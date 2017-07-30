@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleIOCContainer", "SimpleIOCContainer\SimpleIOCContainer.csproj", "{8203FD79-A03C-458D-9FF1-6B76F00682BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleIOCContainerTest", "SimpleIOCContainerTest\SimpleIOCContainerTest.csproj", "{8F6A96C3-C146-453B-BAFB-6162A1F66788}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8203FD79-A03C-458D-9FF1-6B76F00682BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8203FD79-A03C-458D-9FF1-6B76F00682BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8203FD79-A03C-458D-9FF1-6B76F00682BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
