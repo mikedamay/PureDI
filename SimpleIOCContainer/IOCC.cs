@@ -1,8 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -26,15 +24,21 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </remarks>
     public class IOCC
     {
-        public enum OS { Any, Unix, Windows, Macos }
+        public enum OS { Any, Unix, Windows, MacOS }
         public static IOCC Instance { get; } = new IOCC();
-        private const string DEFAULT_PROFILE = "";
+        internal const string DEFAULT_PROFILE = "";
+        internal const string DEFAULT_DEPENDENCY_NAME = "";
 
 
-        private IDictionary<string, IOCObjectTree> mapObjectTrees 
-          = new Dictionary<string, IOCObjectTree>();
+        private IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
+          = new Dictionary<string, IOCObjectTreeContainer>();
 
-        private IDictionary<Type, Type> typeMap = new Dictionary<Type, Type>();
+        private IDictionary<(Type, string, string), Type> typeMap = new Dictionary<(Type, string, string), Type>()
+        {
+            { (typeof(TestIOCC), "", ""), typeof(TestIOCC)}
+            ,{ (typeof(ChildOne), "", ""), typeof(ChildOne)}
+
+        };
 
         private IOCC()
         {        
@@ -49,53 +53,16 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
-
-            object rootObject = CreateObjectTree(typeof(TRootType));
-            if (!(rootObject is TRootType))
+            IOCObjectTreeContainer container;
+            if (mapObjectTreeContainers.ContainsKey(profile))
             {
-                throw new Exception($"object created by IOC container is not {typeof(TRootType).Name} as expected");
+                container = mapObjectTreeContainers[profile];
             }
-            return (TRootType)rootObject;
-        }
-
-        /// <summary>
-        /// see documentation for GetOrCreateObjectTree
-        /// </summary>
-        private object CreateObjectTree(Type rootType)
-        {
-            object rootObject = Construct(rootType);
-            FieldInfo[] propertyInfos = rootType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            foreach (var propertyInfo in propertyInfos)
+            else
             {
-                if (propertyInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
-                {
-                    
-                    if (typeMap.ContainsKey(propertyInfo.FieldType))
-                    {
-                        Type implementation = typeMap[propertyInfo.FieldType];
-                        object dependency = Construct(implementation);
-                        propertyInfo.SetValue(rootObject, dependency);
-                    }
-                    
-                }
+                container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            return rootObject;
-        }
-        ///
-        /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
-        /// <param name="rootType">a concrete clasws typically part of the object tree being instantiated</param>
-        /// <exception>InvalidArgumentException</exception>  
-        private object Construct(Type rootType)
-        {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-            var constructorInfos = rootType.GetConstructors(flags);
-            var noArgConstructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
-            if (noArgConstructorInfo == null)
-            {
-                throw new Exception($"There is no no-arg constructor for {rootType.Name}.  A no-arg constructor is required.");
-            }
-            return noArgConstructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, new object[0], null);
-
+            return container.GetOrCreateObjectTree<TRootType>();
         }
     }
 }

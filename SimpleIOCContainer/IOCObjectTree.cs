@@ -7,10 +7,18 @@ using System.Threading.Tasks;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    class IOCObjectTree
+    internal class IOCObjectTree
     {
-        private IDictionary<Type, Type> typeMap = new Dictionary<Type, Type>();
-        // TODO complete the documentation item 3 below if and when factory types are implemented
+        private readonly string profile;
+        private readonly IDictionary<(Type, string, string), Type> typeMap; 
+
+        public IOCObjectTree(string profile
+          , IDictionary<(Type type, string name, string profile), Type> typeMap)
+        {
+            this.profile = profile;
+            this.typeMap = typeMap;
+        }
+       // TODO complete the documentation item 3 below if and when factory types are implemented
         /// <summary>
         /// 1. mainly used to create the complete object tree at program startup
         /// 2. may be used to create object tree fragments when running tests
@@ -34,17 +42,18 @@ namespace com.TheDisappointedProgrammer.IOCC
         private object CreateObjectTree(Type rootType)
         {
             object rootObject = Construct(rootType);
-            FieldInfo[] propertyInfos = rootType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            foreach (var propertyInfo in propertyInfos)
+            FieldInfo[] fieldInfos = rootType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (var fieldInfo in fieldInfos)
             {
-                if (propertyInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
+                if (fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
                 {
-
-                    if (typeMap.ContainsKey(propertyInfo.FieldType))
+                    (Type, string, string) dependencyKey =
+                        (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME, IOCC.DEFAULT_PROFILE);
+                    if (typeMap.ContainsKey(dependencyKey))
                     {
-                        Type implementation = typeMap[propertyInfo.FieldType];
+                        Type implementation = typeMap[dependencyKey];
                         object dependency = Construct(implementation);
-                        propertyInfo.SetValue(rootObject, dependency);
+                        fieldInfo.SetValue(rootObject, dependency);
                     }
 
                 }

@@ -8,17 +8,20 @@ namespace IOCCTest
     public class IOCCTest
     {
         [TestMethod]
-        public void SelfTest()
+        public void RootClassShouldHaveNoArgConstructor()
         {
-            IOCC.Instance.GetOrCreateObjectTree<object>();
-            Assert.IsFalse(false);
+            void DoTest()
+            {
+                IOCC.Instance.GetOrCreateObjectTree<int>();
+            }
+            Assert.ThrowsException<Exception>((System.Action)DoTest);
         }
 
         [TestMethod]
         public void ShouldBuildTreeFromWellFormedFields()
         {
-            TreeWithFields twf 
-              = IOCC.Instance.GetOrCreateObjectTree<TreeWithFields>();
+            TestIOCC twf 
+              = IOCC.Instance.GetOrCreateObjectTree<TestIOCC>();
             Assert.AreNotEqual(null, twf.childOne);
         }
     }
