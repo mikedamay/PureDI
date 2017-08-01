@@ -7,8 +7,8 @@
     <ProjectGuid>{8F6A96C3-C146-453B-BAFB-6162A1F66788}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DriveTest</RootNamespace>
-    <AssemblyName>DriveTest</AssemblyName>
+    <RootNamespace>IOCCTest</RootNamespace>
+    <AssemblyName>SimpleIOCContainerTest</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,7 +50,8 @@
   <ItemGroup>
     <Compile Include="IOCCTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TreeWithFields.cs" />
+    <Compile Include="TestData\TreeWithFields.cs" />
+    <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -7,7 +7,7 @@ namespace IOCCTest
         [IOCCInjectedDependency]
         public ChildOne childOne;
     }
-
+    [IOCCDependency]
     public class ChildOne
     {
         

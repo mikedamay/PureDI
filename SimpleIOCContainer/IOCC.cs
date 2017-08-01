@@ -1,6 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -29,7 +30,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_PROFILE = "";
         internal const string DEFAULT_DEPENDENCY_NAME = "";
 
-
+        private bool getOrCreateObjectTreeCalled = false;
+        private IList<string> assemblyNames = new List<string>();
         private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
 
@@ -40,8 +42,32 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         };
 
+        private class AssemblyNameComparer : IEqualityComparer<string>
+        {
+            public bool Equals(string x, string y)
+            {
+                return x.Equals(y, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(string obj)
+            {
+                return base.GetHashCode();
+            }
+        }
+
         private IOCC()
         {        
+        }
+
+        public void SetAssemblies(params string[] assemblyNames)
+        {
+            if (getOrCreateObjectTreeCalled)
+            {
+                throw new InvalidOperationException(
+                  "SetAssemblies has been called after GetOrCreateObjectTree."
+                  + "  This is not permitted.");
+            }
+            this.assemblyNames = assemblyNames.ToList();
         }
         // TODO complete the documentation item 3 below if and when factory types are implemented
         /// <summary>
@@ -53,6 +79,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
+            getOrCreateObjectTreeCalled = true;
+            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly);
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
@@ -63,6 +91,30 @@ namespace com.TheDisappointedProgrammer.IOCC
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
             return container.GetOrCreateObjectTree<TRootType>();
+        }
+        /// <summary>
+        /// builds list of all the assemblies involved in the dependency tree
+        /// </summary>
+        /// <param name="assemblyNames">list of names provided by caller.
+        /// This should include the names of all assemblies containing dependencies (concrete classes)
+        /// involved in the object model of this app.  Optionally this can include the assembly
+        /// of the root class in the tree</param>
+        /// <param name="rootAssembly">The assembly which contains the root class</param>
+        /// <returns></returns>
+        private IList<Assembly> AssembleAssemblies(IList<string> assemblyNames, Assembly rootAssembly)
+        {
+            ISet<string> assemblyNamesSet = new HashSet<string>(assemblyNames, new AssemblyNameComparer());
+            ISet<Assembly> assembliesSet = new HashSet<Assembly>();
+            assembliesSet.Add(rootAssembly);
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Console.WriteLine(assembly.GetName().Name);
+                if (assemblyNamesSet.Contains(assembly.GetName().Name))
+                {
+                    assembliesSet.Add(assembly);
+                }
+            }
+            return assembliesSet.ToList();
         }
     }
 }

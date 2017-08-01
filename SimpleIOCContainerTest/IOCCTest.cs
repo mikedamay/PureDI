@@ -20,6 +20,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeFromWellFormedFields()
         {
+            IOCC.Instance.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestIOCC twf 
               = IOCC.Instance.GetOrCreateObjectTree<TestIOCC>();
             Assert.AreNotEqual(null, twf.childOne);
