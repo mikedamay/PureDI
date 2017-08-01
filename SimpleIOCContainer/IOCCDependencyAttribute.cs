@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace com.TheDisappointedProgrammer.IOCC
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    class IOCCDependencyAttribute : Attribute
+    public class IOCCDependencyAttribute : Attribute
     {
         public string Name = "";
         public string Profile = "";

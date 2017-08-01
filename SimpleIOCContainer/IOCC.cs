@@ -24,6 +24,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     the object tree (i.e. the program's static model) is required to be static.
     ///     if objects are added to the tree through code at run-time this will not be 
     ///     reflected in the IOC container.
+    ///     The route class has to be visible to the caller of GetOrCreateObjectTree.
+    ///     The root of the tree cannot be specified using reflection.
     /// </remarks>
     public class IOCC
     {

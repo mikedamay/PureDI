@@ -15,7 +15,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 var query
                   = assembly.GetTypes().Where(TypeIsADependency).SelectMany(d 
-                  => d.GetInterfaces().IncludeImplementation(d).Select(i => ((i, ""), d)));
+                  => d.GetInterfaces().IncludeImplementation(d).Select(i => ((i, d.GetDependencyName()), d)));
                 foreach (((Type dependencyImplementation, string name), Type dependencyInterface) in query)
                 {
                     map.Add((dependencyInterface, name), new TypeHolder(dependencyImplementation));
@@ -39,6 +39,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 yield return dependencyInterface;
             }
+        }
+
+        public static string GetDependencyName(this Type dependency)
+        {
+            return dependency.GetCustomAttributes<IOCCDependencyAttribute>().Select(attr => attr.Name).FirstOrDefault();
         }
     }
 
