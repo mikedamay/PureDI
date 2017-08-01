@@ -14,6 +14,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO references held in tuples
     // TODO references held in embedded structs 
     // TODO references held as objects
+    // TODO use fully qualified type names in comparisons
+    // TODO use immutable collections
     /// <summary>
     /// 
     /// </summary>
