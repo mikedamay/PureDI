@@ -24,16 +24,16 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </remarks>
     public class IOCC
     {
-        public enum OS { Any, Unix, Windows, MacOS }
+        public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
         public static IOCC Instance { get; } = new IOCC();
         internal const string DEFAULT_PROFILE = "";
         internal const string DEFAULT_DEPENDENCY_NAME = "";
 
 
-        private IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
+        private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
 
-        private IDictionary<(Type, string, string), Type> typeMap = new Dictionary<(Type, string, string), Type>()
+        private readonly IDictionary<(Type, string, string), Type> typeMap = new Dictionary<(Type, string, string), Type>()
         {
             { (typeof(TestIOCC), "", ""), typeof(TestIOCC)}
             ,{ (typeof(ChildOne), "", ""), typeof(ChildOne)}
