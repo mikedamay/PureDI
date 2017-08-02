@@ -52,6 +52,7 @@
     <Compile Include="IOCCTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
+    <EmbeddedResource Include="TestData\NamedDependencies.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

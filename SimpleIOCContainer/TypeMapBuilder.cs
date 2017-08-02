@@ -14,9 +14,13 @@ namespace com.TheDisappointedProgrammer.IOCC
             foreach (Assembly assembly in assemblies)
             {
                 var query
-                  = assembly.GetTypes().Where(TypeIsADependency).SelectMany(d 
+                  = assembly.GetTypes().Where(TypeIsADependency).SelectMany(d
                   => d.GetInterfaces().IncludeImplementation(d).Select(i => ((i, d.GetDependencyName()), d)));
-                foreach (((Type dependencyImplementation, string name), Type dependencyInterface) in query)
+                //var query
+                //  = assembly.GetTypes().Where(TypeIsADependency).SelectMany(d 
+                //  => d.GetInterfaces().IncludeImplementation(d).Select(i => (i, d))).ToList();
+                //Console.Write(query.Count);
+                foreach (((Type dependencyInterface, string name), Type dependencyImplementation) in query)
                 {
                     map.Add((dependencyInterface, name), new TypeHolder(dependencyImplementation));
                 }

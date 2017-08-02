@@ -16,6 +16,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO references held as objects
     // TODO use fully qualified type names in comparisons
     // TODO use immutable collections
+    // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     /// <summary>
     /// 
     /// </summary>

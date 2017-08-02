@@ -14,6 +14,11 @@ namespace IOCCTest
     /// </summary>
     internal class AssemblyMaker
     {
+        // TODO currently assemblies are created but not unloaded.
+        // there is a field AssemblyBuilderAccess.RunAndCollect 
+        // which will cause assemblies to be garbage collected but it
+        // it occurs in connection with System.Reflection.Emit and not
+        // compiler services
         /// <summary>
         /// creates and compiles a DLL assembly based on codeText with the latest compiler
         /// </summary>

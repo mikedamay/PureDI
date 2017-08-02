@@ -18,6 +18,30 @@ namespace IOCCTest
             Assert.AreEqual(1, map.Keys.Count);
 
         }
+        // TODO sort out mapp verification fully below
+        [TestMethod]
+        public void ShouldCrewateTypeMapFromNamedDependencies()
+        {
+            string codeText = GetResource("IOCCTest.TestData.NamedDependencies.cs");
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(new List<Assembly>() {assembly});
+            Assert.AreEqual(6, map.Keys.Count);
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("NamedDependencies", "dep-name-abc"), "NamedDependencies"}
+                ,{("NamedDependencies1", "dep-name-xyz"), "NamedDependencies1"}
+                ,{("ISecond", "dep-name-xyz"), "NamedDependencies1"}
+                ,{("NamedDependencies2", "dep-name-def"), "NamedDependencies2"}
+                ,{("INamedDependencies", "dep-name-def"), "NamedDependencies2"}
+                ,{("ISecond", "dep-name-def"), "NamedDependencies2"}
+            };
+            foreach ((var interfaceType, var dependencyName) in map.Keys)
+            {
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.Name, dependencyName))
+                  && map[(interfaceType, dependencyName)] != null);
+            }
+
+        }
         /// <summary>
         /// Typically gets code to comprise the assembly being created dynamically
         /// </summary>
@@ -29,7 +53,7 @@ namespace IOCCTest
         private string GetResource(string resourceName)
         {
             using (Stream s
-                = this.GetType().Assembly.GetManifestResourceStream("IOCCTest.TestData.TreeWithFields.cs"))
+                = this.GetType().Assembly.GetManifestResourceStream(resourceName))
             using (StreamReader sr = new StreamReader(s))
             {
                 return sr.ReadToEnd();

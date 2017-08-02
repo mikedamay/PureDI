@@ -1,6 +1,6 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
 
-// this module is not compiled.  It is embedded as a resource.
+// this module is not compiled as part of the project.  It is embedded as a resource.
 namespace IOCCTest
 {
     public class TreeWithFields
