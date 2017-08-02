@@ -18,7 +18,6 @@ namespace IOCCTest
             Assert.AreEqual(1, map.Keys.Count);
 
         }
-        // TODO sort out mapp verification fully below
         [TestMethod]
         public void ShouldCrewateTypeMapFromNamedDependencies()
         {
@@ -37,8 +36,16 @@ namespace IOCCTest
             };
             foreach ((var interfaceType, var dependencyName) in map.Keys)
             {
-                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.Name, dependencyName))
-                  && map[(interfaceType, dependencyName)] != null);
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.Name, dependencyName)));
+                switch (map[(interfaceType, dependencyName)].Content)
+                {
+                    case System.Type t:
+                        Assert.AreEqual(mapExpected[(interfaceType.Name, dependencyName)], t.Name);
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
             }
 
         }
