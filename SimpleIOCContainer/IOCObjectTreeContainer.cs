@@ -17,9 +17,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         private string profile;
         private IDictionary<Type, IOCObjectTree> mapTrees = new Dictionary<Type, IOCObjectTree>();
-        private readonly IDictionary<(Type type, string name, string profile), Type> typeMap;
+        private readonly IDictionary<(Type type, string name), Type> typeMap;
  
-        internal IOCObjectTreeContainer(string profile, IDictionary<(Type, string, string), Type> typeMap)
+        internal IOCObjectTreeContainer(string profile, IDictionary<(Type, string), Type> typeMap)
         {
             this.profile = profile;
             this.typeMap = typeMap;

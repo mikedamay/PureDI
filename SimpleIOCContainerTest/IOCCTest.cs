@@ -20,10 +20,28 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeFromWellFormedFields()
         {
-            IOCC.Instance.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
-            TestIOCC twf 
-              = IOCC.Instance.GetOrCreateObjectTree<TestIOCC>();
-            Assert.AreNotEqual(null, twf.childOne);
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
+            TestRoot twf 
+              = iocc.GetOrCreateObjectTree<TestRoot>();
+            Assert.AreNotEqual(null, twf.test);
         }
+    }
+
+    internal class TestRoot
+    {
+        [IOCCInjectedDependency]
+        public ITest test;
+    }
+
+    interface ITest
+    {
+        
+    }
+
+    [IOCCDependency]
+    class Test : ITest
+    {
+        
     }
 }

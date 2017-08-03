@@ -10,10 +10,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     internal class IOCObjectTree
     {
         private readonly string profile;
-        private readonly IDictionary<(Type, string, string), Type> typeMap; 
+        private readonly IDictionary<(Type, string), Type> typeMap; 
 
         public IOCObjectTree(string profile
-          , IDictionary<(Type type, string name, string profile), Type> typeMap)
+          , IDictionary<(Type type, string name), Type> typeMap)
         {
             this.profile = profile;
             this.typeMap = typeMap;
@@ -47,8 +47,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 if (fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
                 {
-                    (Type, string, string) dependencyKey =
-                        (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME, IOCC.DEFAULT_PROFILE);
+                    (Type, string) dependencyKey =
+                        (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME);
                     if (typeMap.ContainsKey(dependencyKey))
                     {
                         Type implementation = typeMap[dependencyKey];

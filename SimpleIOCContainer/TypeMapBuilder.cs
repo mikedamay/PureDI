@@ -7,10 +7,10 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class TypeMapBuilder
     {
-        public IDictionary<(Type type, string name), TypeHolder> BuildTypeMapFromAssemblies(
-          IEnumerable<Assembly> assemblies)
+        public IDictionary<(Type type, string name), Type> 
+          BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies)
         {
-            IDictionary<(Type, string), TypeHolder> map = new Dictionary<(Type, string), TypeHolder>();
+            IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var query
@@ -33,9 +33,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                               + Environment.NewLine
                               + $"attempting to add ${dependencyImplementation.FullName}"
                               + Environment.NewLine
-                              + $"when ${(map[(dependencyInterface, name)].Content as Type).FullName} is already included");
+                              + $"when ${(map[(dependencyInterface, name)] as Type).FullName} is already included");
                         }
-                        map.Add((dependencyInterface, name), new TypeHolder(dependencyImplementation));
+                        map.Add((dependencyInterface, name), dependencyImplementation);
                         
                     }
                 }

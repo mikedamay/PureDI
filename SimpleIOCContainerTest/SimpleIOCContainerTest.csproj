@@ -54,6 +54,7 @@
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
     <EmbeddedResource Include="TestData\NamedDependencies.cs" />
     <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
+    <EmbeddedResource Include="TestData\SingleImplementation.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

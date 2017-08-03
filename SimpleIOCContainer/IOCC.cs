@@ -22,11 +22,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </summary>
     /// <remarks>
     /// constraints:
-    ///     the object tree (i.e. the program's static model) is required to be static.
+    ///     1) the object tree (i.e. the program's static model) is required to be static.
     ///     if objects are added to the tree through code at run-time this will not be 
     ///     reflected in the IOC container.
-    ///     The route class has to be visible to the caller of GetOrCreateObjectTree.
-    ///     The root of the tree cannot be specified using reflection.
+    ///     2) The route class has to be visible to the caller of GetOrCreateObjectTree.
+    ///     2a) The root of the tree cannot be specified using reflection.  I'll probably regret that.
     /// </remarks>
     public class IOCC
     {
@@ -40,12 +40,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
 
-        private readonly IDictionary<(Type, string, string), Type> typeMap = new Dictionary<(Type, string, string), Type>()
-        {
-            { (typeof(TestIOCC), "", ""), typeof(TestIOCC)}
-            ,{ (typeof(ChildOne), "", ""), typeof(ChildOne)}
-
-        };
+        private IDictionary<(Type, string), Type> typeMap;
 
         private class AssemblyNameComparer : IEqualityComparer<string>
         {
@@ -59,9 +54,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                 return base.GetHashCode();
             }
         }
-
-        private IOCC()
-        {        
+        /// <summary>
+        /// for testing only
+        /// </summary>
+        internal IOCC()
+        {
         }
 
         public void SetAssemblies(params string[] assemblyNames)
@@ -72,6 +69,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                   "SetAssemblies has been called after GetOrCreateObjectTree."
                   + "  This is not permitted.");
             }
+            getOrCreateObjectTreeCalled = true;
             this.assemblyNames = assemblyNames.ToList();
         }
         // TODO complete the documentation item 3 below if and when factory types are implemented
@@ -86,6 +84,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             getOrCreateObjectTreeCalled = true;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly);
+            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies);
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
@@ -97,6 +96,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return container.GetOrCreateObjectTree<TRootType>();
         }
+
         /// <summary>
         /// builds list of all the assemblies involved in the dependency tree
         /// </summary>

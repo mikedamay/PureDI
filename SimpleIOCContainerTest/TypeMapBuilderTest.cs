@@ -33,26 +33,26 @@ namespace IOCCTest
             Assert.AreEqual(6, map.Keys.Count);
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
-                {("NamedDependencies", "dep-name-abc"), "NamedDependencies"}
-                ,{("NamedDependencies1", "dep-name-xyz"), "NamedDependencies1"}
-                ,{("ISecond", "dep-name-xyz"), "NamedDependencies1"}
-                ,{("NamedDependencies2", "dep-name-def"), "NamedDependencies2"}
-                ,{("INamedDependencies", "dep-name-def"), "NamedDependencies2"}
-                ,{("ISecond", "dep-name-def"), "NamedDependencies2"}
+                {("IOCCTest.TestData.NamedDependencies", "dep-name-abc"), "IOCCTest.TestData.NamedDependencies"}
+                ,{("IOCCTest.TestData.NamedDependencies1", "dep-name-xyz"), "IOCCTest.TestData.NamedDependencies1"}
+                ,{("IOCCTest.TestData.ISecond", "dep-name-xyz"), "IOCCTest.TestData.NamedDependencies1"}
+                ,{("IOCCTest.TestData.NamedDependencies2", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
+                ,{("IOCCTest.TestData.INamedDependencies", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
+                ,{("IOCCTest.TestData.ISecond", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
             };
             CompareMaps(map, mapExpected);
 
         }
 
-        private static void CompareMaps(IDictionary<ValueTuple<Type, string>, TypeHolder> map, IDictionary<ValueTuple<string, string>, string> mapExpected)
+        private static void CompareMaps(IDictionary<(Type, string), Type> map, IDictionary<(string, string), string> mapExpected)
         {
             foreach ((var interfaceType, var dependencyName) in map.Keys)
             {
-                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.Name, dependencyName)));
-                switch (map[(interfaceType, dependencyName)].Content)
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.FullName, dependencyName)));
+                switch (map[(interfaceType, dependencyName)])
                 {
                     case System.Type t:
-                        Assert.AreEqual(mapExpected[(interfaceType.Name, dependencyName)], t.Name);
+                        Assert.AreEqual(mapExpected[(interfaceType.FullName, dependencyName)], t.FullName);
                         break;
                     default:
                         Assert.Fail();
@@ -60,7 +60,6 @@ namespace IOCCTest
                 }
             }
         }
-        [Ignore]
         [TestMethod]
         public void ShouldCreateTypeMapForTypesInADeepHierarchy()
         {
@@ -97,13 +96,13 @@ namespace IOCCTest
             System.Diagnostics.Debug.WriteLine(str);
         }
 
-        private string MapToString(IDictionary<(Type type, string name), TypeHolder> map)
+        private string MapToString(IDictionary<(Type type, string name), Type> map)
         {
             StringBuilder sb = new StringBuilder();
             void AddMapEntry((Type type, string name) key)
             {
                 (Type dependencyInterface, string dependencyName) = key;
-                var dependencyImplementation = map[key].Content as Type;
+                var dependencyImplementation = map[key] as Type;
                 sb.Append($@"{{(""{dependencyInterface}"", ""{dependencyName}""),""{dependencyImplementation}""}}"
                   + Environment.NewLine);
                 
