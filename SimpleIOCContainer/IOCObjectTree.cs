@@ -26,7 +26,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         /// <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
         /// <returns>an ojbect of root type</returns>
-        public TRootType GetOrCreateObjectTree<TRootType>()
+        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics)
         {
             object rootObject = CreateObjectTree(typeof(TRootType));
             if (!(rootObject is TRootType))

@@ -8,7 +8,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     internal class TypeMapBuilder
     {
         public IDictionary<(Type type, string name), Type> 
-          BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies)
+          BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
+          , ref IOCCDiagnostics diagnostics)
         {
             IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)

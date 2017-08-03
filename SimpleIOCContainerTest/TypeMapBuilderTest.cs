@@ -18,7 +18,9 @@ namespace IOCCTest
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             System.Diagnostics.Debug.WriteLine(
                 $"There are {AppDomain.CurrentDomain.GetAssemblies().Length} assmblies loaded");
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(new List<Assembly>() {assembly});
+            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+              new List<Assembly>() {assembly}, ref diagnostics);
             Assert.AreEqual(1, map.Keys.Count);
 
         }
@@ -29,7 +31,9 @@ namespace IOCCTest
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             System.Diagnostics.Debug.WriteLine(
                 $"There are {AppDomain.CurrentDomain.GetAssemblies().Length} assmblies loaded");
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(new List<Assembly>() {assembly});
+            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+              new List<Assembly>() {assembly}, ref diagnostics);
             Assert.AreEqual(6, map.Keys.Count);
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
@@ -44,29 +48,15 @@ namespace IOCCTest
 
         }
 
-        private static void CompareMaps(IDictionary<(Type, string), Type> map, IDictionary<(string, string), string> mapExpected)
-        {
-            foreach ((var interfaceType, var dependencyName) in map.Keys)
-            {
-                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.FullName, dependencyName)));
-                switch (map[(interfaceType, dependencyName)])
-                {
-                    case System.Type t:
-                        Assert.AreEqual(mapExpected[(interfaceType.FullName, dependencyName)], t.FullName);
-                        break;
-                    default:
-                        Assert.Fail();
-                        break;
-                }
-            }
-        }
         [TestMethod]
         public void ShouldCreateTypeMapForTypesInADeepHierarchy()
         {
             string codeText = GetResource(
               "IOCCTest.TestData.DependencyHierarchy.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(new List<Assembly>() { assembly });
+            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+              new List<Assembly>() { assembly }, ref diagnostics);
             Assert.AreEqual(8, map.Keys.Count);
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
@@ -85,45 +75,20 @@ namespace IOCCTest
         [TestMethod]
         public void OutputTypeMap_NotReallyATest()
         {
+            void BuildAndOutputTypeMap(string resourceName)
+            {
+                Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
+                IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+                var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                  new List<Assembly>() { assembly }, ref diagnostics);
+                string str = map.OutputToString();
+                System.Diagnostics.Debug.WriteLine(str);
+            }
             BuildAndOutputTypeMap("IOCCTest.TestData.DependencyHierarchy.cs");
         }
 
-        private void BuildAndOutputTypeMap(string resourceName)
-        {
-            Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(new List<Assembly>() { assembly });
-            string str = MapToString(map);
-            System.Diagnostics.Debug.WriteLine(str);
-        }
 
-        private string MapToString(IDictionary<(Type type, string name), Type> map)
-        {
-            StringBuilder sb = new StringBuilder();
-            void AddMapEntry((Type type, string name) key)
-            {
-                (Type dependencyInterface, string dependencyName) = key;
-                var dependencyImplementation = map[key] as Type;
-                sb.Append($@"{{(""{dependencyInterface}"", ""{dependencyName}""),""{dependencyImplementation}""}}"
-                  + Environment.NewLine);
-                
-            }
-            sb.Append("IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()"
-              + Environment.NewLine);
-            sb.Append("{" + Environment.NewLine);
 
-            var iter = map.Keys.GetEnumerator();
-            iter.MoveNext();
-            sb.Append("\t");
-            AddMapEntry(iter.Current);
-            while (iter.MoveNext())
-            {
-                sb.Append("\t,");
-                AddMapEntry(iter.Current);
-            }
-            sb.Append("};" + Environment.NewLine);
-            iter.Dispose();
-            return sb.ToString();
-        }
 
         /// <summary>
         /// Typically gets code to comprise the assembly being created dynamically
@@ -142,5 +107,65 @@ namespace IOCCTest
                 return sr.ReadToEnd();
             }
         }
+        /// <summary>
+        /// makes sure that all elements in the map built by the TypeMapBuilder
+        /// are found in mapExpected.  The reverse check is not done.
+        /// </summary>
+        /// <param name="map">generated by the TypeMapBuilder</param>
+        /// <param name="mapExpected">expected results of test</param>
+        private static void CompareMaps(IDictionary<(Type, string), Type> map
+          , IDictionary<(string, string), string> mapExpected)
+        {
+            foreach ((var interfaceType, var dependencyName) in map.Keys)
+            {
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.FullName, dependencyName)));
+                Assert.AreEqual(mapExpected[(interfaceType.FullName, dependencyName)]
+                    , map[(interfaceType, dependencyName)].FullName);
+            }
+        }
+    }
+
+    internal static class MapExtensions
+    {
+        /// <summary>
+        /// produces a string suitable for pasting into a test as
+        /// a set of expected results
+        /// </summary>
+        /// <param name="map">as produced by the TypeMapBuilder</param>
+        /// <returns>set of expected results</returns>
+        public static string OutputToString(this IDictionary<(Type type, string name), Type> map)
+        {
+            StringBuilder sb = new StringBuilder();
+            void AddMapEntry((Type type, string name) key)
+            {
+                (Type dependencyInterface, string dependencyName) = key;
+                var dependencyImplementation = map[key] as Type;
+                sb.Append($@"{{(""{dependencyInterface}"", ""{dependencyName}""),""{dependencyImplementation}""}}"
+                          + Environment.NewLine);
+
+            }
+            void AddMapEntriesToString()
+            {
+                var iter = map.Keys.GetEnumerator();
+                iter.MoveNext();
+                sb.Append("\t");
+                AddMapEntry(iter.Current);
+                while (iter.MoveNext())
+                {
+                    sb.Append("\t,");
+                    AddMapEntry(iter.Current);
+                }
+                iter.Dispose();
+            }
+
+            sb.Append(
+                "IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()"
+                + Environment.NewLine);
+            sb.Append("{" + Environment.NewLine);
+            AddMapEntriesToString();
+            sb.Append("};" + Environment.NewLine);
+            return sb.ToString();
+        }
+
     }
 }

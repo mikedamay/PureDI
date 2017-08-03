@@ -60,7 +60,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal IOCC()
         {
         }
-
+        /// <example>SetAssemblies("MyApp", "MyLib")</example>
         public void SetAssemblies(params string[] assemblyNames)
         {
             if (getOrCreateObjectTreeCalled)
@@ -69,10 +69,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                   "SetAssemblies has been called after GetOrCreateObjectTree."
                   + "  This is not permitted.");
             }
-            getOrCreateObjectTreeCalled = true;
             this.assemblyNames = assemblyNames.ToList();
         }
         // TODO complete the documentation item 3 below if and when factory types are implemented
+        // TODO handle situation where there is no console window
         /// <summary>
         /// 1. mainly used to create the complete object tree at program startup
         /// 2. may be used to create object tree fragments when running tests
@@ -82,9 +82,29 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
+            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            var rootObject = GetOrCreateObjectTree<TRootType>(ref diagnostics, profile);
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debug.Write(diagnostics);
+            }
+            else
+            {
+                Console.WriteLine(diagnostics);    
+            }
+            return rootObject;
+        }
+        /// <summary>
+        /// <see cref="GetOrCreateObjectTree"/>
+        /// this overload does not print out the diagnostics
+        /// </summary>
+        /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
+        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics
+            , string profile = DEFAULT_PROFILE)
+        {
             getOrCreateObjectTreeCalled = true;
-            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly);
-            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies);
+            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly, ref diagnostics);
+            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies, ref diagnostics);
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
@@ -94,7 +114,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            return container.GetOrCreateObjectTree<TRootType>();
+            var rootObject = container.GetOrCreateObjectTree<TRootType>(ref diagnostics);
+            return rootObject;
         }
 
         /// <summary>
@@ -106,7 +127,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// of the root class in the tree</param>
         /// <param name="rootAssembly">The assembly which contains the root class</param>
         /// <returns></returns>
-        private IList<Assembly> AssembleAssemblies(IList<string> assemblyNames, Assembly rootAssembly)
+        private IList<Assembly> AssembleAssemblies(IList<string> assemblyNames
+          , Assembly rootAssembly, ref IOCCDiagnostics diagnostics)
         {
             ISet<string> assemblyNamesSet = new HashSet<string>(assemblyNames, new AssemblyNameComparer());
             ISet<Assembly> assembliesSet = new HashSet<Assembly>();

@@ -12,7 +12,7 @@ namespace IOCCTest
         {
             void DoTest()
             {
-                IOCC.Instance.GetOrCreateObjectTree<int>();
+                new IOCC().GetOrCreateObjectTree<int>();
             }
             Assert.ThrowsException<Exception>((System.Action)DoTest);
         }

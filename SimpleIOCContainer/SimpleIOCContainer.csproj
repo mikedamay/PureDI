@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IOCC.cs" />
     <Compile Include="IOCCDependencyAttribute.cs" />
+    <Compile Include="IOCCDiagnostics.cs" />
     <Compile Include="IOCCInjectedDependencyAttribute.cs" />
     <Compile Include="IOCObjectTree.cs" />
     <Compile Include="OSDetector.cs" />

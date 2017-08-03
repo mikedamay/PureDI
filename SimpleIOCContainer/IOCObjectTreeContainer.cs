@@ -24,7 +24,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.profile = profile;
             this.typeMap = typeMap;
         }
-        public TRootType GetOrCreateObjectTree<TRootType>()
+        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics)
         {
             Type rootType = typeof(TRootType);
             IOCObjectTree tree;
@@ -38,7 +38,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 mapTrees[rootType] = tree;
                  
             }
-            return tree.GetOrCreateObjectTree<TRootType>();
+            return tree.GetOrCreateObjectTree<TRootType>(ref diagnostics);
         }
     }
 }
