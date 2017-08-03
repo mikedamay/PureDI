@@ -53,7 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
     <EmbeddedResource Include="TestData\NamedDependencies.cs" />
-    <EmbeddedResource Include="TestData\DependencyHierarcy.cs" />
+    <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

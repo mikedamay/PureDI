@@ -15,7 +15,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 var query
                   = assembly.GetTypes().Where(d => d.TypeIsADependency()).SelectMany(d
-                  => d.GetAncestors().IncludeImplementation(d).Select(i => ((i, d.GetDependencyName()), d)));
+                  => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
+                  .Select(i => ((i, d.GetDependencyName()), d)));
+                IList<((Type, string), Type)> list = query.ToList();
                 foreach (((Type dependencyInterface, string name), Type dependencyImplementation) in query)
                 {
                     if (!dependencyImplementation.IsClass)
@@ -24,6 +26,15 @@ namespace com.TheDisappointedProgrammer.IOCC
                     }
                     else
                     {
+                        if (map.ContainsKey((dependencyInterface, name)))
+                        {
+                            throw new Exception(
+                              $"attempt to add duplicate dependency {(dependencyInterface.FullName, name)}"
+                              + Environment.NewLine
+                              + $"attempting to add ${dependencyImplementation.FullName}"
+                              + Environment.NewLine
+                              + $"when ${(map[(dependencyInterface, name)].Content as Type).FullName} is already included");
+                        }
                         map.Add((dependencyInterface, name), new TypeHolder(dependencyImplementation));
                         
                     }
@@ -58,17 +69,29 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             return dependency.GetCustomAttributes<IOCCDependencyAttribute>().Select(attr => attr.Name).FirstOrDefault();
         }
-
+        /// <summary>
+        /// returns all base classes and interfaces from which a class inherits
+        /// either directly or indirectly
+        /// </summary>
+        /// <param name="dependency">typically a class marked as [IOCCDependency] but can be any class</param>
+        /// <returns>all direct and indirect base classes and interfaces</returns>
         public static IEnumerable<Type> GetAncestors(this Type dependency)
         {
                 foreach (Type dependencyInterface in dependency.GetInterfaces())
                 {
-                    foreach (Type remoteAncestor in dependencyInterface.GetInterfaces())
-                    {
-                        yield return remoteAncestor;
-                    }              
                     yield return dependencyInterface;
+                    GetAncestors(dependencyInterface);
                 }
+        }
+        public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
+        {
+            return type.BaseType == typeof(object)
+                ? type.GetInterfaces()
+                : Enumerable
+                    .Repeat(type.BaseType, 1)
+                    .Concat(type.GetInterfaces())
+                    .Concat(type.BaseType.GetBaseClassesAndInterfaces())
+                    .Distinct();
         }
     }
 

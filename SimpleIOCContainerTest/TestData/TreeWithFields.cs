@@ -1,7 +1,7 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
 
 // this module is not compiled as part of the project.  It is embedded as a resource.
-namespace IOCCTest
+namespace IOCCTest.TestData
 {
     public class TreeWithFields
     {
@@ -12,5 +12,8 @@ namespace IOCCTest
     public class ChildOne
     {
         
+    }
+    public class NamedDependencies
+    {
     }
 }
