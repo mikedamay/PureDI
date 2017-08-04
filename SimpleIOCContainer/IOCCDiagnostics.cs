@@ -8,31 +8,32 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
    public class IOCCDiagnostics
     {
-        public enum DiagnosticType { DuplicateDependency = 99001}
+        public enum DiagnosticType { DuplicateDependency = 99001, InvalidDependency = 99002}
         public enum DiagnosticSeverity { Info, Warning, Error }
 
         public class Group
         {
             public Group(DiagnosticType diagnosticType
               , DiagnosticSeverity diagnosticSeverity
-              , string header, string footer)
+              , string header, string userGuide)
             {
                 this.DiagnosticType = diagnosticType;
                 this.DiagnosticSeverity = diagnosticSeverity;
                 this.Header = header;
-                this.Footer = footer;
+                this.UserGuide = userGuide;
             }
 
             public DiagnosticType DiagnosticType { get; }
             public DiagnosticSeverity DiagnosticSeverity { get; }
             public string Header { get; }
-            public string Footer { get; }
+            public string UserGuide { get; }
             public IList<string> Occurrences { get; } = new List<string>();
         }
 
         public IList<Group> Groups { get; } = new List<Group>
         {
-            new Group(DiagnosticType.DuplicateDependency, DiagnosticSeverity.Info, "", "")
+            new Group(DiagnosticType.DuplicateDependency, DiagnosticSeverity.Warning, "", "")
+            ,new Group(DiagnosticType.InvalidDependency, DiagnosticSeverity.Warning, "", "")
         };
     }
 }

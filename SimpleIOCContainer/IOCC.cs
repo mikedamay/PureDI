@@ -6,7 +6,6 @@ using System.Reflection;
 namespace com.TheDisappointedProgrammer.IOCC
 {
     // TODO guard against circular references
-    // TODO handle nexted classes
     // TODO handle structs
     // TODO handle properties
     // TODO object factories
@@ -17,6 +16,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO use fully qualified type names in comparisons
     // TODO use immutable collections
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
+    // TODO handle or document generic classes
+    // TODO handle dynamic types
     /// <summary>
     /// 
     /// </summary>

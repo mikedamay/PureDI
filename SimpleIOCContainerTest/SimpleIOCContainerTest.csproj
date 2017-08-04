@@ -55,6 +55,9 @@
     <EmbeddedResource Include="TestData\NamedDependencies.cs" />
     <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
     <EmbeddedResource Include="TestData\SingleImplementation.cs" />
+    <EmbeddedResource Include="TestData\NestedClasses.cs" />
+    <EmbeddedResource Include="TestData\DuplicateInterfaces.cs" />
+    <EmbeddedResource Include="TestData\BlankAssembly.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

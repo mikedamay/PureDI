@@ -14,27 +14,15 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCrewateTypeMapFromThisAssembly()
         {
-            string codeText = GetResource("IOCCTest.TestData.TreeWithFields.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            System.Diagnostics.Debug.WriteLine(
-                $"There are {AppDomain.CurrentDomain.GetAssemblies().Length} assmblies loaded");
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-              new List<Assembly>() {assembly}, ref diagnostics);
-            Assert.AreEqual(1, map.Keys.Count);
-
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.ChildOne", ""),"IOCCTest.TestData.ChildOne"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.TreeWithFields.cs", mapExpected);
         }
         [TestMethod]
         public void ShouldCrewateTypeMapFromNamedDependencies()
         {
-            string codeText = GetResource("IOCCTest.TestData.NamedDependencies.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            System.Diagnostics.Debug.WriteLine(
-                $"There are {AppDomain.CurrentDomain.GetAssemblies().Length} assmblies loaded");
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-              new List<Assembly>() {assembly}, ref diagnostics);
-            Assert.AreEqual(6, map.Keys.Count);
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
                 {("IOCCTest.TestData.NamedDependencies", "dep-name-abc"), "IOCCTest.TestData.NamedDependencies"}
@@ -44,20 +32,12 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.INamedDependencies", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
                 ,{("IOCCTest.TestData.ISecond", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
             };
-            CompareMaps(map, mapExpected);
-
+            CommonTypeMapTest("IOCCTest.TestData.NamedDependencies.cs", mapExpected);
         }
 
         [TestMethod]
         public void ShouldCreateTypeMapForTypesInADeepHierarchy()
         {
-            string codeText = GetResource(
-              "IOCCTest.TestData.DependencyHierarchy.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
-            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-              new List<Assembly>() { assembly }, ref diagnostics);
-            Assert.AreEqual(8, map.Keys.Count);
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
                 {("IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
@@ -69,9 +49,49 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenB", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenC", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
             };
-            CompareMaps(map, mapExpected);
+            CommonTypeMapTest("IOCCTest.TestData.DependencyHierarchy.cs", mapExpected);
         }
 
+        [TestMethod]
+        public void ShouldCreateTypeMapForNestedClass()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>
+            {
+                {("IOCCTest.TestData.NestedClasses+NestedDependency", ""),"IOCCTest.TestData.NestedClasses+NestedDependency"}
+                ,{("IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors", ""),"IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors"}
+                ,{("IOCCTest.TestData.NestedClasses+NestedParent", ""),"IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors"}
+                ,{("IOCCTest.TestData.NestedInterface", ""),"IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.NestedClasses.cs", mapExpected);
+        }
+        [TestMethod]
+        public void ShouldCreateTypeMapForDuplicateInterfaces()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3", ""),"IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3"}
+                ,{("IOCCTest.TestData.DuplicateInterfaces.FirstGen2", ""),"IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3"}
+                ,{("IOCCTest.TestData.DuplicateInterfaces.SecondGen1", ""),"IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.DuplicateInterfaces.cs", mapExpected);
+        }
+
+        [TestMethod]
+        public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+            };
+            CommonTypeMapTest("IOCCTest.TestData.BlankAssembly.cs", mapExpected);
+            
+        }
+        /// <summary>
+        /// usage:
+        /// 1) change the resource name in the code below to refer to
+        ///    the resource for the specific test for which you want results
+        /// 2) run this "test" to generate a block of code representing
+        ///    expected results that can be pasted into the test
+        /// </summary>
         [TestMethod]
         public void OutputTypeMap_NotReallyATest()
         {
@@ -84,9 +104,21 @@ namespace IOCCTest
                 string str = map.OutputToString();
                 System.Diagnostics.Debug.WriteLine(str);
             }
-            BuildAndOutputTypeMap("IOCCTest.TestData.DependencyHierarchy.cs");
+            // change the resource name arg in the call below to generate the code
+            // for the specific test
+            BuildAndOutputTypeMap("IOCCTest.TestData.DuplicateInterfaces.cs");
         }
 
+        private void CommonTypeMapTest(string testDataName, IDictionary<(string, string), string> mapExpected)
+        {
+            string codeText = GetResource(testDataName);
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assembly }, ref diagnostics);
+            Assert.AreEqual(mapExpected.Keys.Count, map.Keys.Count);
+            CompareMaps(map, mapExpected);
+        }
 
 
 
@@ -128,7 +160,7 @@ namespace IOCCTest
     internal static class MapExtensions
     {
         /// <summary>
-        /// produces a string suitable for pasting into a test as
+        /// produces a block of c# code suitable for pasting into test code as
         /// a set of expected results
         /// </summary>
         /// <param name="map">as produced by the TypeMapBuilder</param>
@@ -147,13 +179,15 @@ namespace IOCCTest
             void AddMapEntriesToString()
             {
                 var iter = map.Keys.GetEnumerator();
-                iter.MoveNext();
-                sb.Append("\t");
-                AddMapEntry(iter.Current);
-                while (iter.MoveNext())
+                if (iter.MoveNext())
                 {
-                    sb.Append("\t,");
+                    sb.Append("\t");
                     AddMapEntry(iter.Current);
+                    while (iter.MoveNext())
+                    {
+                        sb.Append("\t,");
+                        AddMapEntry(iter.Current);
+                    }
                 }
                 iter.Dispose();
             }

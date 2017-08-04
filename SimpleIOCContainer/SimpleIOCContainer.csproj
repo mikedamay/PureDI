@@ -52,5 +52,8 @@
     <Compile Include="TestIOCC.cs" />
     <Compile Include="TypeMapBuilder.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Docs\DiagnosticGroups.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
