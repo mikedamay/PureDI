@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<groups>
+<diagnosticSchema>
   <group>
-    <cause>DuplicateBean</cause>
+    <causeCode>DuplicateBean</causeCode>
     <severity>Warning</severity>
     <intro>Duplicate beans have been detected.  
            The IOC container will be unable to determine which 
@@ -17,16 +17,16 @@
     </artefacts>
   </group>
   <group>
-    <cause>InvalidBean</cause>
+    <causeCode>InvalidBean</causeCode>
     <severity>Warning</severity>
     <intro>A piece of code has been marked as a bean (with 
-          the bean attribute) which is not capable of being 
+          the "IOCCBean" attribute) which is not capable of being 
           a bean.  Only concrete classes can be beans.</intro>
     <userGuide>Typically this problem occurs with abstract 
-               classes. Note that although the bean reference 
+               classes.  Note that although the bean reference 
                where the injection takes place may be specified as a base
-               class or interface, the bean attribute should be applied 
-               only to the concrete implementation rather than the parent 
+               class or interface, the "IOCCBean" attribute should be applied 
+               only to the concrete implementation, not to a parent 
                or interface</userGuide>
     <template>incorrectly annotated base class: {diagnosticEntry.baseClass}, candidate class for annotation: {diagnosticEntry.candidateBean}</template>
     <artefacts>
@@ -34,4 +34,4 @@
       <candidateBean/>        
     </artefacts>
   </group>
-</groups>
+</diagnosticSchema>

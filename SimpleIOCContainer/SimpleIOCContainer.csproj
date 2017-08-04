@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiagnosticBuilder.cs" />
     <Compile Include="IOCC.cs" />
     <Compile Include="IOCCDependencyAttribute.cs" />
     <Compile Include="IOCCDiagnostics.cs" />
@@ -53,7 +54,7 @@
     <Compile Include="TypeMapBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Docs\DiagnosticGroups.xml" />
+    <EmbeddedResource Include="Docs\DiagnosticScema.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

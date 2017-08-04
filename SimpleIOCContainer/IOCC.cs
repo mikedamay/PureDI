@@ -18,6 +18,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     // TODO handle or document generic classes
     // TODO handle dynamic types
+    // TODO change "dependency" to "bean"
+    // TODO check arguments' validity for externally facing methods
+    // TODO unit test to validate XML
     /// <summary>
     /// 
     /// </summary>

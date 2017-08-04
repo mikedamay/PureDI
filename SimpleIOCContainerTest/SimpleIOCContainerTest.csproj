@@ -51,6 +51,7 @@
     <Compile Include="AssemblyMaker.cs" />
     <Compile Include="IOCCTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DiagnosticBuilderTest.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
     <EmbeddedResource Include="TestData\NamedDependencies.cs" />
     <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />

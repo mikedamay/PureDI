@@ -130,10 +130,10 @@ namespace IOCCTest
         /// </remarks>
         /// <param name="resourceName">IOCCTest.TestData.xxx.cs</param>
         /// <returns>complete code capable of building an assembly</returns>
-        private string GetResource(string resourceName)
+        private static string GetResource(string resourceName)
         {
             using (Stream s
-                = this.GetType().Assembly.GetManifestResourceStream(resourceName))
+                = typeof(TypeMapBuilderTest).Assembly.GetManifestResourceStream(resourceName))
             using (StreamReader sr = new StreamReader(s))
             {
                 return sr.ReadToEnd();
