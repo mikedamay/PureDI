@@ -12,8 +12,8 @@
                name in the bean reference whose value is to be injected</userGuide>
     <template>occurrence 1: {diagnosticEntry.occurrence1}, occurrence2: {diagnosticEntry.occurrence2}</template>
     <artefacts>
-      <occurrence1/>
-      <occurrence2/>
+      <Occurrence1/>
+      <Occurrence2/>
     </artefacts>
   </group>
   <group>
@@ -28,10 +28,10 @@
                class or interface, the "IOCCBean" attribute should be applied 
                only to the concrete implementation, not to a parent 
                or interface</userGuide>
-    <template>incorrectly annotated base class: {diagnosticEntry.baseClass}, candidate class for annotation: {diagnosticEntry.candidateBean}</template>
+    <template>incorrectly annotated base class: {BaseClass}, candidate class for annotation: {CandidateBean}</template>
     <artefacts>
-      <baseClass/>
-      <candidateBean/>        
+      <BaseClass/>
+      <CandidateBean/>        
     </artefacts>
   </group>
 </diagnosticSchema>

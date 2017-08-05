@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using com.TheDisappointedProgrammer.IOCC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,10 +8,10 @@ namespace IOCCTest
     public class DiagnosticBuilderTest
     {
         [TestMethod]
-        public void ShouldLoadDiagnosticSchema()
+        public void ShouldCreateGroupFromWellFormedSchema()
         {
             string schemaName
-              = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticScema.xml";
+              = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
             {
@@ -20,15 +19,75 @@ namespace IOCCTest
             }
             Assert.IsTrue(true);
         }
-        private static string GetResource(string resourceName)
+        [TestMethod]
+        public void ShouldFailWithBadlyFormedSchema()
         {
-            using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader sr = new StreamReader(s))
+            Assert.ThrowsException<IOCCException>(() =>
             {
-                return sr.ReadToEnd();
-            }
+                string schemaName
+                  = "IOCCTest.TestData.BadDiagnosticScema.xml";
+                using (Stream s
+                    = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
+                {
+                    DiagnosticBuilder db = new DiagnosticBuilder(s);
+                }
+            });
         }
-
-    }
+        [TestMethod]
+        public void ShouldFailWithSchemaThatContainsNoXML()
+        {
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                string schemaName
+                  = "IOCCTest.TestData.SchemaWithNoXML.xml";
+                using (Stream s
+                    = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
+                {
+                    DiagnosticBuilder db = new DiagnosticBuilder(s);
+                }
+            });
+        }
+        [TestMethod]
+        public void ShouldSetUpInvalidBeanWarning()
+        {
+            IOCCDiagnostics diags;
+            string schemaName
+                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+            using (Stream s
+                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+            {
+                DiagnosticBuilder db = new DiagnosticBuilder(s);
+                diags = db.Diagnostics;
+                dynamic diag = diags.Groups["InvalidBean"].CreateDiagnostic();
+                diag.BaseClass = "testBaseClassType";
+                diag.CandidateBean = "testCandidateBeanType";
+                diags.Groups["InvalidBean"].Add(diag);
+            }
+            Assert.AreEqual("testBaseClassType"
+                , ((dynamic)diags.Groups["InvalidBean"].Errors[0]).BaseClass);
+            Assert.AreEqual("testCandidateBeanType"
+                , ((dynamic)diags.Groups["InvalidBean"].Errors[0]).CandidateBean);
+            System.Diagnostics.Debug.WriteLine(diags);
+        }
+        [TestMethod]
+        public void ShouldReturnSubstitutionsInString()
+        {
+            IOCCDiagnostics diags;
+            string schemaName
+                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+            using (Stream s
+                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+            {
+                DiagnosticBuilder db = new DiagnosticBuilder(s);
+                diags = db.Diagnostics;
+                dynamic diag = diags.Groups["InvalidBean"].CreateDiagnostic();
+                diag.BaseClass = "testBaseClassType";
+                diag.CandidateBean = "testCandidateBeanType";
+                diags.Groups["InvalidBean"].Add(diag);
+            }
+            string str = diags.ToString();
+            Assert.IsTrue(str.Contains("testBaseClassType"));
+            Assert.IsTrue(str.Contains("testCandidateBeanType"));
+        }
+   }
 }

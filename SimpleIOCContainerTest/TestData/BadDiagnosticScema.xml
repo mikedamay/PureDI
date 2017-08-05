@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<diagnosticSchema>
+  <group>
+    <causeCode>DuplicateBean</causeCode>
+    <BAD>Warning</BAD>
+    <intro>Duplicate beans have been detected.  
+           The IOC container will be unable to determine which 
+           class an injected reference refers to</intro>
+    <userGuide>If there are multiple implementations of some 
+               interface or base class then use the bean's "name" 
+               property to distinguish them and then include that 
+               name in the bean reference whose value is to be injected</userGuide>
+    <template>occurrence 1: {diagnosticEntry.occurrence1}, occurrence2: {diagnosticEntry.occurrence2}</template>
+    <artefacts>
+      <occurrence1/>
+      <occurrence2/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>InvalidBean</causeCode>
+    <severity>Warning</severity>
+    <intro>A piece of code has been marked as a bean (with 
+          the "IOCCBean" attribute) which is not capable of being 
+          a bean.  Only concrete classes can be beans.</intro>
+    <userGuide>Typically this problem occurs with abstract 
+               classes.  Note that although the bean reference 
+               where the injection takes place may be specified as a base
+               class or interface, the "IOCCBean" attribute should be applied 
+               only to the concrete implementation, not to a parent 
+               or interface</userGuide>
+    <template>incorrectly annotated base class: {diagnosticEntry.baseClass}, candidate class for annotation: {diagnosticEntry.candidateBean}</template>
+    <artefacts>
+      <baseClass/>
+      <candidateBean/>        
+    </artefacts>
+  </group>
+</diagnosticSchema>

@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagnostic.cs" />
     <Compile Include="DiagnosticBuilder.cs" />
     <Compile Include="IOCC.cs" />
     <Compile Include="IOCCDependencyAttribute.cs" />
     <Compile Include="IOCCDiagnostics.cs" />
+    <Compile Include="IOCCException.cs" />
     <Compile Include="IOCCInjectedDependencyAttribute.cs" />
     <Compile Include="IOCObjectTree.cs" />
     <Compile Include="OSDetector.cs" />
@@ -54,7 +56,7 @@
     <Compile Include="TypeMapBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Docs\DiagnosticScema.xml" />
+    <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
