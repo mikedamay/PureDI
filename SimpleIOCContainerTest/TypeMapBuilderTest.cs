@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using com.TheDisappointedProgrammer.IOCC;
@@ -77,6 +78,36 @@ namespace IOCCTest
         }
 
         [TestMethod]
+        public void ShouldWarnOfAbstractClassAsBean()
+        {
+            Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(
+                "IOCCTest.TestData.AbstractClass.cs"));
+            IOCCDiagnostics diagnostics;
+            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+                "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
+            {
+                diagnostics = new DiagnosticBuilder(stream).Diagnostics;
+                
+            }
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            Assert.AreEqual(2, diagnostics.Groups["InvalidBean"].Errors.Count);
+
+        }
+
+        [TestMethod]
+        public void ShouldFilterTypesBasedOnProfileAndOS()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.CheckProfileAndOs4", ""),"IOCCTest.TestData.CheckProfileAndOs4"}
+                ,{("IOCCTest.TestData.Interface1", ""),"IOCCTest.TestData.CheckProfileAndOs4"}
+                ,{("IOCCTest.TestData.CheckProfileAndOs5", "mike"),"IOCCTest.TestData.CheckProfileAndOs5"}
+                ,{("IOCCTest.TestData.Interface1", "mike"),"IOCCTest.TestData.CheckProfileAndOs5"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", IOCC.OS.Windows);
+        }
+        [TestMethod]
         public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
@@ -95,27 +126,29 @@ namespace IOCCTest
         [TestMethod]
         public void OutputTypeMap_NotReallyATest()
         {
-            void BuildAndOutputTypeMap(string resourceName)
+            void BuildAndOutputTypeMap(string resourceName, string profile, IOCC.OS os)
             {
                 Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
                 IOCCDiagnostics diagnostics = new IOCCDiagnostics();
                 var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                  new List<Assembly>() { assembly }, ref diagnostics);
+                  new List<Assembly>() { assembly }, ref diagnostics, profile, os);
                 string str = map.OutputToString();
                 System.Diagnostics.Debug.WriteLine(str);
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.DuplicateInterfaces.cs");
+            BuildAndOutputTypeMap("IOCCTest.TestData.CheckProfileAndOs.cs", "someProfile", IOCC.OS.Windows);
         }
 
-        private void CommonTypeMapTest(string testDataName, IDictionary<(string, string), string> mapExpected)
+        private void CommonTypeMapTest(string testDataName
+          , IDictionary<(string, string), string> mapExpected
+          , string profile = IOCC.DEFAULT_PROFILE, IOCC.OS os = IOCC.OS.Any)
         {
             string codeText = GetResource(testDataName);
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             IOCCDiagnostics diagnostics = new IOCCDiagnostics();
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics);
+                new List<Assembly>() { assembly }, ref diagnostics, profile, os);
             Assert.AreEqual(mapExpected.Keys.Count, map.Keys.Count);
             CompareMaps(map, mapExpected);
         }

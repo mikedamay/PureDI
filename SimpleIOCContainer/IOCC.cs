@@ -21,6 +21,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO change "dependency" to "bean"
     // TODO check arguments' validity for externally facing methods
     // TODO unit test to validate XML
+    // TODO run code analysis
     /// <summary>
     /// 
     /// </summary>
@@ -108,7 +109,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             getOrCreateObjectTreeCalled = true;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly, ref diagnostics);
-            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies, ref diagnostics);
+            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+              , ref diagnostics, profile, os);
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {

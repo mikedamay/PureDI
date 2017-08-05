@@ -9,21 +9,24 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public IDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
-          , ref IOCCDiagnostics diagnostics)
+          , ref IOCCDiagnostics diagnostics, string profile, IOCC.OS os)
         {
             IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var query
-                  = assembly.GetTypes().Where(d => d.TypeIsADependency()).SelectMany(d
+                  = assembly.GetTypes().Where(d => d.TypeIsADependency(profile, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                   .Select(i => ((i, d.GetDependencyName()), d)));
                 IList<((Type, string), Type)> list = query.ToList();
                 foreach (((Type dependencyInterface, string name), Type dependencyImplementation) in query)
                 {
-                    if (!dependencyImplementation.IsClass)
+                    if (dependencyImplementation.IsAbstract)
                     {
-                        LogWarning($"{dependencyImplementation.Name} is not a class");
+                        IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
+                        dynamic diag = group.CreateDiagnostic();
+                        diag.AbstractClass = dependencyImplementation.FullName;
+                        group.Add(diag);
                     }
                     else
                     {
@@ -53,9 +56,18 @@ namespace com.TheDisappointedProgrammer.IOCC
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsADependency(this Type type)
+        public static bool TypeIsADependency(this Type type, string profile, IOCC.OS os)
         {
-            return type.GetCustomAttributes().Any(attr => attr is IOCCDependencyAttribute);
+            IOCCDependencyAttribute ida 
+              = (IOCCDependencyAttribute)type.GetCustomAttributes()
+              .FirstOrDefault(attr => attr is IOCCDependencyAttribute);
+            return 
+              ida != null 
+              && (profile == IOCC.DEFAULT_PROFILE
+              || ida.Profile == IOCC.DEFAULT_PROFILE
+              || profile == ida.Profile)
+              && (ida.OS == IOCC.OS.Any 
+              || ida.OS == os);
         }
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)
         {
@@ -69,20 +81,6 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static string GetDependencyName(this Type dependency)
         {
             return dependency.GetCustomAttributes<IOCCDependencyAttribute>().Select(attr => attr.Name).FirstOrDefault();
-        }
-        /// <summary>
-        /// returns all base classes and interfaces from which a class inherits
-        /// either directly or indirectly
-        /// </summary>
-        /// <param name="dependency">typically a class marked as [IOCCDependency] but can be any class</param>
-        /// <returns>all direct and indirect base classes and interfaces</returns>
-        public static IEnumerable<Type> GetAncestors(this Type dependency)
-        {
-                foreach (Type dependencyInterface in dependency.GetInterfaces())
-                {
-                    yield return dependencyInterface;
-                    GetAncestors(dependencyInterface);
-                }
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {

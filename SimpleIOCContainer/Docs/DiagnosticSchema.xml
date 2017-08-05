@@ -21,17 +21,16 @@
     <severity>Warning</severity>
     <intro>A piece of code has been marked as a bean (with 
           the "IOCCBean" attribute) which is not capable of being 
-          a bean.  Only concrete classes can be beans.</intro>
+          a bean.  The only types that can be beans are concrete classes.</intro>
     <userGuide>Typically this problem occurs with abstract 
                classes.  Note that although the bean reference 
                where the injection takes place may be specified as a base
                class or interface, the "IOCCBean" attribute should be applied 
                only to the concrete implementation, not to a parent 
                or interface</userGuide>
-    <template>incorrectly annotated base class: {BaseClass}, candidate class for annotation: {CandidateBean}</template>
+    <template>{AbstractClass} is an abstract class</template>
     <artefacts>
-      <BaseClass/>
-      <CandidateBean/>        
+      <AbstractClass/>
     </artefacts>
   </group>
 </diagnosticSchema>

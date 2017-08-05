@@ -60,6 +60,8 @@
     <EmbeddedResource Include="TestData\NestedClasses.cs" />
     <EmbeddedResource Include="TestData\DuplicateInterfaces.cs" />
     <EmbeddedResource Include="TestData\BlankAssembly.cs" />
+    <EmbeddedResource Include="TestData\AbstractClass.cs" />
+    <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
