@@ -22,6 +22,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO check arguments' validity for externally facing methods
     // TODO unit test to validate XML
     // TODO run code analysis
+    // TODO make Diagnostics constructor private
     /// <summary>
     /// 
     /// </summary>

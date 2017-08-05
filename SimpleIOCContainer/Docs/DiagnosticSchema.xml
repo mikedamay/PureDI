@@ -10,10 +10,12 @@
                interface or base class then use the bean's "name" 
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</userGuide>
-    <template>occurrence 1: {diagnosticEntry.occurrence1}, occurrence2: {diagnosticEntry.occurrence2}</template>
+    <template>attempt to add duplicate dependency: {Interface1} {BeanName}, attempting to add ${NewBean}, when ${ExistingBean} is already included</template>
     <artefacts>
-      <Occurrence1/>
-      <Occurrence2/>
+      <Interface1/>
+      <NewBean/>
+      <BeanName/>
+      <ExistingBean/>
     </artefacts>
   </group>
   <group>

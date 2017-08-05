@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using com.TheDisappointedProgrammer.IOCC;
@@ -100,12 +99,22 @@ namespace IOCCTest
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
-                {("IOCCTest.TestData.CheckProfileAndOs4", ""),"IOCCTest.TestData.CheckProfileAndOs4"}
-                ,{("IOCCTest.TestData.Interface1", ""),"IOCCTest.TestData.CheckProfileAndOs4"}
-                ,{("IOCCTest.TestData.CheckProfileAndOs5", "mike"),"IOCCTest.TestData.CheckProfileAndOs5"}
-                ,{("IOCCTest.TestData.Interface1", "mike"),"IOCCTest.TestData.CheckProfileAndOs5"}
+                {("IOCCTest.TestData.CheckProfileAndOs2", ""),"IOCCTest.TestData.CheckProfileAndOs2"}
+                ,{("IOCCTest.TestData.CheckProfileAndOs3", ""),"IOCCTest.TestData.CheckProfileAndOs3"}
+                ,{("IOCCTest.TestData.CheckProfileAndOs8", ""),"IOCCTest.TestData.CheckProfileAndOs8"}
+                ,{("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
             CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", IOCC.OS.Windows);
+        }
+        [TestMethod]
+        public void ShouldIgnoreNamedProfileAndOsWhenNoParamsPassed()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected
+              , IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
         [TestMethod]
         public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
@@ -115,6 +124,24 @@ namespace IOCCTest
             };
             CommonTypeMapTest("IOCCTest.TestData.BlankAssembly.cs", mapExpected);
             
+        }
+
+        [TestMethod]
+        public void ShouldWarnOfDuplicateBeans()
+        {
+            Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(
+                "IOCCTest.TestData.DuplicateBeans.cs"));
+            IOCCDiagnostics diagnostics;
+            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+                "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
+            {
+                diagnostics = new DiagnosticBuilder(stream).Diagnostics;
+
+            }
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            Assert.AreEqual(4, map.Keys.Count);
+            Assert.AreEqual(1, diagnostics.Groups["DuplicateBean"].Errors.Count);
         }
         /// <summary>
         /// usage:
@@ -137,7 +164,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.CheckProfileAndOs.cs", "someProfile", IOCC.OS.Windows);
+            BuildAndOutputTypeMap("IOCCTest.TestData.CheckProfileAndOs.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
 
         private void CommonTypeMapTest(string testDataName

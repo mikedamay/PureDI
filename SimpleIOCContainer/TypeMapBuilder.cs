@@ -32,15 +32,16 @@ namespace com.TheDisappointedProgrammer.IOCC
                     {
                         if (map.ContainsKey((dependencyInterface, name)))
                         {
-                            throw new Exception(
-                              $"attempt to add duplicate dependency {(dependencyInterface.FullName, name)}"
-                              + Environment.NewLine
-                              + $"attempting to add ${dependencyImplementation.FullName}"
-                              + Environment.NewLine
-                              + $"when ${(map[(dependencyInterface, name)] as Type).FullName} is already included");
+                            IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
+                            dynamic diag = group.CreateDiagnostic();
+                            diag.Interface1 = dependencyInterface.FullName;
+                            diag.BeanName = name;
+                            diag.NewBean = dependencyImplementation.FullName;
+                            diag.ExistingBean = (map[(dependencyInterface, name)] as Type).FullName;
+                            group.Add(diag);
+                            continue;
                         }
-                        map.Add((dependencyInterface, name), dependencyImplementation);
-                        
+                        map.Add((dependencyInterface, name), dependencyImplementation);                        
                     }
                 }
             }
@@ -63,8 +64,8 @@ namespace com.TheDisappointedProgrammer.IOCC
               .FirstOrDefault(attr => attr is IOCCDependencyAttribute);
             return 
               ida != null 
-              && (profile == IOCC.DEFAULT_PROFILE
-              || ida.Profile == IOCC.DEFAULT_PROFILE
+              && (
+              ida.Profile == IOCC.DEFAULT_PROFILE
               || profile == ida.Profile)
               && (ida.OS == IOCC.OS.Any 
               || ida.OS == os);

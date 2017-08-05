@@ -62,6 +62,7 @@
     <EmbeddedResource Include="TestData\BlankAssembly.cs" />
     <EmbeddedResource Include="TestData\AbstractClass.cs" />
     <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
+    <EmbeddedResource Include="TestData\DuplicateBeans.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
