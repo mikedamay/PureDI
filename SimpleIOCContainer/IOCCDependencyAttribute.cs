@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public class IOCCDependencyAttribute : Attribute
     {
         public string Name = "";

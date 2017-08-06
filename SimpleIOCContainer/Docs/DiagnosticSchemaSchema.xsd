@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="diagnosticSchema">
+      <xs:complexType>
+        <xs:sequence>
+        <xs:element name="group" maxOccurs="unbounded">
+          <xs:complexType>
+          <xs:sequence>
+            <xs:element name="causeCode" type ="xs:string"/>
+            <xs:element name="severity">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="Error"/>
+                  <xs:enumeration value="Warning"/>
+                  <xs:enumeration value="Info"/>
+                </xs:restriction>           
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="intro" type ="xs:string"/>
+            <xs:element name="userGuide" type ="xs:string"/>
+            <xs:element name="template" type ="xs:string"/>
+            <xs:element name="artefacts">
+              <xs:complexType>
+                <xs:sequence minOccurs="0">
+                  <xs:any processContents="skip" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>      
+          </xs:complexType>
+        </xs:element>
+        </xs:sequence>        
+      </xs:complexType>
+  </xs:element>
+</xs:schema>

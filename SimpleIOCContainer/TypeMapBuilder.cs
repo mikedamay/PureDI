@@ -21,6 +21,12 @@ namespace com.TheDisappointedProgrammer.IOCC
                 IList<((Type, string), Type)> list = query.ToList();
                 foreach (((Type dependencyInterface, string name), Type dependencyImplementation) in query)
                 {
+                    if (dependencyImplementation.IsValueType && dependencyInterface != dependencyImplementation)
+                    {
+                        // this is a struct and dependencyInterface is System.ValueType which
+                        // should be hidden, so we ignore it
+                        continue;
+                    }
                     if (dependencyImplementation.IsAbstract)
                     {
                         IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];

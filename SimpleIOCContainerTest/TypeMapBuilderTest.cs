@@ -143,6 +143,16 @@ namespace IOCCTest
             Assert.AreEqual(4, map.Keys.Count);
             Assert.AreEqual(1, diagnostics.Groups["DuplicateBean"].Errors.Count);
         }
+        [TestMethod]
+        public void ShouldCreateTypeMapForStruct()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.StructDependency", ""),"IOCCTest.TestData.StructDependency"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.StructDependency.cs", mapExpected);
+
+        }
         /// <summary>
         /// usage:
         /// 1) change the resource name in the code below to refer to
@@ -164,7 +174,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.CheckProfileAndOs.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            BuildAndOutputTypeMap("IOCCTest.TestData.StructDependency.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
 
         private void CommonTypeMapTest(string testDataName

@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using com.TheDisappointedProgrammer.IOCC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -83,5 +87,45 @@ namespace IOCCTest
             string str = diags.ToString();
             Assert.IsTrue(str.Contains("testBaseClassType"));
          }
-   }
+        [TestMethod]
+        public void ShouldValidateDiagnosticSchema()
+        {
+            bool errorsAndWarnings = false;
+            void ValidateXml(XDocument xml, string xsdFilename)
+            {
+                XmlReaderSettings settings = new XmlReaderSettings();
+                XmlSchemaSet schemaSet = new XmlSchemaSet();
+
+                schemaSet.Add(string.Empty, xsdFilename);
+                settings.ValidationType = ValidationType.Schema;
+                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+                settings.ValidationEventHandler += ValidationCallback;
+
+                xml.Validate(schemaSet, ValidationCallback);
+            }
+
+            void ValidationCallback(object sender, ValidationEventArgs args)
+            {
+                if (args.Severity == XmlSeverityType.Warning)
+                {
+                    System.Diagnostics.Debug.WriteLine($"warning: {args.Exception.Message}");
+                    errorsAndWarnings = true;
+                }
+                else if (args.Severity == XmlSeverityType.Error)
+                {
+                    System.Diagnostics.Debug.WriteLine($"error: {args.Exception.Message}");
+                    errorsAndWarnings = true;
+                }
+            }
+            string schemaName
+                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+            using (Stream s
+                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+            {
+                XDocument doc = XDocument.Load(s);
+                ValidateXml(doc, "Docs/DiagnosticSchemaSchema.xsd");
+            }
+            Assert.IsFalse(errorsAndWarnings);
+        }
+    }
 }

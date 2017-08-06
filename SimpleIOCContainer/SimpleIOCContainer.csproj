@@ -58,5 +58,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\DiagnosticSchemaSchema.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
