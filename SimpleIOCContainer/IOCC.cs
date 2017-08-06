@@ -20,7 +20,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO handle dynamic types
     // TODO change "dependency" to "bean"
     // TODO check arguments' validity for externally facing methods
-    // TODO unit test to validate XML
+    // unit test to validate XML
     // TODO run code analysis
     // TODO make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures

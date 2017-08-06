@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using com.TheDisappointedProgrammer.IOCC;
@@ -168,7 +169,7 @@ namespace IOCCTest
                 Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
                 IOCCDiagnostics diagnostics = new IOCCDiagnostics();
                 var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                  new List<Assembly>() { assembly }, ref diagnostics, profile, os);
+                    new List<Assembly>() {assembly}, ref diagnostics, profile, os);
                 string str = map.OutputToString();
                 System.Diagnostics.Debug.WriteLine(str);
             }
@@ -176,7 +177,40 @@ namespace IOCCTest
             // for the specific test
             BuildAndOutputTypeMap("IOCCTest.TestData.StructDependency.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
-
+        /// <summary>
+        /// Not currently used.
+        /// wanted to run tests in another app domain.  Hoped to have access to the assembly
+        /// via reflection in this domain but that, not surprisingly, is not how it works.
+        /// would have to run the test in the other domain and drag back the results
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <returns></returns>
+        public (AppDomain, Assembly) CreateAssemblyInNewAppDomain(string resourceName)
+        {
+            AppDomain domain = null;
+            try
+            {
+                AppDomainSetup domainSetup = new AppDomainSetup();
+                domainSetup.ApplicationBase = Environment.CurrentDirectory;
+                Evidence evidence = AppDomain.CurrentDomain.Evidence;
+                domain = AppDomain.CreateDomain("newDomain", evidence, domainSetup);
+                // the magic here is that this assembly appears to be automatically loaded
+                // into the newly created domain
+                Type type = typeof(Proxy);
+                var value = (Proxy) domain.CreateInstanceAndUnwrap(
+                    type.Assembly.FullName, type.FullName);
+                Assembly assemblyUnderTest = value.GetAssemblyCount(resourceName);
+                return (domain, assemblyUnderTest);
+            }
+            catch (Exception)
+            {
+                if (domain != null)
+                {
+                    AppDomain.Unload(domain);
+                }
+                throw;
+            }
+        }
         private void CommonTypeMapTest(string testDataName
           , IDictionary<(string, string), string> mapExpected
           , string profile = IOCC.DEFAULT_PROFILE, IOCC.OS os = IOCC.OS.Any)
@@ -200,7 +234,7 @@ namespace IOCCTest
         /// </remarks>
         /// <param name="resourceName">IOCCTest.TestData.xxx.cs</param>
         /// <returns>complete code capable of building an assembly</returns>
-        private static string GetResource(string resourceName)
+        public static string GetResource(string resourceName)
         {
             using (Stream s
                 = typeof(TypeMapBuilderTest).Assembly.GetManifestResourceStream(resourceName))
@@ -271,5 +305,22 @@ namespace IOCCTest
             return sb.ToString();
         }
 
+    }
+    public class Proxy : MarshalByRefObject
+    {
+        public Assembly GetAssemblyCount(string resourceName)
+        {
+            try
+            {
+                Assembly assembly = new AssemblyMaker().MakeAssembly("class xx {}");
+                  //TypeMapBuilderTest.GetResource(resourceName));
+                return assembly;
+            }
+            catch (Exception ex)
+            {
+                return null;
+                // throw new InvalidOperationException(ex);
+            }
+        }
     }
 }
