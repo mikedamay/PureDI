@@ -154,6 +154,26 @@ namespace IOCCTest
             CommonTypeMapTest("IOCCTest.TestData.StructDependency.cs", mapExpected);
 
         }
+
+        [TestMethod]
+        public void ShouldRecognizeConnectionsAcrossAssemblies()
+        {
+            Assembly assemblyInterface = new AssemblyMaker().MakeAssembly(GetResource(
+                "IOCCTest.TestData.InterfaceClass.cs"), TargetAssemblyName : "Mike");
+            Assembly assemblyImplementation = new AssemblyMaker().MakeAssembly(GetResource(
+                "IOCCTest.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"});
+            IOCCDiagnostics diagnostics;
+            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+                "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
+            {
+                diagnostics = new DiagnosticBuilder(stream).Diagnostics;
+
+            }
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assemblyInterface, assemblyImplementation }
+              , ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            Assert.AreEqual(3, map.Keys.Count);
+        }
         /// <summary>
         /// usage:
         /// 1) change the resource name in the code below to refer to
@@ -316,7 +336,7 @@ namespace IOCCTest
                   //TypeMapBuilderTest.GetResource(resourceName));
                 return assembly;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
                 // throw new InvalidOperationException(ex);

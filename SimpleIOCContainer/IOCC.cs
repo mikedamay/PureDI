@@ -25,6 +25,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures
     // TODO use immutable collections
+    // TODO license
     /// <summary>
     /// 
     /// </summary>

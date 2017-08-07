@@ -66,6 +66,8 @@
     <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
     <EmbeddedResource Include="TestData\DuplicateBeans.cs" />
     <EmbeddedResource Include="TestData\StructDependency.cs" />
+    <EmbeddedResource Include="TestData\ImplementationClass.cs" />
+    <EmbeddedResource Include="TestData\InterfaceClass.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
