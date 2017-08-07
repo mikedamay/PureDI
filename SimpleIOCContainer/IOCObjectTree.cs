@@ -42,25 +42,25 @@ namespace com.TheDisappointedProgrammer.IOCC
         private object CreateObjectTree(Type rootType)
         {
             object rootObject = Construct(rootType);
-            FieldInfo[] fieldInfos = rootType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            FieldInfo[] fieldInfos = rootType.GetFields(
+              BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var fieldInfo in fieldInfos)
             {
                 if (fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
                 {
-                    (Type, string) dependencyKey =
+                    (Type, string) beanId =
                         (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME);
-                    if (typeMap.ContainsKey(dependencyKey))
+                    if (typeMap.ContainsKey(beanId))
                     {
-                        Type implementation = typeMap[dependencyKey];
-                        object dependency = Construct(implementation);
-                        fieldInfo.SetValue(rootObject, dependency);
+                        Type implementation = typeMap[beanId];
+                        object bean = CreateObjectTree(implementation);
+                        fieldInfo.SetValue(rootObject, bean);
                     }
 
                 }
             }
             return rootObject;
         }
-        ///
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="rootType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <exception>InvalidArgumentException</exception>  

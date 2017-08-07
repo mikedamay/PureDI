@@ -1,15 +1,24 @@
 ﻿using System;
 using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest
 {
-    [IOCCDependency]
     [TestClass]
     public class IOCCTest
     {
         [TestMethod]
-        public void RootClassShouldHaveNoArgConstructor()
+        public void SelfTest()
+        {
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
+            TestRoot twf 
+              = iocc.GetOrCreateObjectTree<TestRoot>();
+            Assert.AreNotEqual(null, twf.test);
+        }
+        [TestMethod]
+        public void ShouldHaveRootClassWithNoArgConstructor()
         {
             void DoTest()
             {
@@ -17,15 +26,23 @@ namespace IOCCTest
             }
             Assert.ThrowsException<Exception>((System.Action)DoTest);
         }
-
         [TestMethod]
-        public void ShouldBuildTreeFromWellFormedFields()
+        public void ShouldInjectIntoDeepHierarchy()
         {
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
-            TestRoot twf 
-              = iocc.GetOrCreateObjectTree<TestRoot>();
-            Assert.AreNotEqual(null, twf.test);
+            DeepHierahy root = IOCC.Instance.GetOrCreateObjectTree<DeepHierahy>();
+            Assert.IsNotNull(root);
+            Assert.IsNotNull(root?.GetResults().Level2a);
+            Assert.IsNotNull(root?.GetResults().Level2b);
+            Assert.IsNotNull(root?.GetResults().Level2a?.GetResults().Level2a3a);
+            Assert.IsNotNull(root?.GetResults().Level2a?.GetResults().Level2a3b);
+            Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
+            Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
+        }
+        [Ignore]
+        [TestMethod]
+        public void ShouldWorkWithCyclicalDependencies()
+        {
+            Assert.Fail();
         }
     }
 

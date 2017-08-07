@@ -9,7 +9,21 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class DiagnosticBuilder
     {
-        /// <param name="diagnosticSchema">XML Text which populates the diagnostics object</param>
+        public DiagnosticBuilder()
+        {
+            string schemaName
+                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+            using (Stream s
+                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+            {
+                Diagnostics = CreateDiagnosticsFromSchema(s);
+            }
+        }
+        /// <param name="diagnosticSchema">
+        ///     XML Text which populates the diagnostics object
+        ///     e.g. typeof(IOCC).Assembly.GetManifestResourceStream(
+        ///          "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml")
+        /// </param>
         public DiagnosticBuilder(Stream diagnosticSchema)
         {
             Diagnostics = CreateDiagnosticsFromSchema(diagnosticSchema);

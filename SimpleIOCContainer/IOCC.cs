@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 
 namespace com.TheDisappointedProgrammer.IOCC
@@ -91,7 +93,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             var rootObject = GetOrCreateObjectTree<TRootType>(ref diagnostics, profile);
             if (System.Diagnostics.Debugger.IsAttached)
             {
