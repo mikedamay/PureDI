@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,14 +39,36 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
-        [Ignore]
-        [TestMethod]
+        [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalDependencies()
         {
-            Assert.Fail();
+            // this should not run forever
+            CyclicalDependency cd = IOCC.Instance.GetOrCreateObjectTree<CyclicalDependency>();
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd?.GetResults().Child);
+            Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
+            Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
+            Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
+        }
+        [TestMethod]
+        public void ShouldWorkWithCyclicalInterfaces()
+        {
+            ParentWithInterface cd 
+              = IOCC.Instance.GetOrCreateObjectTree<ParentWithInterface>();
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd.GetResults().IChild);
+            Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForCyclicalBaseClasses()
+        {
+            BaseClass cd 
+              = IOCC.Instance.GetOrCreateObjectTree<BaseClass>();
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd?.GetResults().ChildClass);
+            Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
         }
     }
-
     internal class TestRoot
     {
         [IOCCInjectedDependency]

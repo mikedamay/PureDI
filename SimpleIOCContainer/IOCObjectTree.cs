@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,7 +29,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics)
         {
-            object rootObject = CreateObjectTree(typeof(TRootType));
+            IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
+                new Dictionary<(Type, string), object>();
+            object rootObject = Construct(typeof(TRootType));
+            mapObjectsCreatedSoFar[(typeof(TRootType), IOCC.DEFAULT_DEPENDENCY_NAME)] = rootObject;
+            CreateObjectTree(rootObject, mapObjectsCreatedSoFar);
             if (!(rootObject is TRootType))
             {
                 throw new Exception($"object created by IOC container is not {typeof(TRootType).Name} as expected");
@@ -39,27 +44,40 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// see documentation for GetOrCreateObjectTree
         /// </summary>
-        private object CreateObjectTree(Type rootType)
+        private object CreateObjectTree(object bean
+          , IDictionary<(Type type, string beanName)
+          , object> mapObjectsCreatedSoFar)
         {
-            object rootObject = Construct(rootType);
-            FieldInfo[] fieldInfos = rootType.GetFields(
+            FieldInfo[] fieldInfos = bean.GetType().GetFields(
               BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var fieldInfo in fieldInfos)
             {
                 if (fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
                 {
-                    (Type, string) beanId =
-                        (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME);
+                    (Type type, string beanName) beanId =
+                      (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME);
                     if (typeMap.ContainsKey(beanId))
                     {
                         Type implementation = typeMap[beanId];
-                        object bean = CreateObjectTree(implementation);
-                        fieldInfo.SetValue(rootObject, bean);
+                        object memberBean;
+                        if (mapObjectsCreatedSoFar.ContainsKey((implementation, beanId.beanName)))
+                        {
+                            memberBean = mapObjectsCreatedSoFar[(implementation, beanId.beanName)];
+                            fieldInfo.SetValue(bean, memberBean);
+                        }
+                        else
+                        {
+                            // reference has not yet been resolved
+                            memberBean = Construct(implementation);
+                            mapObjectsCreatedSoFar[(implementation, beanId.beanName)] = memberBean;
+                            fieldInfo.SetValue(bean, memberBean);
+                            CreateObjectTree(memberBean, mapObjectsCreatedSoFar);
+                        }
                     }
 
                 }
             }
-            return rootObject;
+            return bean;
         }
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="rootType">a concrete clasws typically part of the object tree being instantiated</param>

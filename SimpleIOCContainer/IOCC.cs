@@ -28,6 +28,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO improve names of queries assigned from complex linq structures
     // TODO use immutable collections
     // TODO license
+    // TODO An optional name should be passed to IOCC.GetOrCreateDependencyTree
     /// <summary>
     /// 
     /// </summary>
