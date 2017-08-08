@@ -91,7 +91,7 @@ namespace IOCCTest
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
-            Assert.AreEqual(2, diagnostics.Groups["InvalidBean"].Errors.Count);
+            Assert.AreEqual(2, diagnostics.Groups["InvalidBean"].Occurrences.Count);
 
         }
 
@@ -142,7 +142,7 @@ namespace IOCCTest
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
             Assert.AreEqual(4, map.Keys.Count);
-            Assert.AreEqual(1, diagnostics.Groups["DuplicateBean"].Errors.Count);
+            Assert.AreEqual(1, diagnostics.Groups["DuplicateBean"].Occurrences.Count);
         }
         [TestMethod]
         public void ShouldCreateTypeMapForStruct()

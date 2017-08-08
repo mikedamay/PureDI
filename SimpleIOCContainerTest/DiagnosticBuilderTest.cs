@@ -67,7 +67,7 @@ namespace IOCCTest
                 diags.Groups["InvalidBean"].Add(diag);
             }
             Assert.AreEqual("testBaseClassType"
-                , ((dynamic)diags.Groups["InvalidBean"].Errors[0]).AbstractClass);
+                , ((dynamic)diags.Groups["InvalidBean"].Occurrences[0]).AbstractClass);
         }
         [TestMethod]
         public void ShouldReturnSubstitutionsInString()

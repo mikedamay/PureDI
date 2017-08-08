@@ -35,7 +35,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             public string UserGuide { get; }
             public string DiagnosticTemplate { get; }
             public ISet<string> ArtefactSchema { get; }
-            public List<Diagnostic> Errors { get; } = new List<Diagnostic>();
+            public List<Diagnostic> Occurrences { get; } = new List<Diagnostic>();
 
             public Diagnostic CreateDiagnostic()
             {
@@ -44,12 +44,17 @@ namespace com.TheDisappointedProgrammer.IOCC
 
             public void Add(Diagnostic diag)
             {
-                Errors.Add(diag);
+                Occurrences.Add(diag);
             }
         }
 
         public IDictionary<string, Group> Groups { get; }
           = new Dictionary<string, Group>();
+
+        public bool HasErrors => Groups.Values.Where(
+          g => g.Severity == Severity.Error).Any(g => g.Occurrences.Count > 0);
+        public bool HasWarnings => Groups.Values.Where(
+          g => g.Severity == Severity.Warning).Any(g => g.Occurrences.Count > 0);
 
         private class DiagnosticImpl : Diagnostic
         {
@@ -73,7 +78,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             StringBuilder sb = new StringBuilder();
             foreach (Group group in Groups.Values)
             {
-                if (group.Errors.Count == 0)
+                if (group.Occurrences.Count == 0)
                 {
                     continue;
                 }
@@ -83,7 +88,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 sb.Append(Environment.NewLine);
                 sb.Append(group.Intro);
                 sb.Append(Environment.NewLine);
-                foreach (dynamic diag in group.Errors)
+                foreach (dynamic diag in group.Occurrences)
                 {
                     sb.Append(MakeSubstitutions(group.DiagnosticTemplate, diag));
                     sb.Append(Environment.NewLine);

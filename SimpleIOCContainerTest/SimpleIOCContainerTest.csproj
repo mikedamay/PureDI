@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
     <Compile Include="IOCCTest.cs" />
+    <Compile Include="IOCCTest2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DiagnosticBuilderTest.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="TestCode\CyclicalDependency.cs" />
     <Compile Include="TestCode\DeepHierahyWithNames.cs" />
     <Compile Include="TestCode\DeepHierahy.cs" />
+    <Compile Include="TestCode\MyProps.cs" />
+    <Compile Include="TestCode\ReadOnlyFields.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

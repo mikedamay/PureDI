@@ -22,17 +22,30 @@
     <causeCode>InvalidBean</causeCode>
     <severity>Warning</severity>
     <intro>A piece of code has been marked as a bean (with 
-          the "IOCCBean" attribute) which is not capable of being 
-          a bean.  The only types that can be beans are concrete classes.</intro>
+      the "IOCCBean" attribute) which is not capable of being 
+      a bean.  The only types that can be beans are concrete classes.</intro>
     <userGuide>Typically this problem occurs with abstract 
-               classes.  Note that although the bean reference 
-               where the injection takes place may be specified as a base
-               class or interface, the "IOCCBean" attribute should be applied 
-               only to the concrete implementation, not to a parent 
-               or interface</userGuide>
+      classes.  Note that although the bean reference 
+      where the injection takes place may be specified as a base
+      class or interface, the "IOCCBean" attribute should be applied 
+      only to the concrete implementation, not to a parent 
+      or interface</userGuide>
     <template>{AbstractClass} is an abstract class</template>
     <artefacts>
       <AbstractClass/>
+    </artefacts>
+  </group>  
+  <group>
+    <causeCode>ReadOnlyProperty</causeCode>
+    <severity>Warning</severity>
+    <intro>An attempt has been made to set the value of an auto property.  The container
+           cannot do this.</intro>
+    <userGuide>The container cannot set the value of an auto property as the
+               operation is not supported by reflection.</userGuide>
+    <template>{Member} is an auto property on {Class}</template>
+    <artefacts>
+      <Class/>
+      <Member/>
     </artefacts>
   </group>
 </diagnosticSchema>

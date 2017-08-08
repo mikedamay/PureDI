@@ -4,7 +4,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     public class IOCCException : Exception
     {
-        public IOCCException(string message) : base(message)
+         public IOCCException(string message) : base(message)
         {
         }
 
@@ -12,5 +12,18 @@ namespace com.TheDisappointedProgrammer.IOCC
           : base(message, innerException)
         {
         }
+   }
+
+    public class IOCCInternalException : Exception
+    {
+        public IOCCInternalException(string message) : base(message)
+        {
+        }
+
+        public IOCCInternalException(string message, Exception innerException)
+          : base(message, innerException)
+        {
+        }
+       
     }
 }

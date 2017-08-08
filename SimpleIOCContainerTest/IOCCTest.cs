@@ -39,6 +39,12 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
+        [TestMethod]
+        public void ShouldBuildTreeWithSelfReferentialClass()
+        {
+            SelfReferring sr = IOCC.Instance.GetOrCreateObjectTree<SelfReferring>();
+            Assert.IsNotNull(sr);
+        }
         [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalDependencies()
         {
@@ -92,6 +98,7 @@ namespace IOCCTest
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
         }
+
         [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {

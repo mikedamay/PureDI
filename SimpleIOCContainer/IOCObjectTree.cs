@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 new Dictionary<(Type, string), object>();
             object rootObject = Construct(typeof(TRootType));
             mapObjectsCreatedSoFar[(typeof(TRootType), IOCC.DEFAULT_DEPENDENCY_NAME)] = rootObject;
-            CreateObjectTree(rootObject, mapObjectsCreatedSoFar);
+            CreateObjectTree(rootObject, mapObjectsCreatedSoFar, diagnostics);
             if (!(rootObject is TRootType))
             {
                 throw new Exception($"object created by IOC container is not {typeof(TRootType).Name} as expected");
@@ -44,35 +45,43 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// see documentation for GetOrCreateObjectTree
         /// </summary>
-        private object CreateObjectTree(object bean
-          , IDictionary<(Type type, string beanName)
-          , object> mapObjectsCreatedSoFar)
+        private object CreateObjectTree(object bean, IDictionary<(Type type, string beanName), object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics)
         {
-            FieldInfo[] fieldInfos = bean.GetType().GetFields(
-              BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MemberInfo[] fieldInfos = bean.GetType().GetMembers(
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var fieldInfo in fieldInfos)
             {
                 IOCCInjectedDependencyAttribute attr;
-                if ((attr =fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>()) != null)
+                if ((attr = fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>()) != null)
                 {
+                    System.Diagnostics.Debug.Assert(fieldInfo is FieldInfo || fieldInfo is PropertyInfo);
                     (Type type, string beanName) beanId =
-                      (fieldInfo.FieldType, attr.Name);
+                        (fieldInfo.GetPropertyOrFieldType(), attr.Name);
                     if (typeMap.ContainsKey(beanId))
                     {
                         Type implementation = typeMap[beanId];
                         object memberBean;
-                        if (mapObjectsCreatedSoFar.ContainsKey((implementation, beanId.beanName)))
+                        if (mapObjectsCreatedSoFar.ContainsKey((implementation, beanId.beanName))
+                          )
                         {
                             memberBean = mapObjectsCreatedSoFar[(implementation, beanId.beanName)];
                             fieldInfo.SetValue(bean, memberBean);
                         }
+                        else if (!fieldInfo.CanWriteToProperty(bean))
+                        {
+                            dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
+                            diag.Class = bean.GetType().FullName;
+                            diag.Member = fieldInfo.Name;
+                            diagnostics.Groups["ReadOnlyProperty"].Add(diag);
+                        }
                         else
                         {
+                            object existingMember = fieldInfo.GetValue(bean);
                             // reference has not yet been resolved
                             memberBean = Construct(implementation);
                             mapObjectsCreatedSoFar[(implementation, beanId.beanName)] = memberBean;
                             fieldInfo.SetValue(bean, memberBean);
-                            CreateObjectTree(memberBean, mapObjectsCreatedSoFar);
+                            CreateObjectTree(memberBean, mapObjectsCreatedSoFar, diagnostics);
                         }
                     }
 
@@ -94,6 +103,63 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return noArgConstructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, new object[0], null);
 
+        }
+    }
+
+    internal static class IOCCExtensions
+    {
+        public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
+        {
+            System.Diagnostics.Debug.Assert( memberInfo is FieldInfo || memberInfo is PropertyInfo);
+            return (memberInfo as FieldInfo)?.FieldType ?? (memberInfo as PropertyInfo).PropertyType;
+        }
+
+        public static void SetValue(this MemberInfo memberInfo, object bean, object memberBean)
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo field:
+                    field.SetValue(bean, memberBean);
+                    break;
+                case PropertyInfo property:
+                    property.SetValue(bean, memberBean);
+                    break;
+                default:
+                    throw new IOCCInternalException(
+                      $"GetValue extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
+                      , null);
+            }
+        }
+
+        public static object GetValue(this MemberInfo memberInfo, object bean)
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo field:
+                    return field.GetValue(bean);
+                case PropertyInfo property:
+                    return property.GetValue(bean);
+                default:
+                    throw new IOCCInternalException(
+                      $"GetValue extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
+                      , null);
+            }
+        }
+
+        public static bool CanWriteToProperty(this MemberInfo memberInfo, object bean)
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo field:
+                    return true;
+                case PropertyInfo property:
+                    return property.CanWrite;
+                default:
+                    throw new IOCCInternalException(
+                      $"CanWrite extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
+                      , null);
+
+            }
         }
     }
 }

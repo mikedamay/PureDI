@@ -4,6 +4,17 @@ using com.TheDisappointedProgrammer.IOCC;
 namespace IOCCTest.TestCode
 {
     [IOCCDependency]
+    public class SelfReferring : IResultGetter
+    {
+        [IOCCInjectedDependency] private SelfReferring child;
+        public dynamic GetResults()
+        {
+            dynamic eo = new ExpandoObject();
+            eo.Child = child;
+            return eo;
+        }
+    }
+    [IOCCDependency]
     public class CyclicalDependency : IResultGetter
     {
         [IOCCInjectedDependency]

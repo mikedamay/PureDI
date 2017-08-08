@@ -7,11 +7,12 @@ using System.Reflection;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    // TODO guard against circular references
+    // TODO warning when a field or property has already been initialised
+    // DONE guard against circular references - Done
     // TODO handle structs
     // TODO handle properties
     // TODO object factories
-    // TODO handle multiple assemblies
+    // DONE handle multiple assemblies - Done
     // TODO references held in tuples
     // TODO references held in embedded structs 
     // TODO references held as objects
@@ -22,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO handle dynamic types
     // TODO change "dependency" to "bean"
     // TODO check arguments' validity for externally facing methods
-    // unit test to validate XML
+    // DONE unit test to validate XML - Done
     // TODO run code analysis
     // TODO make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures
@@ -31,6 +32,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO An optional name should be passed to IOCC.GetOrCreateDependencyTree
     // TODO address static fields and beans.  Beans are invalid or maybe not
     // TODO readonly fields
+    // TODO look at MEF implementations - heard on dnr 8-8-17
+    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     /// <summary>
     /// 
     /// </summary>
@@ -98,7 +101,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            var rootObject = GetOrCreateObjectTree<TRootType>(ref diagnostics, profile);
+            var rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 System.Diagnostics.Debug.Write(diagnostics);
@@ -109,12 +112,19 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return rootObject;
         }
+
+        public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics
+            , string profile = DEFAULT_PROFILE)
+        {
+            diagnostics = new DiagnosticBuilder().Diagnostics;
+            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
+        }
         /// <summary>
         /// <see cref="GetOrCreateObjectTree"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
-        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics
+        public TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
             , string profile = DEFAULT_PROFILE)
         {
             getOrCreateObjectTreeCalled = true;
