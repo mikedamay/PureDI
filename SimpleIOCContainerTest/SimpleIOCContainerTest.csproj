@@ -68,7 +68,9 @@
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\ImplementationClass.cs" />
     <EmbeddedResource Include="TestData\InterfaceClass.cs" />
+    <Compile Include="TestCode\CyclicalDependencyWithNames.cs" />
     <Compile Include="TestCode\CyclicalDependency.cs" />
+    <Compile Include="TestCode\DeepHierahyWithNames.cs" />
     <Compile Include="TestCode\DeepHierahy.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>

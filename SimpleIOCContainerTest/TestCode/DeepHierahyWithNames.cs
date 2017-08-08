@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using com.TheDisappointedProgrammer.IOCC;
 
-namespace IOCCTest.TestCode
+namespace IOCCTest.TestCode.WithNames
 {
     public interface IResultGetter
     {
@@ -11,9 +11,9 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     public class DeepHierahy : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2a")]
         private Level2a level2a;
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2b")]
         private Level2b level2b;
 
         public dynamic GetResults()
@@ -24,12 +24,12 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCDependency(Name="level2b")]
     internal class Level2b : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2b3a")]
         private Level2b3a level2b3a;
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2b3b")]
         private Level2b3b level2b3b;
         public dynamic GetResults()
         {
@@ -39,23 +39,23 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-
-    [IOCCDependency]
+    
+    [IOCCDependency(Name="level2b3a")]
     internal class Level2b3a
     {
     }
 
-    [IOCCDependency]
+    [IOCCDependency(Name="level2b3b")]
     internal class Level2b3b
     {
     }
 
-    [IOCCDependency]
+    [IOCCDependency(Name = "level2a")]
     internal class Level2a : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2a3a")]
         private Level2a3a level2a3a;
-        [IOCCInjectedDependency]
+        [IOCCInjectedDependency(Name="level2a3b")]
         private Level2a3b level2a3b;
         public dynamic GetResults()
         {
@@ -65,11 +65,11 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCDependency(Name="level2a3a")]
     internal class Level2a3a
     {
     }
-    [IOCCDependency]
+    [IOCCDependency(Name="level2a3b")]
     internal class Level2a3b
     {
     }

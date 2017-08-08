@@ -52,10 +52,11 @@ namespace com.TheDisappointedProgrammer.IOCC
               BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var fieldInfo in fieldInfos)
             {
-                if (fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>() != null)
+                IOCCInjectedDependencyAttribute attr;
+                if ((attr =fieldInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>()) != null)
                 {
                     (Type type, string beanName) beanId =
-                      (fieldInfo.FieldType, IOCC.DEFAULT_DEPENDENCY_NAME);
+                      (fieldInfo.FieldType, attr.Name);
                     if (typeMap.ContainsKey(beanId))
                     {
                         Type implementation = typeMap[beanId];

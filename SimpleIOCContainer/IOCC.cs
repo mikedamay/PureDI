@@ -29,6 +29,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO use immutable collections
     // TODO license
     // TODO An optional name should be passed to IOCC.GetOrCreateDependencyTree
+    // TODO address static fields and beans.  Beans are invalid or maybe not
+    // TODO readonly fields
     /// <summary>
     /// 
     /// </summary>
@@ -37,8 +39,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     1) the object tree (i.e. the program's static model) is required to be static.
     ///     if objects are added to the tree through code at run-time this will not be 
     ///     reflected in the IOC container.
-    ///     2) The route class has to be visible to the caller of GetOrCreateObjectTree.
+    ///     2) The root class has to be visible to the caller of GetOrCreateObjectTree.
     ///     2a) The root of the tree cannot be specified using reflection.  I'll probably regret that.
+    ///     3) static classes and members are not handled.
     /// </remarks>
     public class IOCC
     {
