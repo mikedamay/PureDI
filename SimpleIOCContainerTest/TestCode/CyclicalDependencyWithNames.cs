@@ -62,8 +62,9 @@ namespace IOCCTest.TestCode.WithNames
     [IOCCDependency(Name = "name-B")]
     class ParentWithInterface : IParent, IResultGetter
     {
+        
         [IOCCInjectedDependency]
-        private IChild child;
+        private IChild child = null;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -76,7 +77,7 @@ namespace IOCCTest.TestCode.WithNames
     class ParentWithInterface2 : IParent, IResultGetter
     {
         [IOCCInjectedDependency]
-        private IChild child;
+        private IChild child = null;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -98,9 +99,9 @@ namespace IOCCTest.TestCode.WithNames
     internal class ChildWithInterface : IChild, IResultGetter
     {
         [IOCCInjectedDependency(Name = "name-B")]
-        private IParent parent;
+        private IParent parent = null;
         [IOCCInjectedDependency(Name = "name-B2")]
-        private IParent parent2;
+        private IParent parent2 = null;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -116,10 +117,10 @@ namespace IOCCTest.TestCode.WithNames
         
     }
     [IOCCDependency(Name="basest")]
-    internal class BaseClass : BasestClass
+    internal class BaseClass : BasestClass, IResultGetter
     {
-        [IOCCInjectedDependency(Name="child")] private ChildClass childClass;
-        public dynamic GetResults()
+        [IOCCInjectedDependency(Name="child")] private ChildClass childClass = null;
+        public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.ChildClass = childClass;
@@ -130,8 +131,8 @@ namespace IOCCTest.TestCode.WithNames
     [IOCCDependency]
     internal class BaseClass2 : BasestClass
     {
-        [IOCCInjectedDependency] private ChildClass childClass;
-        public dynamic GetResults()
+        [IOCCInjectedDependency] private ChildClass childClass = null;
+        public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.ChildClass = childClass;
@@ -142,8 +143,9 @@ namespace IOCCTest.TestCode.WithNames
     [IOCCDependency(Name="child")]
     internal class ChildClass : BaseClass
     {
-        [IOCCInjectedDependency(Name="basest")] private BasestClass basestClass;
-        public dynamic GetResults()
+        #pragma warning disable 649
+        [IOCCInjectedDependency(Name="basest")] private BasestClass basestClass = null;
+        public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.BasestClass = basestClass;

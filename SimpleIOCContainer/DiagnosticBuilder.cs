@@ -31,7 +31,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         private IOCCDiagnostics CreateDiagnosticsFromSchema(Stream diagnosticSchema)
         {
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            IOCCDiagnostics diagnostics = new DiagnosticsImpl();
             XElement groupx = new XElement("no-group-detail-avaialable");
             try
             {
@@ -74,6 +74,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             return diagnostics;
         }
         public IOCCDiagnostics Diagnostics { get; }
+
+        private class DiagnosticsImpl : IOCCDiagnostics
+        {
+            
+        }
     }
 
     internal static class DiagnosticExtensions

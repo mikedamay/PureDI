@@ -187,7 +187,7 @@ namespace IOCCTest
             void BuildAndOutputTypeMap(string resourceName, string profile, IOCC.OS os)
             {
                 Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
-                IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+                IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
                 var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                     new List<Assembly>() {assembly}, ref diagnostics, profile, os);
                 string str = map.OutputToString();
@@ -237,7 +237,7 @@ namespace IOCCTest
         {
             string codeText = GetResource(testDataName);
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCCDiagnostics diagnostics = new IOCCDiagnostics();
+            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, profile, os);
             Assert.AreEqual(mapExpected.Keys.Count, map.Keys.Count);

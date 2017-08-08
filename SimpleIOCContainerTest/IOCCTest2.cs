@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -120,6 +118,5 @@ namespace IOCCTest
                 Assert.Fail();
             }
         }
-        // TODO sort out circular properties
     }
 }

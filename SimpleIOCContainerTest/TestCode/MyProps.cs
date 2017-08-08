@@ -19,9 +19,9 @@ namespace IOCCTest.TestCode
     }
 
     //[IOCCDependency(Name = "name-MyProps2")]
-    public class MyProps2 : MyAutoProp, IResultGetter
+    public class MyProps2 : MyAutoProp
     {
-        public dynamic GetResults()
+        public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.Name = "name-MyProp2";
@@ -35,7 +35,7 @@ namespace IOCCTest.TestCode
         [IOCCInjectedDependency(Name= "name-SomeOtherProp2")]
         private ISomeOtherProp MyProp { get; }
 
-        public dynamic GetResults()
+        public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.MyProp = MyProp;

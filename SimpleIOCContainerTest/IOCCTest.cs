@@ -121,6 +121,7 @@ namespace IOCCTest
     }
     internal class TestRoot
     {
+#pragma warning disable 649
         [IOCCInjectedDependency]
         public ITest test;
     }

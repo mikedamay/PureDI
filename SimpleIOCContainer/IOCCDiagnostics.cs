@@ -13,6 +13,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public enum Severity { Info, Warning, Error }
 
+        protected IOCCDiagnostics()
+        {
+            
+        }
+
         public class Group
         {
             public Group(string causeCode

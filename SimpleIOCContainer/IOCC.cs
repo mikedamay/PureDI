@@ -34,6 +34,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
+    // TODO suppress code analysis messages
     /// <summary>
     /// 
     /// </summary>

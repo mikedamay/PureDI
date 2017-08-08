@@ -12,9 +12,9 @@ namespace IOCCTest.TestCode
     public class DeepHierahy : IResultGetter
     {
         [IOCCInjectedDependency]
-        private Level2a level2a;
+        private Level2a level2a = null;
         [IOCCInjectedDependency]
-        private Level2b level2b;
+        private Level2b level2b = null;
 
         public dynamic GetResults()
         {
@@ -28,9 +28,9 @@ namespace IOCCTest.TestCode
     internal class Level2b : IResultGetter
     {
         [IOCCInjectedDependency]
-        private Level2b3a level2b3a;
+        private Level2b3a level2b3a = null;
         [IOCCInjectedDependency]
-        private Level2b3b level2b3b;
+        private Level2b3b level2b3b = null;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -54,9 +54,9 @@ namespace IOCCTest.TestCode
     internal class Level2a : IResultGetter
     {
         [IOCCInjectedDependency]
-        private Level2a3a level2a3a;
+        private Level2a3a level2a3a = null;
         [IOCCInjectedDependency]
-        private Level2a3b level2a3b;
+        private Level2a3b level2a3b = null;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();

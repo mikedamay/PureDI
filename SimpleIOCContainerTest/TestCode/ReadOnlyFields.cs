@@ -6,7 +6,7 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     public class ReadOnlyFields : IResultGetter
     {
-        [IOCCInjectedDependency] private readonly ReadOnlyFields field;
+        [IOCCInjectedDependency] private readonly ReadOnlyFields field = null;
 
         public dynamic GetResults()
         {

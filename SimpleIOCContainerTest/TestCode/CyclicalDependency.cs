@@ -6,6 +6,7 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     public class SelfReferring : IResultGetter
     {
+#pragma warning disable 649
         [IOCCInjectedDependency] private SelfReferring child;
         public dynamic GetResults()
         {
@@ -98,7 +99,7 @@ namespace IOCCTest.TestCode
     internal class BaseClass : BasestClass
     {
         [IOCCInjectedDependency] private ChildClass childClass;
-        public dynamic GetResults()
+        public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.ChildClass = childClass;
@@ -109,7 +110,7 @@ namespace IOCCTest.TestCode
     internal class ChildClass : BaseClass
     {
         [IOCCInjectedDependency] private BasestClass basestClass;
-        public dynamic GetResults()
+        public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
             eo.BasestClass = basestClass;
