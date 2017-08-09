@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using System.Linq.Expressions;
 using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
@@ -117,5 +118,30 @@ namespace IOCCTest.TestCode
             eo.BasestClass = basestClass;
             return eo;
         }
+    }
+
+    [IOCCDependency]
+    internal class ClassWithMultipleInterfaces : Interface1, Interface2, IResultGetter
+    {
+        [IOCCInjectedDependency] private Interface1 interface1;
+        [IOCCInjectedDependency] private Interface1 interface2;
+
+        public dynamic GetResults()
+        {
+            dynamic eo = new ExpandoObject();
+            eo.Interface1 = interface1;
+            eo.Interface2 = interface2;
+            return eo;
+        }
+    }
+
+
+}
+    internal interface Interface2
+    {
+    }
+
+    internal interface Interface1
+    {
     }
 }

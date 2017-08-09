@@ -55,6 +55,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// see documentation for GetOrCreateObjectTree
         /// </summary>
+        /// <param name="bean">a class already instantiated by IOCC whose
+        ///                    fields and properties may need to be injuected</param>
+        /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
+        ///                                      maps the name of the class or struct of
+        ///                                      the object to the instance of the object.</param>
         private object CreateObjectTree(object bean, IDictionary<(Type type, string beanName)
           , object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics)
         {

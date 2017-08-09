@@ -121,7 +121,7 @@ namespace IOCCTest
 
         [TestMethod]
         public void ShouldThrowExceptionForNoArgConstructor()
-        {
+        {   
             Assert.ThrowsException<IOCCException>(() =>
             {
                 NoArgRoot st = new IOCC().GetOrCreateObjectTree<
@@ -135,6 +135,15 @@ namespace IOCCTest
             NoArgClassTree nact = new IOCC().GetOrCreateObjectTree<
                 NoArgClassTree>(out IOCCDiagnostics diags);
             Assert.IsTrue(diags.HasWarnings);
+        }
+
+        [TestMethod]
+        public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
+        {
+            ClassWithMultipleInterfaces cwmi 
+              = new IOCC().GetOrCreateObjectTree<ClassWithMultipleInterfaces>();
+            Assert.IsNotNull(cwmi?.GetResults().Interface1);
+            Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interfacd2);
         }
     }
 }
