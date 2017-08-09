@@ -135,8 +135,6 @@ namespace IOCCTest.TestCode
         }
     }
 
-
-}
     internal interface Interface2
     {
     }

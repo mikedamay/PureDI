@@ -143,7 +143,7 @@ namespace IOCCTest
             ClassWithMultipleInterfaces cwmi 
               = new IOCC().GetOrCreateObjectTree<ClassWithMultipleInterfaces>();
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
-            Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interfacd2);
+            Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }
     }
 }
