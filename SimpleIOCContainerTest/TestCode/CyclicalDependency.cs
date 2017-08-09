@@ -109,6 +109,7 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     internal class ChildClass : BaseClass
     {
+        (int i, string s) iiss = (1, "");
         [IOCCInjectedDependency] private BasestClass basestClass;
         public override dynamic GetResults()
         {

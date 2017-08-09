@@ -25,7 +25,7 @@ namespace IOCCTest
             {
                 new IOCC().GetOrCreateObjectTree<int>();
             }
-            Assert.ThrowsException<Exception>((System.Action)DoTest);
+            Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()

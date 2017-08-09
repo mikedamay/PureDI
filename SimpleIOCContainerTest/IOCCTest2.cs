@@ -118,5 +118,23 @@ namespace IOCCTest
                 Assert.Fail();
             }
         }
+
+        [TestMethod]
+        public void ShouldThrowExceptionForNoArgConstructor()
+        {
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                NoArgRoot st = new IOCC().GetOrCreateObjectTree<
+                  NoArgRoot>(out IOCCDiagnostics diags);
+                Assert.IsTrue(diags.HasWarnings);
+            });
+        }
+        [TestMethod]
+        public void ShouldThrowExceptionForNoArgClassTree()
+        {
+            NoArgClassTree nact = new IOCC().GetOrCreateObjectTree<
+                NoArgClassTree>(out IOCCDiagnostics diags);
+            Assert.IsTrue(diags.HasWarnings);
+        }
     }
 }

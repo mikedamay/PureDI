@@ -75,6 +75,7 @@
     <Compile Include="TestCode\DeepHierahy.cs" />
     <Compile Include="TestCode\MyProps.cs" />
     <Compile Include="TestCode\ReadOnlyFields.cs" />
+    <Compile Include="TestCode\StructTree.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

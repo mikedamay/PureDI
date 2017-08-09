@@ -10,7 +10,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO warning when a field or property has already been initialised
     // DONE guard against circular references - Done
     // TODO handle structs
-    // TODO handle properties
+    // DONE handle properties
     // TODO object factories
     // DONE handle multiple assemblies - Done
     // TODO references held in tuples
@@ -35,6 +35,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO suppress code analysis messages
+    // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     /// <summary>
     /// 
     /// </summary>
@@ -101,15 +102,24 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
         {
-            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            var rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
-            if (System.Diagnostics.Debugger.IsAttached)
+            IOCCDiagnostics diagnostics = null;
+            TRootType rootObject = default(TRootType);
+            try
             {
-                System.Diagnostics.Debug.Write(diagnostics);
+                diagnostics = new DiagnosticBuilder().Diagnostics;
+                rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
             }
-            else
+            finally
             {
-                Console.WriteLine(diagnostics);    
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    System.Diagnostics.Debug.Write(diagnostics);
+                }
+                else
+                {
+                    Console.WriteLine(diagnostics);    
+                }
+                 
             }
             return rootObject;
         }
