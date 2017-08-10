@@ -110,6 +110,7 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     internal class ChildClass : BaseClass
     {
+        #pragma warning disable 414     // field not used
         (int i, string s) iiss = (1, "");
         [IOCCInjectedDependency] private BasestClass basestClass;
         public override dynamic GetResults()

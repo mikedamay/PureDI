@@ -36,6 +36,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO suppress code analysis messages
     // TODO change wording of no-arg constructor diagnostic to include constructor based injections
+    // TODO document / investigate other classes derived from ValueType
+    // TODo ensure there is a test that uses an object multiple times in the tree.
     /// <summary>
     /// 
     /// </summary>
@@ -125,10 +127,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
         public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics
-            , string profile = DEFAULT_PROFILE)
+            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_DEPENDENCY_NAME )
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
-            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
+            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, rootBeanName);
         }
         /// <summary>
         /// <see cref="GetOrCreateObjectTree"/>
@@ -136,7 +138,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
         public TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
-            , string profile = DEFAULT_PROFILE)
+            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_DEPENDENCY_NAME)
         {
             getOrCreateObjectTreeCalled = true;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly, ref diagnostics);
@@ -151,7 +153,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree<TRootType>(ref diagnostics);
+            var rootObject = container.GetOrCreateObjectTree<TRootType>(ref diagnostics, rootBeanName);
+            if (rootObject == null && diagnostics.HasWarnings)
+            {
+                throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
+            }
             return rootObject;
         }
 

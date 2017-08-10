@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -26,7 +27,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldFailWithBadlyFormedSchema()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<Exception>(() =>
             {
                 string schemaName
                   = "IOCCTest.TestData.BadDiagnosticScema.xml";
@@ -40,7 +41,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldFailWithSchemaThatContainsNoXML()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<Exception>(() =>
             {
                 string schemaName
                   = "IOCCTest.TestData.SchemaWithNoXML.xml";

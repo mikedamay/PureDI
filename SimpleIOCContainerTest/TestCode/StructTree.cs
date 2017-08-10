@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,32 +21,61 @@ namespace IOCCTest.TestCode
         public int someValue;
     }
 
+    public class RefResults
+    {
+        
+    }
+
     [IOCCDependency]
     public class ClassTree
     {
         [IOCCInjectedDependency] private StructChild2 structChild2;
+
+        public ref StructChild2 GetStructChild2()
+        {
+            return ref structChild2;
+        }
     }
     [IOCCDependency]
     public struct StructChild2
     {
         [IOCCInjectedDependency] private ClassChild classChild;
+        public ClassChild GetClassChild()
+        {
+            return classChild;
+        }
     }
     [IOCCDependency]
     public class ClassChild
     {
-        [IOCCInjectedDependency] public int b = 1;
+        [IOCCInjectedDependency] public int someValue = 1;
     }
+
     [IOCCDependency]
-    public struct NoArgRoot
+    public class NoArgRoot
     {
+        public NoArgRoot(int itnowhasanarg) { }
     }
     [IOCCDependency]
     public class NoArgClassTree
     {
-        [IOCCInjectedDependency] private NoArgStructChild2 structChild2;
+        #pragma warning disable 414
+        [IOCCInjectedDependency] private NoArgStructChild2 structChild2 = new NoArgStructChild2();
     }
     [IOCCDependency]
     public struct NoArgStructChild2
     {
+    }
+
+    [IOCCDependency]
+    public struct StructRoot
+    {
+        [IOCCInjectedDependency] public SomeChild child;
+    }
+
+    [IOCCDependency]
+    public class SomeChild
+    {
+        
     }
 }

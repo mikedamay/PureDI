@@ -3,6 +3,8 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
+    // I don't know why I decided on this pattern - maybe just looking for another way to
+    // exercise dynamics
     public interface IResultGetter
     {
         dynamic GetResults();

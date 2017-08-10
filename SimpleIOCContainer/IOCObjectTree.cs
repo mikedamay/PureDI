@@ -28,18 +28,20 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         /// <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
         /// <returns>an ojbect of root type</returns>
-        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics)
+        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics, string rootBeanName)
         {
             try
             {
                 IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
                     new Dictionary<(Type, string), object>();
-                object rootObject = Construct(typeof(TRootType));
-                mapObjectsCreatedSoFar[(typeof(TRootType), IOCC.DEFAULT_DEPENDENCY_NAME)] = rootObject;
-                CreateObjectTree(rootObject, mapObjectsCreatedSoFar, diagnostics);
-                if (!(rootObject is TRootType))
+                object rootObject;
+                //object rootObject = Construct(typeof(TRootType));
+                //mapObjectsCreatedSoFar[(typeof(TRootType), IOCC.DEFAULT_DEPENDENCY_NAME)] = rootObject;
+                rootObject = CreateObjectTree((typeof(TRootType), rootBeanName)
+                  ,mapObjectsCreatedSoFar, diagnostics);
+                if (!(rootObject is TRootType) && rootObject != null)
                 {
-                    throw new Exception($"object created by IOC container is not {typeof(TRootType).Name} as expected");
+                    throw new IOCCInternalException($"object created by IOC container is not {typeof(TRootType).Name} as expected");
                 }
                 return (TRootType) rootObject;
             }
@@ -48,7 +50,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 dynamic diagnostic = diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
                 diagnostic.Class = typeof(TRootType).FullName;
                 diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
-                throw new IOCCException("Failed to create object tree - see diagnostics for details");
+                throw new IOCCException("Failed to create object tree - see diagnostics for details", inace, diagnostics);
             }
         }
 
@@ -60,7 +62,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
         ///                                      maps the name of the class or struct of
         ///                                      the object to the instance of the object.</param>
-        private object CreateObjectTree(object bean, IDictionary<(Type type, string beanName)
+        private void CreateObjectTree3(ref object bean, IDictionary<(Type type, string beanName)
           , object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics)
         {
             var fieldOrPropertyInfos = bean.GetType().GetMembers(
@@ -100,7 +102,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 memberBean = Construct(implementationType);
                                 mapObjectsCreatedSoFar[(implementationType, beanId.beanName)] = memberBean;
                                 fieldOrPropertyInfo.SetValue(bean, memberBean);
-                                CreateObjectTree(memberBean, mapObjectsCreatedSoFar, diagnostics);                           
+                                CreateObjectTree3(ref memberBean, mapObjectsCreatedSoFar, diagnostics);                           
                             }
                             catch (IOCCNoArgConstructorException inace)
                             {
@@ -113,6 +115,100 @@ namespace com.TheDisappointedProgrammer.IOCC
 
                 }
             }
+        }
+        /// <summary>
+        /// see documentation for GetOrCreateObjectTree
+        /// </summary>
+        /// <param name="bean">a class already instantiated by IOCC whose
+        ///                    fields and properties may need to be injuected</param>
+        /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
+        ///                                      maps the name of the class or struct of
+        ///                                      the object to the instance of the object.</param>
+        private object CreateObjectTree((Type beanType, string beanName) beanId,IDictionary<(Type type, string beanName)
+            , object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics)
+        {
+            object bean;
+            try
+            {
+                Type implementationType;
+                if (typeMap.ContainsKey(beanId))
+                {
+                    implementationType = typeMap[beanId];
+                }
+                else
+                {
+                    dynamic diag = diagnostics.Groups["MissingRoot"].CreateDiagnostic();
+                    diag.BeanType = beanId.beanType.FullName;
+                    diag.BeanName = beanId.beanName;
+                    diagnostics.Groups["MissingRoot"].Add(diag);
+                    throw new IOCCException("failed to create object tree - see diagnostics for detail", diagnostics);
+                }
+                if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanName)))
+                {       // there is a cyclical dependency
+                    bean = mapObjectsCreatedSoFar[(implementationType, beanId.beanName)];
+                    return bean;
+                }
+                else
+                {
+                    bean = Construct(implementationType);
+                    mapObjectsCreatedSoFar[(implementationType, beanId.beanName)] = bean;
+                   
+                }
+            }
+            catch (IOCCNoArgConstructorException inace)
+            {
+                dynamic diagnostic = diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
+                diagnostic.Class = inace.Class;
+                diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
+                return null;
+            }
+            var fieldOrPropertyInfos = bean.GetType().GetMembers(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(f => f is FieldInfo || f is PropertyInfo);
+            foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
+            {
+                IOCCInjectedDependencyAttribute attr;
+                if ((attr = fieldOrPropertyInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>()) != null)
+                {
+                    System.Diagnostics.Debug.Assert(fieldOrPropertyInfo is FieldInfo
+                                                    || fieldOrPropertyInfo is PropertyInfo);
+                   (Type type, string beanName) memberBeanId =
+                        (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
+                    if (typeMap.ContainsKey(memberBeanId))
+                    {
+                        Type memberImplementationType = typeMap[memberBeanId];
+                        object memberBean;
+                        if (mapObjectsCreatedSoFar.ContainsKey((memberImplementationType, memberBeanId.beanName))
+                        )
+                        {
+                            memberBean = mapObjectsCreatedSoFar[(memberImplementationType, memberBeanId.beanName)];
+                            fieldOrPropertyInfo.SetValue(bean, memberBean);
+                        }
+                        else if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
+                        {
+                            dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
+                            diag.Class = bean.GetType().FullName;
+                            diag.Member = fieldOrPropertyInfo.Name;
+                            diagnostics.Groups["ReadOnlyProperty"].Add(diag);
+                        }
+                        else
+                        {
+                            
+                            memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar, diagnostics);
+                            fieldOrPropertyInfo.SetValue(bean, memberBean);
+                        }
+                    }
+                    else
+                    {
+                        dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
+                        diag.Bean = bean.GetType().FullName;
+                        diag.MemberType = memberBeanId.type.FullName;
+                        diag.MemberName = fieldOrPropertyInfo.Name;
+                        diag.MemberBeanName = memberBeanId.beanName;
+                        diagnostics.Groups["MissingBean"].Add(diag);
+                    }
+                }
+            }
             return bean;
         }
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
@@ -120,14 +216,22 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <exception>InvalidArgumentException</exception>  
         private object Construct(Type beanType)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-            var constructorInfos = beanType.GetConstructors(flags);
-            var noArgConstructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
-            if (noArgConstructorInfo == null)
+            if (beanType.IsStruct())
             {
-                throw new IOCCNoArgConstructorException(beanType.FullName);
+                return Activator.CreateInstance(beanType);
             }
-            return noArgConstructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, new object[0], null);
+            else
+            {
+                BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+                var constructorInfos = beanType.GetConstructors(flags);
+                var noArgConstructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
+                if (noArgConstructorInfo == null)
+                {
+                    throw new IOCCNoArgConstructorException(beanType.FullName);
+                }
+                return noArgConstructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, new object[0], null);
+                
+            }
 
         }
     }
@@ -196,6 +300,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                       , null);
 
             }
+        }
+
+        public static bool IsStruct(this Type type)
+        {
+            return type.IsValueType && !type.IsPrimitive;
         }
     }
 }

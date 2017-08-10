@@ -4,13 +4,16 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     public class IOCCException : Exception
     {
-         public IOCCException(string message) : base(message)
-        {
-        }
+        public IOCCDiagnostics Diagnostics { get; } = null;
+         public IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
+         {
+             this.Diagnostics = diagnostics;
+         }
 
-        public IOCCException(string message, Exception innerException)
+        public IOCCException(string message, Exception innerException, IOCCDiagnostics diagnostics)
           : base(message, innerException)
         {
+            this.Diagnostics = diagnostics;
         }
    }
 

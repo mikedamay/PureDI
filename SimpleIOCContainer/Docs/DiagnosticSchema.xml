@@ -53,11 +53,40 @@
     <severity>Warning</severity>
     <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
     <userGuide>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a constructor
-               which takes no arguments.</userGuide>
+      which takes no arguments.</userGuide>
     <template>{Class} needs a no-arg constructor</template>
     <artefacts>
       <Class/>
-    </artefacts>
-    
+    </artefacts>   
+  </group>
+  <group>
+    <causeCode>MissingBean</causeCode>
+    <severity>Warning</severity>
+    <intro>A reference to a missing bean has been encountered</intro>
+    <userGuide>The most likely cause of this issue is that there are 
+      duplicate beans or that the dependency referred to was
+      not a concrete class or struct.  The details should be listed
+      in the relevant diagnostics above.</userGuide>
+    <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>
+    <artefacts>
+      <MemberType/>
+      <MemberBeanName/>
+      <MemberName/>
+      <Bean/>
+    </artefacts>  
+  </group>  
+  <group>
+    <causeCode>MissingRoot</causeCode>
+    <severity>Warning</severity>
+    <intro>The root of the class tree was not marked az [IOCCBean] or the bean was not invalid - see diagnostics aboee</intro>
+    <userGuide>The most likely cause of this issue is that the type passed
+    to IOCC.GetOrCreateObjectTree was not marked as a bean.[IOCCBean] or the concrete class
+    derived from the type was not marked as a bean.  Alternatively the bean may have been found
+    to be invalid - see above</userGuide>
+    <template>Missing root bean referred to as: ({BeanType}({BeanName})</template>
+    <artefacts>
+      <BeanType/>
+      <BeanName/>
+    </artefacts>  
   </group>
 </diagnosticSchema>

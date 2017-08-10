@@ -16,7 +16,7 @@ namespace IOCCTest
             iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
               = iocc.GetOrCreateObjectTree<TestRoot>();
-            Assert.AreNotEqual(null, twf.test);
+            Assert.IsNotNull(twf.test);
         }
         [TestMethod]
         public void ShouldHaveRootClassWithNoArgConstructor()
@@ -24,6 +24,16 @@ namespace IOCCTest
             void DoTest()
             {
                 new IOCC().GetOrCreateObjectTree<int>();
+            }
+            Assert.ThrowsException<IOCCException>((System.Action)DoTest);
+        }
+        enum Mike { Mike1}
+        public void ShouldNotTreatEnumAsClass()
+        {
+            void DoTest()
+            {
+                
+                new IOCC().GetOrCreateObjectTree<Mike>();
             }
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
@@ -91,7 +101,7 @@ namespace IOCCTest
         {
             WithNames.CyclicalDependency cd 
               = IOCC.Instance.GetOrCreateObjectTree<
-                    WithNames.CyclicalDependency>();
+                    WithNames.CyclicalDependency>(out IOCCDiagnostics diags, IOCC.DEFAULT_PROFILE, "name-A");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -103,7 +113,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {
             WithNames.ParentWithInterface cd
-                = IOCC.Instance.GetOrCreateObjectTree<WithNames.ParentWithInterface>();
+                = IOCC.Instance.GetOrCreateObjectTree<WithNames.ParentWithInterface>(out IOCCDiagnostics diags, IOCC.DEFAULT_PROFILE, "name-B");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
@@ -113,12 +123,13 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
         {
             WithNames.BaseClass cd
-                = IOCC.Instance.GetOrCreateObjectTree<WithNames.BaseClass>();
+                = IOCC.Instance.GetOrCreateObjectTree<WithNames.BaseClass>(out IOCCDiagnostics diags, IOCC.DEFAULT_PROFILE, "basest");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);
         }
     }
+    [IOCCDependency]
     internal class TestRoot
     {
 #pragma warning disable 649

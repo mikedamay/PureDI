@@ -98,6 +98,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     sb.Append(MakeSubstitutions(group.DiagnosticTemplate, diag));
                     sb.Append(Environment.NewLine);
                 }
+                sb.Append(group.UserGuide);
             }
             return sb.ToString();
         }

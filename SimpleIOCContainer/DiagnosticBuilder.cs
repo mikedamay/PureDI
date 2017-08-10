@@ -62,12 +62,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             catch (NullReferenceException nre)
             {
-                throw new IOCCException($"The diagnostic schema is not valid. See:{Environment.NewLine}"
+                throw new Exception($"The diagnostic schema is not valid. See:{Environment.NewLine}"
                                         + groupx, nre);
             }
             catch (XmlException xe)
             {
-                throw new IOCCException($"The diagnostic schema not correct XML."
+                throw new Exception($"The diagnostic schema not correct XML."
                                         , xe);
                 
             }

@@ -16,7 +16,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     internal class IOCObjectTreeContainer
     {
         private string profile;
-        private IDictionary<Type, IOCObjectTree> mapTrees = new Dictionary<Type, IOCObjectTree>();
+        private IDictionary<(Type, string), IOCObjectTree> mapTrees = new Dictionary<(Type, string), IOCObjectTree>();
         private readonly IDictionary<(Type type, string name), Type> typeMap;
  
         internal IOCObjectTreeContainer(string profile, IDictionary<(Type, string), Type> typeMap)
@@ -24,21 +24,21 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.profile = profile;
             this.typeMap = typeMap;
         }
-        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics)
+        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics, string rootBeanName)
         {
             Type rootType = typeof(TRootType);
             IOCObjectTree tree;
-            if (mapTrees.ContainsKey(rootType))
+            if (mapTrees.ContainsKey((rootType, rootBeanName)))
             {
-                tree = mapTrees[rootType];
+                tree = mapTrees[(rootType, rootBeanName)];
             }
             else
             {
                 tree = new IOCObjectTree(profile, typeMap);
-                mapTrees[rootType] = tree;
+                mapTrees[(rootType, rootBeanName)] = tree;
                  
             }
-            return tree.GetOrCreateObjectTree<TRootType>(ref diagnostics);
+            return tree.GetOrCreateObjectTree<TRootType>(ref diagnostics, rootBeanName);
         }
     }
 }

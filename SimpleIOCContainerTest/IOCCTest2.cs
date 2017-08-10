@@ -145,5 +145,27 @@ namespace IOCCTest
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
             Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }
+
+        [TestMethod]
+        public void ShouldInstantiateStruct()
+        {
+            StructRoot root = new IOCC().GetOrCreateObjectTree<StructRoot>();
+            Assert.IsNotNull(root.child);
+        }
+
+        [TestMethod]
+        public void ShouldCreateATreeWithStructs()
+        {
+            StructTree tree = new IOCC().GetOrCreateObjectTree<StructTree>();
+            Assert.IsNotNull(tree.structChild);
+        }
+
+        [TestMethod]
+        public void ShouldCreateTreeWithMixOfClassesAndStructs()
+        {
+            ClassTree tree = new IOCC().GetOrCreateObjectTree<ClassTree>();
+            Assert.IsNotNull(tree);
+            Assert.AreEqual(1, tree?.GetStructChild2().GetClassChild()?.someValue);
+        }
     }
 }
