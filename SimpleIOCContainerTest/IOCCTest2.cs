@@ -167,5 +167,42 @@ namespace IOCCTest
             Assert.IsNotNull(tree);
             Assert.AreEqual(1, tree?.GetStructChild2().GetClassChild()?.someValue);
         }
+
+        [TestMethod]
+        public void ShouldCreateASingleInstanceForMultipleReferences()
+        {
+            CrossConnections cc = new IOCC().GetOrCreateObjectTree<CrossConnections>();
+            Assert.IsNotNull(cc?.ChildA?.Common);
+            Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
+        }
+        [Ignore]
+        [TestMethod]
+        public void ShouldCreateTreeWithGenerics()
+        {
+            RefersToGeneric rtg = new IOCC().GetOrCreateObjectTree<RefersToGeneric>();
+            Assert.AreEqual("Generic<T>", rtg?.GenericInt?.Name);
+        }
+        [Ignore]
+        [TestMethod]
+        public void ShouldCreateTreeWithGenericRoot()
+        {
+            Generic<int> gi = new IOCC().GetOrCreateObjectTree<Generic<int>>();
+            Assert.IsNotNull(gi);
+        }
+        [Ignore]
+        [TestMethod]
+        public void ShouldCreateTreeWithGenericParameter()
+        {
+            GenericHolderParent ghp = new IOCC().GetOrCreateObjectTree<GenericHolderParent>();
+            Assert.AreEqual("GenericHolder", ghp?.GenericHolder?.GenericHeld.Name);
+        }
+        [Ignore]
+        [TestMethod]
+        public void ShouldCreateTreeWhenRootHasGenericParameter()
+        {
+            GenericHolder<GenericHeld> ghgh 
+              = new IOCC().GetOrCreateObjectTree<GenericHolder<GenericHeld>>();
+            Assert.AreEqual("GenericHeld", ghgh?.GenericHeld?.Name);
+        }
     }
 }

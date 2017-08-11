@@ -8,8 +8,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <summary>
     /// Typical usage:
     ///     Diagnostic diag = diagnostics.groups["InvalidBeanType"].CreateDiagnostic();
-    ///     diag.bean = someType.FullName;
-    ///     diag.dependentBean = someOtherType.FullName;
+    ///     diag.bean = someType.GetIOCCName();
+    ///     diag.dependentBean = someOtherType.GetIOCCName();
     ///     diagnostics.groups["InvalidBeanType"].Add(diag);
     /// alternatively:
     ///     Diagnostic diag = diagnostics.groups["SomeOtherCauseCode"].CreateDiagnostic();

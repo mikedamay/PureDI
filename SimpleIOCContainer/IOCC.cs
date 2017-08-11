@@ -9,13 +9,14 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     // TODO warning when a field or property has already been initialised
     // DONE guard against circular references - Done
-    // TODO handle structs
+    // DONE handle structs
     // DONE handle properties
     // TODO object factories
     // DONE handle multiple assemblies - Done
     // TODO references held in tuples
     // TODO references held in embedded structs 
     // TODO references held as objects
+    // TODO references to arrays
     // TODO use fully qualified type names in comparisons
     // TODO use immutable collections
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
@@ -38,6 +39,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document / investigate other classes derived from ValueType
     // TODo ensure there is a test that uses an object multiple times in the tree.
+    // TODO document the fact that member type is based on the type's GetIOCCName() attribute
+    // TODO and that generics have the for classname`1[TypeParam]
+    // TODO move the majority of unit tests to separate assemblies
+    // TODO test generics with multiple parameters
+    // TODO test generics with nested parameters
     /// <summary>
     /// 
     /// </summary>
@@ -137,7 +143,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
-        public TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
+        private TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
             , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_DEPENDENCY_NAME)
         {
             getOrCreateObjectTreeCalled = true;

@@ -174,6 +174,20 @@ namespace IOCCTest
               , ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
             Assert.AreEqual(3, map.Keys.Count);
         }
+
+        [TestMethod]
+        public void ShouldCreateTreeForGenericDeclarations()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.Generic`1", ""),"IOCCTest.TestData.Generic`1"}
+                ,{("IOCCTest.TestData.GenericUser", ""),"IOCCTest.TestData.GenericUser"}
+                ,{("IOCCTest.TestData.GenericChild", ""),"IOCCTest.TestData.GenericChild"}
+                ,{("IOCCTest.TestData.Generic`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", ""),"IOCCTest.TestData.GenericChild"}
+            };
+            CommonTypeMapTest("IOCCTest.TestData.Generic.cs", mapExpected);
+
+        }
         /// <summary>
         /// usage:
         /// 1) change the resource name in the code below to refer to
@@ -195,7 +209,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.StructDependency.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            BuildAndOutputTypeMap("IOCCTest.TestData.Generic.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
         /// <summary>
         /// Not currently used.
@@ -218,7 +232,7 @@ namespace IOCCTest
                 // into the newly created domain
                 Type type = typeof(Proxy);
                 var value = (Proxy) domain.CreateInstanceAndUnwrap(
-                    type.Assembly.FullName, type.FullName);
+                    type.Assembly.FullName, type.GetIOCCName());
                 Assembly assemblyUnderTest = value.GetAssemblyCount(resourceName);
                 return (domain, assemblyUnderTest);
             }
@@ -241,6 +255,8 @@ namespace IOCCTest
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, profile, os);
             Assert.AreEqual(mapExpected.Keys.Count, map.Keys.Count);
+            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(diagnostics.HasErrors);
             CompareMaps(map, mapExpected);
         }
 
@@ -274,9 +290,9 @@ namespace IOCCTest
         {
             foreach ((var interfaceType, var dependencyName) in map.Keys)
             {
-                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.FullName, dependencyName)));
-                Assert.AreEqual(mapExpected[(interfaceType.FullName, dependencyName)]
-                    , map[(interfaceType, dependencyName)].FullName);
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.GetIOCCName(), dependencyName)));
+                Assert.AreEqual(mapExpected[(interfaceType.GetIOCCName(), dependencyName)]
+                    , map[(interfaceType, dependencyName)].GetIOCCName());
             }
         }
     }
@@ -296,7 +312,7 @@ namespace IOCCTest
             {
                 (Type dependencyInterface, string dependencyName) = key;
                 var dependencyImplementation = map[key] as Type;
-                sb.Append($@"{{(""{dependencyInterface}"", ""{dependencyName}""),""{dependencyImplementation}""}}"
+                sb.Append($@"{{(""{dependencyInterface.GetIOCCName()}"", ""{dependencyName}""),""{dependencyImplementation.GetIOCCName()}""}}"
                           + Environment.NewLine);
 
             }
@@ -343,4 +359,6 @@ namespace IOCCTest
             }
         }
     }
+
+
 }

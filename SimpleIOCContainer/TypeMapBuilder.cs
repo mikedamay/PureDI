@@ -31,7 +31,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     {
                         IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
-                        diag.AbstractClass = dependencyImplementation.FullName;
+                        diag.AbstractClass = dependencyImplementation.GetIOCCName();
                         group.Add(diag);
                     }
                     else
@@ -40,10 +40,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                         {
                             IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
                             dynamic diag = group.CreateDiagnostic();
-                            diag.Interface1 = dependencyInterface.FullName;
+                            diag.Interface1 = dependencyInterface.GetIOCCName();
                             diag.BeanName = name;
-                            diag.NewBean = dependencyImplementation.FullName;
-                            diag.ExistingBean = (map[(dependencyInterface, name)] as Type).FullName;
+                            diag.NewBean = dependencyImplementation.GetIOCCName();
+                            diag.ExistingBean = (map[(dependencyInterface, name)] as Type).GetIOCCName();
                             group.Add(diag);
                             continue;
                         }
