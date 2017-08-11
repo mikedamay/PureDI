@@ -48,7 +48,7 @@ namespace IOCCTest.TestCode
     [IOCCDependency]
     public class ClassChild
     {
-        [IOCCInjectedDependency] public int someValue = 1;
+        public int someValue = 1;
     }
 
     [IOCCDependency]

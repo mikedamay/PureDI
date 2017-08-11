@@ -55,6 +55,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     2) The root class has to be visible to the caller of GetOrCreateObjectTree.
     ///     2a) The root of the tree cannot be specified using reflection.  I'll probably regret that.
     ///     3) static classes and members are not handled.
+    ///     4) If a member is incorrectly marked as [IOCCInjectedDependency] then
+    ///        it will be set to its default value even if it is an initialized member.
     /// </remarks>
     public class IOCC
     {

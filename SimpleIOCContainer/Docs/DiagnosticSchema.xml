@@ -78,12 +78,12 @@
   <group>
     <causeCode>MissingRoot</causeCode>
     <severity>Warning</severity>
-    <intro>The root of the class tree was not marked az [IOCCBean] or the bean was not invalid - see diagnostics aboee</intro>
+    <intro>The root of the class tree was not marked as [IOCCBean] or the bean was invalid - see diagnostics above</intro>
     <userGuide>The most likely cause of this issue is that the type passed
-    to IOCC.GetOrCreateObjectTree was not marked as a bean.[IOCCBean] or the concrete class
+    to IOCC.GetOrCreateObjectTree was not marked as a bean.  [IOCCBean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
     to be invalid - see above</userGuide>
-    <template>Missing root bean referred to as: ({BeanType}({BeanName})</template>
+    <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
     <artefacts>
       <BeanType/>
       <BeanName/>

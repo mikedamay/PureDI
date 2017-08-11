@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +39,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     new Dictionary<(Type, string), object>();
                 object rootObject;
                 rootObject = CreateObjectTree((typeof(TRootType), rootBeanName)
-                  ,mapObjectsCreatedSoFar, diagnostics);
+                  ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails());
                 if (!(rootObject is TRootType) && rootObject != null)
                 {
                     throw new IOCCInternalException($"object created by IOC container is not {typeof(TRootType).Name} as expected");
@@ -55,29 +58,49 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// see documentation for GetOrCreateObjectTree
         /// </summary>
+        /// <param name="beanId"></param>
+        /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
+        ///     maps the name of the class or struct of
+        ///     the object to the instance of the object.</param>
+        /// <param name="diagnostics"></param>
+        /// <param name="beanReferenceDetails"></param>
         /// <param name="bean">a class already instantiated by IOCC whose
         ///                    fields and properties may need to be injuected</param>
-        /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
-        ///                                      maps the name of the class or struct of
-        ///                                      the object to the instance of the object.</param>
-        private object CreateObjectTree((Type beanType, string beanName) beanId,IDictionary<(Type type, string beanName)
-            , object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics)
+        private object CreateObjectTree((Type beanType, string beanName) beanId
+          , IDictionary<(Type type, string beanName), object> mapObjectsCreatedSoFar
+          , IOCCDiagnostics diagnostics
+          , BeanReferenceDetails beanReferenceDetails)
         {
             object bean;
             try
             {
-                Type implementationType;
+                Type implementationType = null;
                 if (typeMap.ContainsKey(beanId))
                 {
                     implementationType = typeMap[beanId];
                 }
                 else
                 {
-                    dynamic diag = diagnostics.Groups["MissingRoot"].CreateDiagnostic();
-                    diag.BeanType = beanId.beanType.GetIOCCName();
-                    diag.BeanName = beanId.beanName;
-                    diagnostics.Groups["MissingRoot"].Add(diag);
-                    throw new IOCCException("failed to create object tree - see diagnostics for detail", diagnostics);
+                    if (beanReferenceDetails.IsRoot)
+                    {
+                        dynamic diag = diagnostics.Groups["MissingRoot"].CreateDiagnostic();
+                        diag.BeanType = beanId.beanType.GetIOCCName();
+                        diag.BeanName = beanId.beanName;
+                        diagnostics.Groups["MissingRoot"].Add(diag);
+                        throw new IOCCException("failed to create object tree - see diagnostics for detail",
+                            diagnostics);
+                    }
+                    else
+                    {
+                        dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
+                        diag.Bean = beanReferenceDetails.DeclaringType.GetIOCCName();
+                        diag.MemberType = beanId.beanType.GetIOCCName();
+                        diag.MemberName = beanReferenceDetails.MemberName;
+                        diag.MemberBeanName = beanReferenceDetails.MemberBeanName;
+                        //(diag.Bean, diag.MemberName, diag.MemberBeanName) = beanReferenceDetails;
+                        diagnostics.Groups["MissingBean"].Add(diag);
+                        return null;
+                    }
                 }
                 if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanName)))
                 {       // there is a cyclical dependency
@@ -110,17 +133,17 @@ namespace com.TheDisappointedProgrammer.IOCC
                                                     || fieldOrPropertyInfo is PropertyInfo);
                    (Type type, string beanName) memberBeanId =
                         (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
-                    if (typeMap.ContainsKey(memberBeanId))
-                    {
-                        Type memberImplementationType = typeMap[memberBeanId];
+                    //if (typeMap.ContainsKey(memberBeanId))
+                    //{
                         object memberBean;
-                        if (mapObjectsCreatedSoFar.ContainsKey((memberImplementationType, memberBeanId.beanName))
-                        )
-                        {
-                            memberBean = mapObjectsCreatedSoFar[(memberImplementationType, memberBeanId.beanName)];
-                            fieldOrPropertyInfo.SetValue(bean, memberBean);
-                        }
-                        else if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
+                        //Type memberImplementationType = typeMap[memberBeanId];
+                        //if (mapObjectsCreatedSoFar.ContainsKey((memberImplementationType, memberBeanId.beanName))
+                        //)
+                        //{
+                        //    memberBean = mapObjectsCreatedSoFar[(memberImplementationType, memberBeanId.beanName)];
+                        //    fieldOrPropertyInfo.SetValue(bean, memberBean);
+                        //}
+                        /*else */ if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
                         {
                             dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
                             diag.Class = bean.GetType().GetIOCCName();
@@ -130,19 +153,22 @@ namespace com.TheDisappointedProgrammer.IOCC
                         else
                         {
                             
-                            memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar, diagnostics);
+                            memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
+                              , diagnostics
+                              , new BeanReferenceDetails(bean.GetType()
+                              , fieldOrPropertyInfo.Name, memberBeanId.beanName));
                             fieldOrPropertyInfo.SetValue(bean, memberBean);
                         }
-                    }
-                    else
-                    {
-                        dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
-                        diag.Bean = bean.GetType().GetIOCCName();
-                        diag.MemberType = memberBeanId.type.GetIOCCName();
-                        diag.MemberName = fieldOrPropertyInfo.Name;
-                        diag.MemberBeanName = memberBeanId.beanName;
-                        diagnostics.Groups["MissingBean"].Add(diag);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
+                    //    diag.Bean = bean.GetType().GetIOCCName();
+                    //    diag.MemberType = memberBeanId.type.GetIOCCName();
+                    //    diag.MemberName = fieldOrPropertyInfo.Name;
+                    //    diag.MemberBeanName = memberBeanId.beanName;
+                    //    diagnostics.Groups["MissingBean"].Add(diag);
+                    //}
                 }
             }
             return bean;
@@ -169,6 +195,51 @@ namespace com.TheDisappointedProgrammer.IOCC
                 
             }
 
+        }
+
+        private class BeanReferenceDetails
+        {
+            private Type declaringType;
+            private string memberName;
+            private string memberBeanName;
+            public bool IsRoot { get; }
+
+            public Type DeclaringType
+              => IsRoot
+              ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
+              : declaringType;
+            public string MemberName
+              => IsRoot
+              ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
+              : memberName;
+            public string MemberBeanName
+              => IsRoot
+              ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
+              : memberBeanName;
+
+        
+            public BeanReferenceDetails()
+            {
+                this.IsRoot = true;
+            }
+
+            public BeanReferenceDetails(Type declaringType, string memberName, string memberBeanName)
+            {
+                this.declaringType = declaringType;
+                this.memberName = memberName;
+                this.memberBeanName = memberBeanName;
+            }
+
+            public void Deconstruct(out Type DeclaringType, out string MemberName, out string MemberBeanName)
+            {
+                if (this.IsRoot)
+                {
+                    throw new IOCCInternalException("there are no reference details for the root bean of the tree");
+                }
+                DeclaringType = declaringType;
+                MemberName = memberName;
+                MemberBeanName = memberBeanName;
+            }
         }
     }
 
