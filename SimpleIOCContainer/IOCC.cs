@@ -44,6 +44,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO move the majority of unit tests to separate assemblies
     // TODO test generics with multiple parameters
     // TODO test generics with nested parameters
+    // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
     /// <summary>
     /// 
     /// </summary>

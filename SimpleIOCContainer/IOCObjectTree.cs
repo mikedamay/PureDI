@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     internal class IOCObjectTree
     {
         private readonly string profile;
-        private readonly IDictionary<(Type, string), Type> typeMap; 
+        private readonly IDictionary<(Type type, string beanName), Type> typeMap; 
+                // from the point of view of generics the key.type may contain a generic type definition
+                // and the value may be a constructed generic type
 
         public IOCObjectTree(string profile
           , IDictionary<(Type type, string name), Type> typeMap)
@@ -35,8 +38,14 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             try
             {
-                IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
-                    new Dictionary<(Type, string), object>();
+                // the key in the objects created so far map comprises 2 types.  The first is the
+                // intended concrete type that will be instantiated.  This works well for
+                // non-generic types but for generics the concrete type, which is taken from the typeMap,
+                // is a generic type definition.  The builder needs to lay its hands on the type argument
+                // to substitute for the generic parameter.  The second type (beanReferenceType) which
+                // has been taken from the member information of the declaring task provides the generic argument
+                IDictionary<(Type beanType, Type beanReferenceType), object> mapObjectsCreatedSoFar =
+                    new Dictionary<(Type, Type), object>();
                 object rootObject;
                 rootObject = CreateObjectTree((typeof(TRootType), rootBeanName)
                   ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails());
@@ -58,26 +67,34 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// see documentation for GetOrCreateObjectTree
         /// </summary>
-        /// <param name="beanId"></param>
+        /// <param name="beanId">the type + beanName for which a bean is to be created.
+        ///     The bean will not necessarily have the type passed in as this
+        ///     may be a base class or interface (constructed generic type)
+        ///     from which the bean is derived</param>
         /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
         ///     maps the name of the class or struct of
         ///     the object to the instance of the object.</param>
         /// <param name="diagnostics"></param>
-        /// <param name="beanReferenceDetails"></param>
+        /// <param name="beanReferenceDetails">provides a context to the bean that
+        ///     can be displayed in diagnostic messages - currently not used for
+        ///     anything else</param>
         /// <param name="bean">a class already instantiated by IOCC whose
         ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName) beanId
-          , IDictionary<(Type type, string beanName), object> mapObjectsCreatedSoFar
+          , IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar
           , IOCCDiagnostics diagnostics
           , BeanReferenceDetails beanReferenceDetails)
         {
             object bean;
             try
             {
-                Type implementationType = null;
-                if (typeMap.ContainsKey(beanId))
+                Type implementationType;
+                if (IsBeanPresntInTypeMap(beanId))
+                //if (typeMap.ContainsKey(beanId))
                 {
-                    implementationType = typeMap[beanId];
+                    implementationType = GetImplementationFromTypeMap(beanId);
+                          
+                    //implementationType = typeMap[beanId];
                 }
                 else
                 {
@@ -97,20 +114,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                         diag.MemberType = beanId.beanType.GetIOCCName();
                         diag.MemberName = beanReferenceDetails.MemberName;
                         diag.MemberBeanName = beanReferenceDetails.MemberBeanName;
-                        //(diag.Bean, diag.MemberName, diag.MemberBeanName) = beanReferenceDetails;
                         diagnostics.Groups["MissingBean"].Add(diag);
                         return null;
                     }
                 }
-                if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanName)))
+                //if (IsBeanAlreadyCreated(mapObjectsCreatedSoFar, (implementationType, beanId.beanName)))
+                if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
                 {       // there is a cyclical dependency
-                    bean = mapObjectsCreatedSoFar[(implementationType, beanId.beanName)];
+                    bean = mapObjectsCreatedSoFar[(implementationType, beanId.beanType)];
                     return bean;
                 }
                 else
                 {
-                    bean = Construct(implementationType);
-                    mapObjectsCreatedSoFar[(implementationType, beanId.beanName)] = bean;
+                    bean = Construct(implementationType.IsGenericType ? beanId.beanType : implementationType);
+                    mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = bean;
                    
                 }
             }
@@ -133,17 +150,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                                                     || fieldOrPropertyInfo is PropertyInfo);
                    (Type type, string beanName) memberBeanId =
                         (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
-                    //if (typeMap.ContainsKey(memberBeanId))
-                    //{
-                        object memberBean;
-                        //Type memberImplementationType = typeMap[memberBeanId];
-                        //if (mapObjectsCreatedSoFar.ContainsKey((memberImplementationType, memberBeanId.beanName))
-                        //)
-                        //{
-                        //    memberBean = mapObjectsCreatedSoFar[(memberImplementationType, memberBeanId.beanName)];
-                        //    fieldOrPropertyInfo.SetValue(bean, memberBean);
-                        //}
-                        /*else */ if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
+                         object memberBean;
+                        if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
                         {
                             dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
                             diag.Class = bean.GetType().GetIOCCName();
@@ -159,20 +167,45 @@ namespace com.TheDisappointedProgrammer.IOCC
                               , fieldOrPropertyInfo.Name, memberBeanId.beanName));
                             fieldOrPropertyInfo.SetValue(bean, memberBean);
                         }
-                    //}
-                    //else
-                    //{
-                    //    dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
-                    //    diag.Bean = bean.GetType().GetIOCCName();
-                    //    diag.MemberType = memberBeanId.type.GetIOCCName();
-                    //    diag.MemberName = fieldOrPropertyInfo.Name;
-                    //    diag.MemberBeanName = memberBeanId.beanName;
-                    //    diagnostics.Groups["MissingBean"].Add(diag);
-                    //}
                 }
             }
             return bean;
         }
+
+        private bool IsBeanAlreadyCreated(IDictionary<(Type type, string beanName)
+          , object> mapObjectsCreatedSoFar, (Type, string) beanId)
+        {
+            return true;
+
+        }
+
+        /// <param name="beanid">Typically this is the type ofa member 
+        ///     marked as a bean reference with [IOCCBeanReference]
+        ///     for generics bean type is a generic type definition</param>
+        /// <returns>This will be a concrete class marked as a bean with [IOCCBean] which
+        ///     is derived from the beanId.beanType.  For generics this will be a
+        ///     constructed generic type</returns>
+        private Type GetImplementationFromTypeMap((Type beanType, string beanName) beanId)
+        {
+            
+            char[] a = beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
+            string beanTypeName =  new String(a);
+                    // trim the generic arguments from a generic
+            Type referenceType = typeMap.Keys.FirstOrDefault(
+              k => k.type.FullName == beanTypeName && k.beanName == beanId.beanName).type;
+            return typeMap[(referenceType, beanId.beanName)];
+
+        }
+
+        /// <param name="beanid"><see cref="GetImplementationFromTypeMap"/></param>
+        private bool IsBeanPresntInTypeMap((Type beanType, string beanName) beanId)
+        {
+            char[] a = beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
+            string beanTypeName =  new String(a);
+                    // trim the generic arguments from a generic
+            return typeMap.Keys.Any(k => k.type.FullName == beanTypeName && k.beanName == beanId.beanName);
+        }
+
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <exception>InvalidArgumentException</exception>  

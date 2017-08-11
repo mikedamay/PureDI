@@ -74,5 +74,32 @@ namespace IOCCTest
             Assert.AreEqual("ii", diagnostic.MemberName);
             Assert.AreEqual("", diagnostic.MemberBeanName);
         }
+
+        [TestMethod]
+        public void ShouldErrorIfMissingRootType()
+        {
+            IOCCDiagnostics diags = null;
+            Assert.ThrowsException<IOCCException>(() =>
+                new IOCC().GetOrCreateObjectTree<int>(out diags));
+            Assert.IsTrue(diags.HasWarnings);
+            dynamic diagnostic = diags.Groups["MissingRoot"]?.Occurrences[0];
+            Assert.AreEqual("System.Int32", diagnostic.BeanType);
+            Assert.AreEqual("", diagnostic.BeanName);
+        }
+
+        [TestMethod]
+        public void ShouldCreateTreeForGenericsWithMultipleParameters()
+        {
+            MultipleParamGenericUser mpgu 
+              = new IOCC().GetOrCreateObjectTree<MultipleParamGenericUser>();
+            Assert.IsNotNull(mpgu?.Multiple);
+        }
+
+        [TestMethod]
+        public void ShouldCreateTreeForNestedGeneric()
+        {
+            WrapperUser wu = new IOCC().GetOrCreateObjectTree<WrapperUser>();
+            Assert.IsNotNull(wu?.Nested);
+        }
     }
 }

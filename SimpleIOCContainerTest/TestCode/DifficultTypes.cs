@@ -33,4 +33,35 @@ namespace IOCCTest.TestCode
     {
         public string Name => "GenericHeld";
     }
+
+    [IOCCDependency]
+    internal class GenericWith3Params<A, B, C>
+    {
+        
+    }
+    [IOCCDependency]
+    internal class MultipleParamGenericUser
+    {
+        public GenericWith3Params<int, int, int> Multiple => multiple;
+        [IOCCInjectedDependency]
+        private GenericWith3Params<int, int, int> multiple;
+    }
+
+    [IOCCDependency]
+    internal class NestedGeneric<T>
+    {
+        
+    }
+    [IOCCDependency]
+    internal class WrapperGeneric<T>
+    {
+        
+    }
+    [IOCCDependency]
+    internal class WrapperUser
+    {
+        public WrapperGeneric<NestedGeneric<int>> Nested => nested;
+        [IOCCInjectedDependency]
+        private WrapperGeneric<NestedGeneric<int>> nested;
+    }
 }
