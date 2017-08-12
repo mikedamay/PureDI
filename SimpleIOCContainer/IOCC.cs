@@ -23,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     // DONE handle or document generic classes
     // TODO handle dynamic types
-    // TODO change "dependency" to "bean"
+    // DONE change "dependency" to "bean"
     // TODO check arguments' validity for externally facing methods
     // DONE unit test to validate XML - Done
     // TODO run code analysis
@@ -47,6 +47,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test generics with nested parameters
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
     // TODO Apply the IOCC to the Calculation Server and Maven docs
+    // TODO Release Build
+    // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     /// <summary>
     /// 
     /// </summary>
@@ -73,7 +75,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
 
-        private IDictionary<(Type, string), Type> typeMap;
+        private IDictionary<(Type beanType, string beanName), Type> typeMap;
 
         private class AssemblyNameComparer : IEqualityComparer<string>
         {
@@ -136,6 +138,33 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return rootObject;
         }
+        /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
+        /// <param name="rootBeanName"></param>
+        /// <returns></returns>
+        public object GetOrCreateObjectTree(string rootTypeName, out IOCCDiagnostics diagnostics
+            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
+        {
+            diagnostics = new DiagnosticBuilder().Diagnostics;
+            IList <Assembly> assemblies = AssembleAssemblies(assemblyNames);
+            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+              , ref diagnostics, profile, os);
+            (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
+             IOCObjectTreeContainer container;
+            if (mapObjectTreeContainers.ContainsKey(profile))
+            {
+                container = mapObjectTreeContainers[profile];
+            }
+            else
+            {
+                container = new IOCObjectTreeContainer(profile, typeMap);
+            }
+            var rootObject = container.GetOrCreateObjectTree(rootType, ref diagnostics, rootBeanName);
+            if (rootObject == null && diagnostics.HasWarnings)
+            {
+                throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
+            }
+            return rootObject;
+        }
 
         public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics
             , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME )
@@ -143,6 +172,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             diagnostics = new DiagnosticBuilder().Diagnostics;
             return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, rootBeanName);
         }
+
         /// <summary>
         /// <see cref="GetOrCreateObjectTree"/>
         /// this overload does not print out the diagnostics
@@ -151,8 +181,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         private TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
             , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
         {
+            return GetOrCreateObjectTreeExEx<TRootType>(ref diagnostics, profile, rootBeanName);
+        }
+
+        private TRootType GetOrCreateObjectTreeExEx<TRootType>(ref IOCCDiagnostics diagnostics
+          , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
+            {
             getOrCreateObjectTreeCalled = true;
-            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames, typeof(TRootType).Assembly, ref diagnostics);
+            assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
+            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
             typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
             IOCObjectTreeContainer container;
@@ -164,38 +201,40 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree<TRootType>(ref diagnostics, rootBeanName);
+            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
             }
-            return rootObject;
+            System.Diagnostics.Debug.Assert(rootObject is TRootType);
+            return (TRootType)rootObject;
         }
-
+        struct st
+        {
+            private int a;
+        }
         /// <summary>
         /// builds list of all the assemblies involved in the dependency tree
         /// </summary>
         /// <param name="assemblyNames">list of names provided by caller.
-        /// This should include the names of all assemblies containing dependencies (concrete classes)
-        /// involved in the object model of this app.  Optionally this can include the assembly
-        /// of the root class in the tree</param>
-        /// <param name="rootAssembly">The assembly which contains the root class</param>
+        ///     This should include the names of all assemblies containing dependencies (concrete classes)
+        ///     involved in the object model of this app.  Optionally this can include the assembly
+        ///     of the root class in the tree</param>
         /// <returns></returns>
-        private IList<Assembly> AssembleAssemblies(IList<string> assemblyNames
-          , Assembly rootAssembly, ref IOCCDiagnostics diagnostics)
+        private IList<Assembly> AssembleAssemblies(IList<string> assemblyNames)
         {
-            ISet<string> assemblyNamesSet = new HashSet<string>(assemblyNames, new AssemblyNameComparer());
-            ISet<Assembly> assembliesSet = new HashSet<Assembly>();
-            assembliesSet.Add(rootAssembly);
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Console.WriteLine(assembly.GetName().Name);
-                if (assemblyNamesSet.Contains(assembly.GetName().Name))
-                {
-                    assembliesSet.Add(assembly);
-                }
-            }
-            return assembliesSet.ToList();
+            ISet<string> assemblyNameSet = assemblyNames.ToHashSet( s => s);
+            return AppDomain.CurrentDomain.GetAssemblies()
+              .Where(a => assemblyNameSet.Contains(a.GetName().Name)).ToList();
+        }
+        /// <param name="typeFullName">classic Type.FullName</param>
+        /// <param name="IOCCUserEnteredName">Hopefully same as Type.FullName except for generics where
+        ///     parameters have the same format as a program delcaration, e.g. MyClass&lt;MyOuterParam&lt;MyInnerParam&gt;&gt;</param>
+        /// <returns>true if the types match i.e.
+        ///     if a type identified by IOCCUserEnteredName would output typeFullName as its FullName</returns>
+        private static bool AreTypeNamesEqualish(string typeFullName, string IOCCUserEnteredName)
+        {
+            return typeFullName == IOCCUserEnteredName;
         }
     }
 }

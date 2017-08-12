@@ -24,12 +24,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// 2. may be used to create object tree fragments when running tests
         /// 3. may be used to create an object or link to an existing object
         /// </summary>
-        /// <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
+        /// <param name="rootType">The top node in the tree</param>
         /// <returns>an ojbect of root type</returns>
-        public TRootType GetOrCreateObjectTree<TRootType>(ref IOCCDiagnostics diagnostics, string rootBeanName)
+        public object GetOrCreateObjectTree(Type rootType
+          ,ref IOCCDiagnostics diagnostics, string rootBeanName)
         {
             try
             {
+                System.Diagnostics.Debug.Assert(rootType != null);
+                System.Diagnostics.Debug.Assert(rootBeanName != null);
                 // the key in the objects created so far map comprises 2 types.  The first is the
                 // intended concrete type that will be instantiated.  This works well for
                 // non-generic types but for generics the concrete type, which is taken from the typeMap,
@@ -38,19 +41,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                 // has been taken from the member information of the declaring task provides the generic argument
                 IDictionary<(Type beanType, Type beanReferenceType), object> mapObjectsCreatedSoFar =
                     new Dictionary<(Type, Type), object>();
-                object rootObject;
-                rootObject = CreateObjectTree((typeof(TRootType), rootBeanName)
-                  ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails());
-                if (!(rootObject is TRootType) && rootObject != null)
+                var rootObject = CreateObjectTree((rootType, rootBeanName)
+                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails());
+                if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
-                    throw new IOCCInternalException($"object created by IOC container is not {typeof(TRootType).Name} as expected");
+                    throw new IOCCInternalException($"object created by IOC container is not {rootType.Name} as expected");
                 }
-                return (TRootType) rootObject;
+                System.Diagnostics.Debug.Assert(rootObject == null 
+                  || rootType.IsInstanceOfType(rootObject));
+                return rootObject;
             }
             catch (IOCCNoArgConstructorException inace)
             {
                 dynamic diagnostic = diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
-                diagnostic.Class = typeof(TRootType).GetIOCCName();
+                diagnostic.Class = rootType.GetIOCCName();
                 diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", inace, diagnostics);
             }
@@ -82,11 +86,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 Type implementationType;
                 if (IsBeanPresntInTypeMap(beanId))
-                //if (typeMap.ContainsKey(beanId))
                 {
                     implementationType = GetImplementationFromTypeMap(beanId);
-                          
-                    //implementationType = typeMap[beanId];
                 }
                 else
                 {
@@ -110,7 +111,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                         return null;
                     }
                 }
-                //if (IsBeanAlreadyCreated(mapObjectsCreatedSoFar, (implementationType, beanId.beanName)))
                 if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
                 {       // there is a cyclical dependency
                     bean = mapObjectsCreatedSoFar[(implementationType, beanId.beanType)];
@@ -162,13 +162,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
             }
             return bean;
-        }
-
-        private bool IsBeanAlreadyCreated(IDictionary<(Type type, string beanName)
-          , object> mapObjectsCreatedSoFar, (Type, string) beanId)
-        {
-            return true;
-
         }
 
         /// <param name="beanid">Typically this is the type ofa member 
