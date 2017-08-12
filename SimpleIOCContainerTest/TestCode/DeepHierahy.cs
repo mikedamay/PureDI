@@ -10,12 +10,12 @@ namespace IOCCTest.TestCode
         dynamic GetResults();
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class DeepHierahy : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2a level2a = null;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2b level2b = null;
 
         public dynamic GetResults()
@@ -26,12 +26,12 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2b : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2b3a level2b3a = null;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2b3b level2b3b = null;
         public dynamic GetResults()
         {
@@ -42,22 +42,22 @@ namespace IOCCTest.TestCode
         }
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2b3a
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2b3b
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2a : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2a3a level2a3a = null;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private Level2a3b level2a3b = null;
         public dynamic GetResults()
         {
@@ -67,11 +67,11 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2a3a
     {
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class Level2a3b
     {
     }

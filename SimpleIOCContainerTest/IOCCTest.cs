@@ -129,11 +129,11 @@ namespace IOCCTest
             Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class TestRoot
     {
 #pragma warning disable 649
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public ITest test;
     }
 
@@ -142,7 +142,7 @@ namespace IOCCTest
         
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     class Test : ITest
     {
         

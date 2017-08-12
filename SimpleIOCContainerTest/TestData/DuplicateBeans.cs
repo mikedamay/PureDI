@@ -2,18 +2,18 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class DuplicateBeans : Interface1
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class DuplicateBeans2 : Interface1
     {
         
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class TrailingBean
     {
         

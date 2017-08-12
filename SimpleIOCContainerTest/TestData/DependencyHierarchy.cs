@@ -9,7 +9,7 @@ using com.TheDisappointedProgrammer.IOCC;
 // this module is not compiled as part of the project.  It is embedded as a resource.
 namespace IOCCTest.TestData.DependencyHierarchy
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class ForstGemClassWithManyAncestors8 : SecondGenClass2 , ISecondGenWithAncestors2, ISecondGen3
     {
     }

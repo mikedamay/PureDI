@@ -12,25 +12,25 @@ namespace IOCCTest.TestData
 
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class GenericDerived : GenericBase<int>
     {
 
     }
 
 
-    [IOCCDependency]
+    [IOCCBean]
     class Gen<T>
     {
 
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     class GenUser : Gen<T>
     {
 
     }
-    [IOCCDependency]
+    [IOCCBean]
     class T
     {
 

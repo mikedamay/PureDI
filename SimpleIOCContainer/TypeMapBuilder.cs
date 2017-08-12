@@ -15,39 +15,39 @@ namespace com.TheDisappointedProgrammer.IOCC
             foreach (Assembly assembly in assemblies)
             {
                 var query
-                  = assembly.GetTypes().Where(d => d.TypeIsADependency(profile, os)).SelectMany(d
+                  = assembly.GetTypes().Where(d => d.TypeIsABean(profile, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                  .Select(i => ((i, d.GetDependencyName()), d)));
+                  .Select(i => ((i, d.GetBeanName()), d)));
                 IList<((Type, string), Type)> list = query.ToList();
-                foreach (((Type dependencyInterface, string name), Type dependencyImplementation) in query)
+                foreach (((Type beanInterface, string name), Type beanImplementation) in query)
                 {
-                    if (dependencyImplementation.IsValueType && dependencyInterface != dependencyImplementation)
+                    if (beanImplementation.IsValueType && beanInterface != beanImplementation)
                     {
                         // this is a struct and dependencyInterface is System.ValueType which
                         // should be hidden, so we ignore it
                         continue;
                     }
-                    if (dependencyImplementation.IsAbstract)
+                    if (beanImplementation.IsAbstract)
                     {
                         IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
-                        diag.AbstractClass = dependencyImplementation.GetIOCCName();
+                        diag.AbstractClass = beanImplementation.GetIOCCName();
                         group.Add(diag);
                     }
                     else
                     {
-                        if (map.ContainsKey((dependencyInterface, name)))
+                        if (map.ContainsKey((beanInterface, name)))
                         {
                             IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
                             dynamic diag = group.CreateDiagnostic();
-                            diag.Interface1 = dependencyInterface.GetIOCCName();
+                            diag.Interface1 = beanInterface.GetIOCCName();
                             diag.BeanName = name;
-                            diag.NewBean = dependencyImplementation.GetIOCCName();
-                            diag.ExistingBean = (map[(dependencyInterface, name)] as Type).GetIOCCName();
+                            diag.NewBean = beanImplementation.GetIOCCName();
+                            diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
                             group.Add(diag);
                             continue;
                         }
-                        map.Add((dependencyInterface, name), dependencyImplementation);                        
+                        map.Add((beanInterface, name), beanImplementation);                        
                     }
                 }
             }
@@ -63,11 +63,11 @@ namespace com.TheDisappointedProgrammer.IOCC
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsADependency(this Type type, string profile, IOCC.OS os)
+        public static bool TypeIsABean(this Type type, string profile, IOCC.OS os)
         {
-            IOCCDependencyAttribute ida 
-              = (IOCCDependencyAttribute)type.GetCustomAttributes()
-              .FirstOrDefault(attr => attr is IOCCDependencyAttribute);
+            IOCCBeanAttribute ida 
+              = (IOCCBeanAttribute)type.GetCustomAttributes()
+              .FirstOrDefault(attr => attr is IOCCBeanAttribute);
             return 
               ida != null 
               && (
@@ -79,15 +79,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)
         {
             yield return implementation;
-            foreach (Type dependencyInterface in interfaces)
+            foreach (Type beanInterface in interfaces)
             {
-                yield return dependencyInterface;
+                yield return beanInterface;
             }
         }
 
-        public static string GetDependencyName(this Type dependency)
+        public static string GetBeanName(this Type bean)
         {
-            return dependency.GetCustomAttributes<IOCCDependencyAttribute>().Select(attr => attr.Name).FirstOrDefault();
+            return bean.GetCustomAttributes<IOCCBeanAttribute>().Select(attr => attr.Name).FirstOrDefault();
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {

@@ -10,7 +10,7 @@
                interface or base class then use the bean's "name" 
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</userGuide>
-    <template>attempt to add duplicate dependency: {Interface1} {BeanName}, attempting to add ${NewBean}, when ${ExistingBean} is already included</template>
+    <template>attempt to add duplicate bean: {Interface1} {BeanName}, attempting to add ${NewBean}, when ${ExistingBean} is already included</template>
     <artefacts>
       <Interface1/>
       <NewBean/>
@@ -64,7 +64,7 @@
     <severity>Warning</severity>
     <intro>A reference to a missing bean has been encountered</intro>
     <userGuide>The most likely cause of this issue is that there are 
-      duplicate beans or that the dependency referred to was
+      duplicate beans or that the bean referred to was
       not a concrete class or struct.  The details should be listed
       in the relevant diagnostics above.</userGuide>
     <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>

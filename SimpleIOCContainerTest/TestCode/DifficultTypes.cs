@@ -2,66 +2,66 @@
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     internal class Generic<T>
     {
         public string Name => "Generic<T>";
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class RefersToGeneric
     {
-        [IOCCInjectedDependency] private Generic<int> genericInt;
+        [IOCCBeanReference] private Generic<int> genericInt;
         public Generic<int> GenericInt => genericInt;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class GenericHolderParent
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private GenericHolder<GenericHeld> genericHolder;
         public GenericHolder<GenericHeld> GenericHolder => genericHolder;
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class GenericHolder<T>
     {
-        [IOCCInjectedDependency] private T injectedT;
+        [IOCCBeanReference] private T injectedT;
         public T GenericHeld => injectedT;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class GenericHeld
     {
         public string Name => "GenericHeld";
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class GenericWith3Params<A, B, C>
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class MultipleParamGenericUser
     {
         public GenericWith3Params<int, int, int> Multiple => multiple;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private GenericWith3Params<int, int, int> multiple;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class NestedGeneric<T>
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class WrapperGeneric<T>
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class WrapperUser
     {
         public WrapperGeneric<NestedGeneric<int>> Nested => nested;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private WrapperGeneric<NestedGeneric<int>> nested;
     }
 }

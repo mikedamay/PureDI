@@ -7,7 +7,7 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestData.DuplicateInterfaces
 {
-    [IOCCDependency]
+    [IOCCBean]
     class DuplicateInterfaces3 : FirstGen2, SecondGen1
     {
     }

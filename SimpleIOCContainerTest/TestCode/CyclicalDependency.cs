@@ -4,11 +4,11 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class SelfReferring : IResultGetter
     {
 #pragma warning disable 649
-        [IOCCInjectedDependency] private SelfReferring child;
+        [IOCCBeanReference] private SelfReferring child;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -16,10 +16,10 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class CyclicalDependency : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public Child child;
         public dynamic GetResults()
         {
@@ -29,13 +29,13 @@ namespace IOCCTest.TestCode
         }
 
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class Child : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public CyclicalDependency parent;
 
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public GrandChild grandChild;
         public dynamic GetResults()
         {
@@ -45,10 +45,10 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class GrandChild : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public CyclicalDependency grandParent;
         public dynamic GetResults()
         {
@@ -58,10 +58,10 @@ namespace IOCCTest.TestCode
         }
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     class ParentWithInterface : IParent, IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private IChild child;
         public dynamic GetResults()
         {
@@ -79,10 +79,10 @@ namespace IOCCTest.TestCode
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class ChildWithInterface : IChild, IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private IParent parent;
         public dynamic GetResults()
         {
@@ -96,10 +96,10 @@ namespace IOCCTest.TestCode
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class BaseClass : BasestClass
     {
-        [IOCCInjectedDependency] private ChildClass childClass;
+        [IOCCBeanReference] private ChildClass childClass;
         public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -107,12 +107,12 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class ChildClass : BaseClass
     {
         #pragma warning disable 414     // field not used
         (int i, string s) iiss = (1, "");
-        [IOCCInjectedDependency] private BasestClass basestClass;
+        [IOCCBeanReference] private BasestClass basestClass;
         public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -121,11 +121,11 @@ namespace IOCCTest.TestCode
         }
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class ClassWithMultipleInterfaces : Interface1, Interface2, IResultGetter
     {
-        [IOCCInjectedDependency] private Interface1 interface1;
-        [IOCCInjectedDependency] private Interface1 interface2;
+        [IOCCBeanReference] private Interface1 interface1;
+        [IOCCBeanReference] private Interface1 interface2;
 
         public dynamic GetResults()
         {

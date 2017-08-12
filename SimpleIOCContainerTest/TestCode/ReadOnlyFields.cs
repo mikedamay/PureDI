@@ -3,10 +3,10 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class ReadOnlyFields : IResultGetter
     {
-        [IOCCInjectedDependency] private readonly ReadOnlyFields field = null;
+        [IOCCBeanReference] private readonly ReadOnlyFields field = null;
 
         public dynamic GetResults()
         {
@@ -15,10 +15,10 @@ namespace IOCCTest.TestCode
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class AlreadyInitialized : IResultGetter
     {
-        [IOCCInjectedDependency] private readonly ReadOnlyFields field = new ReadOnlyFields();
+        [IOCCBeanReference] private readonly ReadOnlyFields field = new ReadOnlyFields();
 
         public dynamic GetResults()
         {

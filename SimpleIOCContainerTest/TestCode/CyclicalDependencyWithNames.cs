@@ -4,10 +4,10 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.TestCode.WithNames
 { 
-    [IOCCDependency(Name="name-A")]
+    [IOCCBean(Name="name-A")]
     public class CyclicalDependency : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public Child child;
         public dynamic GetResults()
         {
@@ -17,10 +17,10 @@ namespace IOCCTest.TestCode.WithNames
         }
 
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class CyclicalDependencyAlt : IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public Child child;
         public dynamic GetResults()
         {
@@ -30,13 +30,13 @@ namespace IOCCTest.TestCode.WithNames
         }
 
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class Child : IResultGetter
     {
-        [IOCCInjectedDependency(Name="name-A")]
+        [IOCCBeanReference(Name="name-A")]
         public CyclicalDependency parent;
 
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public GrandChild grandChild;
         public dynamic GetResults()
         {
@@ -46,10 +46,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class GrandChild : IResultGetter
     {
-        [IOCCInjectedDependency(Name="name-A")]
+        [IOCCBeanReference(Name="name-A")]
         public CyclicalDependency grandParent;
         public dynamic GetResults()
         {
@@ -59,11 +59,11 @@ namespace IOCCTest.TestCode.WithNames
         }
     }
 
-    [IOCCDependency(Name = "name-B")]
+    [IOCCBean(Name = "name-B")]
     class ParentWithInterface : IParent, IResultGetter
     {
         
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private IChild child = null;
         public dynamic GetResults()
         {
@@ -73,10 +73,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCDependency(Name = "name-B2")]
+    [IOCCBean(Name = "name-B2")]
     class ParentWithInterface2 : IParent, IResultGetter
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private IChild child = null;
         public dynamic GetResults()
         {
@@ -95,12 +95,12 @@ namespace IOCCTest.TestCode.WithNames
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class ChildWithInterface : IChild, IResultGetter
     {
-        [IOCCInjectedDependency(Name = "name-B")]
+        [IOCCBeanReference(Name = "name-B")]
         private IParent parent = null;
-        [IOCCInjectedDependency(Name = "name-B2")]
+        [IOCCBeanReference(Name = "name-B2")]
         private IParent parent2 = null;
         public dynamic GetResults()
         {
@@ -116,10 +116,10 @@ namespace IOCCTest.TestCode.WithNames
     {
         
     }
-    [IOCCDependency(Name="basest")]
+    [IOCCBean(Name="basest")]
     internal class BaseClass : BasestClass, IResultGetter
     {
-        [IOCCInjectedDependency(Name="child")] private ChildClass childClass = null;
+        [IOCCBeanReference(Name="child")] private ChildClass childClass = null;
         public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -128,10 +128,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class BaseClass2 : BasestClass
     {
-        [IOCCInjectedDependency] private ChildClass childClass = null;
+        [IOCCBeanReference] private ChildClass childClass = null;
         public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -140,11 +140,11 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCDependency(Name="child")]
+    [IOCCBean(Name="child")]
     internal class ChildClass : BaseClass
     {
         #pragma warning disable 649
-        [IOCCInjectedDependency(Name="basest")] private BasestClass basestClass = null;
+        [IOCCBeanReference(Name="basest")] private BasestClass basestClass = null;
         public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();

@@ -5,10 +5,10 @@ namespace IOCCTest.TestData
 {
     public class TreeWithFields
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public ChildOne childOne;
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class ChildOne
     {
         

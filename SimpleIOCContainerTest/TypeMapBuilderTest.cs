@@ -288,11 +288,11 @@ namespace IOCCTest
         private static void CompareMaps(IDictionary<(Type, string), Type> map
           , IDictionary<(string, string), string> mapExpected)
         {
-            foreach ((var interfaceType, var dependencyName) in map.Keys)
+            foreach ((var interfaceType, var beanName) in map.Keys)
             {
-                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.GetIOCCName(), dependencyName)));
-                Assert.AreEqual(mapExpected[(interfaceType.GetIOCCName(), dependencyName)]
-                    , map[(interfaceType, dependencyName)].GetIOCCName());
+                Assert.IsTrue(mapExpected.ContainsKey((interfaceType.GetIOCCName(), beanName)));
+                Assert.AreEqual(mapExpected[(interfaceType.GetIOCCName(), beanName)]
+                    , map[(interfaceType, beanName)].GetIOCCName());
             }
         }
     }
@@ -310,9 +310,9 @@ namespace IOCCTest
             StringBuilder sb = new StringBuilder();
             void AddMapEntry((Type type, string name) key)
             {
-                (Type dependencyInterface, string dependencyName) = key;
-                var dependencyImplementation = map[key] as Type;
-                sb.Append($@"{{(""{dependencyInterface.GetIOCCName()}"", ""{dependencyName}""),""{dependencyImplementation.GetIOCCName()}""}}"
+                (Type beanInterface, string beanName) = key;
+                var beanImplementation = map[key] as Type;
+                sb.Append($@"{{(""{beanInterface.GetIOCCName()}"", ""{beanName}""),""{beanImplementation.GetIOCCName()}""}}"
                           + Environment.NewLine);
 
             }

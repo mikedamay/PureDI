@@ -3,46 +3,46 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     internal class CrossConnections
     {
-        [IOCCInjectedDependency] private ChildA childA;
-        [IOCCInjectedDependency] private ChildB childB;
+        [IOCCBeanReference] private ChildA childA;
+        [IOCCBeanReference] private ChildB childB;
         public ChildA ChildA => childA;
         public ChildB ChildB => childB;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class ChildB
     {
-        [IOCCInjectedDependency] private Common common;
-        [IOCCInjectedDependency] private GrandChildB grandChildB;
+        [IOCCBeanReference] private Common common;
+        [IOCCBeanReference] private GrandChildB grandChildB;
         public Common Common => common;
         public GrandChildB GrandChildB => grandChildB;
     }
-    [IOCCDependency]
+    [IOCCBean]
     internal class GrandChildB
     {
         public string Name => "GrandChildB";
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class GrandChildA
     {
         public string Nme = "GrandChildA";
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class Common
     {
         public string Name = "Common";
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     internal class ChildA
     {
-        [IOCCInjectedDependency] private Common common;
-        [IOCCInjectedDependency] private GrandChildA grandChildA;
+        [IOCCBeanReference] private Common common;
+        [IOCCBeanReference] private GrandChildA grandChildA;
         public Common Common => common;
         public GrandChildA GrandChildA => grandChildA;
     }

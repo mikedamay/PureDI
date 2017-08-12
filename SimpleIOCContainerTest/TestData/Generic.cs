@@ -2,17 +2,17 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class Generic<T>
     {
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class GenericUser
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class GenericChild : Generic<int>
     {
         

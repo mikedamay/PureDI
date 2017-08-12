@@ -4,13 +4,13 @@ namespace IOCCTest.TestData
 {
     public class NestedClasses
     {
-        [IOCCDependency]
+        [IOCCBean]
         private class NestedDependency
         {
             
         }
 
-        [IOCCDependency]
+        [IOCCBean]
         private class NestedDependencyWithAncestors : NestedParent, NestedInterface
         {
             

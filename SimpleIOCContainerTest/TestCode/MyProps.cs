@@ -3,11 +3,11 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     public class MyProps : IResultGetter
     {
         private MyProps myProps;
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         private MyProps MyProp { get { return myProps; } set { myProps = value; }}
 
         public dynamic GetResults()
@@ -18,7 +18,6 @@ namespace IOCCTest.TestCode
         }
     }
 
-    //[IOCCDependency(Name = "name-MyProps2")]
     public class MyProps2 : MyAutoProp
     {
         public override dynamic GetResults()
@@ -29,10 +28,10 @@ namespace IOCCTest.TestCode
         }
         
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class MyAutoProp : IResultGetter
     {
-        [IOCCInjectedDependency(Name= "name-SomeOtherProp2")]
+        [IOCCBeanReference(Name= "name-SomeOtherProp2")]
         private ISomeOtherProp MyProp { get; }
 
         public virtual dynamic GetResults()
@@ -43,7 +42,7 @@ namespace IOCCTest.TestCode
         }
     }
 
-    [IOCCDependency(Name="name-SomeOtherProp")]
+    [IOCCBean(Name="name-SomeOtherProp")]
     public class SomeOtherProp : ISomeOtherProp
     {
         public dynamic GetResults()
@@ -54,7 +53,7 @@ namespace IOCCTest.TestCode
         }
         
     }
-    [IOCCDependency(Name="name-SomeOtherProp2")]
+    [IOCCBean(Name="name-SomeOtherProp2")]
     public class SomeOtherProp2 : ISomeOtherProp
     {
         public dynamic GetResults()

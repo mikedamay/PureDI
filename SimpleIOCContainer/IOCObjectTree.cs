@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -143,8 +135,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                 .Where(f => f is FieldInfo || f is PropertyInfo);
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
-                IOCCInjectedDependencyAttribute attr;
-                if ((attr = fieldOrPropertyInfo.GetCustomAttribute<IOCCInjectedDependencyAttribute>()) != null)
+                IOCCBeanReferenceAttribute attr;
+                if ((attr = fieldOrPropertyInfo.GetCustomAttribute<IOCCBeanReferenceAttribute>()) != null)
                 {
                     System.Diagnostics.Debug.Assert(fieldOrPropertyInfo is FieldInfo
                                                     || fieldOrPropertyInfo is PropertyInfo);

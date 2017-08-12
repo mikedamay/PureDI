@@ -8,16 +8,16 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCDependency]
+    [IOCCBean]
     public struct StructTree
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public StructChild structChild;
     }
-    [IOCCDependency]
+    [IOCCBean]
     public struct StructChild
     {
-        [IOCCInjectedDependency]
+        [IOCCBeanReference]
         public int someValue;
     }
 
@@ -26,54 +26,54 @@ namespace IOCCTest.TestCode
         
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class ClassTree
     {
-        [IOCCInjectedDependency] private StructChild2 structChild2;
+        [IOCCBeanReference] private StructChild2 structChild2;
 
         public ref StructChild2 GetStructChild2()
         {
             return ref structChild2;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public struct StructChild2
     {
-        [IOCCInjectedDependency] private ClassChild classChild;
+        [IOCCBeanReference] private ClassChild classChild;
         public ClassChild GetClassChild()
         {
             return classChild;
         }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class ClassChild
     {
         public int someValue = 1;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class NoArgRoot
     {
         public NoArgRoot(int itnowhasanarg) { }
     }
-    [IOCCDependency]
+    [IOCCBean]
     public class NoArgClassTree
     {
         #pragma warning disable 414
-        [IOCCInjectedDependency] private NoArgStructChild2 structChild2 = new NoArgStructChild2();
+        [IOCCBeanReference] private NoArgStructChild2 structChild2 = new NoArgStructChild2();
     }
-    [IOCCDependency]
+    [IOCCBean]
     public struct NoArgStructChild2
     {
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public struct StructRoot
     {
-        [IOCCInjectedDependency] public SomeChild child;
+        [IOCCBeanReference] public SomeChild child;
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class SomeChild
     {
         

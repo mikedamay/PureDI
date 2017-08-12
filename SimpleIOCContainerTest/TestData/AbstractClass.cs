@@ -2,13 +2,13 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCDependency]
+    [IOCCBean]
     public abstract class AbstractClass
     {
         
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public class ConcreteClass
     {
         
@@ -19,7 +19,7 @@ namespace IOCCTest.TestData
         
     }
 
-    [IOCCDependency]
+    [IOCCBean]
     public abstract class AbstractClass2
     {
         
