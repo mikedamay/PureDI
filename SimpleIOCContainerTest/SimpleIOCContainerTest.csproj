@@ -71,6 +71,7 @@
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\ImplementationClass.cs" />
     <EmbeddedResource Include="TestData\InterfaceClass.cs" />
+    <Compile Include="StringToTypeTreeConverterTest.cs" />
     <Compile Include="TestCode\CrossConnections.cs" />
     <Compile Include="TestCode\CyclicalDependencyWithNames.cs" />
     <Compile Include="TestCode\CyclicalDependency.cs" />

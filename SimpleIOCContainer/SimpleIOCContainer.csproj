@@ -57,7 +57,9 @@
     <Compile Include="OSPlatform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IOCObjectTreeContainer.cs" />
+    <Compile Include="StringToTypeTreeConverter.cs" />
     <Compile Include="TypeMapBuilder.cs" />
+    <Compile Include="TypeTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
