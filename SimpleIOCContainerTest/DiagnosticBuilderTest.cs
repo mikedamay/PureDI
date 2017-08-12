@@ -44,7 +44,7 @@ namespace IOCCTest
             Assert.ThrowsException<Exception>(() =>
             {
                 string schemaName
-                  = "IOCCTest.TestData.SchemaWithNoXML.xml";
+                  = "IOCCTest.TestData.SchemaWithNoXML.badxml";
                 using (Stream s
                     = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
                 {

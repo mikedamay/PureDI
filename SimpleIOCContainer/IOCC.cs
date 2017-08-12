@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -49,6 +50,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Apply the IOCC to the Calculation Server and Maven docs
     // TODO Release Build
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
+    // TODO make sure that root failure when passing type string is handled via diagnostics and that
+    // TODO the explanation is expanded to include that.
     /// <summary>
     /// 
     /// </summary>
@@ -149,7 +152,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
-             IOCObjectTreeContainer container;
+            if (rootType == null)
+            {
+                throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
+            }
+            IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
                 container = mapObjectTreeContainers[profile];
@@ -186,7 +193,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         private TRootType GetOrCreateObjectTreeExEx<TRootType>(ref IOCCDiagnostics diagnostics
           , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
-            {
+        {
             getOrCreateObjectTreeCalled = true;
             assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
@@ -235,6 +242,20 @@ namespace com.TheDisappointedProgrammer.IOCC
         private static bool AreTypeNamesEqualish(string typeFullName, string IOCCUserEnteredName)
         {
             return typeFullName == IOCCUserEnteredName;
+        }
+    }
+    internal static class IOCCLocalExtensions
+    {
+        public static string ListContents(this IList<string> assemblyNames)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(assemblyNames[0]);
+            foreach (var name in assemblyNames.Skip(1))
+            {
+                sb.Append(", ");
+                sb.Append(name);
+            }
+            return sb.ToString();
         }
     }
 }

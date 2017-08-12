@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
-    <Compile Include="FactoryTest.cs" />
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <Compile Include="IOCCTest.cs" />
     <Compile Include="IOCCTest2.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="TestCode\StructTree.cs" />
     <EmbeddedResource Include="TestData\Generic.cs" />
     <EmbeddedResource Include="TestData\BadGeneric.cs" />
+    <Compile Include="FactoryTest.cs" />
     <Compile Include="TypeMapBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +99,7 @@
     <EmbeddedResource Include="TestData\BadDiagnosticScema.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\SchemaWithNoXML.xml" />
+    <None Include="TestData\SchemaWithNoXML.badxml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
