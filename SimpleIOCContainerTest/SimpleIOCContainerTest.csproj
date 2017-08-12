@@ -99,7 +99,7 @@
     <EmbeddedResource Include="TestData\BadDiagnosticScema.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\SchemaWithNoXML.badxml" />
+    <EmbeddedResource Include="TestData\SchemaWithNoXML.badxml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
