@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest
@@ -32,26 +33,26 @@ namespace IOCCTest
                 {
                     return true;
                 }
-                TypeTree[] typeTrees = new TypeTree[typeTree.GenericArguments.Count];
-                typeTree.GenericArguments.CopyTo(typeTrees);
-                List<TypeTree> typeTreeChildren = new List<TypeTree>(typeTrees);
-                foreach (Type childType in type.GenericTypeArguments)
+                IEnumerator<TypeTree> typeTreeiter = typeTree.GenericArguments.OrderBy(tt => tt.TypeFullName)
+                    .GetEnumerator();
+                typeTreeiter.MoveNext();
+                foreach (Type childType in type.GenericTypeArguments.OrderBy(t => t.FullName))
                 {
-                    foreach (TypeTree childTypeTree in typeTreeChildren)
+                    if (Match(childType, typeTreeiter.Current))
                     {
-                        if (Match(childType, childTypeTree))
-                        {
-                            typeTreeChildren.Remove(childTypeTree);
-                            if (typeTreeChildren.Count == 0)
-                            {
-                                return true; // we've matched every type at this level so things must be good
-                            }
-                            break;
-                        }
+                        typeTreeiter.MoveNext();
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
+                return true;
             }
-            return false;   // failed to find a match for all the children
+            else
+            {
+                return false;
+            }
         }
     }
 }
