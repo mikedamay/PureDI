@@ -52,6 +52,7 @@
     <Compile Include="IOCCException.cs" />
     <Compile Include="IOCCExtensions.cs" />
     <Compile Include="IOCCBeanReferenceAttribute.cs" />
+    <Compile Include="IOCCIgnoreAttribute.cs" />
     <Compile Include="IOCObjectTree.cs" />
     <Compile Include="OSDetector.cs" />
     <Compile Include="OSPlatform.cs" />

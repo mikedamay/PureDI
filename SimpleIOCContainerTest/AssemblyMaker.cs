@@ -38,7 +38,7 @@ namespace IOCCTest
             var csc = new CSharpCodeProvider();
             var parms = new CompilerParameters(
               CombineReferencedAssemblies(new string[]
-              {"mscorlib.dll", "System.Core.dll", "SimpleIOCContainer.dll"}
+              {"mscorlib.dll", "System.Core.dll", "SimpleIOCContainer.dll", "SimpleIOCContainerTest.dll"}
               , ExtraAssemblies)
               , SelectAssemblyName(TargetAssemblyName));
             parms.GenerateExecutable = false;

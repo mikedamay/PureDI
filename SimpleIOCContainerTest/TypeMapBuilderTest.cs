@@ -209,7 +209,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.Generic.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            BuildAndOutputTypeMap("IOCCTest.TestData.IgnoreHelper.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
         }
         /// <summary>
         /// Not currently used.
@@ -245,7 +245,7 @@ namespace IOCCTest
                 throw;
             }
         }
-        private void CommonTypeMapTest(string testDataName
+        public static void CommonTypeMapTest(string testDataName
           , IDictionary<(string, string), string> mapExpected
           , string profile = IOCC.DEFAULT_PROFILE, IOCC.OS os = IOCC.OS.Any)
         {

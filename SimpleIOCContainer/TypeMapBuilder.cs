@@ -18,7 +18,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                   = assembly.GetTypes().Where(d => d.TypeIsABean(profile, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                   .Select(i => ((i, d.GetBeanName()), d)));
-                IList<((Type, string), Type)> list = query.ToList();
                 foreach (((Type beanInterface, string name), Type beanImplementation) in query)
                 {
                     if (beanImplementation.IsValueType && beanInterface != beanImplementation)
@@ -92,12 +91,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {
             return type.BaseType == typeof(object)
-                ? type.GetInterfaces()
+                ? type.GetInterfaces().Where( ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IOCCIgnoreAttribute)))
                 : Enumerable
                     .Repeat(type.BaseType, 1)
                     .Concat(type.GetInterfaces())
                     .Concat(type.BaseType.GetBaseClassesAndInterfaces())
-                    .Distinct();
+                    .Distinct().Where(ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IOCCIgnoreAttribute)));
         }
     }
 
