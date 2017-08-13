@@ -143,7 +143,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             return rootObject;
         }
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
-        /// <param name="rootBeanName"></param>
+        /// <param name="rootBeanName">an IOCC type spec in the form "MyNameSpace.MyClass"
+        /// or "MyNameSpace.MyClass&lt;MyActualParam&gt" or
+        /// where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
         /// <returns></returns>
         public object GetOrCreateObjectTree(string rootTypeName, out IOCCDiagnostics diagnostics
             , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)

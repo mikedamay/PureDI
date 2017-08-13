@@ -37,10 +37,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                 switch (ch = typeSpec.Current)
                 {
                     case '<':
-                        this.typeFullName = sb.ToString();
-                        sb.Clear();
                         parent.GenericArguments.Add(this);
                         AddChildren(typeSpec);
+                        this.typeFullName = sb.ToString() + "`" + genericArguments.Count;
+                        sb.Clear();
                         typeSpec.MoveNext();    // eat the trailing ">"
                         return;
                     case ',':

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
+    <Compile Include="TypeMatcherTest.cs" />
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <Compile Include="IOCCTest.cs" />
     <Compile Include="IOCCTest2.cs" />

@@ -19,7 +19,7 @@ namespace IOCCTest
         {
             var sttc = new StringToTypeTreeConverter();
             com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<System.Int32>");
-            Assert.AreEqual("MyClass", tt?.TypeFullName);
+            Assert.AreEqual("MyClass`1", tt?.TypeFullName);
             Assert.AreEqual(1, tt?.GenericArguments.Count);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.TypeFullName);
 
@@ -29,7 +29,7 @@ namespace IOCCTest
         {
             var sttc = new StringToTypeTreeConverter();
             com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<System.Int32,string>");
-            Assert.AreEqual("MyClass", tt?.TypeFullName);
+            Assert.AreEqual("MyClass`2", tt?.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.TypeFullName);
             Assert.AreEqual("string", tt?.GenericArguments[1]?.TypeFullName);
@@ -41,10 +41,10 @@ namespace IOCCTest
         {
             var sttc = new StringToTypeTreeConverter();
             com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<string>>");
-            Assert.AreEqual("MyClass", tt.TypeFullName);
+            Assert.AreEqual("MyClass`2", tt.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
-            Assert.AreEqual("MyClass2", tt?.GenericArguments[0]?.TypeFullName);
-            Assert.AreEqual("MyClass2", tt?.GenericArguments[1]?.TypeFullName);
+            Assert.AreEqual("MyClass2`1", tt?.GenericArguments[0]?.TypeFullName);
+            Assert.AreEqual("MyClass2`1", tt?.GenericArguments[1]?.TypeFullName);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.GenericArguments[0]?.TypeFullName);
             Assert.AreEqual("string", tt?.GenericArguments[1]?.GenericArguments[0]?.TypeFullName);
 
@@ -54,12 +54,12 @@ namespace IOCCTest
         {
             var sttc = new StringToTypeTreeConverter();
             com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<MyClass<string,string>>>");
-            Assert.AreEqual("MyClass", tt.TypeFullName);
+            Assert.AreEqual("MyClass`2", tt.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
-            Assert.AreEqual("MyClass2", tt?.GenericArguments[0]?.TypeFullName);
-            Assert.AreEqual("MyClass2", tt?.GenericArguments[1]?.TypeFullName);
+            Assert.AreEqual("MyClass2`1", tt?.GenericArguments[0]?.TypeFullName);
+            Assert.AreEqual("MyClass2`1", tt?.GenericArguments[1]?.TypeFullName);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.GenericArguments[0]?.TypeFullName);
-            Assert.AreEqual("MyClass", tt?.GenericArguments[1]?.GenericArguments[0]?.TypeFullName);
+            Assert.AreEqual("MyClass`2", tt?.GenericArguments[1]?.GenericArguments[0]?.TypeFullName);
         }
 
         [TestMethod]

@@ -60,6 +60,7 @@
     <Compile Include="StringToTypeTreeConverter.cs" />
     <Compile Include="TwoWayEnumerator.cs" />
     <Compile Include="TypeMapBuilder.cs" />
+    <Compile Include="TypeMatcher.cs" />
     <Compile Include="TypeTree.cs" />
   </ItemGroup>
   <ItemGroup>
