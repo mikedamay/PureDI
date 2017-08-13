@@ -10,7 +10,7 @@ namespace IOCCTest
         public void ShouldConvertNonGenericType()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass");
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt = sttc.Convert("MyClass");
             Assert.AreEqual("MyClass", tt.TypeFullName);
         }
 
@@ -18,7 +18,7 @@ namespace IOCCTest
         public void ShouldConvertSimpleGenericType()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<System.Int32>");
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt = sttc.Convert("MyClass<System.Int32>");
             Assert.AreEqual("MyClass`1", tt?.TypeFullName);
             Assert.AreEqual(1, tt?.GenericArguments.Count);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.TypeFullName);
@@ -28,7 +28,7 @@ namespace IOCCTest
         public void ShouldConvertGenericWithNultipleArguments()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<System.Int32,string>");
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt = sttc.Convert("MyClass<System.Int32,string>");
             Assert.AreEqual("MyClass`2", tt?.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
             Assert.AreEqual("System.Int32", tt?.GenericArguments[0]?.TypeFullName);
@@ -40,7 +40,7 @@ namespace IOCCTest
         public void SHouldConvertGenericWithMultipleLevels()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<string>>");
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<string>>");
             Assert.AreEqual("MyClass`2", tt.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
             Assert.AreEqual("MyClass2`1", tt?.GenericArguments[0]?.TypeFullName);
@@ -53,7 +53,7 @@ namespace IOCCTest
         public void SHouldConvertGenericWithMultipleLevels2()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<MyClass<string,string>>>");
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt = sttc.Convert("MyClass<MyClass2<System.Int32>,MyClass2<MyClass<string,string>>>");
             Assert.AreEqual("MyClass`2", tt.TypeFullName);
             Assert.AreEqual(2, tt?.GenericArguments.Count);
             Assert.AreEqual("MyClass2`1", tt?.GenericArguments[0]?.TypeFullName);
@@ -66,7 +66,7 @@ namespace IOCCTest
         public void ShouldBuildTreeForBadlyFormedTypeSpec()
         {
             var sttc = new StringToTypeTreeConverter();
-            com.TheDisappointedProgrammer.IOCC.TypeTree tt;
+            com.TheDisappointedProgrammer.IOCC.TypeNameTree tt;
             tt = sttc.Convert("abc<,<");
             Assert.IsNotNull(tt);
             tt = sttc.Convert("");

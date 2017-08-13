@@ -61,7 +61,7 @@
     <Compile Include="TwoWayEnumerator.cs" />
     <Compile Include="TypeMapBuilder.cs" />
     <Compile Include="TypeMatcher.cs" />
-    <Compile Include="TypeTree.cs" />
+    <Compile Include="TypeNameTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />

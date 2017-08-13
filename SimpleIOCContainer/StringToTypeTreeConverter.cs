@@ -2,9 +2,9 @@
 {
     internal class StringToTypeTreeConverter
     {
-        public TypeTree Convert(string myClass)
+        public TypeNameTree Convert(string myClass)
         {
-            return new TypeTree(myClass.Replace(" ", "").Replace("\t",""));
+            return new TypeNameTree(myClass.Replace(" ", "").Replace("\t",""));
         }
     }
 }

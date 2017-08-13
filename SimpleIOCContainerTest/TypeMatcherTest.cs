@@ -14,7 +14,7 @@ namespace IOCCTest
         public void shouldMatchSimpleType()
         {
             TypeMatcher tm = new TypeMatcher();
-            bool result = tm.Match(typeof(MyClass), new TypeTree("IOCCTest.TypeMatcherTest+MyClass"));
+            bool result = tm.Match(typeof(MyClass), new TypeNameTree("IOCCTest.TypeMatcherTest+MyClass"));
             Assert.IsTrue(result);
         }
 
@@ -32,7 +32,7 @@ namespace IOCCTest
         {
             TypeMatcher tm = new TypeMatcher();
             bool result = tm.Match(typeof(MyDerived).BaseType
-              ,new TypeTree("IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>"));
+              ,new TypeNameTree("IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>"));
             Assert.IsTrue(result);
         }
 
@@ -50,10 +50,10 @@ namespace IOCCTest
         {
             TypeMatcher tm = new TypeMatcher();
             bool result = tm.Match(typeof(MyDerived2).BaseType
-                , new TypeTree("IOCCTest.TypeMatcherTest+MyGeneric<System.Int32,IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>>"));
+                , new TypeNameTree("IOCCTest.TypeMatcherTest+MyGeneric<System.Int32,IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>>"));
             Assert.IsTrue(result);
             bool result2 = tm.Match(typeof(MyDerived2).BaseType
-                , new TypeTree("IOCCTest.TypeMatcherTest+MyGeneric<IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>,System.Int32>"));
+                , new TypeNameTree("IOCCTest.TypeMatcherTest+MyGeneric<IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>,System.Int32>"));
             Assert.IsTrue(result2);
         }
         [TestMethod]
@@ -61,7 +61,7 @@ namespace IOCCTest
         {
             TypeMatcher tm = new TypeMatcher();
             bool result = tm.Match(typeof(MyDerived2).BaseType
-                , new TypeTree("IOCCTest.TypeMatcherTest+MyGeneric<int,IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>>"));
+                , new TypeNameTree("IOCCTest.TypeMatcherTest+MyGeneric<int,IOCCTest.TypeMatcherTest+MyGeneric<System.Int32>>"));
             Assert.IsFalse(result);
         }
          [TestMethod]
@@ -69,7 +69,7 @@ namespace IOCCTest
         {
             TypeMatcher tm = new TypeMatcher();
             bool result = tm.Match(typeof(MyDerived2).BaseType
-                , new TypeTree("<<>>,abc"));
+                , new TypeNameTree("<<>>,abc"));
             Assert.IsFalse(result);
         }
    }

@@ -14,45 +14,34 @@ namespace IOCCTest
     {
         public bool Match(Type type, string typeSpec)
         {
-            TypeTree typeTree = new StringToTypeTreeConverter().Convert(typeSpec);
-            return Match(type, new TypeTree(""));
+            TypeNameTree typeNameTree = new StringToTypeTreeConverter().Convert(typeSpec);
+            return Match(type, new TypeNameTree(""));
         }
 
-        internal bool Match(Type type, TypeTree typeTree)
+        internal bool Match(Type type, TypeNameTree typeNameTree)
         {
             // The full name returned by constructed generic types includes details
             // of the parameter arguments inluding assembly and version.  The name has to be curtailed
             // e.g. MyClass`1[[System.Int32, mscorlib, version=4.0.0....]] -> MyClass`1 
-            if (new string(type.FullName.TakeWhile(c => c != '[').ToArray()) == typeTree.TypeFullName)
+            if (new string(type.FullName.TakeWhile(c => c != '[').ToArray()) == typeNameTree.TypeFullName)
             {
-                if (type.GenericTypeArguments.Length != typeTree.GenericArguments.Count)
-                {
-                    return false;
-                }
-                if (type.GenericTypeArguments.Length == 0)
-                {
-                    return true;
-                }
-                IEnumerator<TypeTree> typeTreeiter = typeTree.GenericArguments.OrderBy(tt => tt.TypeFullName)
+                IEnumerator<TypeNameTree> typeTreeIter = typeNameTree.GenericArguments.OrderBy(tt => tt.TypeFullName)
                     .GetEnumerator();
-                typeTreeiter.MoveNext();
+                typeTreeIter.MoveNext();
                 foreach (Type childType in type.GenericTypeArguments.OrderBy(t => t.FullName))
                 {
-                    if (Match(childType, typeTreeiter.Current))
+                    if (Match(childType, typeTreeIter.Current))
                     {
-                        typeTreeiter.MoveNext();
+                        typeTreeIter.MoveNext();
                     }
                     else
                     {
-                        return false;
+                        return false;   // children don't match
                     }
                 }
-                return true;
+                return true;            // current type tree and all its children match
             }
-            else
-            {
-                return false;
-            }
+            return false;               // current tree type doesn't match
         }
     }
 }

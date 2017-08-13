@@ -8,27 +8,27 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// takes a string like "MyClass&lt;MyClass2&gt; and builds a tree
     /// TreeMap of "MyClass`1" -> TreeMap of "MyClass2"
     /// </summary>
-    internal class TypeTree
+    internal class TypeNameTree
     {
-        private readonly List<TypeTree> genericArguments = new List<TypeTree>();
+        private readonly List<TypeNameTree> genericArguments = new List<TypeNameTree>();
         private string typeFullName;
         /// <param name="typeSpec">namespace.classname&lt;genericAgrument&gt;</param>
-        public TypeTree(string typeSpec) : this(new TwoWayEnumerator<char>(typeSpec.GetEnumerator())
-          , new TypeTree(new TwoWayEnumerator<char>("".GetEnumerator()), null))
+        public TypeNameTree(string typeSpec) : this(new TwoWayEnumerator<char>(typeSpec.GetEnumerator())
+          , new TypeNameTree(new TwoWayEnumerator<char>("".GetEnumerator()), null))
         {
             // embedded spaces must be dealt with by caller
             System.Diagnostics.Debug.Assert(!typeSpec.Contains(" "));
             System.Diagnostics.Debug.Assert(!typeSpec.Contains("\t"));
         }
 
-        private TypeTree(ITwoWayEnumerator<char> typeSpec, TypeTree parent)
+        private TypeNameTree(ITwoWayEnumerator<char> typeSpec, TypeNameTree parent)
         {
             ProcessTypeSpec(typeSpec, parent);
         }
         public string TypeFullName => typeFullName;
-        public List<TypeTree> GenericArguments => genericArguments;
+        public List<TypeNameTree> GenericArguments => genericArguments;
 
-        private void ProcessTypeSpec(ITwoWayEnumerator<char> typeSpec, TypeTree parent)
+        private void ProcessTypeSpec(ITwoWayEnumerator<char> typeSpec, TypeNameTree parent)
         {
             StringBuilder sb = new StringBuilder();
             while (typeSpec.MoveNext())
@@ -72,7 +72,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             do
             {
-                new TypeTree(typeSpec, this);
+                new TypeNameTree(typeSpec, this);
                 if (typeSpec.Current != ',')
                 {
                     return;     // no more children
