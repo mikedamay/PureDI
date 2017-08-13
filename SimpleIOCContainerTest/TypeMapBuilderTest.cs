@@ -159,9 +159,9 @@ namespace IOCCTest
         public void ShouldRecognizeConnectionsAcrossAssemblies()
         {
             Assembly assemblyInterface = new AssemblyMaker().MakeAssembly(GetResource(
-                "IOCCTest.TestData.InterfaceClass.cs"), TargetAssemblyName : "Mike");
+                "IOCCTest.TestData.InterfaceClass.cs"), TargetAssemblyName : "Mike", InMemory : false);
             Assembly assemblyImplementation = new AssemblyMaker().MakeAssembly(GetResource(
-                "IOCCTest.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"});
+                "IOCCTest.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"}, InMemory: false);
             IOCCDiagnostics diagnostics;
             using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
                 "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))

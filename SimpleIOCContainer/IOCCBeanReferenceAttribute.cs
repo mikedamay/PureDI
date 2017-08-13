@@ -19,7 +19,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public string Name = "";
         public Type Factory = null;
-        public FactoryMethod FactoryMethod = null;
-        public string FactoryParameter = "";
+        public object FactoryParameter = null;
     }
 }

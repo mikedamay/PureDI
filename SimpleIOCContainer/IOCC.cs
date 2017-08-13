@@ -53,6 +53,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
     // TODO the explanation is expanded to include that.
     // TODO remove 2-way enumerator
+    // TODO Perf
+    // TODO Test with nullables
     /// <summary>
     /// 
     /// </summary>
@@ -79,6 +81,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
 
+        private bool excludeRootAssembly;
         private IDictionary<(Type beanType, string beanName), Type> typeMap;
 
         private class AssemblyNameComparer : IEqualityComparer<string>
@@ -98,6 +101,22 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         internal IOCC()
         {
+        }
+
+        /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
+        /// <param name="excludeRootAssembly">By default the assembly containing the type
+        /// passed to GetOrCreateObjectTree() is included automatically.
+        /// Pass true here to ensure it is not scanned for beans.
+        /// Note that if you include the root assembly in the list
+        /// of assemblies then the excludeRootAssembly flag is ignored.
+        /// Note that if a string containing the root type is passed
+        /// to GetOrCreateObjectTree() then the system behaves as if
+        /// the flag was set to true as there is no easy way for the container
+        /// to know the assembly from which it was called.</param>
+        public void SetAssemblies(bool excludeRootAssembly, params string[] assemblyNames)
+        {
+            this.excludeRootAssembly = excludeRootAssembly;
+            SetAssemblies(assemblyNames);
         }
         /// <example>SetAssemblies("MyApp", "MyLib")</example>
         public void SetAssemblies(params string[] assemblyNames)
@@ -151,7 +170,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
-            IList <Assembly> assemblies = AssembleAssemblies(assemblyNames);
+            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
             typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
@@ -198,7 +217,10 @@ namespace com.TheDisappointedProgrammer.IOCC
           , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
         {
             getOrCreateObjectTreeCalled = true;
-            assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
+            if (!excludeRootAssembly)
+            {
+                assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
+            }
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
             typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
@@ -249,13 +271,13 @@ namespace com.TheDisappointedProgrammer.IOCC
     }
     internal static class IOCCLocalExtensions
     {
-        public static string ListContents(this IList<string> assemblyNames)
+        public static string ListContents(this IList<string> assemblyNames, string separator = ", ")
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(assemblyNames[0]);
             foreach (var name in assemblyNames.Skip(1))
             {
-                sb.Append(", ");
+                sb.Append(separator);
                 sb.Append(name);
             }
             return sb.ToString();

@@ -32,7 +32,7 @@ namespace IOCCTest
         /// <param name="ExtraAssemblies"></param>
         /// <returns>An assembly suitable for use in IOCC testing</returns>
         public Assembly MakeAssembly(string CodeText
-            , string TargetAssemblyName = null, string[] ExtraAssemblies = null)
+            , string TargetAssemblyName = null, string[] ExtraAssemblies = null, bool InMemory = true)
         {
             Assembly assembly;
             var csc = new CSharpCodeProvider();
@@ -42,10 +42,12 @@ namespace IOCCTest
               , ExtraAssemblies)
               , SelectAssemblyName(TargetAssemblyName));
             parms.GenerateExecutable = false;
+            parms.GenerateInMemory = InMemory;
             CompilerResults result = csc.CompileAssemblyFromSource(parms, CodeText);
             if (result.Errors.Count > 0)
             {
-                throw new Exception("compilation failed");
+                throw new Exception("compilation failed:" + Environment.NewLine
+                  + result.Errors[0]);
             }
             else
             {

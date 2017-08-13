@@ -10,10 +10,10 @@ namespace IOCCTest
         
     }
     [TestClass]
-    public class IgnoreReferencesAttributeTest
+    public class IgnoreAttributeTest
     {
         [TestMethod]
-        public void ShouldCreateTreeForGenericDeclarations()
+        public void souldIgnoreAncestorsMarkedAsIOCCIgnore()
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
