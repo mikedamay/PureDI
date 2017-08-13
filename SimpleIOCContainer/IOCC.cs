@@ -52,6 +52,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
     // TODO the explanation is expanded to include that.
+    // TODO remove 2-way enumerator
     /// <summary>
     /// 
     /// </summary>

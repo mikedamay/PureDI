@@ -4,7 +4,7 @@
     {
         public TypeTree Convert(string myClass)
         {
-            return new TypeTree(myClass);
+            return new TypeTree(myClass.Replace(" ", "").Replace("\t",""));
         }
     }
 }
