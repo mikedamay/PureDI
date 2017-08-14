@@ -70,6 +70,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     4) If a member is incorrectly marked as [IOCCBeanReference] then
     ///        it will be set to its default value even if it is an initialized member.
     /// </remarks>
+    [IOCCBean]
     public class IOCC
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
@@ -81,6 +82,14 @@ namespace com.TheDisappointedProgrammer.IOCC
         private IList<string> assemblyNames = new List<string>();
         private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
           = new Dictionary<string, IOCObjectTreeContainer>();
+        // the key in the objects created so far map comprises 2 types.  The first is the
+        // intended concrete type that will be instantiated.  This works well for
+        // non-generic types but for generics the concrete type, which is taken from the typeMap,
+        // is a generic type definition.  The builder needs to lay its hands on the type argument
+        // to substitute for the generic parameter.  The second type (beanReferenceType) which
+        // has been taken from the member information of the declaring task provides the generic argument
+        IDictionary<(Type beanType, Type beanReferenceType), object> mapObjectsCreatedSoFar =
+            new Dictionary<(Type, Type), object>();
 
         private bool excludeRootAssembly;
         private IDictionary<(Type beanType, string beanName), Type> typeMap;
@@ -188,7 +197,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree(rootType, ref diagnostics, rootBeanName);
+            var rootObject = container.GetOrCreateObjectTree(rootType, ref diagnostics, rootBeanName, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
@@ -234,7 +243,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName);
+            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);

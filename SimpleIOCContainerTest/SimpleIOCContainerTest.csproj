@@ -53,6 +53,9 @@
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\Generic.cs" />
     <Compile Include="IgnoreAttributeTest.cs" />
     <EmbeddedResource Include="TestData\IgnoreHelper.cs" />
     <Compile Include="TypeMatcherTest.cs" />
