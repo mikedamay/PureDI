@@ -13,7 +13,7 @@ namespace IOCCTest.FactoryTestData
         }
     }
     [IOCCBean]
-    public class MyBean : IResultGetter
+    public class SimpleBean : IResultGetter
     {
         [IOCCBeanReference(Factory=typeof(SimpleFactory), FactoryParameter=10)]
         public int Abc;

@@ -1,4 +1,6 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using System.Dynamic;
+using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
@@ -11,8 +13,14 @@ namespace IOCCTest.FactoryTestData
         }
     }
     [IOCCBean]
-    public class TypeMismatch
+    public class TypeMismatch : IResultGetter
     {
         [IOCCBeanReference(Factory = typeof(TypeMismatchFactory))] public string memberString;
+
+        public dynamic GetResults()
+        {
+            dynamic eo = new ExpandoObject();
+            return eo;
+        }
     }
 }

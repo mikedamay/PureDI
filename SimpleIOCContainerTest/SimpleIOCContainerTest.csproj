@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
-    <EmbeddedResource Include="FactoryTestData\SimpleFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\Generic.cs" />

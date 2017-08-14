@@ -26,110 +26,72 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeWithSimpleFactory()
         {
-            string codeText = GetResource("IOCCTest.FactoryTestData.SimpleFactory.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-              "IOCCTest.FactoryTestData.MyBean"
-              , out IOCCDiagnostics diagnostics);
-            Assert.IsNotNull(rootBean);
-            dynamic results = ((IResultGetter)rootBean).GetResults();
-            Assert.AreEqual(10, results.Abc);
+            (var result, var diagnostics) = CommonFactoryTest("SimpleBean");
+            Assert.AreEqual(10, result.Abc);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
         [TestMethod]
         public void ShouldBuildTreeWithFactoryAndMemberBeans()
         {
-            string codeText = GetResource("IOCCTest.FactoryTestData.FactoryWithMemberBeans.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.FactoryWithMemberBeans"
-                , out IOCCDiagnostics diagnostics);
-            System.Diagnostics.Debug.WriteLine(diagnostics);
-            Assert.IsNotNull(rootBean);
-            dynamic results = ((IResultGetter)rootBean).GetResults();
-            Assert.IsNotNull(results?.Member);
-            Assert.IsNotNull(results?.Member?.GetResults().SubMember);
+            (var result, var diagnostics) = CommonFactoryTest("FactoryWithMemberBeans");
+            Assert.IsNotNull(result?.GetResults().Member);
+            Assert.IsNotNull(result?.GetResults().Member?.GetResults().SubMember);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
         [TestMethod]
         public void ShouldWarnIfFactoryMissing()
         {
-            string codeText = GetResource(
-              "IOCCTest.FactoryTestData.MissingFactory.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.MissingFactory"
-                , out IOCCDiagnostics diagnostics);
+            (var result, var diagnostics) = CommonFactoryTest("MissingFactory");
             Assert.IsTrue(diagnostics.HasWarnings);
             Assert.AreEqual(1, diagnostics.Groups["MissingFactory"].Occurrences.Count);
         }
         [TestMethod]
         public void ShouldCreateTreeForFactoryWithGenerics()
         {
-            string codeText = GetResource(
-                "IOCCTest.FactoryTestData.Generic.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.Generic"
-                , out IOCCDiagnostics diagnostics);
-            dynamic results = (IResultGetter)rootBean;
-            Assert.IsNotNull(results);
-            Assert.IsNotNull(results?.GetResults().MyGeneric);
+            (var result, var diagnostics) = CommonFactoryTest("Generic");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result?.GetResults().MyGeneric);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
         [TestMethod]
         public void ShouldWarnOnFactoryMismatch()
         {
-            string codeText = GetResource(
-                "IOCCTest.FactoryTestData.TypeMismatch.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.TypeMismatch"
-                , out IOCCDiagnostics diagnostics);
+            (var result, var diagnostics) = CommonFactoryTest("TypeMismatch");
             Assert.AreEqual(1, diagnostics.Groups["TypeMismatch"].Occurrences.Count);
         }
 
         [TestMethod]
         public void ShouldWarnIfFactoryExeccuteThrowsExcption()
         {
-            string codeText = GetResource(
-                "IOCCTest.FactoryTestData.ThrowsException.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.ThrowsException"
-                , out IOCCDiagnostics diagnostics);
-            System.Diagnostics.Debug.WriteLine(diagnostics);
+            (var result, var diagnostics) = CommonFactoryTest("ThrowsException");
             Assert.AreEqual(1, diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
 
         }
         [TestMethod]
         public void ShouldCreateTreeForFactoryWithDependencies()
         {
+            (var result, var diagnostics) = CommonFactoryTest("FactoryDependencies");
+            Assert.AreEqual(17, result?.GetResults().SomeValue );
+            Assert.IsFalse(diagnostics.HasWarnings);
+        }
+
+        private static 
+          (dynamic result, IOCCDiagnostics diagnostics) 
+          CommonFactoryTest(string className)
+        {
             string codeText = GetResource(
-                "IOCCTest.FactoryTestData.FactoryDependencies.cs");
+                $"IOCCTest.FactoryTestData.{className}.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             IOCC iocc = new IOCC();
             iocc.SetAssemblies(assembly.GetName().Name);
             object rootBean = iocc.GetOrCreateObjectTree(
-                "IOCCTest.FactoryTestData.FactoryDependencies"
+                $"IOCCTest.FactoryTestData.{className}"
                 , out IOCCDiagnostics diagnostics);
-            dynamic result = (IResultGetter) rootBean;
             System.Diagnostics.Debug.WriteLine(diagnostics);
-            Assert.AreEqual(17, result?.GetResults().SomeValue );
-            Assert.IsFalse(diagnostics.HasWarnings);
+            dynamic result = (IResultGetter) rootBean;
+            return (result, diagnostics);
         }
+
 
         public static string GetResource(string resourceName)
         {

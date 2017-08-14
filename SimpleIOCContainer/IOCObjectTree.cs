@@ -161,11 +161,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                             memberBean = null;
                             if (attr.Factory != null)
                             {
-                                object o = null;
-                                    o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
-                                        , diagnostics
-                                        , new BeanReferenceDetails(constructedBean.GetType()
-                                            , fieldOrPropertyInfo.Name, memberBeanId.beanName));
+                                object
+                                o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
+                                  , diagnostics
+                                  , new BeanReferenceDetails(constructedBean.GetType()
+                                  , fieldOrPropertyInfo.Name, memberBeanId.beanName));
                                 if (o == null)
                                 {
                                     dynamic diag = diagnostics.Groups["MissingFactory"].CreateDiagnostic();
@@ -174,8 +174,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     diag.Factory = attr.Factory.FullName;
                                     diagnostics.Groups["MissingFactory"].Add(diag);
                                     memberBean = null;
-                                }
-                                
+                                }                                
                                 else
                                 {
                                     try
@@ -208,7 +207,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                         diagnostics.Groups["FactoryExecutionFailure"].Add(diag);
                                     }
                                 }
-                        }
+                            }
                             else
                             {
                                 memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
@@ -216,16 +215,16 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     , new BeanReferenceDetails(constructedBean.GetType()
                                         , fieldOrPropertyInfo.Name, memberBeanId.beanName));
                                 fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
-                            }
-                        }
-                    }
-                }
-            }           // CreateChildren()
+                            }       // not a factory
+                        }           // writeable member
+                    }               // this is a bean reference
+                }                   // for each property or field
+            }                       // CreateChildren()
 
             (bool complete, object bean) = MakeBean();
             if (complete)
             {
-                return bean;        // either the bean had already been created
+                return bean;        // either the bean and therefore its children had already been created
                                     // or we were unable to create the bean (null)
             }
             CreateChildren(bean);

@@ -1,4 +1,6 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using System.Dynamic;
+using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
@@ -6,9 +8,15 @@ namespace IOCCTest.FactoryTestData
     
     }
     [IOCCBean]
-    public class MissingFactory
+    public class MissingFactory : IResultGetter
     {
         [IOCCBeanReference(Factory 
           = typeof(FactoryWithoutFactoryAttribute))] private int Abc;
+
+        public dynamic GetResults()
+        {
+            dynamic eo = new ExpandoObject();
+            return eo;
+        }
     }
 }
