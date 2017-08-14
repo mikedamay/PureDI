@@ -158,10 +158,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                         }
                         else // member is writable
                         {
+                            memberBean = null;
                             if (attr.Factory != null)
                             {
-                                object o =
-                                    CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
+                                object o = null;
+                                    o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
                                         , diagnostics
                                         , new BeanReferenceDetails(constructedBean.GetType()
                                             , fieldOrPropertyInfo.Name, memberBeanId.beanName));
@@ -174,23 +175,38 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     diagnostics.Groups["MissingFactory"].Add(diag);
                                     memberBean = null;
                                 }
+                                
                                 else
                                 {
-                                    System.Diagnostics.Debug.Assert(o is IOCCFactory);
-                                    IOCCFactory factory = o as IOCCFactory;
-                                    memberBean = factory.Execute(new BeanFactoryArgs(
-                                        attr.FactoryParameter));
-                                    CreateChildren(memberBean);
+                                    try { 
+                                        System.Diagnostics.Debug.Assert(o is IOCCFactory);
+                                        IOCCFactory factory = o as IOCCFactory;
+                                        memberBean = factory.Execute(new BeanFactoryArgs(
+                                            attr.FactoryParameter));
+                                        CreateChildren(memberBean);
+                                        fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                    }
+                                    catch (ArgumentException ae)
+                                    {
+                                        dynamic diag = diagnostics.Groups["TypeMismatch"].CreateDiagnostic();
+                                        diag.DeclaringBean = constructedBean.GetType().FullName;
+                                        diag.Member = fieldOrPropertyInfo.Name;
+                                        diag.Factory = attr.Factory.FullName;
+                                        diag.ExpectedType = fieldOrPropertyInfo.MemberType;
+                                        diag.Exception = ae;
+                                        diagnostics.Groups["TypeMismatch"].Add(diag);
+                                        memberBean = null;
+                                    }
                                 }
-                            }
+                        }
                             else
                             {
                                 memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
                                     , diagnostics
                                     , new BeanReferenceDetails(constructedBean.GetType()
                                         , fieldOrPropertyInfo.Name, memberBeanId.beanName));
+                                fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
                             }
-                            fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
                         }
                     }
                 }

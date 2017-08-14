@@ -73,17 +73,30 @@ namespace IOCCTest
         public void ShouldCreateTreeForFactoryWithGenerics()
         {
             string codeText = GetResource(
-              "IOCCTest.FactoryTestData.Generic.cs");
+                "IOCCTest.FactoryTestData.Generic.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             IOCC iocc = new IOCC();
             iocc.SetAssemblies(assembly.GetName().Name);
             object rootBean = iocc.GetOrCreateObjectTree(
-              "IOCCTest.FactoryTestData.Generic"
-              , out IOCCDiagnostics diagnostics);
-            dynamic results = (IResultGetter) rootBean;
+                "IOCCTest.FactoryTestData.Generic"
+                , out IOCCDiagnostics diagnostics);
+            dynamic results = (IResultGetter)rootBean;
             Assert.IsNotNull(results);
             Assert.IsNotNull(results?.GetResults().MyGeneric);
             Assert.IsFalse(diagnostics.HasWarnings);
+        }
+        [TestMethod]
+        public void ShouldWarnOnFactoryMismatch()
+        {
+            string codeText = GetResource(
+                "IOCCTest.FactoryTestData.TypeMismatch.cs");
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies(assembly.GetName().Name);
+            object rootBean = iocc.GetOrCreateObjectTree(
+                "IOCCTest.FactoryTestData.TypeMismatch"
+                , out IOCCDiagnostics diagnostics);
+            Assert.AreEqual(1, diagnostics.Groups["TypeMismatch"].Occurrences.Count);
         }
 
 

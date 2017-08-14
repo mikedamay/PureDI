@@ -10,7 +10,9 @@
                interface or base class then use the bean's "name" 
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</userGuide>
-    <template>attempt to add duplicate bean: {Interface1} {BeanName}, attempting to add ${NewBean}, when ${ExistingBean} is already included</template>
+    <template>attempt to add duplicate bean: {Interface1} {BeanName}, 
+              attempting to add ${NewBean}, when ${ExistingBean} is already included.
+              </template>
     <artefacts>
       <Interface1/>
       <NewBean/>
@@ -103,5 +105,26 @@
       <Member/>
       <Factory/>
     </artefacts>
+  </group>
+  <group>
+    <causeCode>TypeMismatch</causeCode>
+    <severity>Warning</severity>
+    <intro>The type assigned to a member by a factory was incompatible</intro>
+    <userGuide>
+      The type of the object returned by the Execute() method of a factory must be compatible with the
+      type of the member to which it is being assigned
+    </userGuide>
+    <template>
+      The type returne from {Factory} for {DeclaringBean}.{Member}
+      {ExpectedType} was expected.Excepton: {Excepton}
+    </template>
+    <artefacts>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+      <ExpectedType/>
+      <Exception/>
+    </artefacts>
+    
   </group>
 </diagnosticSchema>
