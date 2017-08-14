@@ -57,6 +57,8 @@
     <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\Generic.cs" />
     <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
+    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
     <Compile Include="IgnoreAttributeTest.cs" />
     <EmbeddedResource Include="TestData\IgnoreHelper.cs" />
     <Compile Include="TypeMatcherTest.cs" />

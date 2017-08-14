@@ -99,6 +99,37 @@ namespace IOCCTest
             Assert.AreEqual(1, diagnostics.Groups["TypeMismatch"].Occurrences.Count);
         }
 
+        [TestMethod]
+        public void ShouldWarnIfFactoryExeccuteThrowsExcption()
+        {
+            string codeText = GetResource(
+                "IOCCTest.FactoryTestData.ThrowsException.cs");
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies(assembly.GetName().Name);
+            object rootBean = iocc.GetOrCreateObjectTree(
+                "IOCCTest.FactoryTestData.ThrowsException"
+                , out IOCCDiagnostics diagnostics);
+            System.Diagnostics.Debug.WriteLine(diagnostics);
+            Assert.AreEqual(1, diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
+
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForFactoryWithDependencies()
+        {
+            string codeText = GetResource(
+                "IOCCTest.FactoryTestData.FactoryDependencies.cs");
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies(assembly.GetName().Name);
+            object rootBean = iocc.GetOrCreateObjectTree(
+                "IOCCTest.FactoryTestData.FactoryDependencies"
+                , out IOCCDiagnostics diagnostics);
+            dynamic result = (IResultGetter) rootBean;
+            System.Diagnostics.Debug.WriteLine(diagnostics);
+            Assert.AreEqual(17, result?.GetResults().SomeValue );
+            Assert.IsFalse(diagnostics.HasWarnings);
+        }
 
         public static string GetResource(string resourceName)
         {

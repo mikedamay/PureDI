@@ -178,7 +178,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 
                                 else
                                 {
-                                    try { 
+                                    try
+                                    {
                                         System.Diagnostics.Debug.Assert(o is IOCCFactory);
                                         IOCCFactory factory = o as IOCCFactory;
                                         memberBean = factory.Execute(new BeanFactoryArgs(
@@ -196,6 +197,15 @@ namespace com.TheDisappointedProgrammer.IOCC
                                         diag.Exception = ae;
                                         diagnostics.Groups["TypeMismatch"].Add(diag);
                                         memberBean = null;
+                                    }
+                                    catch (Exception ex)
+                                    { 
+                                        dynamic diag = diagnostics.Groups["FactoryExecutionFailure"].CreateDiagnostic();
+                                        diag.DeclaringBean = constructedBean.GetType().FullName;
+                                        diag.Member = fieldOrPropertyInfo.Name;
+                                        diag.Factory = attr.Factory.FullName;
+                                        diag.Exception = ex;
+                                        diagnostics.Groups["FactoryExecutionFailure"].Add(diag);
                                     }
                                 }
                         }

@@ -116,7 +116,7 @@
     </userGuide>
     <template>
       The type returne from {Factory} for {DeclaringBean}.{Member}
-      {ExpectedType} was expected.Excepton: {Excepton}
+      {ExpectedType} was expected.Excepton: {Exception}
     </template>
     <artefacts>
       <DeclaringBean/>
@@ -125,6 +125,23 @@
       <ExpectedType/>
       <Exception/>
     </artefacts>
-    
+  </group>
+  <group>
+    <causeCode>FactoryExecutionFailure</causeCode>
+    <severity>Warning</severity>
+    <intro>An error occurred when creating a bean using bean factory</intro>
+    <userGuide>
+      An exception was thrown during the Execute() method of a bean factory
+    </userGuide>
+    <template>
+      The exception thrown by {Factory} for {DeclaringBean}.{Member}
+      was {Exception}
+    </template>
+    <artefacts>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+      <Exception/>
+    </artefacts>
   </group>
 </diagnosticSchema>
