@@ -89,4 +89,18 @@
       <BeanName/>
     </artefacts>  
   </group>
+  <group>
+    <causeCode>MissingFactory</causeCode>
+    <severity>Warning</severity>
+    <intro>No factory has been found for member(s) marked with a factory bean</intro>
+    <userGuide>
+      Factory beans must be marked as beans [IOCCBean].  They must be in an assembly passed to IOCC.SetAssemblies().
+    </userGuide>
+    <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
+    <artefacts>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+    </artefacts>
+  </group>
 </diagnosticSchema>

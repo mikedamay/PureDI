@@ -1,35 +1,28 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Dynamic;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    public interface ISimpleFactory
-    {
-        object Execute(BeanFactoryArgs args);
-    }
-
     [IOCCBean]
-    public class SimpleFactory : ISimpleFactory
+    public class SimpleFactory : IOCCFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
-            return null;
+            return args.FactoryParmeter;
         }
     }
     [IOCCBean]
-    public class MyBean //: IResultGetter
+    public class MyBean : IResultGetter
     {
         [IOCCBeanReference(Factory=typeof(SimpleFactory), FactoryParameter=10)]
         public int Abc;
 
-        public object GetResults()
+        public dynamic GetResults()
         {
-            return null;
-            //dynamic eo = new ExpandoObject();
-            //eo.Abc = Abc;
-            //return eo;
+            dynamic eo = new ExpandoObject();
+            eo.Abc = Abc;
+            return eo;
         }        
     }
 }

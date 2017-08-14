@@ -55,6 +55,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO remove 2-way enumerator
     // TODO Perf
     // TODO Test with nullables
+    // TODO make IOCC instance a bean by default.
     /// <summary>
     /// 
     /// </summary>
@@ -281,6 +282,19 @@ namespace com.TheDisappointedProgrammer.IOCC
                 sb.Append(name);
             }
             return sb.ToString();
+        }
+
+        public static bool HasAFactory(this MemberInfo type)
+        {
+            return type.GetCustomAttributes().Any(ca => ca.GetType()
+              == typeof(IOCCBeanReferenceAttribute) &&
+              (ca as IOCCBeanReferenceAttribute).Factory != null);
+        }
+
+        public static IOCCBeanReferenceAttribute GetBeanReferenceAttribute(this MemberInfo type)
+        {
+            return (IOCCBeanReferenceAttribute) type.GetCustomAttributes().Where(
+              ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
@@ -31,18 +32,27 @@ namespace IOCCTest
             iocc.SetAssemblies(assembly.GetName().Name);
             object rootBean = iocc.GetOrCreateObjectTree("IOCCTest.FactoryTestData.MyBean", out IOCCDiagnostics diagnostics);
             Assert.IsNotNull(rootBean);
-            //dynamic results = ((IResultGetter)rootBean).GetResults();
-            //Assert.AreEqual(10, results.Abc);
+            dynamic results = ((IResultGetter)rootBean).GetResults();
+            Assert.AreEqual(10, results.Abc);
         }
 
 
         public static string GetResource(string resourceName)
         {
-            using (Stream s
-                = typeof(TypeMapBuilderTest).Assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader sr = new StreamReader(s))
+            try
             {
-                return sr.ReadToEnd();
+                using (Stream s
+                    = typeof(TypeMapBuilderTest).Assembly.GetManifestResourceStream(resourceName))
+                using (StreamReader sr = new StreamReader(s))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            catch (ArgumentNullException aue)
+            {
+                throw new Exception(
+                  $"Most likely the file {resourceName} has not been marked as an embedded resource in the VS project"
+                  , aue);
             }
         }
     }

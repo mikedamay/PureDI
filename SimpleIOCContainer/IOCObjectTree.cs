@@ -118,9 +118,12 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
                 else
                 {
-                    bean = Construct(implementationType.IsGenericType ? beanId.beanType : implementationType);
+                    Type constructableType = implementationType.IsGenericType
+                      ? beanId.beanType : implementationType;
+                        // TODO explain why type to be constructed is complicated by generics
+                    bean = Construct(constructableType);
                     mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = bean;
-                   
+                                           
                 }
             }
             catch (IOCCNoArgConstructorException inace)
@@ -143,22 +146,48 @@ namespace com.TheDisappointedProgrammer.IOCC
                    (Type type, string beanName) memberBeanId =
                         (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
                          object memberBean;
-                        if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
+                    if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(bean))
+                    {
+                        dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
+                        diag.Class = bean.GetType().GetIOCCName();
+                        diag.Member = fieldOrPropertyInfo.Name;
+                        diagnostics.Groups["ReadOnlyProperty"].Add(diag);
+                    }
+                    else    // member is writable
+                    {
+                        if (attr.Factory != null)
                         {
-                            dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
-                            diag.Class = bean.GetType().GetIOCCName();
-                            diag.Member = fieldOrPropertyInfo.Name;
-                            diagnostics.Groups["ReadOnlyProperty"].Add(diag);
-                        }
-                        else
-                        {
-                            
-                            memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
+                            object o =
+                              CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
                               , diagnostics
                               , new BeanReferenceDetails(bean.GetType()
                               , fieldOrPropertyInfo.Name, memberBeanId.beanName));
-                            fieldOrPropertyInfo.SetValue(bean, memberBean);
+                            if (o == null)
+                            {
+                                dynamic diag = diagnostics.Groups["MissingFactory"].CreateDiagnostic();
+                                diag.DeclaringBean = bean.GetType().FullName;
+                                diag.Member = fieldOrPropertyInfo.Name;
+                                diag.Factory = attr.Factory.FullName;
+                                diagnostics.Groups["MissingFactory"].Add(diag);
+                                memberBean = null;
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.Assert(o is IOCCFactory);
+                                IOCCFactory factory = o as IOCCFactory;
+                                memberBean = factory.Execute(new BeanFactoryArgs(
+                                  attr.FactoryParameter));
+                            }
                         }
+                        else
+                        {
+                            memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
+                                , diagnostics
+                                , new BeanReferenceDetails(bean.GetType()
+                                    , fieldOrPropertyInfo.Name, memberBeanId.beanName));
+                        }
+                        fieldOrPropertyInfo.SetValue(bean, memberBean);
+                    }
                 }
             }
             return bean;

@@ -4,14 +4,17 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     public class BeanFactoryArgs
     {
-        public IOCC IOCC { get; }
-        public BeanFactoryArgs(IOCC iocc)
+        public object FactoryParmeter { get; }
+
+        public BeanFactoryArgs(object FactoryParameter)
         {
-            this.IOCC = iocc;
+             this.FactoryParmeter = FactoryParameter;
         }
     }
-
-    public delegate void FactoryMethod(BeanFactoryArgs args);
+    public interface IOCCFactory
+    {
+        object Execute(BeanFactoryArgs args);
+    }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
       , Inherited = false, AllowMultiple = false)]
