@@ -107,6 +107,20 @@
     </artefacts>
   </group>
   <group>
+    <causeCode>BadFatory</causeCode>
+    <severity>Warning</severity>
+    <intro>A factory has been found but it does not implement the required IOCCFactory interface</intro>
+    <userGuide>
+      Factory beans must be marked as beans [IOCCBean].  They must also implement IOCCFactory.
+    </userGuide>
+    <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
+    <artefacts>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+    </artefacts>
+  </group>
+  <group>
     <causeCode>TypeMismatch</causeCode>
     <severity>Warning</severity>
     <intro>The type assigned to a member by a factory was incompatible</intro>

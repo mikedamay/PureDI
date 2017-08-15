@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -38,15 +39,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             try
             {
-                System.Diagnostics.Debug.Assert(rootType != null);
-                System.Diagnostics.Debug.Assert(rootBeanName != null);
+                Assert(rootType != null);
+                Assert(rootBeanName != null);
                 var rootObject = CreateObjectTree((rootType, rootBeanName)
                     ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException($"object created by IOC container is not {rootType.Name} as expected");
                 }
-                System.Diagnostics.Debug.Assert(rootObject == null 
+                Assert(rootObject == null 
                   || rootType.IsInstanceOfType(rootObject));
                 return rootObject;
             }
@@ -149,7 +150,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     IOCCBeanReferenceAttribute attr;
                     if ((attr = fieldOrPropertyInfo.GetCustomAttribute<IOCCBeanReferenceAttribute>()) != null)
                     {
-                        System.Diagnostics.Debug.Assert(fieldOrPropertyInfo is FieldInfo
+                        Assert(fieldOrPropertyInfo is FieldInfo
                                                         || fieldOrPropertyInfo is PropertyInfo);
                         (Type type, string beanName) memberBeanId =
                             (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
@@ -182,12 +183,22 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 {
                                     try
                                     {
-                                        System.Diagnostics.Debug.Assert(o is IOCCFactory);
-                                        IOCCFactory factory = o as IOCCFactory;
-                                        memberBean = factory.Execute(new BeanFactoryArgs(
-                                            attr.FactoryParameter));
-                                        CreateChildren(memberBean);
-                                        fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                        if (o is IOCCFactory)
+                                        {
+                                            IOCCFactory factory = o as IOCCFactory;
+                                            memberBean = factory.Execute(new BeanFactoryArgs(
+                                                attr.FactoryParameter));
+                                            CreateChildren(memberBean);
+                                            fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                        }
+                                        else
+                                        {
+                                            RecordDiagnostic(diagnostics, "BadFactory"
+                                                , ("DeclaringBean", constructedBean.GetType().FullName)
+                                                , ("Member", fieldOrPropertyInfo.Name)
+                                                , ("Factory", attr.Factory.FullName)
+                                                );
+                                        }
                                     }
                                     catch (ArgumentException ae)
                                     {
@@ -359,7 +370,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
         {
-            System.Diagnostics.Debug.Assert( memberInfo is FieldInfo || memberInfo is PropertyInfo);
+            Assert( memberInfo is FieldInfo || memberInfo is PropertyInfo);
             return (memberInfo as FieldInfo)?.FieldType ?? (memberInfo as PropertyInfo).PropertyType;
         }
 

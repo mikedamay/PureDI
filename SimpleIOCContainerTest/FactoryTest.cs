@@ -71,8 +71,22 @@ namespace IOCCTest
         public void ShouldCreateTreeForFactoryWithDependencies()
         {
             (var result, var diagnostics) = CommonFactoryTest("FactoryDependencies");
-            Assert.AreEqual(17, result?.GetResults().SomeValue );
+            Assert.AreEqual(17, result?.GetResults().SomeValue);
             Assert.IsFalse(diagnostics.HasWarnings);
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForGenericFactory()
+        {
+            (var result, var diagnostics) = CommonFactoryTest("GenericFactory");
+            Assert.IsNotNull(result?.GetResults().MyThing);
+            Assert.IsNotNull(result?.GetResults().MySecondThing);
+            Assert.IsFalse(diagnostics.HasWarnings);
+        }
+        [TestMethod]
+        public void ShouldWarnOfBadFactory()
+        {
+            (var result, var diagnostics) = CommonFactoryTest("BadFactory");
+            Assert.IsTrue(diagnostics.HasWarnings);
         }
 
         private static 

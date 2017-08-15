@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -271,7 +272,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
             }
-            System.Diagnostics.Debug.Assert(rootObject is TRootType);
+            Assert(rootObject is TRootType);
             return (TRootType)rootObject;
         }
         struct st
