@@ -91,21 +91,21 @@ namespace com.TheDisappointedProgrammer.IOCC
                     {
                         if (beanReferenceDetails.IsRoot)
                         {
-                            dynamic diag = diagnostics.Groups["MissingRoot"].CreateDiagnostic();
-                            diag.BeanType = beanId.Item1.GetIOCCName();
-                            diag.BeanName = beanId.Item2;
-                            diagnostics.Groups["MissingRoot"].Add(diag);
+                            RecordDiagnostic(diagnostics, "MissingRoot"
+                                , ("BeanType", beanId.Item1.GetIOCCName())
+                                , ("BeanName", beanId.Item2)
+                            );
                             throw new IOCCException("failed to create object tree - see diagnostics for detail",
                                 diagnostics);
                         }
                         else
                         {
-                            dynamic diag = diagnostics.Groups["MissingBean"].CreateDiagnostic();
-                            diag.Bean = beanReferenceDetails.DeclaringType.GetIOCCName();
-                            diag.MemberType = beanId.Item1.GetIOCCName();
-                            diag.MemberName = beanReferenceDetails.MemberName;
-                            diag.MemberBeanName = beanReferenceDetails.MemberBeanName;
-                            diagnostics.Groups["MissingBean"].Add(diag);
+                            RecordDiagnostic(diagnostics, "MissingBean"
+                                , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
+                                , ("MemberType", beanId.Item1.GetIOCCName())
+                                , ("MemberName", beanReferenceDetails.MemberName)
+                                , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
+                                );
                             return (true, null);
                         }
                     }
@@ -127,9 +127,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
                 catch (IOCCNoArgConstructorException inace)
                 {
-                    dynamic diagnostic = diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
-                    diagnostic.Class = inace.Class;
-                    diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
+                    RecordDiagnostic(diagnostics, "MissingNoArgConstructor"
+                      , ("Class", inace.Class));
                     return (true, null);
                 }
                 return (false, constructedBean);
@@ -151,10 +150,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                         object memberBean;
                         if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(constructedBean))
                         {
-                            dynamic diag = diagnostics.Groups["ReadOnlyProperty"].CreateDiagnostic();
-                            diag.Class = constructedBean.GetType().GetIOCCName();
-                            diag.Member = fieldOrPropertyInfo.Name;
-                            diagnostics.Groups["ReadOnlyProperty"].Add(diag);
+                            RecordDiagnostic(diagnostics, "ReadOnlyProperty"
+                                , ("Class", constructedBean.GetType().GetIOCCName())
+                                , ("Member", fieldOrPropertyInfo.Name));
                         }
                         else // member is writable
                         {
@@ -168,12 +166,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                                   , fieldOrPropertyInfo.Name, memberBeanId.beanName));
                                 if (o == null)
                                 {
-                                    dynamic diag = diagnostics.Groups["MissingFactory"].CreateDiagnostic();
-                                    diag.DeclaringBean = constructedBean.GetType().FullName;
-                                    diag.Member = fieldOrPropertyInfo.Name;
-                                    diag.Factory = attr.Factory.FullName;
-                                    diagnostics.Groups["MissingFactory"].Add(diag);
-                                    memberBean = null;
+                                    RecordDiagnostic(diagnostics, "MissingFactory"
+                                        , ("DeclaringBean", constructedBean.GetType().FullName)
+                                        , ("Member", fieldOrPropertyInfo.Name)
+                                        , ("Factory", attr.Factory.FullName)
+                                        , ("ExpectedType", fieldOrPropertyInfo.MemberType));
                                 }                                
                                 else
                                 {
@@ -188,23 +185,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     }
                                     catch (ArgumentException ae)
                                     {
-                                        dynamic diag = diagnostics.Groups["TypeMismatch"].CreateDiagnostic();
-                                        diag.DeclaringBean = constructedBean.GetType().FullName;
-                                        diag.Member = fieldOrPropertyInfo.Name;
-                                        diag.Factory = attr.Factory.FullName;
-                                        diag.ExpectedType = fieldOrPropertyInfo.MemberType;
-                                        diag.Exception = ae;
-                                        diagnostics.Groups["TypeMismatch"].Add(diag);
-                                        memberBean = null;
+                                        RecordDiagnostic(diagnostics, "TypeMismatch"
+                                          ,("DeclaringBean", constructedBean.GetType().FullName)
+                                          ,("Member", fieldOrPropertyInfo.Name)
+                                          ,("Factory", attr.Factory.FullName)
+                                          ,("ExpectedType", fieldOrPropertyInfo.MemberType)
+                                          ,("Exception", ae));
                                     }
                                     catch (Exception ex)
-                                    { 
-                                        dynamic diag = diagnostics.Groups["FactoryExecutionFailure"].CreateDiagnostic();
-                                        diag.DeclaringBean = constructedBean.GetType().FullName;
-                                        diag.Member = fieldOrPropertyInfo.Name;
-                                        diag.Factory = attr.Factory.FullName;
-                                        diag.Exception = ex;
-                                        diagnostics.Groups["FactoryExecutionFailure"].Add(diag);
+                                    {
+                                        RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
+                                            , ("DeclaringBean", constructedBean.GetType().FullName)
+                                            , ("Member", fieldOrPropertyInfo.Name)
+                                            , ("Factory", attr.Factory.FullName)
+                                            , ("Exception", ex));
                                     }
                                 }
                             }
@@ -231,7 +225,23 @@ namespace com.TheDisappointedProgrammer.IOCC
             return bean;
         }
 
- 
+        private static void RecordDiagnostic(IOCCDiagnostics diagnostics, string groupName
+            , params (string member, object value)[] occurrences)
+        {
+            dynamic diag = diagnostics.Groups[groupName].CreateDiagnostic();
+            foreach ((var member, var value) in occurrences)
+            {
+                diag.Members[member] = value;
+            }
+            diagnostics.Groups[groupName].Add(diag);
+            //diag.DeclaringBean = constructedBean.GetType().FullName;
+            //diag.Member = fieldOrPropertyInfo.Name;
+            //diag.Factory = attr.Factory.FullName;
+            //diag.ExpectedType = fieldOrPropertyInfo.MemberType;
+            //diag.Exception = ae;
+            //diagnostics.Groups[groupName].Add(diag);
+        }
+
 
         /// <param name="beanid">Typically this is the type ofa member 
         ///     marked as a bean reference with [IOCCBeanReference]

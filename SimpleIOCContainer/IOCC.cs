@@ -9,11 +9,12 @@ using System.Text;
 namespace com.TheDisappointedProgrammer.IOCC
 {
     // TODO constructor paramter injection
+    // TODO prototypes
     // TODO warning when a field or property has already been initialised
     // DONE guard against circular references - Done
     // DONE handle structs
     // DONE handle properties
-    // TODO object factories
+    // DONE object factories
     // DONE handle multiple assemblies - Done
     // TODO references held in tuples
     // TODO references held in embedded structs 
@@ -56,6 +57,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Perf
     // TODO Test with nullables
     // TODO make IOCC instance a bean by default.
+    // TODO generics for factories
     /// <summary>
     /// 
     /// </summary>
