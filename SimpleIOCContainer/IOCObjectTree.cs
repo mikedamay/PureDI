@@ -27,10 +27,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="rootType">The top node in the tree</param>
         /// <param name="diagnostics"></param>
         /// <param name="rootBeanName"></param>
+        /// <param name="scope"></param>
+        /// <param name="mapObjectsCreatedSoFar"></param>
         /// <param name="mapObjectsCreatedSoFar1"></param>
         /// <returns>an ojbect of root type</returns>
-        public object GetOrCreateObjectTree(Type rootType, ref IOCCDiagnostics diagnostics
-          , string rootBeanName, IDictionary<(Type beanType
+        public object GetOrCreateObjectTree(Type rootType
+          , ref IOCCDiagnostics diagnostics
+          , string rootBeanName, BeanScope scope, IDictionary<(Type beanType
           , Type beanReferenceType), object> mapObjectsCreatedSoFar)
         {
             try
@@ -38,7 +41,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 System.Diagnostics.Debug.Assert(rootType != null);
                 System.Diagnostics.Debug.Assert(rootBeanName != null);
                 var rootObject = CreateObjectTree((rootType, rootBeanName)
-                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), BeanScope.Singleton);
+                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException($"object created by IOC container is not {rootType.Name} as expected");

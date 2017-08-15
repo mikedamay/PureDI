@@ -154,15 +154,19 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// 3. may be used to create an object or link to an existing object
         /// </summary>
         /// <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
+        /// <param name="scope">scope refers to the scope of the root bean i.e. the
+        /// top of the tree - as instantiated by rootType
+        /// It does not affect the rest of the tree.  The other nodes on the tree will
+        /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an ojbect of root type</returns>
-        public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE)
+        public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE, string beanName = DEFAULT_BEAN_NAME, BeanScope scope = BeanScope.Singleton)
         {
             IOCCDiagnostics diagnostics = null;
             TRootType rootObject = default(TRootType);
             try
             {
                 diagnostics = new DiagnosticBuilder().Diagnostics;
-                rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile);
+                rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, DEFAULT_BEAN_NAME, scope);
             }
             finally
             {
@@ -178,13 +182,21 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return rootObject;
         }
+
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
+        /// <param name="diagnostics"></param>
+        /// <param name="profile"></param>
         /// <param name="rootBeanName">an IOCC type spec in the form "MyNameSpace.MyClass"
-        /// or "MyNameSpace.MyClass&lt;MyActualParam&gt" or
-        /// where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
+        ///     or "MyNameSpace.MyClass&lt;MyActualParam&gt" or
+        ///     where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
+        /// <param name="scope">scope refers to the scope of the root bean i.e. the
+        /// top of the tree - as instantiated by rootTypeName
+        /// It does not affect the rest of the tree.  The other nodes on the tree will
+        /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns></returns>
         public object GetOrCreateObjectTree(string rootTypeName, out IOCCDiagnostics diagnostics
-            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
+          ,string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME
+          , BeanScope scope = BeanScope.Singleton)
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
@@ -204,7 +216,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree(rootType, ref diagnostics, rootBeanName, mapObjectsCreatedSoFar);
+            var rootObject = container.GetOrCreateObjectTree(rootType, ref diagnostics, rootBeanName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
@@ -212,11 +224,14 @@ namespace com.TheDisappointedProgrammer.IOCC
             return rootObject;
         }
 
-        public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics
-            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME )
+        /// <param name="scope">scope refers to the scope of the root bean i.e. the
+        /// top of the tree - as instantiated by rootType
+        /// It does not affect the rest of the tree.  The other nodes on the tree will
+        /// honour the Scope property of [IOCCBeanReference]</param>
+        public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, BeanScope scope = BeanScope.Singleton)
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
-            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, rootBeanName);
+            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, rootBeanName, scope);
         }
 
         /// <summary>
@@ -224,14 +239,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
-        private TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics
-            , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
+        /// <param name="profile"></param>
+        /// <param name="rootBeanName"></param>
+        /// <param name="scope"></param>
+        private TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, BeanScope scope)
         {
-            return GetOrCreateObjectTreeExEx<TRootType>(ref diagnostics, profile, rootBeanName);
+            return GetOrCreateObjectTreeExEx<TRootType>(ref diagnostics, profile, rootBeanName, scope);
         }
 
-        private TRootType GetOrCreateObjectTreeExEx<TRootType>(ref IOCCDiagnostics diagnostics
-          , string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME)
+        private TRootType GetOrCreateObjectTreeExEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, BeanScope scope)
         {
             getOrCreateObjectTreeCalled = true;
             if (!excludeRootAssembly)
@@ -250,7 +266,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName, mapObjectsCreatedSoFar);
+            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);

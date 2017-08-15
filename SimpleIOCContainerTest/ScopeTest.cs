@@ -41,21 +41,46 @@ namespace IOCCTest
             Assert.IsFalse(diagnostics.HasWarnings);
 
         }
+
+        [TestMethod]
+        public void ShouldCreateRootAsPrototype()
+        {
+            string className = "RootPrototype";
+            var iocc = MakeIOCCForTestAssembly(className);
+            object rootBean = iocc.GetOrCreateObjectTree(
+                $"IOCCTest.ScopeTestData.{className}"
+                , out IOCCDiagnostics diagnostics1, scope: BeanScope.Prototype);
+            object rootBean2 = iocc.GetOrCreateObjectTree(
+                $"IOCCTest.ScopeTestData.{className}"
+                , out IOCCDiagnostics diagnostics2, scope: BeanScope.Prototype);
+            System.Diagnostics.Debug.WriteLine(diagnostics1);
+            System.Diagnostics.Debug.WriteLine(diagnostics2);
+            Assert.AreNotEqual(rootBean, rootBean2);
+            Assert.IsFalse(diagnostics1.HasWarnings);
+            Assert.IsFalse(diagnostics2.HasWarnings);
+
+        }
         private static
             (dynamic result, IOCCDiagnostics diagnostics)
             CommonScopeTest(string className)
         {
-            string codeText = FactoryTest.GetResource(
-                $"IOCCTest.ScopeTestData.{className}.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
+            var iocc = MakeIOCCForTestAssembly(className);
             object rootBean = iocc.GetOrCreateObjectTree(
                 $"IOCCTest.ScopeTestData.{className}"
                 , out IOCCDiagnostics diagnostics);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             dynamic result = (IResultGetter)rootBean;
             return (result, diagnostics);
+        }
+
+        private static IOCC MakeIOCCForTestAssembly(string className)
+        {
+            string codeText = FactoryTest.GetResource(
+                $"IOCCTest.ScopeTestData.{className}.cs");
+            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            IOCC iocc = new IOCC();
+            iocc.SetAssemblies(assembly.GetName().Name);
+            return iocc;
         }
     }
 }

@@ -24,9 +24,10 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.profile = profile;
             this.typeMap = typeMap;
         }
-        public object GetOrCreateObjectTree(Type rootType, ref IOCCDiagnostics diagnostics
-          , string rootBeanName, IDictionary<(Type beanType
-          , Type beanReferenceType), object> mapObjectsCreatedSoFar)
+        public object GetOrCreateObjectTree(Type rootType
+          , ref IOCCDiagnostics diagnostics, string rootBeanName
+          , BeanScope scope, IDictionary<(Type beanType
+           , Type beanReferenceType), object> mapObjectsCreatedSoFar)
         {
             IOCObjectTree tree;
             if (mapTrees.ContainsKey((rootType, rootBeanName)))
@@ -40,7 +41,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                  
             }
             return tree.GetOrCreateObjectTree(rootType, ref diagnostics
-              ,rootBeanName, mapObjectsCreatedSoFar);
+              ,rootBeanName, scope, mapObjectsCreatedSoFar);
         }
     }
 }

@@ -65,6 +65,7 @@
     <Compile Include="ScopeTest.cs" />
     <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
     <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
+    <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />
     <Compile Include="TypeMatcherTest.cs" />
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <Compile Include="IOCCTest.cs" />
