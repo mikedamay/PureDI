@@ -23,5 +23,6 @@ namespace com.TheDisappointedProgrammer.IOCC
         public string Name = "";
         public Type Factory = null;
         public object FactoryParameter = null;
+        public BeanScope Scope = BeanScope.Singleton;
     }
 }

@@ -38,7 +38,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 System.Diagnostics.Debug.Assert(rootType != null);
                 System.Diagnostics.Debug.Assert(rootBeanName != null);
                 var rootObject = CreateObjectTree((rootType, rootBeanName)
-                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails());
+                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), BeanScope.Singleton);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException($"object created by IOC container is not {rootType.Name} as expected");
@@ -70,12 +70,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="beanReferenceDetails">provides a context to the bean that
         ///     can be displayed in diagnostic messages - currently not used for
         ///     anything else</param>
+        /// <param name="beanScope"></param>
+        /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
         /// <param name="bean">a class already instantiated by IOCC whose
         ///                    fields and properties may need to be injuected</param>
-        private object CreateObjectTree((Type beanType, string beanName) beanId
-          , IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar
-          , IOCCDiagnostics diagnostics
-          , BeanReferenceDetails beanReferenceDetails)
+        private object CreateObjectTree((Type beanType, string beanName) beanId, IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
         {
             (bool constructionComplete, object beanId) MakeBean()
             {
@@ -109,7 +108,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                             return (true, null);
                         }
                     }
-                    if (mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
+                    if ( beanScope != BeanScope.Prototype
+                      && mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
                     {
                         // there is a cyclical dependency
                         constructedBean = mapObjectsCreatedSoFar[(implementationType, beanId.beanType)];
@@ -122,7 +122,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                             : implementationType;
                         // TODO explain why type to be constructed is complicated by generics
                         constructedBean = Construct(constructableType);
-                        mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;
+                        if (beanScope != BeanScope.Prototype)
+                        {
+                            mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;                         
+                        }
                     }
                 }
                 catch (IOCCNoArgConstructorException inace)
@@ -156,14 +159,14 @@ namespace com.TheDisappointedProgrammer.IOCC
                         }
                         else // member is writable
                         {
-                            memberBean = null;
                             if (attr.Factory != null)
                             {
+                                // create the factory
                                 object
                                 o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
                                   , diagnostics
                                   , new BeanReferenceDetails(constructedBean.GetType()
-                                  , fieldOrPropertyInfo.Name, memberBeanId.beanName));
+                                  , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
                                 if (o == null)
                                 {
                                     RecordDiagnostic(diagnostics, "MissingFactory"
@@ -172,7 +175,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                         , ("Factory", attr.Factory.FullName)
                                         , ("ExpectedType", fieldOrPropertyInfo.MemberType));
                                 }                                
-                                else
+                                else    // use the factory to create the member of the declaring bean
                                 {
                                     try
                                     {
@@ -202,12 +205,12 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     }
                                 }
                             }
-                            else
+                            else    // create the member without using a factory
                             {
                                 memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
                                     , diagnostics
                                     , new BeanReferenceDetails(constructedBean.GetType()
-                                        , fieldOrPropertyInfo.Name, memberBeanId.beanName));
+                                        , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
                                 fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
                             }       // not a factory
                         }           // writeable member

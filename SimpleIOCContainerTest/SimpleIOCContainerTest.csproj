@@ -61,6 +61,10 @@
     <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
     <Compile Include="IgnoreAttributeTest.cs" />
     <EmbeddedResource Include="TestData\IgnoreHelper.cs" />
+    <EmbeddedResource Include="ScopeTestData\SimpleScope.cs" />
+    <Compile Include="ScopeTest.cs" />
+    <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
+    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <Compile Include="TypeMatcherTest.cs" />
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <Compile Include="IOCCTest.cs" />

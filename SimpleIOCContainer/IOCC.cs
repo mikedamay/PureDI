@@ -58,6 +58,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Test with nullables
     // TODO make IOCC instance a bean by default.
     // TODO generics for factories
+    // TODO decide if scope on factory reference refers to factory or reference to be created
+    // TODO it makes no sence for the created object as the scope is under the control of the factory
+    // TODO does it make any sense in the case of the factory
+    // TODO allow root type a prototype
     /// <summary>
     /// 
     /// </summary>
@@ -71,6 +75,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     3) static classes and members are not handled.
     ///     4) If a member is incorrectly marked as [IOCCBeanReference] then
     ///        it will be set to its default value even if it is an initialized member.
+    ///     5) There is no way for the root bean to be a prototype
     /// </remarks>
     [IOCCBean]
     public class IOCC
@@ -280,7 +285,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             return typeFullName == IOCCUserEnteredName;
         }
-    }
+    }       // IOCC
+    public enum BeanScope { Singleton, Prototype}
     internal static class IOCCLocalExtensions
     {
         public static string ListContents(this IList<string> assemblyNames, string separator = ", ")
