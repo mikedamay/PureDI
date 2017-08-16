@@ -89,32 +89,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                 object constructedBean;
                 try
                 {
-                    //if (IsBeanPresntInTypeMap(beanId))
-                    //{
-                    //    implementationType = GetImplementationFromTypeMap(beanId);
-                    //}
-                    //else
-                    //{
-                    //    if (beanReferenceDetails.IsRoot)
-                    //    {
-                    //        RecordDiagnostic(diagnostics, "MissingRoot"
-                    //            , ("BeanType", beanId.Item1.GetIOCCName())
-                    //            , ("BeanName", beanId.Item2)
-                    //        );
-                    //        throw new IOCCException("failed to create object tree - see diagnostics for detail",
-                    //            diagnostics);
-                    //    }
-                    //    else
-                    //    {
-                    //        RecordDiagnostic(diagnostics, "MissingBean"
-                    //            , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
-                    //            , ("MemberType", beanId.Item1.GetIOCCName())
-                    //            , ("MemberName", beanReferenceDetails.MemberName)
-                    //            , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
-                    //            );
-                    //        return (true, null);
-                    //    }
-                    //}
                     if (beanScope != BeanScope.Prototype
                       && mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
                     {
@@ -146,7 +120,6 @@ namespace com.TheDisappointedProgrammer.IOCC
             void CreateChildren(Type declaringBeanType
               , out List<MemberSpec> members)
             {
-                //Type declaringBeanType = constructedBean.GetType();
                 members = new List<MemberSpec>();
                 var fieldOrPropertyInfos = declaringBeanType.GetMembers(
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -196,45 +169,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 else    // factory successfully created
                                 {
                                     IOCCFactory factoryBean = (o as IOCCFactory);
-                                    //try
-                                    //{
-                                    //if (o is IOCCFactory)
-                                    //{
-                                    //    IOCCFactory factory = o as IOCCFactory;
-                                    //    memberBean = factory.Execute(new BeanFactoryArgs(
-                                    //        attr.FactoryParameter));
-                                    //    CreateChildren(memberBean, out var factoryCreatedBeanMembers);
-                                    //    AssignMembers(memberBean, factoryCreatedBeanMembers);
-                                    //    //fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
-                                    //    members.Add((new MemberSpec(fieldOrPropertyInfo, factory
-                                    //      , true, factoryCreatedBeanMembers)));
-                                    //}
-                                    //else
-                                    //{
-                                    //    RecordDiagnostic(diagnostics, "BadFactory"
-                                    //        , ("DeclaringBean", declaringBeanType.FullName)
-                                    //        , ("Member", fieldOrPropertyInfo.Name)
-                                    //        , ("Factory", attr.Factory.FullName)
-                                    //        );
-                                    //}
-                                    //}
-                                    //catch (ArgumentException ae)
-                                    //{
-                                    //    RecordDiagnostic(diagnostics, "TypeMismatch"
-                                    //      ,("DeclaringBean", declaringBeanType.FullName)
-                                    //      ,("Member", fieldOrPropertyInfo.Name)
-                                    //      ,("Factory", attr.Factory.FullName)
-                                    //      ,("ExpectedType", fieldOrPropertyInfo.MemberType)
-                                    //      ,("Exception", ae));
-                                    //}
-                                    //catch (Exception ex)
-                                    //{
-                                    //    RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
-                                    //        , ("DeclaringBean", declaringBeanType.FullName)
-                                    //        , ("Member", fieldOrPropertyInfo.Name)
-                                    //        , ("Factory", attr.Factory.FullName)
-                                    //        , ("Exception", ex));
-                                    //}
                                     members.Add(new MemberSpec(fieldOrPropertyInfo, factoryBean, true, null));
                                 }
                             }
@@ -244,7 +178,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                                     , diagnostics
                                     , new BeanReferenceDetails(declaringBeanType
                                         , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
-                                //fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
                                 members.Add(new MemberSpec(fieldOrPropertyInfo, memberBean, false, null));
                             }       // not a factory
                         }           // writeable member
@@ -312,12 +245,7 @@ namespace com.TheDisappointedProgrammer.IOCC
              */
             (bool complete, Type implementationType) GetImplementationType()
             {
-/*               Type factoryImplementationType;
-                if ((factoryImplementationType = GetFactoryImplementation(beanId)) != null)
-                {
-                    return (false, factoryImplementationType);
-                }
-                else */if (IsBeanPresntInTypeMap(beanId))
+                if (IsBeanPresntInTypeMap(beanId))
                 {
                     implementationType = GetImplementationFromTypeMap(beanId);
                     return (false, implementationType);
