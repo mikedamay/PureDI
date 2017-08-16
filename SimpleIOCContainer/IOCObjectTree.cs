@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
@@ -78,44 +79,46 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
         /// <param name="bean">a class already instantiated by IOCC whose
         ///                    fields and properties may need to be injuected</param>
-        private object CreateObjectTree((Type beanType, string beanName) beanId, IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
+        private object CreateObjectTree((Type beanType, string beanName) beanId
+          , IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar
+          , IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
         {
+            Type implementationType;
             (bool constructionComplete, object beanId) MakeBean()
             {
                 object constructedBean;
                 try
                 {
-                    Type implementationType;
-                    if (IsBeanPresntInTypeMap(beanId))
-                    {
-                        implementationType = GetImplementationFromTypeMap(beanId);
-                    }
-                    else
-                    {
-                        if (beanReferenceDetails.IsRoot)
-                        {
-                            RecordDiagnostic(diagnostics, "MissingRoot"
-                                , ("BeanType", beanId.Item1.GetIOCCName())
-                                , ("BeanName", beanId.Item2)
-                            );
-                            throw new IOCCException("failed to create object tree - see diagnostics for detail",
-                                diagnostics);
-                        }
-                        else
-                        {
-                            RecordDiagnostic(diagnostics, "MissingBean"
-                                , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
-                                , ("MemberType", beanId.Item1.GetIOCCName())
-                                , ("MemberName", beanReferenceDetails.MemberName)
-                                , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
-                                );
-                            return (true, null);
-                        }
-                    }
-                    if ( beanScope != BeanScope.Prototype
+                    //if (IsBeanPresntInTypeMap(beanId))
+                    //{
+                    //    implementationType = GetImplementationFromTypeMap(beanId);
+                    //}
+                    //else
+                    //{
+                    //    if (beanReferenceDetails.IsRoot)
+                    //    {
+                    //        RecordDiagnostic(diagnostics, "MissingRoot"
+                    //            , ("BeanType", beanId.Item1.GetIOCCName())
+                    //            , ("BeanName", beanId.Item2)
+                    //        );
+                    //        throw new IOCCException("failed to create object tree - see diagnostics for detail",
+                    //            diagnostics);
+                    //    }
+                    //    else
+                    //    {
+                    //        RecordDiagnostic(diagnostics, "MissingBean"
+                    //            , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
+                    //            , ("MemberType", beanId.Item1.GetIOCCName())
+                    //            , ("MemberName", beanReferenceDetails.MemberName)
+                    //            , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
+                    //            );
+                    //        return (true, null);
+                    //    }
+                    //}
+                    if (beanScope != BeanScope.Prototype
                       && mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
                     {
-                        // there is a cyclical dependency
+                        // there maybe a cyclical dependency
                         constructedBean = mapObjectsCreatedSoFar[(implementationType, beanId.beanType)];
                         return (true, constructedBean);
                     }
@@ -128,7 +131,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                         constructedBean = Construct(constructableType);
                         if (beanScope != BeanScope.Prototype)
                         {
-                            mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;                         
+                            mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;
                         }
                     }
                 }
@@ -140,9 +143,12 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
                 return (false, constructedBean);
             }           // MakeBean()
-            void CreateChildren(object constructedBean)
+            void CreateChildren(Type declaringBeanType
+              , out List<MemberSpec> members)
             {
-                var fieldOrPropertyInfos = constructedBean.GetType().GetMembers(
+                //Type declaringBeanType = constructedBean.GetType();
+                members = new List<MemberSpec>();
+                var fieldOrPropertyInfos = declaringBeanType.GetMembers(
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(f => f is FieldInfo || f is PropertyInfo);
                 foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
@@ -151,14 +157,14 @@ namespace com.TheDisappointedProgrammer.IOCC
                     if ((attr = fieldOrPropertyInfo.GetCustomAttribute<IOCCBeanReferenceAttribute>()) != null)
                     {
                         Assert(fieldOrPropertyInfo is FieldInfo
-                                                        || fieldOrPropertyInfo is PropertyInfo);
+                          || fieldOrPropertyInfo is PropertyInfo);
                         (Type type, string beanName) memberBeanId =
                             (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
                         object memberBean;
-                        if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty(constructedBean))
+                        if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty())
                         {
                             RecordDiagnostic(diagnostics, "ReadOnlyProperty"
-                                , ("Class", constructedBean.GetType().GetIOCCName())
+                                , ("Class", declaringBeanType.GetIOCCName())
                                 , ("Member", fieldOrPropertyInfo.Name));
                         }
                         else // member is writable
@@ -169,78 +175,196 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 object
                                 o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
                                   , diagnostics
-                                  , new BeanReferenceDetails(constructedBean.GetType()
+                                  , new BeanReferenceDetails(declaringBeanType
                                   , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
                                 if (o == null)
                                 {
                                     RecordDiagnostic(diagnostics, "MissingFactory"
-                                        , ("DeclaringBean", constructedBean.GetType().FullName)
+                                        , ("DeclaringBean", declaringBeanType.FullName)
                                         , ("Member", fieldOrPropertyInfo.Name)
                                         , ("Factory", attr.Factory.FullName)
                                         , ("ExpectedType", fieldOrPropertyInfo.MemberType));
-                                }                                
-                                else    // use the factory to create the member of the declaring bean
+                                }
+                                else if (!(o is IOCCFactory))
                                 {
-                                    try
-                                    {
-                                        if (o is IOCCFactory)
-                                        {
-                                            IOCCFactory factory = o as IOCCFactory;
-                                            memberBean = factory.Execute(new BeanFactoryArgs(
-                                                attr.FactoryParameter));
-                                            CreateChildren(memberBean);
-                                            fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
-                                        }
-                                        else
-                                        {
-                                            RecordDiagnostic(diagnostics, "BadFactory"
-                                                , ("DeclaringBean", constructedBean.GetType().FullName)
-                                                , ("Member", fieldOrPropertyInfo.Name)
-                                                , ("Factory", attr.Factory.FullName)
-                                                );
-                                        }
-                                    }
-                                    catch (ArgumentException ae)
-                                    {
-                                        RecordDiagnostic(diagnostics, "TypeMismatch"
-                                          ,("DeclaringBean", constructedBean.GetType().FullName)
-                                          ,("Member", fieldOrPropertyInfo.Name)
-                                          ,("Factory", attr.Factory.FullName)
-                                          ,("ExpectedType", fieldOrPropertyInfo.MemberType)
-                                          ,("Exception", ae));
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
-                                            , ("DeclaringBean", constructedBean.GetType().FullName)
-                                            , ("Member", fieldOrPropertyInfo.Name)
-                                            , ("Factory", attr.Factory.FullName)
-                                            , ("Exception", ex));
-                                    }
+                                    RecordDiagnostic(diagnostics, "BadFactory"
+                                        , ("DeclaringBean", declaringBeanType.FullName)
+                                        , ("Member", fieldOrPropertyInfo.Name)
+                                        , ("Factory", attr.Factory.FullName)
+                                    );
+                                }
+                                else    // factory successfully created
+                                {
+                                    IOCCFactory factoryBean = (o as IOCCFactory);
+                                    //try
+                                    //{
+                                    //if (o is IOCCFactory)
+                                    //{
+                                    //    IOCCFactory factory = o as IOCCFactory;
+                                    //    memberBean = factory.Execute(new BeanFactoryArgs(
+                                    //        attr.FactoryParameter));
+                                    //    CreateChildren(memberBean, out var factoryCreatedBeanMembers);
+                                    //    AssignMembers(memberBean, factoryCreatedBeanMembers);
+                                    //    //fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                    //    members.Add((new MemberSpec(fieldOrPropertyInfo, factory
+                                    //      , true, factoryCreatedBeanMembers)));
+                                    //}
+                                    //else
+                                    //{
+                                    //    RecordDiagnostic(diagnostics, "BadFactory"
+                                    //        , ("DeclaringBean", declaringBeanType.FullName)
+                                    //        , ("Member", fieldOrPropertyInfo.Name)
+                                    //        , ("Factory", attr.Factory.FullName)
+                                    //        );
+                                    //}
+                                    //}
+                                    //catch (ArgumentException ae)
+                                    //{
+                                    //    RecordDiagnostic(diagnostics, "TypeMismatch"
+                                    //      ,("DeclaringBean", declaringBeanType.FullName)
+                                    //      ,("Member", fieldOrPropertyInfo.Name)
+                                    //      ,("Factory", attr.Factory.FullName)
+                                    //      ,("ExpectedType", fieldOrPropertyInfo.MemberType)
+                                    //      ,("Exception", ae));
+                                    //}
+                                    //catch (Exception ex)
+                                    //{
+                                    //    RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
+                                    //        , ("DeclaringBean", declaringBeanType.FullName)
+                                    //        , ("Member", fieldOrPropertyInfo.Name)
+                                    //        , ("Factory", attr.Factory.FullName)
+                                    //        , ("Exception", ex));
+                                    //}
+                                    members.Add(new MemberSpec(fieldOrPropertyInfo, factoryBean, true, null));
                                 }
                             }
                             else    // create the member without using a factory
                             {
                                 memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
                                     , diagnostics
-                                    , new BeanReferenceDetails(constructedBean.GetType()
+                                    , new BeanReferenceDetails(declaringBeanType
                                         , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
-                                fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                //fieldOrPropertyInfo.SetValue(constructedBean, memberBean);
+                                members.Add(new MemberSpec(fieldOrPropertyInfo, memberBean, false, null));
                             }       // not a factory
                         }           // writeable member
                     }               // this is a bean reference
                 }                   // for each property or field
             }                       // CreateChildren()
+            // declaringBean - the bean just returned by MakeBean()
+            void AssignMembers(object declaringBean
+                , List<MemberSpec> childrenArg)
+            {
+                foreach (var memberSpec in childrenArg)
+                {
+                    if (memberSpec.IsFactory)
+                    {
+                        try
+                        {
+                            IOCCFactory factory = memberSpec.MemberOrFactoryBean as IOCCFactory;
+                            object memberBean = factory.Execute(new BeanFactoryArgs(
+                                memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
+                            CreateChildren(memberBean.GetType(), out var memberBeanMembers);
+                            AssignMembers(memberBean, memberBeanMembers);
+                            memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            RecordDiagnostic(diagnostics, "TypeMismatch"
+                                , ("DeclaringBean", declaringBean.GetType().FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory.FullName)
+                                , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
+                                , ("Exception", ae));
+                        }
+                        catch (Exception ex)
+                        {
+                            RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
+                                , ("DeclaringBean", declaringBean.GetType().FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory.FullName)
+                                , ("Exception", ex));
+                        }
+                    }
+                    else
+                    {
+                        memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberSpec.MemberOrFactoryBean);
+                    }
 
-            (bool complete, object bean) = MakeBean();
+                }
+            }
+            Type GetFactoryImplementation((Type type, string name) beanIdArg)
+            {
+                (var factory, var factoryName) = (beanIdArg.type?.GetBeanReferenceAttribute()?.Factory
+                  , beanIdArg.type?.GetBeanReferenceAttribute()?.Name);
+                if (IsBeanPresntInTypeMap((factory, factoryName)))
+                {
+                    return GetImplementationFromTypeMap((factory, factoryName));
+                }
+                return null;
+            }
+            /*
+             * finds the matching concrete type (bean) for some member reference
+             * where the member reference might be a base class or interface together
+             * with an optional bean name (held as part of the bean reference attribute
+             * which allows the container to choose between multiple matching concrete classes
+             * Alternatively the member reference may be the implementationType itself.
+             */
+            (bool complete, Type implementationType) GetImplementationType()
+            {
+/*               Type factoryImplementationType;
+                if ((factoryImplementationType = GetFactoryImplementation(beanId)) != null)
+                {
+                    return (false, factoryImplementationType);
+                }
+                else */if (IsBeanPresntInTypeMap(beanId))
+                {
+                    implementationType = GetImplementationFromTypeMap(beanId);
+                    return (false, implementationType);
+                }
+                else
+                {
+                    if (beanReferenceDetails.IsRoot)
+                    {
+                        RecordDiagnostic(diagnostics, "MissingRoot"
+                            , ("BeanType", beanId.Item1.GetIOCCName())
+                            , ("BeanName", beanId.Item2)
+                        );
+                        throw new IOCCException("failed to create object tree - see diagnostics for detail",
+                            diagnostics);
+                    }
+                    else
+                    {
+                        RecordDiagnostic(diagnostics, "MissingBean"
+                            , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
+                            , ("MemberType", beanId.Item1.GetIOCCName())
+                            , ("MemberName", beanReferenceDetails.MemberName)
+                            , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
+                        );
+                        return (true, null);
+                    }
+                }
+            }
+
+            bool complete;
+            bool hasFactory;
+            object bean;
+            (complete, implementationType) = GetImplementationType();
+            if (complete)
+            {
+                return null;
+            }
+            CreateChildren(implementationType, out var children);
+            (complete, bean) = MakeBean();
             if (complete)
             {
                 return bean;        // either the bean and therefore its children had already been created
                                     // or we were unable to create the bean (null)
             }
-            CreateChildren(bean);
+            AssignMembers(bean, children);
             return bean;
         }
+
 
         private static void RecordDiagnostic(IOCCDiagnostics diagnostics, string groupName
             , params (string member, object value)[] occurrences)
@@ -251,14 +375,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 diag.Members[member] = value;
             }
             diagnostics.Groups[groupName].Add(diag);
-            //diag.DeclaringBean = constructedBean.GetType().FullName;
-            //diag.Member = fieldOrPropertyInfo.Name;
-            //diag.Factory = attr.Factory.FullName;
-            //diag.ExpectedType = fieldOrPropertyInfo.MemberType;
-            //diag.Exception = ae;
-            //diagnostics.Groups[groupName].Add(diag);
         }
-
 
         /// <param name="beanid">Typically this is the type ofa member 
         ///     marked as a bean reference with [IOCCBeanReference]
@@ -357,6 +474,27 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
     }
 
+    internal class MemberSpec
+    {
+        public MemberInfo FieldOrPropertyInfo { get; }          
+        public object MemberOrFactoryBean { get; }
+        public bool IsFactory { get; }
+        public List<MemberSpec> FactoryCreatedMembers { get; }
+
+        public MemberSpec(MemberInfo fieldOrPropertyInfo
+            , object memberOrFactoryBean
+            , bool isFactory
+            , List<MemberSpec> factoryCreatedMembers)
+        {
+            this.FieldOrPropertyInfo = fieldOrPropertyInfo;
+            this.MemberOrFactoryBean = memberOrFactoryBean;
+            this.IsFactory = isFactory;
+            this.FactoryCreatedMembers = factoryCreatedMembers;
+            //Assert(!isFactory && FactoryCreatedMembers == null 
+            //  || isFactory && FactoryCreatedMembers != null);
+        }
+    }
+
     internal class IOCCNoArgConstructorException : Exception
     {
         public string Class { get; }
@@ -406,7 +544,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-        public static bool CanWriteToFieldOrProperty(this MemberInfo memberInfo, object bean)
+        public static bool CanWriteToFieldOrProperty(this MemberInfo memberInfo)
         {
             switch (memberInfo)
             {

@@ -12,9 +12,9 @@ namespace IOCCTest.TestCode.WithNames
     public class DeepHierahy : IResultGetter
     {
         [IOCCBeanReference(Name="level2a")]
-        private Level2a level2a = null;
+        private Level2 level2a = null;
         [IOCCBeanReference(Name="level2b")]
-        private Level2b level2b = null;
+        private Level2 level2b = null;
 
         public dynamic GetResults()
         {
@@ -24,8 +24,12 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
+    public interface Level2
+    {
+
+    }
     [IOCCBean(Name="level2b")]
-    internal class Level2b : IResultGetter
+    internal class Level2b : IResultGetter, Level2
     {
         [IOCCBeanReference(Name="level2b3a")]
         private Level2b3a level2b3a = null;
@@ -51,7 +55,7 @@ namespace IOCCTest.TestCode.WithNames
     }
 
     [IOCCBean(Name = "level2a")]
-    internal class Level2a : IResultGetter
+    internal class Level2a : IResultGetter, Level2
     {
         [IOCCBeanReference(Name="level2a3a")]
         private Level2a3a level2a3a = null;

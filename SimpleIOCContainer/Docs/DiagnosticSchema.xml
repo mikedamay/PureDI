@@ -107,7 +107,7 @@
     </artefacts>
   </group>
   <group>
-    <causeCode>BadFatory</causeCode>
+    <causeCode>BadFactory</causeCode>
     <severity>Warning</severity>
     <intro>A factory has been found but it does not implement the required IOCCFactory interface</intro>
     <userGuide>
