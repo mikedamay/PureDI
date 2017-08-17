@@ -158,4 +158,18 @@
       <Exception/>
     </artefacts>
   </group>
+  <group>
+    <causeCode>CyclicalDepndency</causeCode>
+    <severity>Warning</severity>
+    <intro>A cyclical dependency was found in the object tree.  This is not supported</intro>
+    <userGuide>A cyclical dependency occurs when a class constructor includes
+    a parameter whose own constructor includes a parameter of the original class.
+    Add in intermediate ancestors to make this interesting
+    a parent bean or </userGuide>
+    <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
+    <artefacts>
+      <DeclaringBean/>
+      <ConstructorParam/>
+    </artefacts>
+  </group>
 </diagnosticSchema>

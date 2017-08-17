@@ -43,7 +43,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                 Assert(rootType != null);
                 Assert(rootBeanName != null);
                 var rootObject = CreateObjectTree((rootType, rootBeanName)
-                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), scope);
+                    ,mapObjectsCreatedSoFar, diagnostics, new BeanReferenceDetails(), scope
+                    ,new CycleGuard());
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException($"object created by IOC container is not {rootType.Name} as expected");
@@ -81,8 +82,14 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName) beanId
           , IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar
-          , IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
+          , IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails
+          , BeanScope beanScope, CycleGuard cycleGuard)
         {
+            Type MakeConstructableType((Type beanType, string beanName) beanIdArg, Type implementationTypeArg) 
+              => implementationTypeArg.IsGenericType
+              ? beanIdArg.beanType
+              : implementationTypeArg;
+
             Type implementationType;
             (bool constructionComplete, object beanId) MakeBean()
             {
@@ -98,14 +105,13 @@ namespace com.TheDisappointedProgrammer.IOCC
                     }
                     else
                     {
-                        Type constructableType = implementationType.IsGenericType
-                            ? beanId.Item1
-                            : implementationType;
+                        Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                         // TODO explain why type to be constructed is complicated by generics
-                        constructedBean = Construct(constructableType);
+                        constructedBean = Construct(constructableTypeLocal);
                         if (beanScope != BeanScope.Prototype)
                         {
                             mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;
+                            // TODO replace first param with ConstructableType
                         }
                     }
                 }
@@ -132,7 +138,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                         Assert(fieldOrPropertyInfo is FieldInfo
                           || fieldOrPropertyInfo is PropertyInfo);
                         (Type type, string beanName) memberBeanId =
-                            (fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name);
+                            MakeMemberBeanId(fieldOrPropertyInfo.GetPropertyOrFieldType(), attr.Name, beanId);
                         object memberBean;
                         if (!fieldOrPropertyInfo.CanWriteToFieldOrProperty())
                         {
@@ -149,7 +155,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 o = CreateObjectTree((attr.Factory, attr.Name), mapObjectsCreatedSoFar
                                   , diagnostics
                                   , new BeanReferenceDetails(declaringBeanType
-                                  , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
+                                  , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope, cycleGuard);
                                 if (o == null)
                                 {
                                     RecordDiagnostic(diagnostics, "MissingFactory"
@@ -177,7 +183,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 memberBean = CreateObjectTree(memberBeanId, mapObjectsCreatedSoFar
                                     , diagnostics
                                     , new BeanReferenceDetails(declaringBeanType
-                                        , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
+                                        , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope, cycleGuard);
                                 members.Add(new MemberSpec(fieldOrPropertyInfo, memberBean, false, null));
                             }       // not a factory
                         }           // writeable member
@@ -243,12 +249,12 @@ namespace com.TheDisappointedProgrammer.IOCC
              * which allows the container to choose between multiple matching concrete classes
              * Alternatively the member reference may be the implementationType itself.
              */
-            (bool complete, Type implementationType) GetImplementationType()
+            Type GetImplementationType()
             {
                 if (IsBeanPresntInTypeMap(beanId))
                 {
                     implementationType = GetImplementationFromTypeMap(beanId);
-                    return (false, implementationType);
+                    return implementationType;
                 }
                 else
                 {
@@ -269,28 +275,86 @@ namespace com.TheDisappointedProgrammer.IOCC
                             , ("MemberName", beanReferenceDetails.MemberName)
                             , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
                         );
-                        return (true, null);
+                        return null;
                     }
                 }
             }
 
             bool complete;
-            bool hasFactory;
             object bean;
-            (complete, implementationType) = GetImplementationType();
-            if (complete)
+            if ((implementationType = GetImplementationType()) == null)
             {
-                return null;
+                return null;    // no implementation type found corresponding to this beanId
             }
-            CreateChildren(implementationType, out var children);
-            (complete, bean) = MakeBean();
-            if (complete)
+            Type constructableType = MakeConstructableType(beanId, implementationType);
+            bool cyclicalDependencyFound = false;
+            try
             {
-                return bean;        // either the bean and therefore its children had already been created
-                                    // or we were unable to create the bean (null)
+                cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Push(constructableType);
+                    CreateChildren(constructableType, out var children);
+                    (complete, bean) = MakeBean();
+                    Assert(!cycleGuard.IsCyclicalDependency(constructableType)
+                      || cycleGuard.IsCyclicalDependency(constructableType)
+                      && complete
+                      && bean != null);     // "complete && bean != null" indicates that
+                                            // MakeBean found a bean cached in mapObjectsCreatedSoFar.
+                                            // 
+                                            // if a cyclical dependency was found lower
+                                            // in the stack then a bean must have been
+                                            // created for it at that time. So wtf!
+                    if (complete && !cycleGuard.IsCyclicalDependency(constructableType))
+                    {
+                        return bean;        // either the bean and therefore its children had already been created
+                                            // or we were unable to create the bean (null)
+                    }
+                    cycleGuard.RemoveCyclicalDependency(constructableType);
+                    AssignMembers(bean, children);
+                }
+                else    // there is a cyclical dependency so we
+                        // need to just create the bean itself and defer child creation
+                        // until the implementationType is encountered again
+                        // further up the stack
+                {
+                    (complete, bean) = MakeBean();
+                    if (bean != null)
+                    {
+                        cycleGuard.AddCyclicalDependency(constructableType);
+                    }
+                }
             }
-            AssignMembers(bean, children);
+            finally
+            {
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Pop();
+                }
+            }
             return bean;
+        }
+        /// <summary>
+        /// well, this is tricky.
+        /// </summary>
+        /// <param name="memberDeclaredBeanType"></param>
+        /// <param name="memberDeclaredBeanName"></param>
+        /// <param name="declaringBeanId"></param>
+        /// <returns></returns>
+        (Type type, string beanName)
+          MakeMemberBeanId(Type memberDeclaredBeanType
+          , string memberDeclaredBeanName
+          , (Type type, string beanName) declaringBeanId)
+        {
+            if (memberDeclaredBeanType.IsGenericParameter)
+            {
+                return (declaringBeanId.type.GetGenericArguments()[0]
+                  , memberDeclaredBeanName);
+            }
+            else
+            {
+                return (memberDeclaredBeanType, memberDeclaredBeanName);
+            }
         }
 
 

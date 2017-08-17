@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="CycleGuard.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DiagnosticBuilder.cs" />
     <Compile Include="IOCC.cs" />

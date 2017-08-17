@@ -63,6 +63,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO it makes no sence for the created object as the scope is under the control of the factory
     // TODO does it make any sense in the case of the factory
     // TODO allow root type a prototype
+    // TODO test with no namespace
+    // TODO change name to SimpleIOCContainer from IOCC
+    // TODO optimised build
     /// <summary>
     /// 
     /// </summary>
@@ -173,7 +176,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 if (System.Diagnostics.Debugger.IsAttached)
                 {
-                    System.Diagnostics.Debug.Write(diagnostics);
+                    System.Diagnostics.Debug.WriteLine(diagnostics);
+
                 }
                 else
                 {
