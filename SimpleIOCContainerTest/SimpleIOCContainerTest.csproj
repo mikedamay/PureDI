@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AssemblyMaker.cs" />
     <EmbeddedResource Include="ConstructorTestData\SimpleConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />

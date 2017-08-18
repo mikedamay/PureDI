@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -97,8 +98,8 @@ namespace com.TheDisappointedProgrammer.IOCC
 
             Type implementationType;
 
-            (bool constructionComplete, object beanId) MakeBean()
-            {
+            (bool constructionComplete, object beanId) MakeBean(IList<ChildBeanSpec> constructorParameterSpecs = null)
+            {            
                 object constructedBean;
                 try
                 {
@@ -113,7 +114,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                     else
                     {
                         // TODO explain why type to be constructed is complicated by generics
-                        constructedBean = Construct(constructableTypeLocal);
+                        constructedBean = Construct(constructableTypeLocal
+                          , constructorParameterSpecs, beanId.constructorName);
                         if (beanScope != BeanScope.Prototype)
                         {
                             creationContext.MapObjectsCreatedSoFar[constructableTypeLocal] = constructedBean;
@@ -130,7 +132,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 return (false, constructedBean);
             } // MakeBean()
 
-            void CreateTreeForMember(Info fieldOrPropertyInfo, Type declaringBeanType, List<MemberSpec> members)
+            void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members)
             {
                 IOCCBeanReferenceAttribute attr;
                 if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<IOCCBeanReferenceAttribute>()) != null)
@@ -176,7 +178,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                             else // factory successfully created
                             {
                                 IOCCFactory factoryBean = (o as IOCCFactory);
-                                members.Add(new MemberSpec(fieldOrPropertyInfo, factoryBean, true));
+                                members.Add(new ChildBeanSpec(fieldOrPropertyInfo, factoryBean, true));
                             }
                         }
                         else // create the member without using a factory
@@ -185,43 +187,58 @@ namespace com.TheDisappointedProgrammer.IOCC
                                 , diagnostics
                                 , new BeanReferenceDetails(declaringBeanType
                                     , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
-                            members.Add(new MemberSpec(fieldOrPropertyInfo, memberBean, false));
+                            members.Add(new ChildBeanSpec(fieldOrPropertyInfo, memberBean, false));
                         } // not a factory
                     } // writeable member
                 } // this is a bean reference
             }
 
             void CreateMemberTrees(Type declaringBeanType
-                , out List<MemberSpec> members)
+                , out List<ChildBeanSpec> members)
             {
-                members = new List<MemberSpec>();
+                members = new List<ChildBeanSpec>();
                 var fieldOrPropertyInfos = declaringBeanType.GetMembers(
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(f => f is FieldInfo || f is PropertyInfo);
                 foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
                 {
-                    CreateTreeForMember(new Info(fieldOrPropertyInfo), declaringBeanType, members);
+                    CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType, members);
                 } // for each property or field
             } // CreateMemberTrees()
 
-            void CreateConstructorTrees(Type declaringBeanType
-                , out List<MemberSpec> members)
+
+            ParameterInfo[] GetParametersForConstructorMatching(Type declaringBeanTypeArg, string constructorNameArg)
             {
-                members = new List<MemberSpec>();
+                Type dt = declaringBeanTypeArg;
+                return declaringBeanTypeArg
+                    .GetConstructors().FirstOrDefault(co
+                        => co.GetCustomAttribute<IOCCConstructorAttribute>() != null
+                           && co.GetCustomAttribute<IOCCConstructorAttribute>()?
+                               .Name == constructorNameArg)?.GetParameters();
+            }
+
+            void CreateConstructorTrees(Type declaringBeanType
+                , out List<ChildBeanSpec> members)
+            {
+                members = new List<ChildBeanSpec>();
+                string constructorName = declaringBeanType.GetConstructorNameFromMember();
                 if (declaringBeanType.GetConstructors().Length > 0)
                 {
-                    var paramInfos = declaringBeanType.GetConstructors()[0].GetParameters();
-                    foreach (var paramInfo in paramInfos)
+                    var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
+                    if (paramInfos != null)
                     {
-                        CreateTreeForMember(new Info(paramInfo), declaringBeanType, members);
-                    } // for each property or field
+                        foreach (var paramInfo in paramInfos)
+                        {
+                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members);
+                        } // for each constructor parameter
+                    }
 
                 }
             } // CreateMemberTrees()
 
             // declaringBean - the bean just returned by MakeBean()
             void AssignMembers(object declaringBean
-                , List<MemberSpec> childrenArg)
+                , List<ChildBeanSpec> childrenArg)
             {
                 foreach (var memberSpec in childrenArg)
                 {
@@ -320,8 +337,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                 {
                     cycleGuard.Push(constructableType);
                     CreateMemberTrees(constructableType, out var memberSpecs);
-                    CreateConstructorTrees(constructableType, out var parameterSpecs);
-                    (complete, bean) = MakeBean();
+                    CreateConstructorTrees(constructableType, out var parameterSpec);
+                    (complete, bean) = MakeBean(parameterSpec);
                     Assert(!cyclicalDependencies.Contains(constructableType)
                            || cyclicalDependencies.Contains(constructableType)
                            && complete
@@ -424,8 +441,9 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <exception>InvalidArgumentException</exception>  
-        private object Construct(Type beanType)
+        private object Construct(Type beanType, IList<ChildBeanSpec> constructorParameterSpecs, string constructorName)
         {
+            object[] args = new object[0];
             if (beanType.IsStruct())
             {
                 return Activator.CreateInstance(beanType);
@@ -433,13 +451,40 @@ namespace com.TheDisappointedProgrammer.IOCC
             else
             {
                 BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-                var constructorInfos = beanType.GetConstructors(flags);
-                var noArgConstructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
-                if (noArgConstructorInfo == null)
+                ConstructorInfo constructorInfo;
+                if (constructorParameterSpecs?.Count > 0)
+                {
+                    constructorInfo = beanType.GetConstructorNamed(constructorName);
+                    if (constructorInfo == null)
+                    {
+                        throw new IOCCInternalException("gone badly wrong");
+                        // TODO diagnostics and a good exception required here
+                    }
+                    List<object> parameters = new List<object>();
+                    foreach (var spec in constructorParameterSpecs)
+                    {
+                        if (spec.IsFactory)
+                        {
+                            // TODO
+                        }
+                        else
+                        {
+                            parameters.Add(spec.MemberOrFactoryBean);   
+                        }
+                    }
+                    args = parameters.ToArray();
+                }
+                else
+                {
+                    var constructorInfos = beanType.GetConstructors(flags);
+                    constructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
+                }
+                if (constructorInfo == null)
                 {
                     throw new IOCCNoArgConstructorException(beanType.GetIOCCName());
+                    // TODO some diagnostics required here
                 }
-                return noArgConstructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, new object[0], null);
+                return constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null);
 
             }
 
@@ -587,7 +632,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-    internal class MemberSpec
+    internal class ChildBeanSpec
     {
         public MemberInfo FieldOrPropertyInfo
         {
@@ -602,27 +647,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         public bool IsFactory { get; }
         private Info Info { get; }
 
-        public MemberSpec(Info fieldOrPropertyInfo, object memberOrFactoryBean, bool isFactory)
+        public ChildBeanSpec(Info fieldOrPropertyInfo, object memberOrFactoryBean, bool isFactory)
         {
             this.Info = fieldOrPropertyInfo;
             this.MemberOrFactoryBean = memberOrFactoryBean;
             this.IsFactory = isFactory;
         }
     }
-    internal class ParameterSpec
-    {
-        public ParameterInfo ParameterInfo { get; }
-        public object MemberOrFactoryBean { get; }
-        public bool IsFactory { get; }
-
-        public ParameterSpec(ParameterInfo parameterInfo, object memberOrFactoryBean, bool isFactory)
-        {
-            this.ParameterInfo = parameterInfo;
-            this.MemberOrFactoryBean = memberOrFactoryBean;
-            this.IsFactory = isFactory;
-        }
-    }
-
     internal class IOCCNoArgConstructorException : Exception
     {
         public string Class { get; }
@@ -699,6 +730,25 @@ namespace com.TheDisappointedProgrammer.IOCC
             return type.GetConstructors().Any(c => c.GetCustomAttributes().Any(
                 ca => ca is IOCCConstructorAttribute
                       && (ca as IOCCConstructorAttribute).Name == constructorName));
+        }
+
+        public static string GetConstructorNameFromMember(this Type type)
+        {
+            IOCCBeanReferenceAttribute attr = type.GetCustomAttribute<IOCCBeanReferenceAttribute>();
+            if (attr != null)
+            {
+                return attr.ConstructorName;
+            }
+            return IOCC.DEFAULT_CONSTRUCTOR_NAME;
+        }
+
+        public static ConstructorInfo GetConstructorNamed(this Type type, string name)
+        {
+            return type.GetConstructors()
+              .FirstOrDefault(co => co.GetCustomAttribute<
+              IOCCConstructorAttribute>() != null
+              && co.GetCustomAttribute<
+              IOCCConstructorAttribute>().Name == name);
         }
     }
 }

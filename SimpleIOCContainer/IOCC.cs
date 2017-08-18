@@ -66,6 +66,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test with no namespace
     // TODO change name to SimpleIOCContainer from IOCC
     // TODO optimised build
+    // TODO guard against static constructors
     /// <summary>
     /// 
     /// </summary>
