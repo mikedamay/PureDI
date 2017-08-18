@@ -49,14 +49,13 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
-        [Ignore]
+       
         [TestMethod]
         public void ShouldBuildTreeWithSelfReferentialClass()
         {
             SelfReferring sr = IOCC.Instance.GetOrCreateObjectTree<SelfReferring>();
             Assert.IsNotNull(sr);
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalDependencies()
         {
@@ -75,7 +74,6 @@ namespace IOCCTest
                 Assert.Fail("The stack overflowed indicating cyclical dependencies");
             }
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalInterfaces()
         {
@@ -85,7 +83,6 @@ namespace IOCCTest
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldCreateTreeForCyclicalBaseClasses()
         {
@@ -107,7 +104,6 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldCreateTreeForBeansWithNames()
         {
@@ -120,7 +116,6 @@ namespace IOCCTest
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {
@@ -131,7 +126,6 @@ namespace IOCCTest
             Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
             Assert.AreEqual("name-B2", cd.GetResults().IChild?.GetResults().IParent2?.GetResults().Name);
         }
-        [Ignore]
         [TestMethod, Timeout(100)]
         public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
         {

@@ -99,8 +99,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         // is a generic type definition.  The builder needs to lay its hands on the type argument
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
-        IDictionary<(Type beanType, Type beanReferenceType), object> mapObjectsCreatedSoFar =
-            new Dictionary<(Type, Type), object>();
+        IDictionary<Type, object> mapObjectsCreatedSoFar =
+            new Dictionary<Type, object>();
 
         private bool excludeRootAssembly;
         private IDictionary<(Type beanType, string beanName), Type> typeMap;

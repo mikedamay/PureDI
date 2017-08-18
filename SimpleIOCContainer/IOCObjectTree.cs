@@ -35,8 +35,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public object GetOrCreateObjectTree(Type rootType
           , ref IOCCDiagnostics diagnostics
-          , string rootBeanName, BeanScope scope, IDictionary<(Type beanType
-          , Type beanReferenceType), object> mapObjectsCreatedSoFar)
+          , string rootBeanName, BeanScope scope, IDictionary<Type, object> mapObjectsCreatedSoFar)
         {
             try
             {
@@ -81,7 +80,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="bean">a class already instantiated by IOCC whose
         ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName) beanId
-          , IDictionary<(Type type, Type beanReferenceType), object> mapObjectsCreatedSoFar
+          , IDictionary<Type, object> mapObjectsCreatedSoFar
           , IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails
           , BeanScope beanScope, CycleGuard cycleGuard)
         {
@@ -96,21 +95,21 @@ namespace com.TheDisappointedProgrammer.IOCC
                 object constructedBean;
                 try
                 {
+                    Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                     if (beanScope != BeanScope.Prototype
-                      && mapObjectsCreatedSoFar.ContainsKey((implementationType, beanId.beanType)))
+                      && mapObjectsCreatedSoFar.ContainsKey(constructableTypeLocal))
                     {
                         // there maybe a cyclical dependency
-                        constructedBean = mapObjectsCreatedSoFar[(implementationType, beanId.beanType)];
+                        constructedBean = mapObjectsCreatedSoFar[constructableTypeLocal];
                         return (true, constructedBean);
                     }
                     else
                     {
-                        Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                         // TODO explain why type to be constructed is complicated by generics
                         constructedBean = Construct(constructableTypeLocal);
                         if (beanScope != BeanScope.Prototype)
                         {
-                            mapObjectsCreatedSoFar[(implementationType, beanId.beanType)] = constructedBean;
+                            mapObjectsCreatedSoFar[constructableTypeLocal] = constructedBean;
                             // TODO replace first param with ConstructableType
                         }
                     }
