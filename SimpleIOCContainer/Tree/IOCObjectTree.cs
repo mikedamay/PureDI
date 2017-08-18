@@ -12,6 +12,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
     {
         private readonly string profile;
 
+        private const BindingFlags constructorFlags =
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+
         private readonly IDictionary<(Type type, string beanName), Type> typeMap;
         // from the point of view of generics the key.type may contain a generic type definition
         // and the value may be a constructed generic type
@@ -200,14 +203,20 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 } // for each property or field
             } // CreateMemberTrees()
 
-
+            // throws an exception for invalid constructors.
+            // With member references there's a good chance that
+            // we can hang around to collect more
+            // diagnostics but with constructors hanging around is
+            // more liable to cause chaos
             void CreateConstructorTrees(Type declaringBeanType
                 , out List<ChildBeanSpec> members)
             {
                 members = new List<ChildBeanSpec>();
-                //string constructorName = declaringBeanType.GetConstructorNameFromMember();
                 string constructorName = beanId.Item3;
-                if (declaringBeanType.GetConstructors().Length > 0)
+                ValidateConstructors(declaringBeanType, constructorName, diagnostics);
+                if (declaringBeanType.GetConstructors(
+                  BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                  .Length > 0)
                 {
                     var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
                     if (paramInfos != null)
@@ -329,10 +338,28 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             }
             return bean;
         }
+
+        private void ValidateConstructors(Type declaringBeanType
+          ,string constructorName, IOCCDiagnostics diagnostics)
+        {
+            ConstructorInfo[] constructors
+                = declaringBeanType.GetConstructors(constructorFlags);
+            if (constructors.Length == 0)
+            {
+                return;
+            }
+            if (constructors.Length > 1)
+            {
+                dynamic diag = diagnostics.Groups["DuplicateConstructors"].CreateDiagnostic();
+                diag.DeclaringBean = declaringBeanType;
+                diagnostics.Groups["DuplicateConstructors"].Add(diag);
+            }
+        }
+
         ParameterInfo[] GetParametersForConstructorMatching(
             Type declaringBeanTypeArg, string constructorNameArg)
             => declaringBeanTypeArg
-                .GetConstructors().FirstOrDefault(co
+                .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
                     => co.GetCustomAttribute<IOCCConstructorAttribute>() != null
                        && co.GetCustomAttribute<IOCCConstructorAttribute>()?
                            .Name == constructorNameArg)?.GetParameters();
@@ -462,7 +489,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         if (spec.IsFactory)
                         {
-                            // TODO
+                            
+                            object obj = (spec.MemberOrFactoryBean as IOCCFactory)
+                              .Execute(new BeanFactoryArgs(
+                              spec.ParameterInfo.GetBeanReferenceAttribute()
+                              .FactoryParameter));
+                            parameters.Add(obj);
+                            // TODO it would be good to catch type mismatches during eventual construction
                         }
                         else
                         {

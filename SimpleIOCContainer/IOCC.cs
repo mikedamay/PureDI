@@ -335,8 +335,13 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public static IOCCBeanReferenceAttribute GetBeanReferenceAttribute(this MemberInfo type)
         {
-            return (IOCCBeanReferenceAttribute) type.GetCustomAttributes().Where(
-              ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
+            return (IOCCBeanReferenceAttribute)type.GetCustomAttributes().Where(
+                ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
+        }
+        public static IOCCBeanReferenceAttribute GetBeanReferenceAttribute(this ParameterInfo type)
+        {
+            return (IOCCBeanReferenceAttribute)type.GetCustomAttributes().Where(
+                ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
         }
     }
 }

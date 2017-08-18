@@ -68,7 +68,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
         public static bool HasInjectedConstructorParameters(this Type type, string constructorName)
         {
-            return type.GetConstructors().Any(c => CustomAttributeExtensions.GetCustomAttributes((MemberInfo) c).Any(
+            return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Any(c => CustomAttributeExtensions.GetCustomAttributes((MemberInfo) c).Any(
                 ca => ca is IOCCConstructorAttribute
                       && (ca as IOCCConstructorAttribute).Name == constructorName));
         }
@@ -85,7 +85,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
         public static ConstructorInfo GetConstructorNamed(this Type type, string name)
         {
-            return type.GetConstructors()
+            return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(co => co.GetCustomAttribute<
                                           IOCCConstructorAttribute>() != null
                                       && co.GetCustomAttribute<

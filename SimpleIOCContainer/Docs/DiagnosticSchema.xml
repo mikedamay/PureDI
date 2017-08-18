@@ -163,13 +163,27 @@
     <severity>Warning</severity>
     <intro>A cyclical dependency was found in the object tree.  This is not supported</intro>
     <userGuide>A cyclical dependency occurs when a class constructor includes
-    a parameter whose own constructor includes a parameter of the original class.
-    Add in intermediate ancestors to make this interesting
-    a parent bean or </userGuide>
+      a parameter whose own constructor includes a parameter of the original class.
+      Add in intermediate ancestors to make this interesting
+      a parent bean or </userGuide>
     <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
     <artefacts>
       <DeclaringBean/>
       <ConstructorParam/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>DuplicateConstructors</causeCode>
+    <severity>Warning</severity>
+    <intro>More than one suitable constructor is available for injection</intro>
+    <userGuide>The container needs an exact specification of the constructor to be run.
+    Where there are two candidate constructors then each should be given a differnt "Name"
+    and the "ConstructorName" parameter of the [IOCCBeanReference] should be used
+    in the reference to the bean to indicate which constructor should be used.
+    </userGuide>
+    <template>The declaring bean {DeclaringBean} has more than one suitable constructor</template>
+    <artefacts>
+      <DeclaringBean/>
     </artefacts>
   </group>
 </diagnosticSchema>

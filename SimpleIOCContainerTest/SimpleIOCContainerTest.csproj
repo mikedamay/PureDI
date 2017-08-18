@@ -56,6 +56,10 @@
     <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
     <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
     <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
+    <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />

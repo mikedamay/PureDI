@@ -49,17 +49,35 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithFactoryConstructorParams()
         {
-            Assert.Fail();
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "Factory");
+            Assert.IsNotNull(result?.GetResults().Level1?.GetResults().Level2);
+            Assert.IsFalse(diagnostics.HasWarnings);
         }
         [TestMethod]
         public void ShouldCreateTreeWithFactoryInjectedViaConstructor()
         {
-            Assert.Fail();
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "FactoryConstructor");
+            Assert.IsNotNull(result?.GetResults().Level1?.GetResults().Level2);
+            Assert.IsFalse(diagnostics.HasWarnings);
+        }
+        [TestMethod]
+        public void ShouldCreateTreeWithPrivateConstructor()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "PrivateConstructor");
+            Assert.AreEqual(42, result?.GetResults().SomeValue);
+            Assert.IsFalse(diagnostics.HasWarnings);
+
         }
         [TestMethod]
         public void ShouldWarnIfDuplicateConstructors()
         {
-            Assert.Fail();
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "DuplicateConstructors");
+            Assert.IsTrue(diagnostics.HasWarnings);
+            
         }
         [TestMethod]
         public void ShouldWarnIfSomeParametersAreNotMarkedForInjetion()
