@@ -26,27 +26,5 @@ namespace com.TheDisappointedProgrammer.IOCC
             return type;
         }
         public bool IsPresent(Type type) => types.Contains(type);
-        // bye bye single responsibility!
-        public void AddCyclicalDependency(Type type) => cyclicalDependencies.Add(type);
-        public bool IsCyclicalDependency(Type type) => cyclicalDependencies.Contains(type);
-        public void RemoveCyclicalDependency(Type type) => cyclicalDependencies.Remove(type);
     }
-    //internal class CycleGuard
-    //{
-    //    private Stack<HashSet<(Type beanType, string beanName)>> stack 
-    //      = new Stack<HashSet<(Type beanType, string beanName)>>();
-    //    public void PushFrame()
-    //    {
-    //        stack.Push(new HashSet<(Type beanType, string beanName)>());
-    //    }
-    //    public void PopFrame() => stack.Pop();
-    //    public void Add((Type, string) spec)
-    //    {
-    //        stack.Peek().Add(spec);
-    //    }
-    //    public bool IsPresent((Type beanType, string beanName) beanId)
-    //    {
-    //        return stack.Any(f => f.Contains(beanId));
-    //    }
-    //}
 }

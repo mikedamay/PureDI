@@ -50,6 +50,7 @@
     <Compile Include="DiagnosticBuilder.cs" />
     <Compile Include="IOCC.cs" />
     <Compile Include="IOCCBeanAttribute.cs" />
+    <Compile Include="IOCCConstructorAttribute.cs" />
     <Compile Include="IOCCDiagnostics.cs" />
     <Compile Include="IOCCException.cs" />
     <Compile Include="IOCCExtensions.cs" />

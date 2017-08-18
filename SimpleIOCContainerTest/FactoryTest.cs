@@ -6,7 +6,7 @@ using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest
-{   
+{
     [TestClass]
     public class FactoryTest
     {
@@ -18,7 +18,8 @@ namespace IOCCTest
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
             IOCC iocc = new IOCC();
             iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree("IOCCTest.FactoryTestData.AccessByString", out IOCCDiagnostics diagnostics);
+            object rootBean = iocc.GetOrCreateObjectTree("IOCCTest.FactoryTestData.AccessByString",
+                out IOCCDiagnostics diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
@@ -30,6 +31,7 @@ namespace IOCCTest
             Assert.AreEqual(10, result.Abc);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
+
         [TestMethod]
         public void ShouldBuildTreeWithFactoryAndMemberBeans()
         {
@@ -38,6 +40,7 @@ namespace IOCCTest
             Assert.IsNotNull(result?.GetResults().Member?.GetResults().SubMember);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
+
         [TestMethod]
         public void ShouldWarnIfFactoryMissing()
         {
@@ -45,6 +48,7 @@ namespace IOCCTest
             Assert.IsTrue(diagnostics.HasWarnings);
             Assert.AreEqual(1, diagnostics.Groups["MissingFactory"].Occurrences.Count);
         }
+
         [TestMethod]
         public void ShouldCreateTreeForFactoryWithGenerics()
         {
@@ -53,6 +57,7 @@ namespace IOCCTest
             Assert.IsNotNull(result?.GetResults().MyGeneric);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
+
         [TestMethod]
         public void ShouldWarnOnFactoryMismatch()
         {
@@ -67,6 +72,7 @@ namespace IOCCTest
             Assert.AreEqual(1, diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
 
         }
+
         [TestMethod]
         public void ShouldCreateTreeForFactoryWithDependencies()
         {
@@ -74,6 +80,7 @@ namespace IOCCTest
             Assert.AreEqual(17, result?.GetResults().SomeValue);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
+
         [TestMethod]
         public void ShouldCreateTreeForGenericFactory()
         {
@@ -82,6 +89,7 @@ namespace IOCCTest
             Assert.IsNotNull(result?.GetResults().MySecondThing);
             Assert.IsFalse(diagnostics.HasWarnings);
         }
+
         [TestMethod]
         public void ShouldWarnOfBadFactory()
         {
@@ -89,41 +97,16 @@ namespace IOCCTest
             Assert.IsTrue(diagnostics.HasWarnings);
         }
 
-        private static 
-          (dynamic result, IOCCDiagnostics diagnostics) 
-          CommonFactoryTest(string className)
+        private static
+            (dynamic result, IOCCDiagnostics diagnostics)
+            CommonFactoryTest(string className)
         {
-            string codeText = GetResource(
-                $"IOCCTest.FactoryTestData.{className}.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                $"IOCCTest.FactoryTestData.{className}"
-                , out IOCCDiagnostics diagnostics);
-            System.Diagnostics.Debug.WriteLine(diagnostics);
-            dynamic result = (IResultGetter) rootBean;
-            return (result, diagnostics);
+            return Utils.CreateAndRunAssembly("FactoryTestData", className);
         }
-
 
         public static string GetResource(string resourceName)
         {
-            try
-            {
-                using (Stream s
-                    = typeof(TypeMapBuilderTest).Assembly.GetManifestResourceStream(resourceName))
-                using (StreamReader sr = new StreamReader(s))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-            catch (ArgumentNullException aue)
-            {
-                throw new Exception(
-                  $"Most likely the file {resourceName} has not been created or has not been marked as an embedded resource in the VS project"
-                  , aue);
-            }
+            return Utils.GetResource(resourceName);
         }
     }
 }

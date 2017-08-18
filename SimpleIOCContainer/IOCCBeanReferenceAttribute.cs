@@ -17,12 +17,14 @@ namespace com.TheDisappointedProgrammer.IOCC
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
+      | AttributeTargets.Parameter
       , Inherited = false, AllowMultiple = false)]
     public class IOCCBeanReferenceAttribute : Attribute
     {
-        public string Name = "";
+        public string Name = IOCC.DEFAULT_BEAN_NAME;
         public Type Factory = null;
         public object FactoryParameter = null;
         public BeanScope Scope = BeanScope.Singleton;
+        public string ConstructorName = IOCC.DEFAULT_CONSTRUCTOR_NAME;
     }
 }

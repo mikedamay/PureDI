@@ -25,7 +25,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.typeMap = typeMap;
         }
         public object GetOrCreateObjectTree(Type rootType
-          , ref IOCCDiagnostics diagnostics, string rootBeanName
+          , ref IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
           , BeanScope scope, IDictionary<Type, object> mapObjectsCreatedSoFar)
         {
             IOCObjectTree tree;
@@ -40,7 +40,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                  
             }
             return tree.GetOrCreateObjectTree(rootType, ref diagnostics
-              ,rootBeanName, scope, mapObjectsCreatedSoFar);
+              ,rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
         }
     }
 }
