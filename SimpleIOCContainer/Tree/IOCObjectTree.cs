@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using static com.TheDisappointedProgrammer.IOCC.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
-    internal class IOCObjectTree
+    internal partial class IOCObjectTree
     {
         private readonly string profile;
 
@@ -90,13 +90,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
             BeanScope beanScope)
         {
-            Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
-                Type implementationTypeArg)
-                => implementationTypeArg.IsGenericType
-                    ? beanIdArg.beanType
-                    : implementationTypeArg;
-
-            Type implementationType;
+             Type implementationType;
 
             (bool constructionComplete, object beanId) MakeBean(IList<ChildBeanSpec> constructorParameterSpecs = null)
             {            
@@ -115,7 +109,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     {
                         // TODO explain why type to be constructed is complicated by generics
                         constructedBean = Construct(constructableTypeLocal
-                          , constructorParameterSpecs, beanId.constructorName);
+                            , constructorParameterSpecs, beanId.constructorName);
                         if (beanScope != BeanScope.Prototype)
                         {
                             creationContext.MapObjectsCreatedSoFar[constructableTypeLocal] = constructedBean;
@@ -207,16 +201,6 @@ namespace com.TheDisappointedProgrammer.IOCC
             } // CreateMemberTrees()
 
 
-            ParameterInfo[] GetParametersForConstructorMatching(Type declaringBeanTypeArg, string constructorNameArg)
-            {
-                Type dt = declaringBeanTypeArg;
-                return declaringBeanTypeArg
-                    .GetConstructors().FirstOrDefault(co
-                        => co.GetCustomAttribute<IOCCConstructorAttribute>() != null
-                           && co.GetCustomAttribute<IOCCConstructorAttribute>()?
-                               .Name == constructorNameArg)?.GetParameters();
-            }
-
             void CreateConstructorTrees(Type declaringBeanType
                 , out List<ChildBeanSpec> members)
             {
@@ -281,49 +265,12 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
             }
 
-            /*
-             * finds the matching concrete type (bean) for some member reference
-             * where the member reference might be a base class or interface together
-             * with an optional bean name (held as part of the bean reference attribute
-             * which allows the container to choose between multiple matching concrete classes
-             * Alternatively the member reference may be the implementationType itself.
-             */
-            Type GetImplementationType()
-            {
-                if (IsBeanPresntInTypeMap(beanId))
-                {
-                    implementationType = GetImplementationFromTypeMap(beanId);
-                    return implementationType;
-                }
-                else
-                {
-                    if (beanReferenceDetails.IsRoot)
-                    {
-                        RecordDiagnostic(diagnostics, "MissingRoot"
-                            , ("BeanType", beanId.Item1.GetIOCCName())
-                            , ("BeanName", beanId.Item2)
-                        );
-                        throw new IOCCException("failed to create object tree - see diagnostics for detail",
-                            diagnostics);
-                    }
-                    else
-                    {
-                        RecordDiagnostic(diagnostics, "MissingBean"
-                            , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
-                            , ("MemberType", beanId.Item1.GetIOCCName())
-                            , ("MemberName", beanReferenceDetails.MemberName)
-                            , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
-                        );
-                        return null;
-                    }
-                }
-            }
 
             CycleGuard cycleGuard = creationContext.CycleGuard;
             ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
             bool complete;
             object bean;
-            if ((implementationType = GetImplementationType()) == null)
+            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, diagnostics)) == null)
             {
                 return null; // no implementation type found corresponding to this beanId
                 // TODO don't we need some diangostics here
@@ -381,7 +328,57 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return bean;
         }
+        ParameterInfo[] GetParametersForConstructorMatching(
+            Type declaringBeanTypeArg, string constructorNameArg)
+            => declaringBeanTypeArg
+                .GetConstructors().FirstOrDefault(co
+                    => co.GetCustomAttribute<IOCCConstructorAttribute>() != null
+                       && co.GetCustomAttribute<IOCCConstructorAttribute>()?
+                           .Name == constructorNameArg)?.GetParameters();
+        Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
+            Type implementationTypeArg)
+            => implementationTypeArg.IsGenericType
+                ? beanIdArg.beanType
+                : implementationTypeArg;
 
+        /*
+          * finds the matching concrete type (bean) for some member reference
+          * where the member reference might be a base class or interface together
+          * with an optional bean name (held as part of the bean reference attribute
+          * which allows the container to choose between multiple matching concrete classes
+          * Alternatively the member reference may be the implementationType itself.
+          */
+        Type GetImplementationType((Type, string, string) beanId, BeanReferenceDetails beanReferenceDetails
+          ,IOCCDiagnostics diagnostics)
+        {
+            if (IsBeanPresntInTypeMap(beanId))
+            {
+                Type implementationType = GetImplementationFromTypeMap(beanId);
+                return implementationType;
+            }
+            else
+            {
+                if (beanReferenceDetails.IsRoot)
+                {
+                    RecordDiagnostic(diagnostics, "MissingRoot"
+                        , ("BeanType", beanId.Item1.GetIOCCName())
+                        , ("BeanName", beanId.Item2)
+                    );
+                    throw new IOCCException("failed to create object tree - see diagnostics for detail",
+                        diagnostics);
+                }
+                else
+                {
+                    RecordDiagnostic(diagnostics, "MissingBean"
+                        , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
+                        , ("MemberType", beanId.Item1.GetIOCCName())
+                        , ("MemberName", beanReferenceDetails.MemberName)
+                        , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
+                    );
+                    return null;
+                }
+            }
+        }
 
         /// <summary>
         /// well, this is tricky.
@@ -428,7 +425,6 @@ namespace com.TheDisappointedProgrammer.IOCC
             return typeMap[(referenceType, beanId.beanName)];
 
         }
-
         /// <param name="beanid"><see cref="GetImplementationFromTypeMap"/></param>
         private bool IsBeanPresntInTypeMap((Type beanType, string beanName, string constructorName) beanId)
         {
@@ -488,267 +484,6 @@ namespace com.TheDisappointedProgrammer.IOCC
 
             }
 
-        }
-
-        private class BeanReferenceDetails
-        {
-            private Type declaringType;
-            private string memberName;
-            private string memberBeanName;
-            public bool IsRoot { get; }
-
-            public Type DeclaringType
-                => IsRoot
-                    ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
-                    : declaringType;
-
-            public string MemberName
-                => IsRoot
-                    ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
-                    : memberName;
-
-            public string MemberBeanName
-                => IsRoot
-                    ? throw new IOCCInternalException("there are no reference details for the root bean of the tree")
-                    : memberBeanName;
-
-
-            public BeanReferenceDetails()
-            {
-                this.IsRoot = true;
-            }
-
-            public BeanReferenceDetails(Type declaringType, string memberName, string memberBeanName)
-            {
-                this.declaringType = declaringType;
-                this.memberName = memberName;
-                this.memberBeanName = memberBeanName;
-            }
-
-            public void Deconstruct(out Type DeclaringType, out string MemberName, out string MemberBeanName)
-            {
-                if (this.IsRoot)
-                {
-                    throw new IOCCInternalException("there are no reference details for the root bean of the tree");
-                }
-                DeclaringType = declaringType;
-                MemberName = memberName;
-                MemberBeanName = memberBeanName;
-            }
-        }
-
-        internal class CreationContext
-        {
-            public IDictionary<Type, object> MapObjectsCreatedSoFar { get; }
-            public CycleGuard CycleGuard { get; }
-            public ISet<Type> CyclicalDependencies { get; }
-
-            public CreationContext(
-                IDictionary<Type, object> mapObjectsCreatedSoFar
-                , CycleGuard cycleGuard
-                , ISet<Type>cyclicalDependencies
-            )
-            {
-                MapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
-                CycleGuard = cycleGuard;
-                CyclicalDependencies = cyclicalDependencies;
-            }
-        }
-    }
-
-       internal class Info
-       {
-            public MemberInfo FieldOrPropertyInfo { get; }
-            public ParameterInfo ParameterInfo { get; }
-
-            public Info(MemberInfo fieldOrPropertyInfo)
-            {
-                this.FieldOrPropertyInfo = fieldOrPropertyInfo;
-            }
-
-            public Info(ParameterInfo parameterInfo)
-            {
-                this.ParameterInfo = parameterInfo;
-            }
-
-            public string Name
-            {
-                get
-                {
-                    if (FieldOrPropertyInfo != null)
-                    {
-                        return FieldOrPropertyInfo.Name;
-                    }
-                    else
-                    {
-                        return ParameterInfo.Name;
-                    }
-                }
-            }
-            public Type Type
-            {
-                get
-                {
-                    if (FieldOrPropertyInfo != null)
-                    {
-                        return FieldOrPropertyInfo.GetPropertyOrFieldType();
-                    }
-                    else
-                    {
-                        return ParameterInfo.ParameterType;
-                    }
-                }
-            }
-
-            public bool IsWriteable
-            {
-                get
-                {
-                    if (FieldOrPropertyInfo != null)
-                    {
-                        return FieldOrPropertyInfo.CanWriteToFieldOrProperty();
-                                        // for certain properties the bean can
-                                        // be created but can't be assigned to the member
-                    }
-                    else
-                    {
-                        return true;    // for a parameter there is not concept of being writeable
-                                        // the created bean can always be used in a constructor
-                    }
-                }
-            }
-
-            public T GetCustomeAttribute<T>() where T :  Attribute
-            {
-                if (FieldOrPropertyInfo != null)
-                {
-                    return FieldOrPropertyInfo.GetCustomAttribute<T>();
-                }
-                else
-                {
-                    return ParameterInfo.GetCustomAttribute<T>();
-                }
-
-            }
-        }
-
-    internal class ChildBeanSpec
-    {
-        public MemberInfo FieldOrPropertyInfo
-        {
-            get { return Info.FieldOrPropertyInfo; }
-        }
-
-        public ParameterInfo ParameterInfo
-        {
-            get { return Info.ParameterInfo; }
-        }
-        public object MemberOrFactoryBean { get; }
-        public bool IsFactory { get; }
-        private Info Info { get; }
-
-        public ChildBeanSpec(Info fieldOrPropertyInfo, object memberOrFactoryBean, bool isFactory)
-        {
-            this.Info = fieldOrPropertyInfo;
-            this.MemberOrFactoryBean = memberOrFactoryBean;
-            this.IsFactory = isFactory;
-        }
-    }
-    internal class IOCCNoArgConstructorException : Exception
-    {
-        public string Class { get; }
-        public IOCCNoArgConstructorException(string _class)
-        {
-            Class = _class;
-        }
-    }
-
-    internal static class IOCCTreeExtensions
-    {
-        public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
-        {
-            Assert( memberInfo is FieldInfo || memberInfo is PropertyInfo);
-            return (memberInfo as FieldInfo)?.FieldType ?? (memberInfo as PropertyInfo).PropertyType;
-        }
-
-        public static void SetValue(this MemberInfo memberInfo, object bean, object memberBean)
-        {
-            switch (memberInfo)
-            {
-                case FieldInfo field:
-                    field.SetValue(bean, memberBean);
-                    break;
-                case PropertyInfo property:
-                    property.SetValue(bean, memberBean);
-                    break;
-                default:
-                    throw new IOCCInternalException(
-                      $"GetValue extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
-                      , null);
-            }
-        }
-
-        public static object GetValue(this MemberInfo memberInfo, object bean)
-        {
-            switch (memberInfo)
-            {
-                case FieldInfo field:
-                    return field.GetValue(bean);
-                case PropertyInfo property:
-                    return property.GetValue(bean);
-                default:
-                    throw new IOCCInternalException(
-                      $"GetValue extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
-                      , null);
-            }
-        }
-
-        public static bool CanWriteToFieldOrProperty(this MemberInfo memberInfo)
-        {
-            switch (memberInfo)
-            {
-                case FieldInfo field:
-                    return true;        // are there fields capable of 
-                                        // being assigned an class instance with a no-arg constructorimmune to writing?
-                case PropertyInfo property:
-                    return property.CanWrite;
-                default:
-                    throw new IOCCInternalException(
-                      $"CanWrite extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
-                      , null);
-
-            }
-        }
-
-        public static bool IsStruct(this Type type)
-        {
-            return type.IsValueType && !type.IsPrimitive;
-        }
-
-        public static bool HasInjectedConstructorParameters(this Type type, string constructorName)
-        {
-            return type.GetConstructors().Any(c => c.GetCustomAttributes().Any(
-                ca => ca is IOCCConstructorAttribute
-                      && (ca as IOCCConstructorAttribute).Name == constructorName));
-        }
-
-        public static string GetConstructorNameFromMember(this Type type)
-        {
-            IOCCBeanReferenceAttribute attr = type.GetCustomAttribute<IOCCBeanReferenceAttribute>();
-            if (attr != null)
-            {
-                return attr.ConstructorName;
-            }
-            return IOCC.DEFAULT_CONSTRUCTOR_NAME;
-        }
-
-        public static ConstructorInfo GetConstructorNamed(this Type type, string name)
-        {
-            return type.GetConstructors()
-              .FirstOrDefault(co => co.GetCustomAttribute<
-              IOCCConstructorAttribute>() != null
-              && co.GetCustomAttribute<
-              IOCCConstructorAttribute>().Name == name);
         }
     }
 }

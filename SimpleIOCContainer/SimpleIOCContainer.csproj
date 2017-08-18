@@ -56,7 +56,13 @@
     <Compile Include="IOCCExtensions.cs" />
     <Compile Include="IOCCBeanReferenceAttribute.cs" />
     <Compile Include="IOCCIgnoreAttribute.cs" />
-    <Compile Include="IOCObjectTree.cs" />
+    <Compile Include="Tree\BeanReferenceDetails.cs" />
+    <Compile Include="Tree\ChildBeanSpec.cs" />
+    <Compile Include="Tree\CreationContext.cs" />
+    <Compile Include="Tree\Info.cs" />
+    <Compile Include="Tree\IOCCNoArgConstructorException.cs" />
+    <Compile Include="Tree\IOCCTreeExtensions.cs" />
+    <Compile Include="Tree\IOCObjectTree.cs" />
     <Compile Include="OSDetector.cs" />
     <Compile Include="OSPlatform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
