@@ -39,7 +39,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         public object GetOrCreateObjectTree(Type rootType
             , ref IOCCDiagnostics diagnostics
             , string rootBeanName, string rootConstructorName, BeanScope scope,
-            IDictionary<Type, object> mapObjectsCreatedSoFar)
+            IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             try
             {
@@ -99,10 +99,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 {
                     Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                     if (beanScope != BeanScope.Prototype
-                        && creationContext.MapObjectsCreatedSoFar.ContainsKey(constructableTypeLocal))
+                        && creationContext.MapObjectsCreatedSoFar.ContainsKey((constructableTypeLocal, beanId.constructorName)))
                     {
                         // there maybe a cyclical dependency
-                        constructedBean = creationContext.MapObjectsCreatedSoFar[constructableTypeLocal];
+                        constructedBean = creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)];
                         return (true, constructedBean);
                     }
                     else
@@ -112,7 +112,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             , constructorParameterSpecs, beanId.constructorName);
                         if (beanScope != BeanScope.Prototype)
                         {
-                            creationContext.MapObjectsCreatedSoFar[constructableTypeLocal] = constructedBean;
+                            creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
                             // TODO replace first param with ConstructableType
                         }
                     }
@@ -205,7 +205,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 , out List<ChildBeanSpec> members)
             {
                 members = new List<ChildBeanSpec>();
-                string constructorName = declaringBeanType.GetConstructorNameFromMember();
+                //string constructorName = declaringBeanType.GetConstructorNameFromMember();
+                string constructorName = beanId.Item3;
                 if (declaringBeanType.GetConstructors().Length > 0)
                 {
                     var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);

@@ -54,6 +54,8 @@
     <Compile Include="AssemblyMaker.cs" />
     <EmbeddedResource Include="ConstructorTestData\SimpleConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />

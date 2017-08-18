@@ -26,7 +26,7 @@ namespace IOCCTest
         }
 
         [TestMethod]
-        public void ShouldCreateDeepHierarchyWithConstructorParams()
+        public void ShouldCreateDeepHierarchy()
         {
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "DeepHierarchy");
@@ -37,8 +37,15 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithMultipleConstructors()
         {
-            Assert.Fail();
-        }
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructors");
+            Assert.IsNotNull(result?.GetResults().Level1a?.GetResults().Level2a);
+            Assert.IsNotNull(result?.GetResults().Level1b?.GetResults().Level2b);
+            Assert.IsNull(result?.GetResults().Level1a?.GetResults().Level2b);
+            Assert.IsNull(result?.GetResults().Level1b?.GetResults().Level2a);
+
+            Assert.IsFalse(diagnostics.HasWarnings);            
+         }
         [TestMethod]
         public void ShouldCreateTreeWithFactoryConstructorParams()
         {

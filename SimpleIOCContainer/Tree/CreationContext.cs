@@ -5,12 +5,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
         internal class CreationContext
         {
-            public IDictionary<Type, object> MapObjectsCreatedSoFar { get; }
+            public IDictionary<(Type constructableType, string constructorName)
+              , object> MapObjectsCreatedSoFar { get; }
             public CycleGuard CycleGuard { get; }
             public ISet<Type> CyclicalDependencies { get; }
 
             public CreationContext(
-                IDictionary<Type, object> mapObjectsCreatedSoFar
+                IDictionary<(Type, string), object> mapObjectsCreatedSoFar
                 , CycleGuard cycleGuard
                 , ISet<Type>cyclicalDependencies
             )

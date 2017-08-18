@@ -27,7 +27,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
         public object GetOrCreateObjectTree(Type rootType
           , ref IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
-          , BeanScope scope, IDictionary<Type, object> mapObjectsCreatedSoFar)
+          , BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             IOCObjectTree tree;
             if (mapTrees.ContainsKey((rootType, rootBeanName)))
