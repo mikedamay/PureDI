@@ -219,7 +219,9 @@ namespace IOCCTest
         /// </summary>
         /// <param name="resourceName"></param>
         /// <returns></returns>
-        public (AppDomain, Assembly) CreateAssemblyInNewAppDomain(string resourceName)
+#if false
+        // not supported on .NET core 2.0 - besides which it does not solve anything
+        private (AppDomain, Assembly) CreateAssemblyInNewAppDomain(string resourceName)
         {
             AppDomain domain = null;
             try
@@ -245,6 +247,7 @@ namespace IOCCTest
                 throw;
             }
         }
+#endif
         public static void CommonTypeMapTest(string testDataName
           , IDictionary<(string, string), string> mapExpected
           , string profile = SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS os = SimpleIOCContainer.OS.Any)

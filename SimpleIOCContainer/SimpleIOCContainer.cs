@@ -64,7 +64,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO does it make any sense in the case of the factory
     // TODO allow root type a prototype
     // TODO test with no namespace
-    // TODO change name to SimpleIOCContainer from SimpleIOCContainer
+    // DONE change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
     // TODO guard against static constructors
     /// <summary>
