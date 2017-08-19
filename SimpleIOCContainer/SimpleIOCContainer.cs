@@ -9,8 +9,8 @@ using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    // TODO constructor paramter injection
-    // TODO prototypes
+    // DONE constructor paramter injection
+    // DONE prototypes
     // TODO warning when a field or property has already been initialised
     // DONE guard against circular references - Done
     // DONE handle structs
@@ -34,7 +34,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO improve names of queries assigned from complex linq structures
     // TODO use immutable collections
     // TODO license
-    // TODO An optional name should be passed to IOCC.GetOrCreateDependencyTree
+    // TODO An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
     // TODO address static fields and beans.  Beans are invalid or maybe not
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
@@ -49,7 +49,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test generics with multiple parameters
     // DONE test generics with nested parameters
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
-    // TODO Apply the IOCC to the Calculation Server and Maven docs
+    // TODO Apply the SimpleIOCContainer to the Calculation Server and Maven docs
     // TODO Release Build
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
@@ -57,14 +57,14 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO remove 2-way enumerator
     // TODO Perf
     // TODO Test with nullables
-    // TODO make IOCC instance a bean by default.
-    // TODO generics for factories
+    // TODO make SimpleIOCContainer instance a bean by default.
+    // DONE generics for factories
     // TODO decide if scope on factory reference refers to factory or reference to be created
-    // TODO it makes no sence for the created object as the scope is under the control of the factory
+    // TODO it makes no sense for the created object as the scope is under the control of the factory
     // TODO does it make any sense in the case of the factory
     // TODO allow root type a prototype
     // TODO test with no namespace
-    // TODO change name to SimpleIOCContainer from IOCC
+    // TODO change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
     // TODO guard against static constructors
     /// <summary>
@@ -83,10 +83,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     5) There is no way for the root bean to be a prototype
     /// </remarks>
     [IOCCBean]
-    public class IOCC
+    public class SimpleIOCContainer
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
-        public static IOCC Instance { get; } = new IOCC();
+        public static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
         internal const string DEFAULT_PROFILE = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
@@ -122,7 +122,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// for testing only
         /// </summary>
-        internal IOCC()
+        internal SimpleIOCContainer()
         {
         }
 
@@ -194,7 +194,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
         /// <param name="diagnostics"></param>
         /// <param name="profile"></param>
-        /// <param name="rootBeanName">an IOCC type spec in the form "MyNameSpace.MyClass"
+        /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
         ///     or "MyNameSpace.MyClass&lt;MyActualParam&gt" or
         ///     where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
         /// <param name="scope">scope refers to the scope of the root bean i.e. the
@@ -310,7 +310,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             return typeFullName == IOCCUserEnteredName;
         }
-    }       // IOCC
+    }       // SimpleIOCContainer
     public enum BeanScope { Singleton, Prototype}
     internal static class IOCCLocalExtensions
     {

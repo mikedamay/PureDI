@@ -9,7 +9,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public IDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
-          , ref IOCCDiagnostics diagnostics, string profile, IOCC.OS os)
+          , ref IOCCDiagnostics diagnostics, string profile, SimpleIOCContainer.OS os)
         {
             IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
@@ -62,7 +62,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsABean(this Type type, string profile, IOCC.OS os)
+        public static bool TypeIsABean(this Type type, string profile, SimpleIOCContainer.OS os)
         {
             IOCCBeanAttribute ida 
               = (IOCCBeanAttribute)type.GetCustomAttributes()
@@ -70,9 +70,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             return 
               ida != null 
               && (
-              ida.Profile == IOCC.DEFAULT_PROFILE
+              ida.Profile == SimpleIOCContainer.DEFAULT_PROFILE
               || profile == ida.Profile)
-              && (ida.OS == IOCC.OS.Any 
+              && (ida.OS == SimpleIOCContainer.OS.Any 
               || ida.OS == os);
         }
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)

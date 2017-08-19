@@ -87,7 +87,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     maps the name of the class or struct of
         ///     the object to the instance of the object.</param>
         /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
-        /// <param name="bean">a class already instantiated by IOCC whose
+        /// <param name="bean">a class already instantiated by SimpleIOCContainer whose
         ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName, string constructorName) beanId,
             CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
@@ -318,7 +318,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     // until the implementationType is encountered again
                     // further up the stack
                 {
-                    if (constructableType.HasInjectedConstructorParameters(IOCC.DEFAULT_CONSTRUCTOR_NAME))
+                    if (constructableType.HasInjectedConstructorParameters(SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME))
                     {
                         dynamic diag = diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
                         diag.Bean = constructableType.FullName;

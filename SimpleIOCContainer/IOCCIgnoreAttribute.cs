@@ -7,7 +7,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// which the library user does not want to be treated as a reference
     /// for the purposes of injecting dependencies.
     /// This does not prevent it being used as the root type in
-    /// calls to IOCC.GetOrCreateObjectTree().
+    /// calls to SimpleIOCContainer.GetOrCreateObjectTree().
     /// The purpose is simply to prevent warnings for duplicate
     /// beans which might otherwise occurs.
     /// </summary>

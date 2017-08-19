@@ -48,7 +48,7 @@
     <Compile Include="CycleGuard.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DiagnosticBuilder.cs" />
-    <Compile Include="IOCC.cs" />
+    <Compile Include="SimpleIOCContainer.cs" />
     <Compile Include="IOCCBeanAttribute.cs" />
     <Compile Include="IOCCConstructorAttribute.cs" />
     <Compile Include="IOCCDiagnostics.cs" />

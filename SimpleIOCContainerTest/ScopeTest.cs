@@ -73,12 +73,12 @@ namespace IOCCTest
             return (result, diagnostics);
         }
 
-        private static IOCC MakeIOCCForTestAssembly(string className)
+        private static SimpleIOCContainer MakeIOCCForTestAssembly(string className)
         {
             string codeText = FactoryTest.GetResource(
                 $"IOCCTest.ScopeTestData.{className}.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
+            SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
         }

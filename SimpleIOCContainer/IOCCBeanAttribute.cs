@@ -11,6 +11,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public string Name = "";
         public string Profile = "";
-        public IOCC.OS OS = IOCC.OS.Any;
+        public SimpleIOCContainer.OS OS = SimpleIOCContainer.OS.Any;
     }
 }

@@ -80,7 +80,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 return attr.ConstructorName;
             }
-            return IOCC.DEFAULT_CONSTRUCTOR_NAME;
+            return SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME;
         }
 
         public static ConstructorInfo GetConstructorNamed(this Type type, string name)

@@ -30,7 +30,7 @@ namespace IOCCTest
         /// <param name="getAssemblyName"></param>
         /// <param name="targetAssemblyName"></param>
         /// <param name="ExtraAssemblies"></param>
-        /// <returns>An assembly suitable for use in IOCC testing</returns>
+        /// <returns>An assembly suitable for use in SimpleIOCContainer testing</returns>
         public Assembly MakeAssembly(string CodeText
             , string TargetAssemblyName = null, string[] ExtraAssemblies = null, bool InMemory = true)
         {

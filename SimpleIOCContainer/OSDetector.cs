@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using static com.TheDisappointedProgrammer.IOCC.IOCC;
+using static com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {

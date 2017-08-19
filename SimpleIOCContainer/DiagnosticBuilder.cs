@@ -14,14 +14,14 @@ namespace com.TheDisappointedProgrammer.IOCC
             string schemaName
                 = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 Diagnostics = CreateDiagnosticsFromSchema(s);
             }
         }
         /// <param name="diagnosticSchema">
         ///     XML Text which populates the diagnostics object
-        ///     e.g. typeof(IOCC).Assembly.GetManifestResourceStream(
+        ///     e.g. typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
         ///          "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml")
         /// </param>
         public DiagnosticBuilder(Stream diagnosticSchema)

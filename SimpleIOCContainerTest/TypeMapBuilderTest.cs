@@ -83,14 +83,14 @@ namespace IOCCTest
             Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(
                 "IOCCTest.TestData.AbstractClass.cs"));
             IOCCDiagnostics diagnostics;
-            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
                 "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
                 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
             Assert.AreEqual(2, diagnostics.Groups["InvalidBean"].Occurrences.Count);
 
         }
@@ -105,7 +105,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.CheckProfileAndOs8", ""),"IOCCTest.TestData.CheckProfileAndOs8"}
                 ,{("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", IOCC.OS.Windows);
+            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", SimpleIOCContainer.OS.Windows);
         }
         [TestMethod]
         public void ShouldIgnoreNamedProfileAndOsWhenNoParamsPassed()
@@ -115,7 +115,7 @@ namespace IOCCTest
                 {("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
             CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected
-              , IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+              , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
         }
         [TestMethod]
         public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
@@ -133,14 +133,14 @@ namespace IOCCTest
             Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(
                 "IOCCTest.TestData.DuplicateBeans.cs"));
             IOCCDiagnostics diagnostics;
-            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
                 "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
             Assert.AreEqual(4, map.Keys.Count);
             Assert.AreEqual(1, diagnostics.Groups["DuplicateBean"].Occurrences.Count);
         }
@@ -163,7 +163,7 @@ namespace IOCCTest
             Assembly assemblyImplementation = new AssemblyMaker().MakeAssembly(GetResource(
                 "IOCCTest.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"}, InMemory: false);
             IOCCDiagnostics diagnostics;
-            using (Stream stream = typeof(IOCC).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
                 "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -171,7 +171,7 @@ namespace IOCCTest
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assemblyInterface, assemblyImplementation }
-              , ref diagnostics, IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+              , ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
             Assert.AreEqual(3, map.Keys.Count);
         }
 
@@ -198,7 +198,7 @@ namespace IOCCTest
         [TestMethod]
         public void OutputTypeMap_NotReallyATest()
         {
-            void BuildAndOutputTypeMap(string resourceName, string profile, IOCC.OS os)
+            void BuildAndOutputTypeMap(string resourceName, string profile, SimpleIOCContainer.OS os)
             {
                 Assembly assembly = new AssemblyMaker().MakeAssembly(GetResource(resourceName));
                 IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
@@ -209,7 +209,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.IgnoreHelper.cs", IOCC.DEFAULT_PROFILE, IOCC.OS.Any);
+            BuildAndOutputTypeMap("IOCCTest.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
         }
         /// <summary>
         /// Not currently used.
@@ -247,7 +247,7 @@ namespace IOCCTest
         }
         public static void CommonTypeMapTest(string testDataName
           , IDictionary<(string, string), string> mapExpected
-          , string profile = IOCC.DEFAULT_PROFILE, IOCC.OS os = IOCC.OS.Any)
+          , string profile = SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS os = SimpleIOCContainer.OS.Any)
         {
             string codeText = GetResource(testDataName);
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);

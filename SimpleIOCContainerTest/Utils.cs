@@ -21,12 +21,12 @@ namespace IOCCTest
             return (result, diagnostics);
         }
 
-        public static IOCC CreateAssembly(string nameSpace, string className)
+        public static SimpleIOCContainer CreateAssembly(string nameSpace, string className)
         {
             string codeText = GetResource(
                 $"IOCCTest.{nameSpace}.{className}.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
+            SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
         }

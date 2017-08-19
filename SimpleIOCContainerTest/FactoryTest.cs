@@ -16,7 +16,7 @@ namespace IOCCTest
 
             string codeText = GetResource("IOCCTest.FactoryTestData.AccessByString.cs");
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            IOCC iocc = new IOCC();
+            SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies(assembly.GetName().Name);
             object rootBean = iocc.GetOrCreateObjectTree("IOCCTest.FactoryTestData.AccessByString",
                 out IOCCDiagnostics diagnostics);

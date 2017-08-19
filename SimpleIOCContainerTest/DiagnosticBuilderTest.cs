@@ -18,7 +18,7 @@ namespace IOCCTest
             string schemaName
               = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
             }
@@ -59,7 +59,7 @@ namespace IOCCTest
             string schemaName
                 = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
@@ -77,7 +77,7 @@ namespace IOCCTest
             string schemaName
                 = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
@@ -121,7 +121,7 @@ namespace IOCCTest
             string schemaName
                 = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(IOCC).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 XDocument doc = XDocument.Load(s);
                 ValidateXml(doc, "Docs/DiagnosticSchemaSchema.xsd");
