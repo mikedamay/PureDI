@@ -69,7 +69,9 @@
       you forgot to mark a ben with [IOCCBean] or there are 
       duplicate beans or that the bean referred to was
       not a concrete class or struct.  The details should be listed
-      in the relevant diagnostics above.</userGuide>
+      in the relevant diagnostics above.  Also you may have attempted
+      to mark as injectable a non-bean class such as a primitive or library class.
+      This, of course, amounts to much the same thing.</userGuide>
     <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>
     <artefacts>
       <MemberType/>
@@ -176,14 +178,72 @@
     <causeCode>DuplicateConstructors</causeCode>
     <severity>Warning</severity>
     <intro>More than one suitable constructor is available for injection</intro>
-    <userGuide>The container needs an exact specification of the constructor to be run.
-    Where there are two candidate constructors then each should be given a differnt "Name"
-    and the "ConstructorName" parameter of the [IOCCBeanReference] should be used
-    in the reference to the bean to indicate which constructor should be used.
+    <userGuide>
+      The container needs an exact specification of the constructor to be run.
+      Where there are two candidate constructors then each should be given a differnt "Name"
+      and the "ConstructorName" parameter of the [IOCCBeanReference] should be used
+      in the reference to the bean to indicate which constructor should be used.
     </userGuide>
-    <template>The declaring bean {DeclaringBean} has more than one suitable constructor</template>
+    <template>The declaring bean {Bean} has more than one applicable constructor</template>
     <artefacts>
-      <DeclaringBean/>
+      <Bean/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>MissingConstructorParameterAttribute</causeCode>
+    <severity>Warning</severity>
+    <intro>A constructor has been found marked as [IOCCConstructor] but one or more of whose parameters are not marked as [IOCCBeanReference]</intro>
+    <userGuide>
+      In order to inject values into a class (bean) via the constructor its constructor must
+      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
+      must be marked as [IOCCBeanReference].  If a parameter to be injected is not a
+      bean then a factory bean can be used to provide the value and the constructor
+      should be marked [IOCCBeanReference(Factory=typeof(SomeFactoryClass)]
+    </userGuide>
+    <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
+    <artefacts>
+      <Bean/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>MissingConstructorAttribute</causeCode>
+    <severity>Warning</severity>
+    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [IOCCBeanReference]</intro>
+    <userGuide>
+      In order to inject values into a class (bean) via the constructor its constructor must
+      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
+      must be marked as [IOCCBeanReference].
+    </userGuide>
+    <template>One or more of the declaring bean {Bean}'s constructor's is not marked as [IOCCConstructor] but has marked parameters</template>
+    <artefacts>
+      <Bean/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>MissingConstructorAttribute</causeCode>
+    <severity>Warning</severity>
+    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [IOCCBeanReference]</intro>
+    <userGuide>
+      In order to inject values into a class (bean) via the constructor its constructor must
+      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
+      must be marked as [IOCCBeanReference].
+    </userGuide>
+    <template>One or more of the declaring bean {Bean}'s constructor's is not marked as [IOCCConstructor] but has marked parameters</template>
+    <artefacts>
+      <Bean/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>CyclicalDependency</causeCode>
+    <severity>Warning</severity>
+    <intro>Two beans has been found that are mutually dependent using constructor injection.  This is not supported</intro>
+    <userGuide>
+      If a reference to Bean A is injected into Bean B's constructor and a reference to Bean B is
+      injected into Bean A's constructor then there is no way to construct both beans.
+    </userGuide>
+    <template>{Bean} has a cyclical dependency</template>
+    <artefacts>
+      <Bean/>
     </artefacts>
   </group>
 </diagnosticSchema>

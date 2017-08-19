@@ -60,6 +60,11 @@
     <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\ParameterNotInjectable.cs" />
+    <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />

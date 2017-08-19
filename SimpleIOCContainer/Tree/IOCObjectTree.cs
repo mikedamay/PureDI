@@ -213,7 +213,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 members = new List<ChildBeanSpec>();
                 string constructorName = beanId.Item3;
-                ValidateConstructors(declaringBeanType, constructorName, diagnostics);
+                ValidateConstructors(declaringBeanType, constructorName, diagnostics, beanReferenceDetails);
                 if (declaringBeanType.GetConstructors(
                   BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                   .Length > 0)
@@ -320,6 +320,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 {
                     if (constructableType.HasInjectedConstructorParameters(IOCC.DEFAULT_CONSTRUCTOR_NAME))
                     {
+                        dynamic diag = diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
+                        diag.Bean = constructableType.FullName;
+                        diagnostics.Groups["CyclicalDependency"].Add(diag);
                         throw new IOCCException("Cannot create this bean due to a cyclical dependency", diagnostics);
                     }
                     (complete, bean) = MakeBean();
@@ -340,10 +343,22 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         }
 
         private void ValidateConstructors(Type declaringBeanType
-          ,string constructorName, IOCCDiagnostics diagnostics)
+          ,string constructorName, IOCCDiagnostics diagnostics
+          ,BeanReferenceDetails beanReferenceDetails)
         {
             ConstructorInfo[] constructors
-                = declaringBeanType.GetConstructors(constructorFlags);
+              = declaringBeanType.GetConstructors(constructorFlags
+              ).Where(co => co.GetCustomAttributes<IOCCConstructorAttribute>()
+              .Any(ca => ca.Name == constructorName)).ToArray();
+            if (declaringBeanType.GetConstructors().Where(
+                    co => !co.GetCustomAttributes<IOCCConstructorAttribute>().Any())
+                .Any(co => !co.GetParameters().All(
+                    p => p.GetCustomAttributes<IOCCBeanReferenceAttribute>().Any())))
+            {
+                dynamic diag = diagnostics.Groups["MissingConstructorAttribute"].CreateDiagnostic();
+                diag.Bean = declaringBeanType;
+                diagnostics.Groups["MissingConstructorAttribute"].Add(diag);
+            }
             if (constructors.Length == 0)
             {
                 return;
@@ -351,8 +366,21 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             if (constructors.Length > 1)
             {
                 dynamic diag = diagnostics.Groups["DuplicateConstructors"].CreateDiagnostic();
-                diag.DeclaringBean = declaringBeanType;
+                diag.Bean = declaringBeanType;
                 diagnostics.Groups["DuplicateConstructors"].Add(diag);
+                throw new IOCCException($"{declaringBeanType} has duplicate constructors - please see diagnostics for further details",diagnostics);
+            }
+            if (constructors.Length > 0)
+            {
+                ConstructorInfo constructor = constructors[0];
+                if (constructor.GetParameters().Length > 0
+                    && !constructor.GetParameters().All(p => p.GetCustomAttributes<IOCCBeanReferenceAttribute>().Any()))
+                {
+                    dynamic diag = diagnostics.Groups["MissingConstructorParameterAttribute"].CreateDiagnostic();
+                    diag.Bean = declaringBeanType;
+                    diagnostics.Groups["MissingConstructorParameterAttribute"].Add(diag);
+                    throw new IOCCException($"{declaringBeanType}'s constructor has parameters not marked as [IOCCBeanReference] - please see diagnostics for further details", diagnostics);
+                }
             }
         }
 

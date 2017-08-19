@@ -74,25 +74,62 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfDuplicateConstructors()
         {
-            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
-                CONSTRUCTOR_TEST_NAMESPACE, "DuplicateConstructors");
-            Assert.IsTrue(diagnostics.HasWarnings);
-            
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "DuplicateConstructors");
+            });
         }
         [TestMethod]
         public void ShouldWarnIfSomeParametersAreNotMarkedForInjetion()
         {
-            Assert.Fail();
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedParameter");
+            });
+        }
+        [TestMethod]
+        public void ShouldWarnIfSomeUnmarkedConstructorsContainMarkedParameters()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedConstructor");
+        }
+        [TestMethod]
+        public void ShouldWarnIfSomeUnmarkedMatchingConstructorsContainMarkedParameters()
+        {
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedMatchingConstructor");
+            });
         }
         [TestMethod]
         public void ShouldWarnIfParmeterNotInjectable()
         {
-            Assert.Fail();
+            // TODO this should really be an exception
+            // TODO we con't seem to have the equivalent for injected members
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "ParameterNotInjectable");
+            Assert.IsTrue(diagnostics.HasWarnings);
+            Assert.AreEqual(1, diagnostics.Groups["MissingBean"].Occurrences.Count);
+            Assert.AreEqual("abc"
+              , ((dynamic)diagnostics.Groups["MissingBean"].Occurrences[0]).MemberName);
         }
         [TestMethod]
         public void ShouldWarnIfCyclicalDependency()
         {
-            Assert.Fail();
+            try
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependency");
+                Assert.Fail();
+            }
+            catch (IOCCException iex)
+            {
+                System.Diagnostics.Debug.WriteLine(iex.Diagnostics);
+                Assert.IsTrue(true);
+            }
         }
 
 
