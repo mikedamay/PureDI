@@ -67,6 +67,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
     // TODO guard against static constructors
+    // TODO automatically add SimpleIOCContainer to the list of assemblies
+    // TODO write out the diagnostic schema - move to test project
+    // TODO document that IOCCFactory is ignored as an interface.  Workaround to create intermediate
+    // TODO this is the first gotcha
+    // TODO name and profile get mixed up - maybe a profile set will help - second gotcha
     /// <summary>
     /// 
     /// </summary>
@@ -122,7 +127,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <summary>
         /// for testing only
         /// </summary>
-        internal SimpleIOCContainer()
+        public SimpleIOCContainer()
         {
         }
 

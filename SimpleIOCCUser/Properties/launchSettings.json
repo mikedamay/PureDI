@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SimpleIOCCUser": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\projects\\mike.cs"
+    }
+  }
+}

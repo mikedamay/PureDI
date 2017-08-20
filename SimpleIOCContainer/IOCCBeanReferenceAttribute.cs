@@ -11,6 +11,7 @@ namespace com.TheDisappointedProgrammer.IOCC
              this.FactoryParmeter = FactoryParameter;
         }
     }
+    [IOCCIgnore]
     public interface IOCCFactory
     {
         object Execute(BeanFactoryArgs args);
