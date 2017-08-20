@@ -7,10 +7,10 @@ namespace IOCCTest.ConstructorTestData
     [IOCCBean]
     public class UnmarkedParameter : IResultGetter
     {
-        private IntHolder intHolder;
+        private IntHolderO intHolder;
         [IOCCConstructor]
         public UnmarkedParameter(
-          [IOCCBeanReference]IntHolder intHolder
+          [IOCCBeanReference]IntHolderO intHolder
           ,int abc
           )
         {
@@ -26,7 +26,7 @@ namespace IOCCTest.ConstructorTestData
     }
 
     [IOCCBean]
-    public class IntHolder
+    public class IntHolderO
     {
         public readonly int heldValue = 42;
     }

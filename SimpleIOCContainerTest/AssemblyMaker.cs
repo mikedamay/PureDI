@@ -44,7 +44,8 @@ namespace IOCCTest
               , SelectAssemblyName(TargetAssemblyName));
             parms.GenerateExecutable = false;
             parms.GenerateInMemory = InMemory;
-            CompilerResults result = csc.CompileAssemblyFromSource(parms, CodeText);
+            
+            CompilerResults result = csc.CompileAssemblyFromSource(parms, new string[] { CodeText });
             if (result.Errors.Count > 0)
             {
                 throw new Exception("compilation failed:" + Environment.NewLine

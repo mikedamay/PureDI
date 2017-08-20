@@ -2,6 +2,7 @@
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -14,7 +15,7 @@ namespace IOCCTest
             (var result, var diagnostics) = CommonScopeTest("SimpleScope");
             Assert.IsNotNull(result?.GetResults().MemberA);
             Assert.AreNotEqual(result?.GetResults().MemberA, result?.GetResults().MemberB);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
         [TestMethod]
         public void shouldBuildTreeWithPrototypesWithSingleton()
@@ -25,7 +26,7 @@ namespace IOCCTest
             Assert.IsNotNull((result?.GetResults().MemberA as IResultGetter)?.GetResults().MemberA);
             Assert.AreEqual((result?.GetResults().MemberA as IResultGetter)?.GetResults().MemberA
                , (result?.GetResults().MemberB as IResultGetter)?.GetResults().MemberA);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace IOCCTest
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result?.GetResults().FirstNumber);
             Assert.AreEqual(1, result?.GetResults().SecondNumber);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Utils.Falsify(diagnostics.HasWarnings));
 
         }
 
@@ -56,31 +57,32 @@ namespace IOCCTest
             System.Diagnostics.Debug.WriteLine(diagnostics1);
             System.Diagnostics.Debug.WriteLine(diagnostics2);
             Assert.AreNotEqual(rootBean, rootBean2);
-            Assert.IsFalse(diagnostics1.HasWarnings);
-            Assert.IsFalse(diagnostics2.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics1.HasWarnings));
 
         }
         private static
             (dynamic result, IOCCDiagnostics diagnostics)
             CommonScopeTest(string className)
         {
-            var iocc = MakeIOCCForTestAssembly(className);
-            object rootBean = iocc.GetOrCreateObjectTree(
-                $"IOCCTest.ScopeTestData.{className}"
-                , out IOCCDiagnostics diagnostics);
-            System.Diagnostics.Debug.WriteLine(diagnostics);
-            dynamic result = (IResultGetter)rootBean;
-            return (result, diagnostics);
+            return Utils.CreateAndRunAssembly($"ScopeTestData", className);
+            //var iocc = MakeIOCCForTestAssembly(className);
+            //object rootBean = iocc.GetOrCreateObjectTree(
+            //    $"IOCCTest.ScopeTestData.{className}"
+            //    , out IOCCDiagnostics diagnostics);
+            //System.Diagnostics.Debug.WriteLine(diagnostics);
+            //dynamic result = (IResultGetter)rootBean;
+            //return (result, diagnostics);
         }
 
         private static SimpleIOCContainer MakeIOCCForTestAssembly(string className)
         {
-            string codeText = FactoryTest.GetResource(
-                $"IOCCTest.ScopeTestData.{className}.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            SimpleIOCContainer iocc = new SimpleIOCContainer();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            return iocc;
+            return Utils.CreateIOCCinAssembly($"ScopeTestData", className);
+            //string codeText = FactoryTest.GetResource(
+            //    $"IOCCTest.ScopeTestData.{className}.cs");
+            //Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
+            //SimpleIOCContainer iocc = new SimpleIOCContainer();
+            //iocc.SetAssemblies(assembly.GetName().Name);
+            //return iocc;
         }
     }
 }

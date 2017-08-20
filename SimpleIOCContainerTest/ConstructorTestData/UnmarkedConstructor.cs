@@ -7,16 +7,16 @@ namespace IOCCTest.ConstructorTestData
     [IOCCBean]
     public class UnmarkedConstructor : IResultGetter
     {
-        private IntHolder intHolder;
+        private IntHolderY intHolder;
         public UnmarkedConstructor(
-            [IOCCBeanReference]IntHolder intHolder
+            [IOCCBeanReference]IntHolderY intHolder
             , int abc
         )
         { }
         [IOCCConstructor]
         public UnmarkedConstructor(
-            [IOCCBeanReference]IntHolder intHolder
-            , [IOCCBeanReference] IntHolder intHolder2
+            [IOCCBeanReference]IntHolderY intHolder
+            , [IOCCBeanReference] IntHolderY intHolder2
         )
         {
             this.intHolder = intHolder;
@@ -31,7 +31,7 @@ namespace IOCCTest.ConstructorTestData
     }
 
     [IOCCBean]
-    public class IntHolder
+    public class IntHolderY
     {
         public readonly int heldValue = 42;
     }

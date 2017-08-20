@@ -6,7 +6,7 @@ using IOCCTest.TestCode;
 namespace IOCCTest.FactoryTestData
 {
     [IOCCBean]
-    public class GenericFactory : IOCCFactory
+    public class GenericFactoryX : IOCCFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
@@ -16,7 +16,7 @@ namespace IOCCTest.FactoryTestData
     [IOCCBean]
     public class Generic : IResultGetter
     {
-        [IOCCBeanReference(Factory=typeof(GenericFactory))]
+        [IOCCBeanReference(Factory=typeof(GenericFactoryX))]
         private MyGeneric<int> myGeneric;
 
         public dynamic GetResults()

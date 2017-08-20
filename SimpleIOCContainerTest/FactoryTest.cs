@@ -4,6 +4,7 @@ using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -14,14 +15,9 @@ namespace IOCCTest
         public void ShouldCreateTreeFromRootAsString()
         {
 
-            string codeText = GetResource("IOCCTest.FactoryTestData.AccessByString.cs");
-            Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            SimpleIOCContainer iocc = new SimpleIOCContainer();
-            iocc.SetAssemblies(assembly.GetName().Name);
-            object rootBean = iocc.GetOrCreateObjectTree("IOCCTest.FactoryTestData.AccessByString",
-                out IOCCDiagnostics diagnostics);
-            Assert.IsNotNull(rootBean);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            (var result, var diagnostics) = CommonFactoryTest("AccessByString");
+            Assert.IsNotNull(result);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -29,7 +25,7 @@ namespace IOCCTest
         {
             (var result, var diagnostics) = CommonFactoryTest("SimpleBean");
             Assert.AreEqual(10, result.Abc);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -38,7 +34,7 @@ namespace IOCCTest
             (var result, var diagnostics) = CommonFactoryTest("FactoryWithMemberBeans");
             Assert.IsNotNull(result?.GetResults().Member);
             Assert.IsNotNull(result?.GetResults().Member?.GetResults().SubMember);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -55,7 +51,7 @@ namespace IOCCTest
             (var result, var diagnostics) = CommonFactoryTest("Generic");
             Assert.IsNotNull(result);
             Assert.IsNotNull(result?.GetResults().MyGeneric);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -78,7 +74,7 @@ namespace IOCCTest
         {
             (var result, var diagnostics) = CommonFactoryTest("FactoryDependencies");
             Assert.AreEqual(17, result?.GetResults().SomeValue);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -87,7 +83,7 @@ namespace IOCCTest
             (var result, var diagnostics) = CommonFactoryTest("GenericFactory");
             Assert.IsNotNull(result?.GetResults().MyThing);
             Assert.IsNotNull(result?.GetResults().MySecondThing);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]

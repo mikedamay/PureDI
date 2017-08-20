@@ -1,5 +1,6 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -13,7 +14,7 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "SimpleConstructor");
             Assert.AreEqual(42, result?.GetResults().SomeValue);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
         [TestMethod]
         public void ShouldCreateTreeWithMultipleParameters()
@@ -22,7 +23,7 @@ namespace IOCCTest
                 CONSTRUCTOR_TEST_NAMESPACE, "MultipleParams");
             Assert.IsNotNull(result?.GetResults().ParamOne);
             Assert.IsNotNull(result?.GetResults().ParamTwo);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
         [TestMethod]
@@ -31,7 +32,7 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "DeepHierarchy");
             Assert.IsNotNull(result?.GetResults().Level1?.GetResults().Level2);
-            Assert.IsFalse(diagnostics.HasWarnings);            
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));            
         }
 
         [TestMethod]
@@ -43,8 +44,7 @@ namespace IOCCTest
             Assert.IsNotNull(result?.GetResults().Level1b?.GetResults().Level2b);
             Assert.IsNull(result?.GetResults().Level1a?.GetResults().Level2b);
             Assert.IsNull(result?.GetResults().Level1b?.GetResults().Level2a);
-
-            Assert.IsFalse(diagnostics.HasWarnings);            
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));            
          }
         [TestMethod]
         public void ShouldCreateTreeWithFactoryConstructorParams()
@@ -52,7 +52,7 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "Factory");
             Assert.IsNotNull(result?.GetResults().Level1?.GetResults().Level2);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
         [TestMethod]
         public void ShouldCreateTreeWithFactoryInjectedViaConstructor()
@@ -60,7 +60,7 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "FactoryConstructor");
             Assert.IsNotNull(result?.GetResults().Level1?.GetResults().Level2);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
         [TestMethod]
         public void ShouldCreateTreeWithPrivateConstructor()
@@ -68,7 +68,7 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "PrivateConstructor");
             Assert.AreEqual(42, result?.GetResults().SomeValue);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
 
         }
         [TestMethod]

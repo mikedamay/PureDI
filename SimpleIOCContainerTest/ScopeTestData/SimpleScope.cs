@@ -7,8 +7,8 @@ namespace IOCCTest.ScopeTestData
     [IOCCBean]
     public class SimpleScope : IResultGetter
     {
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberA;
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberB;
+        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberA;
+        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberB;
 
         public dynamic GetResults()
         {
@@ -19,7 +19,7 @@ namespace IOCCTest.ScopeTestData
         }
     }
     [IOCCBean]
-    internal class MemberClass
+    internal class MemberClassX
     {
     }
 }

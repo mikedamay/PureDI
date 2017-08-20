@@ -8,9 +8,9 @@ namespace IOCCTest.ConstructorTestData
     public class MultipleConstructors : IResultGetter
     {
         [IOCCBeanReference(ConstructorName = "level2a")]
-        private Level1 level1a;
+        private Level1K level1a;
         [IOCCBeanReference(ConstructorName = "level2b")]
-        private Level1 level1b;
+        private Level1K level1b;
 
  
 
@@ -23,19 +23,19 @@ namespace IOCCTest.ConstructorTestData
         }
     }
     [IOCCBean]
-    public class Level1 : IResultGetter
+    public class Level1K : IResultGetter
     {
-        private Level2a level2a;
-        private Level2b level2b;
+        private Level2Ka level2a;
+        private Level2Kb level2b;
         [IOCCConstructor(Name="level2a")]
-        public Level1(
-          [IOCCBeanReference]Level2a level2a)
+        public Level1K(
+          [IOCCBeanReference]Level2Ka level2a)
         {
             this.level2a = level2a;
         }
         [IOCCConstructor(Name="level2b")]
-        public Level1(
-          [IOCCBeanReference]Level2b level2b)
+        public Level1K(
+          [IOCCBeanReference]Level2Kb level2b)
         {
             this.level2b = level2b;
         }
@@ -49,11 +49,11 @@ namespace IOCCTest.ConstructorTestData
         }
     }
     [IOCCBean]
-    public class Level2a
+    public class Level2Ka
     {
     }
     [IOCCBean]
-    public class Level2b
+    public class Level2Kb
     {
     }
 }

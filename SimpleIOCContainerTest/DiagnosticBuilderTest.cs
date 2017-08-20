@@ -12,11 +12,15 @@ namespace IOCCTest
     [TestClass]
     public class DiagnosticBuilderTest
     {
+        private static readonly string ResourceLocationPrefix = Common.ResourcePrefix;
+        // .NET framework uses namespace, .NET core uses assembly name
+        // "com.thedisappointedprogrammer.IOCC"
+        private static readonly string TestResourcePrefix = ResourceLocationPrefix;
         [TestMethod]
         public void ShouldCreateGroupFromWellFormedSchema()
         {
             string schemaName
-              = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+              = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
@@ -27,10 +31,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldFailWithBadlyFormedSchema()
         {
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<IOException>(() =>
             {
                 string schemaName
-                  = "IOCCTest.TestData.BadDiagnosticScema.xml";
+                  = $"{TestResourcePrefix}.TestData.BadDiagnosticScema.xml";
                 using (Stream s
                     = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
                 {
@@ -41,10 +45,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldFailWithSchemaThatContainsNoXML()
         {
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<IOException>(() =>
             {
                 string schemaName
-                  = "IOCCTest.TestData.SchemaWithNoXML.badxml";
+                  = $"{TestResourcePrefix}.TestData.SchemaWithNoXML.badxml";
                 using (Stream s
                     = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
                 {
@@ -57,7 +61,7 @@ namespace IOCCTest
         {
             IOCCDiagnostics diags;
             string schemaName
-                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+                = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
@@ -75,7 +79,7 @@ namespace IOCCTest
         {
             IOCCDiagnostics diags;
             string schemaName
-                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+                = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
@@ -119,7 +123,8 @@ namespace IOCCTest
                 }
             }
             string schemaName
-                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+                //= "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+                = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {

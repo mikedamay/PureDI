@@ -18,8 +18,17 @@ namespace com.TheDisappointedProgrammer.IOCC
                   = assembly.GetTypes().Where(d => d.TypeIsABean(profile, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                   .Select(i => ((i, d.GetBeanName()), d)));
-                foreach (((Type beanInterface, string name), Type beanImplementation) in query)
+                // 'inferred' names for tuple elements not supported by
+                // .NET standard - apparently a 7.1 feature
+                Type beanInterface;
+                string name;
+                Type beanImplementation;
+                foreach (((Type beanInterfaceArg, string nameArg) beanInterfaceAndName, Type beanImplementationArg) beanId in query)
                 {
+                    beanInterface = beanId.beanInterfaceAndName.beanInterfaceArg;
+                    name = beanId.beanInterfaceAndName.nameArg;
+                    beanImplementation = beanId.beanImplementationArg;
+
                     if (beanImplementation.IsValueType && beanInterface != beanImplementation)
                     {
                         // this is a struct and dependencyInterface is System.ValueType which

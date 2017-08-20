@@ -13,7 +13,4 @@ namespace IOCCTest.TestData
     {
         
     }
-    public class NamedDependencies
-    {
-    }
 }

@@ -14,5 +14,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return true;
         }
+#if NETSTANDARD2_0
+        public static readonly string ResourcePrefix 
+          = typeof(Common).Assembly.GetName().Name;
+#else
+        public static readonly string ResourcePrefix 
+          = typeof(SimpleIOCContainer).Namespace;
+#endif
     }
 }

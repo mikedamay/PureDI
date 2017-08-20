@@ -9,7 +9,7 @@ namespace IOCCTest.ConstructorTestData
     public class Factory : IResultGetter
     {
         [IOCCBeanReference]
-        private Level1 level1;
+        private Level1H level1;
 
         public dynamic GetResults()
         {
@@ -19,12 +19,12 @@ namespace IOCCTest.ConstructorTestData
         }
     }
     [IOCCBean]
-    public class Level1 : IResultGetter
+    public class Level1H : IResultGetter
     {
-        private Level2 level2;
+        private Level2H level2;
         [IOCCConstructor]
-        public Level1(
-          [IOCCBeanReference(Factory=typeof(Level2Factory))]Level2 level2)
+        public Level1H(
+          [IOCCBeanReference(Factory=typeof(Level2Factory))]Level2H level2)
         {
             this.level2 = level2;
         }
@@ -42,11 +42,11 @@ namespace IOCCTest.ConstructorTestData
     {
         public object Execute(BeanFactoryArgs args)
         {
-            return new Level2();
+            return new Level2H();
         }
     }
     [IOCCBean]
-    public class Level2
+    public class Level2H
     {
     }
 }

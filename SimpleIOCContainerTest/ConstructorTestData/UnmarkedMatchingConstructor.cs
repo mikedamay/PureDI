@@ -7,9 +7,9 @@ namespace IOCCTest.ConstructorTestData
     [IOCCBean]
     public class UnmarkedMatchingConstructor : IResultGetter
     {
-        private IntHolder intHolder;
+        private IntHolderN intHolder;
         public UnmarkedMatchingConstructor(
-            [IOCCBeanReference]IntHolder intHolder
+            [IOCCBeanReference]IntHolderN intHolder
         )
         { }
 
@@ -22,7 +22,7 @@ namespace IOCCTest.ConstructorTestData
     }
 
     [IOCCBean]
-    public class IntHolder
+    public class IntHolderN
     {
         public readonly int heldValue = 42;
     }

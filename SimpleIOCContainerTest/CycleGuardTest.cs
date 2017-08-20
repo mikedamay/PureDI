@@ -83,17 +83,7 @@ namespace IOCCTest
             cycleGuard.Pop();
             Assert.IsFalse(cycleGuard.IsPresent(typeof(List<int>)));
         }
-/*
-        [TestMethod]
-        public void ShouldAddAndRemoveDependency()
-        {
-            Assert.IsFalse(cycleGuard.IsCyclicalDependency(typeof(string)));
-            cycleGuard.AddCyclicalDependency(typeof(string));
-            Assert.IsTrue(cycleGuard.IsCyclicalDependency(typeof(string)));
-            cycleGuard.RemoveCyclicalDependency(typeof(string));
-            Assert.IsFalse(cycleGuard.IsCyclicalDependency(typeof(string)));
-        }
-*/
+
         [TestMethod]
         public void ShouldNotConfuseConstructedGenerics()
         {

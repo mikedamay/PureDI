@@ -7,10 +7,10 @@ namespace IOCCTest.ConstructorTestData
     [IOCCBean]
     public class SimpleConstructor : IResultGetter
     {
-        private IntHolder intHolder;
+        private IntHolderM intHolder;
         [IOCCConstructor]
         public SimpleConstructor(
-          [IOCCBeanReference]IntHolder intHolder
+          [IOCCBeanReference]IntHolderM intHolder
           )
         {
             this.intHolder = intHolder;
@@ -25,7 +25,7 @@ namespace IOCCTest.ConstructorTestData
     }
 
     [IOCCBean]
-    public class IntHolder
+    public class IntHolderM
     {
         public readonly int heldValue = 42;
     }

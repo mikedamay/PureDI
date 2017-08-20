@@ -12,7 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         public DiagnosticBuilder()
         {
             string schemaName
-                = "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
+                = $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
@@ -22,7 +22,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="diagnosticSchema">
         ///     XML Text which populates the diagnostics object
         ///     e.g. typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
-        ///          "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml")
+        ///          $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml")
         /// </param>
         public DiagnosticBuilder(Stream diagnosticSchema)
         {
