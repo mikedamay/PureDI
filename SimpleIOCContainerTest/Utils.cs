@@ -25,7 +25,7 @@ namespace IOCCTest
         public static SimpleIOCContainer CreateIOCCinAssembly(string nameSpace
             , string className)
         {
-            Assembly assembly = CreateAssembly($"{nameSpace}.{className}");
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{nameSpace}.{className}.cs");
             SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;

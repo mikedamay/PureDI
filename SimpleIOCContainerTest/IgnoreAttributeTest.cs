@@ -19,7 +19,7 @@ namespace IOCCTest
             {
                 {("IOCCTest.TestData.IgnoreHelper", ""), "IOCCTest.TestData.IgnoreHelper"}
             };
-            TypeMapBuilderTest.CommonTypeMapTest("IOCCTest.TestData.IgnoreHelper.cs", mapExpected);
+            TypeMapBuilderTest.CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.IgnoreHelper.cs", mapExpected);
 
         }
 

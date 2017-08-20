@@ -39,7 +39,7 @@ namespace IOCCTest
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result?.GetResults().FirstNumber);
             Assert.AreEqual(1, result?.GetResults().SecondNumber);
-            Assert.IsFalse(Utils.Falsify(diagnostics.HasWarnings));
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
 
         }
 

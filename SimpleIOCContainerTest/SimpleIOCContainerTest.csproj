@@ -1,10 +1,102 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
+    <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
+    <Compile Remove="ConstructorTestData\DuplicateConstructors.cs" />
+    <Compile Remove="ConstructorTestData\Factory.cs" />
+    <Compile Remove="ConstructorTestData\FactoryConstructor.cs" />
+    <Compile Remove="ConstructorTestData\MultipleConstructors.cs" />
+    <Compile Remove="ConstructorTestData\MultipleParams.cs" />
+    <Compile Remove="ConstructorTestData\ParameterNotInjectable.cs" />
+    <Compile Remove="ConstructorTestData\PrivateConstructor.cs" />
+    <Compile Remove="ConstructorTestData\SimpleConstructor.cs" />
+    <Compile Remove="ConstructorTestData\UnmarkedConstructor.cs" />
+    <Compile Remove="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
+    <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
+    <Compile Remove="FactoryTestData\AccessByString.cs" />
+    <Compile Remove="FactoryTestData\BadFactory.cs" />
+    <Compile Remove="FactoryTestData\FactoryDependencies.cs" />
+    <Compile Remove="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <Compile Remove="FactoryTestData\Generic.cs" />
+    <Compile Remove="FactoryTestData\GenericFactory.cs" />
+    <Compile Remove="FactoryTestData\MissingFactory.cs" />
+    <Compile Remove="FactoryTestData\SimpleBean.cs" />
+    <Compile Remove="FactoryTestData\ThrowsException.cs" />
+    <Compile Remove="FactoryTestData\TypeMismatch.cs" />
+    <Compile Remove="ScopeTestData\FactoryPrototype.cs" />
+    <Compile Remove="ScopeTestData\ProtoTypesWithSingletons.cs" />
+    <Compile Remove="ScopeTestData\RootProtoType.cs" />
+    <Compile Remove="ScopeTestData\SimpleScope.cs" />
+    <Compile Remove="TestData\AbstractClass.cs" />
+    <Compile Remove="TestData\BadGeneric.cs" />
+    <Compile Remove="TestData\BlankAssembly.cs" />
+    <Compile Remove="TestData\CheckProfileAndOs.cs" />
+    <Compile Remove="TestData\DependencyHierarchy.cs" />
+    <Compile Remove="TestData\DuplicateBeans.cs" />
+    <Compile Remove="TestData\DuplicateInterfaces.cs" />
+    <Compile Remove="TestData\Generic.cs" />
+    <Compile Remove="TestData\IgnoreHelper.cs" />
+    <Compile Remove="TestData\ImplementationClass.cs" />
+    <Compile Remove="TestData\InterfaceClass.cs" />
+    <Compile Remove="TestData\NamedDependencies.cs" />
+    <Compile Remove="TestData\NestedClasses.cs" />
+    <Compile Remove="TestData\SingleImplementation.cs" />
+    <Compile Remove="TestData\StructDependency.cs" />
+    <Compile Remove="TestData\TreeWithFields.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
+    <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
+    <EmbeddedResource Include="ConstructorTestData\ParameterNotInjectable.cs" />
+    <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\SimpleConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
+    <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
+    <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <EmbeddedResource Include="FactoryTestData\Generic.cs" />
+    <EmbeddedResource Include="FactoryTestData\GenericFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
+    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
+    <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
+    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
+    <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
+    <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />
+    <EmbeddedResource Include="ScopeTestData\SimpleScope.cs" />
+    <EmbeddedResource Include="TestData\AbstractClass.cs" />
+    <EmbeddedResource Include="TestData\BadGeneric.cs" />
+    <EmbeddedResource Include="TestData\BlankAssembly.cs" />
+    <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
+    <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
+    <EmbeddedResource Include="TestData\DuplicateBeans.cs" />
+    <EmbeddedResource Include="TestData\DuplicateInterfaces.cs" />
+    <EmbeddedResource Include="TestData\Generic.cs" />
+    <EmbeddedResource Include="TestData\IgnoreHelper.cs" />
+    <EmbeddedResource Include="TestData\ImplementationClass.cs" />
+    <EmbeddedResource Include="TestData\InterfaceClass.cs" />
+    <EmbeddedResource Include="TestData\NamedDependencies.cs" />
+    <EmbeddedResource Include="TestData\NestedClasses.cs" />
+    <EmbeddedResource Include="TestData\SingleImplementation.cs" />
+    <EmbeddedResource Include="TestData\StructDependency.cs" />
+    <EmbeddedResource Include="TestData\TreeWithFields.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />

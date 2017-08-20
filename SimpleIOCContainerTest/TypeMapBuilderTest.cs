@@ -63,7 +63,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.INamedDependencies", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
                 ,{("IOCCTest.TestData.ISecond", "dep-name-def"), "IOCCTest.TestData.NamedDependencies2"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.NamedDependencies.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NamedDependencies.cs", mapExpected);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenB", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenC", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.DependencyHierarchy.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.DependencyHierarchy.cs", mapExpected);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.NestedClasses+NestedParent", ""),"IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors"}
                 ,{("IOCCTest.TestData.NestedInterface", ""),"IOCCTest.TestData.NestedClasses+NestedDependencyWithAncestors"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.NestedClasses.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NestedClasses.cs", mapExpected);
         }
         [TestMethod]
         public void ShouldCreateTypeMapForDuplicateInterfaces()
@@ -104,7 +104,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.DuplicateInterfaces.FirstGen2", ""),"IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3"}
                 ,{("IOCCTest.TestData.DuplicateInterfaces.SecondGen1", ""),"IOCCTest.TestData.DuplicateInterfaces.DuplicateInterfaces3"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.DuplicateInterfaces.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.DuplicateInterfaces.cs", mapExpected);
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.CheckProfileAndOs8", ""),"IOCCTest.TestData.CheckProfileAndOs8"}
                 ,{("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", SimpleIOCContainer.OS.Windows);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", SimpleIOCContainer.OS.Windows);
         }
         [TestMethod]
         public void ShouldIgnoreNamedProfileAndOsWhenNoParamsPassed()
@@ -145,7 +145,7 @@ namespace IOCCTest
             {
                 {("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.CheckProfileAndOs.cs", mapExpected
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected
               , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
         }
         [TestMethod]
@@ -154,7 +154,7 @@ namespace IOCCTest
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
             };
-            CommonTypeMapTest("IOCCTest.TestData.BlankAssembly.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.BlankAssembly.cs", mapExpected);
             
         }
 
@@ -183,7 +183,7 @@ namespace IOCCTest
             {
                 {("IOCCTest.TestData.StructDependency", ""),"IOCCTest.TestData.StructDependency"}
             };
-            CommonTypeMapTest("IOCCTest.TestData.StructDependency.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.StructDependency.cs", mapExpected);
 
         }
 #if !NETCOREAPP2_0
@@ -191,9 +191,9 @@ namespace IOCCTest
         public void ShouldRecognizeConnectionsAcrossAssemblies()
         {
             Assembly assemblyInterface = new AssemblyMaker().MakeAssembly(GetResource(
-                "IOCCTest.TestData.InterfaceClass.cs"), TargetAssemblyName : "Mike", InMemory : false);
+                $"{Utils.TestResourcePrefix}.TestData.InterfaceClass.cs"), TargetAssemblyName : "Mike", InMemory : false);
             Assembly assemblyImplementation = new AssemblyMaker().MakeAssembly(GetResource(
-                "IOCCTest.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"}, InMemory: false);
+                $"{Utils.TestResourcePrefix}.TestData.ImplementationClass.cs"), ExtraAssemblies: new [] { "Mike"}, InMemory: false);
             IOCCDiagnostics diagnostics;
             using (Stream stream = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
@@ -221,7 +221,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.Generic`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", ""),"IOCCTest.TestData.GenericChild"}
 #endif
             };
-            CommonTypeMapTest("IOCCTest.TestData.Generic.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.Generic.cs", mapExpected);
 
         }
         /// <summary>
@@ -245,7 +245,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap("IOCCTest.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
         }
 
         /// <summary>
