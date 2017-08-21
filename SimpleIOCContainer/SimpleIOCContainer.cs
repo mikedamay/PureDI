@@ -130,7 +130,17 @@ namespace com.TheDisappointedProgrammer.IOCC
         public SimpleIOCContainer()
         {
         }
-
+        /// <summary>
+        /// this routine is called to specify the assemblies to be scanned
+        /// for beans.  Any bean to be injected must be defined in one
+        /// of these assemblies and must be marked with the [IOCCBean] attribute.
+        /// </summary>
+        /// <remarks>
+        /// The assembly containing SimpleIOCCBean class itself is always included
+        /// by default.  It does not need to be specified.  The purpose
+        /// of the inclusion is to allow callers to include the SimpleIOCContainer
+        /// bean itself in factories.  The assumbly is included to make this intuitive.
+        /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
         /// <param name="excludeRootAssembly">By default the assembly containing the type
         /// passed to GetOrCreateObjectTree() is included automatically.
@@ -268,6 +278,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
             }
+            assemblyNames.Add(this.GetType().Assembly.GetName().Name);
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
             typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
