@@ -3,7 +3,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using com.TheDisappointedProgrammer.IOCC;
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
+    [IOCCBean(Name="usage")]
     internal class UsageListProvider : ListProvider
     {
         public TodoList LoadList()

@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using com.TheDisappointedProgrammer.IOCC;
+﻿using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDemo
 {

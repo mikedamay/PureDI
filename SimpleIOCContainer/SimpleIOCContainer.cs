@@ -86,6 +86,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     4) If a member is incorrectly marked as [IOCCBeanReference] then
     ///        it will be set to its default value even if it is an initialized member.
     ///     5) There is no way for the root bean to be a prototype
+    ///     6) Even if beans are referenced only by factories they still names to 
+    ///        distinguish multiple implementations of the same interfacr.
+    ///        Of course classes referenced by factories don't have to be beans.
     /// </remarks>
     [IOCCBean]
     public class SimpleIOCContainer
@@ -223,11 +226,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-	    if (typeMap == null )
-	    {
-            	typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-              , ref diagnostics, profile, os);
-	    }
+	        if (typeMap == null )
+	        {
+          	    typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+                  , ref diagnostics, profile, os);
+    	    }
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
@@ -242,7 +245,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
-		mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+		    mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             var rootObject = container.GetOrCreateObjectTree(
               rootType, ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
@@ -284,11 +287,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             assemblyNames.Add(this.GetType().Assembly.GetName().Name);
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-	    if (typeMap == null)
-	    {
-            	typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-                  , ref diagnostics, profile, os);
-	    }
+	        if (typeMap == null)
+	        {
+            	    typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+                      , ref diagnostics, profile, os);
+	        }
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
@@ -298,6 +301,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
+            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {

@@ -14,7 +14,7 @@ namespace SimpleIOCCDemo
 			}
 			else
 			{
-				return iocContainer.GetOrCreateObjectTree<UsageListProvider>();
+				return iocContainer.GetOrCreateObjectTree<UsageListProvider>(beanName : "usage");
 			}
 			
 		}
