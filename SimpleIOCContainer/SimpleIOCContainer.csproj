@@ -23,7 +23,9 @@
   <ItemGroup>
     <None Update="Docs\DiagnosticSchemaSchema.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>  
   </ItemGroup>
-
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+ </PropertyGroup>
 </Project>

@@ -17,5 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleIOCContainer\SimpleIOCContainer.csproj" />
   </ItemGroup>
-
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
 </Project>
