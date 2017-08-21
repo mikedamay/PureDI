@@ -5,7 +5,7 @@ namespace SimpleIOCCDemo
     [IOCCBean]
     public class ConsoleToDoProcessor : TodoProcessor
     {
-        [IOCCBeanReference] private ListProvider listProvider;
+        [IOCCBeanReference(Factory=typeof(ProviderFactory))] private ListProvider listProvider;
         [IOCCBeanReference(Factory=typeof(DisplayFactory))] private ListDisplay listDisplay;
         public void Process()
         {

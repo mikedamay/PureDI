@@ -223,8 +223,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+	    if (typeMap == null )
+	    {
+            	typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
               , ref diagnostics, profile, os);
+	    }
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
@@ -239,6 +242,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 container = new IOCObjectTreeContainer(profile, typeMap);
             }
+		mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             var rootObject = container.GetOrCreateObjectTree(
               rootType, ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
@@ -280,8 +284,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             assemblyNames.Add(this.GetType().Assembly.GetName().Name);
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-            typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-              , ref diagnostics, profile, os);
+	    if (typeMap == null)
+	    {
+            	typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+                  , ref diagnostics, profile, os);
+	    }
             IOCObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
