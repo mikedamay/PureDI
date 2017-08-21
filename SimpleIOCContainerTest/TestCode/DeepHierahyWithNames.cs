@@ -8,12 +8,12 @@ namespace IOCCTest.TestCode.WithNames
         dynamic GetResults();
     }
 
-    [IOCCBean]
+    [Bean]
     public class DeepHierahy : IResultGetter
     {
-        [IOCCBeanReference(Name="level2a")]
+        [BeanReference(Name="level2a")]
         private Level2 level2a = null;
-        [IOCCBeanReference(Name="level2b")]
+        [BeanReference(Name="level2b")]
         private Level2 level2b = null;
 
         public dynamic GetResults()
@@ -28,12 +28,12 @@ namespace IOCCTest.TestCode.WithNames
     {
 
     }
-    [IOCCBean(Name="level2b")]
+    [Bean(Name="level2b")]
     internal class Level2b : IResultGetter, Level2
     {
-        [IOCCBeanReference(Name="level2b3a")]
+        [BeanReference(Name="level2b3a")]
         private Level2b3a level2b3a = null;
-        [IOCCBeanReference(Name="level2b3b")]
+        [BeanReference(Name="level2b3b")]
         private Level2b3b level2b3b = null;
         public dynamic GetResults()
         {
@@ -44,22 +44,22 @@ namespace IOCCTest.TestCode.WithNames
         }
     }
     
-    [IOCCBean(Name="level2b3a")]
+    [Bean(Name="level2b3a")]
     internal class Level2b3a
     {
     }
 
-    [IOCCBean(Name="level2b3b")]
+    [Bean(Name="level2b3b")]
     internal class Level2b3b
     {
     }
 
-    [IOCCBean(Name = "level2a")]
+    [Bean(Name = "level2a")]
     internal class Level2a : IResultGetter, Level2
     {
-        [IOCCBeanReference(Name="level2a3a")]
+        [BeanReference(Name="level2a3a")]
         private Level2a3a level2a3a = null;
-        [IOCCBeanReference(Name="level2a3b")]
+        [BeanReference(Name="level2a3b")]
         private Level2a3b level2a3b = null;
         public dynamic GetResults()
         {
@@ -69,11 +69,11 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCBean(Name="level2a3a")]
+    [Bean(Name="level2a3a")]
     internal class Level2a3a
     {
     }
-    [IOCCBean(Name="level2a3b")]
+    [Bean(Name="level2a3b")]
     internal class Level2a3b
     {
     }

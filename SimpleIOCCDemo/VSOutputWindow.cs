@@ -2,7 +2,7 @@
 
 namespace SimpleIOCCDemo
 {
-    [IOCCBean(Name="outputWindow")]
+    [Bean(Name="outputWindow")]
     internal class VSOutputWindow : ListDisplay
     {
         public void DisplayList(TodoList todoList)

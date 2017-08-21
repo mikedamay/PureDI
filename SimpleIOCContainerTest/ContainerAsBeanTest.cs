@@ -8,14 +8,15 @@ namespace IOCCTest
     [TestClass]
     public class ContainerAsBeanTest
     {
-        [IOCCBean]
+        [Bean]
         private class TrivialBean
         {
-            [IOCCBeanReference]
+            [BeanReference]
             public SimpleIOCContainer child;
+
         }
 
-        [IOCCBean]
+        [Bean]
         private class Child
         {
             
@@ -27,7 +28,7 @@ namespace IOCCTest
             {
                 SimpleIOCContainer sic = new SimpleIOCContainer();
                 ContainerAsBeanTest.TrivialBean tb 
-                  = sic.GetOrCreateObjectTree<ContainerAsBeanTest.TrivialBean>();
+                  = sic.CreateAndInjectDependencies<ContainerAsBeanTest.TrivialBean>();
                 Assert.AreEqual(sic, tb.child);
             } finally { }
             /*

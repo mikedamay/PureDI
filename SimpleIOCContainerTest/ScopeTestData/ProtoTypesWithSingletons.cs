@@ -4,11 +4,11 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ScopeTestData
 {
-    [IOCCBean]
+    [Bean]
     public class PrototypesWithSingletons : IResultGetter
     {
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberA;
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberB;
+        [BeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberA;
+        [BeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberB;
 
         public dynamic GetResults()
         {
@@ -18,10 +18,10 @@ namespace IOCCTest.ScopeTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     internal class MemberClass : IResultGetter
     {
-        [IOCCBeanReference] private MemberMemberClass MemberA;
+        [BeanReference] private MemberMemberClass MemberA;
 
         public dynamic GetResults()
         {
@@ -30,7 +30,7 @@ namespace IOCCTest.ScopeTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     internal class MemberMemberClass
     {
     }

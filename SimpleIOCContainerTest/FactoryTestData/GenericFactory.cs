@@ -5,8 +5,8 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class GenericFactoryFactory<T> : IOCCFactory where T : new()
+    [Bean]
+    public class GenericFactoryFactory<T> : IFactory where T : new()
     {
         public object Execute(BeanFactoryArgs args)
         {
@@ -14,12 +14,12 @@ namespace IOCCTest.FactoryTestData
         }
     }
     // this is not really a factory
-    [IOCCBean]
+    [Bean]
     public class GenericFactory : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(GenericFactoryFactory<MyThing>))]
+        [BeanReference(Factory = typeof(GenericFactoryFactory<MyThing>))]
         private MyThing myThing;
-        [IOCCBeanReference(Factory = typeof(GenericFactoryFactory<MySecondThing>))]
+        [BeanReference(Factory = typeof(GenericFactoryFactory<MySecondThing>))]
         private MySecondThing mySecondThing;
 
         public dynamic GetResults()

@@ -61,7 +61,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.GetOrCreateObjectTree<ReadOnlyFields>();
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ReadOnlyFields>();
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.GetOrCreateObjectTree<AlreadyInitialized>();
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<AlreadyInitialized>();
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.GetOrCreateObjectTree<MyProps>();
+                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyProps>();
             }
             catch (Exception ex)
             {
@@ -109,7 +109,7 @@ namespace IOCCTest
             MyAutoProp props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.GetOrCreateObjectTree<MyAutoProp>(out IOCCDiagnostics diags);
+                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyAutoProp>(out IOCCDiagnostics diags);
                 Assert.IsTrue(diags.HasWarnings);
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ namespace IOCCTest
         {   
             Assert.ThrowsException<IOCCException>(() =>
             {
-                NoArgRoot st = new SimpleIOCContainer().GetOrCreateObjectTree<
+                NoArgRoot st = new SimpleIOCContainer().CreateAndInjectDependencies<
                   NoArgRoot>(out IOCCDiagnostics diags);
                 Assert.IsTrue(diags.HasWarnings);
             });
@@ -132,7 +132,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldThrowExceptionForNoArgClassTree()
         {
-            NoArgClassTree nact = new SimpleIOCContainer().GetOrCreateObjectTree<
+            NoArgClassTree nact = new SimpleIOCContainer().CreateAndInjectDependencies<
                 NoArgClassTree>(out IOCCDiagnostics diags);
             Assert.IsTrue(diags.HasWarnings);
         }
@@ -141,7 +141,7 @@ namespace IOCCTest
         public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
         {
             ClassWithMultipleInterfaces cwmi 
-              = new SimpleIOCContainer().GetOrCreateObjectTree<ClassWithMultipleInterfaces>();
+              = new SimpleIOCContainer().CreateAndInjectDependencies<ClassWithMultipleInterfaces>();
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
             Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }
@@ -149,21 +149,21 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInstantiateStruct()
         {
-            StructRoot root = new SimpleIOCContainer().GetOrCreateObjectTree<StructRoot>();
+            StructRoot root = new SimpleIOCContainer().CreateAndInjectDependencies<StructRoot>();
             Assert.IsNotNull(root.child);
         }
 
         [TestMethod]
         public void ShouldCreateATreeWithStructs()
         {
-            StructTree tree = new SimpleIOCContainer().GetOrCreateObjectTree<StructTree>();
+            StructTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<StructTree>();
             Assert.IsNotNull(tree.structChild);
         }
 
         [TestMethod]
         public void ShouldCreateTreeWithMixOfClassesAndStructs()
         {
-            ClassTree tree = new SimpleIOCContainer().GetOrCreateObjectTree<ClassTree>();
+            ClassTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<ClassTree>();
             Assert.IsNotNull(tree);
             Assert.AreEqual(1, tree?.GetStructChild2().GetClassChild()?.someValue);
         }
@@ -171,33 +171,33 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateASingleInstanceForMultipleReferences()
         {
-            CrossConnections cc = new SimpleIOCContainer().GetOrCreateObjectTree<CrossConnections>();
+            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependencies<CrossConnections>();
             Assert.IsNotNull(cc?.ChildA?.Common);
             Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenerics()
         {
-            RefersToGeneric rtg = new SimpleIOCContainer().GetOrCreateObjectTree<RefersToGeneric>();
+            RefersToGeneric rtg = new SimpleIOCContainer().CreateAndInjectDependencies<RefersToGeneric>();
             Assert.AreEqual("Generic<T>", rtg?.GenericInt?.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericRoot()
         {
-            Generic<int> gi = new SimpleIOCContainer().GetOrCreateObjectTree<Generic<int>>();
+            Generic<int> gi = new SimpleIOCContainer().CreateAndInjectDependencies<Generic<int>>();
             Assert.IsNotNull(gi);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericParameter()
         {
-            GenericHolderParent ghp = new SimpleIOCContainer().GetOrCreateObjectTree<GenericHolderParent>();
+            GenericHolderParent ghp = new SimpleIOCContainer().CreateAndInjectDependencies<GenericHolderParent>();
             Assert.AreEqual("GenericHeld", ghp?.GenericHolder?.GenericHeld.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWhenRootHasGenericParameter()
         {
             GenericHolder<GenericHeld> ghgh 
-              = new SimpleIOCContainer().GetOrCreateObjectTree<GenericHolder<GenericHeld>>();
+              = new SimpleIOCContainer().CreateAndInjectDependencies<GenericHolder<GenericHeld>>();
             Assert.AreEqual("GenericHeld", ghgh?.GenericHeld?.Name);
         }
     }

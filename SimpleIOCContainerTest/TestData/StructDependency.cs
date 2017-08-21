@@ -2,7 +2,7 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCBean]
+    [Bean]
     public struct StructDependency
     {
     }

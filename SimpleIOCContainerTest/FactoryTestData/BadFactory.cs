@@ -4,15 +4,15 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
+    [Bean]
     public class BadFactoryFactory
     {
         
     }
-    [IOCCBean]
+    [Bean]
     public class BadFactory : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(BadFactoryFactory))] private int myInt;
+        [BeanReference(Factory = typeof(BadFactoryFactory))] private int myInt;
 
         public dynamic GetResults()
         {

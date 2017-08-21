@@ -5,10 +5,10 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class Factory : IResultGetter
     {
-        [IOCCBeanReference]
+        [BeanReference]
         private Level1H level1;
 
         public dynamic GetResults()
@@ -18,13 +18,13 @@ namespace IOCCTest.ConstructorTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level1H : IResultGetter
     {
         private Level2H level2;
-        [IOCCConstructor]
+        [Constructor]
         public Level1H(
-          [IOCCBeanReference(Factory=typeof(Level2Factory))]Level2H level2)
+          [BeanReference(Factory=typeof(Level2Factory))]Level2H level2)
         {
             this.level2 = level2;
         }
@@ -37,15 +37,15 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
-    public class Level2Factory : IOCCFactory
+    [Bean]
+    public class Level2Factory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             return new Level2H();
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level2H
     {
     }

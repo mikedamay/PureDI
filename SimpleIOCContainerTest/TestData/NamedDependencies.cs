@@ -8,16 +8,16 @@ using com.TheDisappointedProgrammer.IOCC;
 // this module is not compiled as part of the project.  It is embedded as a resource.
 namespace IOCCTest.TestData
 {
-    [IOCCBean(Name="dep-name-abc")]
+    [Bean(Name="dep-name-abc")]
     public class NamedDependencies
     {
     }
-    [IOCCBean(Name="dep-name-xyz")]
+    [Bean(Name="dep-name-xyz")]
     public class NamedDependencies1 : ISecond
     {
         
     }
-    [IOCCBean(Name="dep-name-def")]
+    [Bean(Name="dep-name-def")]
     public class NamedDependencies2 : INamedDependencies, ISecond
     {
     }

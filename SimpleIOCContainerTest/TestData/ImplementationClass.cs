@@ -2,7 +2,7 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCBean]
+    [Bean]
     public class ImplementationClass : InterfaceClass
     {
         

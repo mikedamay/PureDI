@@ -5,18 +5,18 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class GenericFactoryX : IOCCFactory
+    [Bean]
+    public class GenericFactoryX : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             return new MyGeneric<int>();
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Generic : IResultGetter
     {
-        [IOCCBeanReference(Factory=typeof(GenericFactoryX))]
+        [BeanReference(Factory=typeof(GenericFactoryX))]
         private MyGeneric<int> myGeneric;
 
         public dynamic GetResults()

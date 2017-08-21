@@ -2,47 +2,47 @@
 
 namespace IOCCTest.TestData
 {
-    [IOCCBean(OS = SimpleIOCContainer.OS.Linux, Profile = "someProfile")]
+    [Bean(OS = SimpleIOCContainer.OS.Linux, Profile = "someProfile")]
     public class CheckProfileAndOs
     {
 
     }
-    [IOCCBean( OS = SimpleIOCContainer.OS.Windows, Profile = "someProfile")]
+    [Bean( OS = SimpleIOCContainer.OS.Windows, Profile = "someProfile")]
     public class CheckProfileAndOs2
     {
 
     }
-    [IOCCBean( OS = SimpleIOCContainer.OS.Any, Profile = "someProfile")]
+    [Bean( OS = SimpleIOCContainer.OS.Any, Profile = "someProfile")]
     public class CheckProfileAndOs3
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Linux, Profile = "someOtherProfile")]
+    [Bean(OS = SimpleIOCContainer.OS.Linux, Profile = "someOtherProfile")]
     public class CheckProfileAndOs4
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Windows, Profile = "someOtherProfile")]
+    [Bean(OS = SimpleIOCContainer.OS.Windows, Profile = "someOtherProfile")]
     public class CheckProfileAndOs5
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Any, Profile = "someOtherProfile")]
+    [Bean(OS = SimpleIOCContainer.OS.Any, Profile = "someOtherProfile")]
     public class CheckProfileAndOs6
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Linux, Profile = "")]
+    [Bean(OS = SimpleIOCContainer.OS.Linux, Profile = "")]
     public class CheckProfileAndOs7
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Windows, Profile = "")]
+    [Bean(OS = SimpleIOCContainer.OS.Windows, Profile = "")]
     public class CheckProfileAndOs8
     {
 
     }
-    [IOCCBean(OS = SimpleIOCContainer.OS.Any, Profile = "")]
+    [Bean(OS = SimpleIOCContainer.OS.Any, Profile = "")]
     public class CheckProfileAndOs9
     {
 

@@ -4,15 +4,15 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class MultipleParams : IResultGetter
     {
         private ParamOne paramOne;
         private ParamTwo paramTwo;
-        [IOCCConstructor]
+        [Constructor]
         public MultipleParams(
-          [IOCCBeanReference]ParamOne one
-          ,[IOCCBeanReference]ParamTwo two)
+          [BeanReference]ParamOne one
+          ,[BeanReference]ParamTwo two)
         {
             this.paramOne = one;
             this.paramTwo = two;
@@ -27,12 +27,12 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
+    [Bean]
     public class ParamOne
     {
         
     }
-    [IOCCBean]
+    [Bean]
     public class ParamTwo
     {
         

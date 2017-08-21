@@ -4,11 +4,11 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ScopeTestData
 {
-    [IOCCBean]
+    [Bean]
     public class SimpleScope : IResultGetter
     {
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberA;
-        [IOCCBeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberB;
+        [BeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberA;
+        [BeanReference(Scope = BeanScope.Prototype)] private MemberClassX MemberB;
 
         public dynamic GetResults()
         {
@@ -18,7 +18,7 @@ namespace IOCCTest.ScopeTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     internal class MemberClassX
     {
     }

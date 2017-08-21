@@ -64,7 +64,7 @@ namespace IOCCTest
         public void ShouldWarnIfTypeMissing()
         {
             MissingType mt 
-              = new SimpleIOCContainer().GetOrCreateObjectTree<MissingType>(
+              = new SimpleIOCContainer().CreateAndInjectDependencies<MissingType>(
               out IOCCDiagnostics diags);
             Assert.IsTrue(diags.HasWarnings);
             dynamic diagnostic = diags.Groups["MissingBean"]?.Occurrences[0];
@@ -80,7 +80,7 @@ namespace IOCCTest
         {
             IOCCDiagnostics diags = null;
             Assert.ThrowsException<IOCCException>(() =>
-                new SimpleIOCContainer().GetOrCreateObjectTree<int>(out diags));
+                new SimpleIOCContainer().CreateAndInjectDependencies<int>(out diags));
             Assert.IsTrue(diags.HasWarnings);
             dynamic diagnostic = diags.Groups["MissingRoot"]?.Occurrences[0];
             Assert.AreEqual("System.Int32", diagnostic.BeanType);
@@ -91,14 +91,14 @@ namespace IOCCTest
         public void ShouldCreateTreeForGenericsWithMultipleParameters()
         {
             MultipleParamGenericUser mpgu 
-              = new SimpleIOCContainer().GetOrCreateObjectTree<MultipleParamGenericUser>();
+              = new SimpleIOCContainer().CreateAndInjectDependencies<MultipleParamGenericUser>();
             Assert.IsNotNull(mpgu?.Multiple);
         }
 
         [TestMethod]
         public void ShouldCreateTreeForNestedGeneric()
         {
-            WrapperUser wu = new SimpleIOCContainer().GetOrCreateObjectTree<WrapperUser>();
+            WrapperUser wu = new SimpleIOCContainer().CreateAndInjectDependencies<WrapperUser>();
             Assert.IsNotNull(wu?.Nested);
         }
     }

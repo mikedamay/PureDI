@@ -6,6 +6,7 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+  
   <ItemGroup>
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
@@ -95,8 +96,8 @@
     <EmbeddedResource Include="TestData\SingleImplementation.cs" />
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
-
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />

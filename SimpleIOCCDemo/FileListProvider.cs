@@ -3,13 +3,13 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using com.TheDisappointedProgrammer.IOCC;
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
+    [Bean]
     internal class FileListProvider : ListProvider
     {
         private string location;
-        [IOCCConstructor]
+        [Constructor]
         public FileListProvider(
-          [IOCCBeanReference(Factory=typeof(CommandLineFactory))] string location)
+          [BeanReference(Factory=typeof(CommandLineFactory))] string location)
         {
             this.location = location 
               ?? throw new Exception(

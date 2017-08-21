@@ -4,18 +4,18 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class SimpleFactory : IOCCFactory
+    [Bean]
+    public class SimpleFactory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             return args.FactoryParmeter;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class SimpleBean : IResultGetter
     {
-        [IOCCBeanReference(Factory=typeof(SimpleFactory), FactoryParameter=10)]
+        [BeanReference(Factory=typeof(SimpleFactory), FactoryParameter=10)]
         public int Abc;
 
         public dynamic GetResults()

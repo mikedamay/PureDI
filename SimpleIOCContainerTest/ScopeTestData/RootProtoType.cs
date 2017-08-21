@@ -2,7 +2,7 @@
 
 namespace IOCCTest.ScopeTestData
 {
-    [IOCCBean]
+    [Bean]
     public class RootPrototype
     {
         

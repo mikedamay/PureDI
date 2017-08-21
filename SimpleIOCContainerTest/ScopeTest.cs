@@ -48,10 +48,10 @@ namespace IOCCTest
         {
             string className = "RootPrototype";
             var iocc = MakeIOCCForTestAssembly(className);
-            object rootBean = iocc.GetOrCreateObjectTree(
+            object rootBean = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}"
                 , out IOCCDiagnostics diagnostics1, scope: BeanScope.Prototype);
-            object rootBean2 = iocc.GetOrCreateObjectTree(
+            object rootBean2 = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}"
                 , out IOCCDiagnostics diagnostics2, scope: BeanScope.Prototype);
             System.Diagnostics.Debug.WriteLine(diagnostics1);
@@ -66,7 +66,7 @@ namespace IOCCTest
         {
             return Utils.CreateAndRunAssembly($"ScopeTestData", className);
             //var iocc = MakeIOCCForTestAssembly(className);
-            //object rootBean = iocc.GetOrCreateObjectTree(
+            //object rootBean = iocc.CreateAndInjectDependencies(
             //    $"IOCCTest.ScopeTestData.{className}"
             //    , out IOCCDiagnostics diagnostics);
             //System.Diagnostics.Debug.WriteLine(diagnostics);

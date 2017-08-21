@@ -4,12 +4,12 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class UnmarkedMatchingConstructor : IResultGetter
     {
         private IntHolderN intHolder;
         public UnmarkedMatchingConstructor(
-            [IOCCBeanReference]IntHolderN intHolder
+            [BeanReference]IntHolderN intHolder
         )
         { }
 
@@ -21,7 +21,7 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
+    [Bean]
     public class IntHolderN
     {
         public readonly int heldValue = 42;

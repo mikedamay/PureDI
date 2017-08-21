@@ -3,7 +3,7 @@ using MyIgnoredReference = IOCCTest.MyIgnoredReference;
 
 namespace IOCCTest.TestData
 {
-    [IOCCBean]
+    [Bean]
     public class IgnoreHelper : MyIgnoredReference
     {
         

@@ -4,10 +4,10 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.TestCode.WithNames
 { 
-    [IOCCBean(Name="name-A")]
+    [Bean(Name="name-A")]
     public class CyclicalDependency : IResultGetter
     {
-        [IOCCBeanReference]
+        [BeanReference]
         public Child child;
         public dynamic GetResults()
         {
@@ -17,10 +17,10 @@ namespace IOCCTest.TestCode.WithNames
         }
 
     }
-    [IOCCBean]
+    [Bean]
     public class CyclicalDependencyAlt : IResultGetter
     {
-        [IOCCBeanReference]
+        [BeanReference]
         public Child child;
         public dynamic GetResults()
         {
@@ -30,13 +30,13 @@ namespace IOCCTest.TestCode.WithNames
         }
 
     }
-    [IOCCBean]
+    [Bean]
     public class Child : IResultGetter
     {
-        [IOCCBeanReference(Name="name-A")]
+        [BeanReference(Name="name-A")]
         public CyclicalDependency parent;
 
-        [IOCCBeanReference]
+        [BeanReference]
         public GrandChild grandChild;
         public dynamic GetResults()
         {
@@ -46,10 +46,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class GrandChild : IResultGetter
     {
-        [IOCCBeanReference(Name="name-A")]
+        [BeanReference(Name="name-A")]
         public CyclicalDependency grandParent;
         public dynamic GetResults()
         {
@@ -59,11 +59,11 @@ namespace IOCCTest.TestCode.WithNames
         }
     }
 
-    [IOCCBean(Name = "name-B")]
+    [Bean(Name = "name-B")]
     class ParentWithInterface : IParent, IResultGetter
     {
         
-        [IOCCBeanReference]
+        [BeanReference]
         private IChild child = null;
         public dynamic GetResults()
         {
@@ -73,10 +73,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCBean(Name = "name-B2")]
+    [Bean(Name = "name-B2")]
     class ParentWithInterface2 : IParent, IResultGetter
     {
-        [IOCCBeanReference]
+        [BeanReference]
         private IChild child = null;
         public dynamic GetResults()
         {
@@ -95,12 +95,12 @@ namespace IOCCTest.TestCode.WithNames
     {
     }
 
-    [IOCCBean]
+    [Bean]
     internal class ChildWithInterface : IChild, IResultGetter
     {
-        [IOCCBeanReference(Name = "name-B")]
+        [BeanReference(Name = "name-B")]
         private IParent parent = null;
-        [IOCCBeanReference(Name = "name-B2")]
+        [BeanReference(Name = "name-B2")]
         private IParent parent2 = null;
         public dynamic GetResults()
         {
@@ -116,10 +116,10 @@ namespace IOCCTest.TestCode.WithNames
     {
         
     }
-    [IOCCBean(Name="basest")]
+    [Bean(Name="basest")]
     internal class BaseClass : BasestClass, IResultGetter
     {
-        [IOCCBeanReference(Name="child")] private ChildClass childClass = null;
+        [BeanReference(Name="child")] private ChildClass childClass = null;
         public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -128,10 +128,10 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     internal class BaseClass2 : BasestClass
     {
-        [IOCCBeanReference] private ChildClass childClass = null;
+        [BeanReference] private ChildClass childClass = null;
         public virtual dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -140,11 +140,11 @@ namespace IOCCTest.TestCode.WithNames
             return eo;
         }
     }
-    [IOCCBean(Name="child")]
+    [Bean(Name="child")]
     internal class ChildClass : BaseClass
     {
         #pragma warning disable 649
-        [IOCCBeanReference(Name="basest")] private BasestClass basestClass = null;
+        [BeanReference(Name="basest")] private BasestClass basestClass = null;
         public override dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();

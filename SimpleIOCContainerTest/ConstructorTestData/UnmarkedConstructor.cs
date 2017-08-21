@@ -4,19 +4,19 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class UnmarkedConstructor : IResultGetter
     {
         private IntHolderY intHolder;
         public UnmarkedConstructor(
-            [IOCCBeanReference]IntHolderY intHolder
+            [BeanReference]IntHolderY intHolder
             , int abc
         )
         { }
-        [IOCCConstructor]
+        [Constructor]
         public UnmarkedConstructor(
-            [IOCCBeanReference]IntHolderY intHolder
-            , [IOCCBeanReference] IntHolderY intHolder2
+            [BeanReference]IntHolderY intHolder
+            , [BeanReference] IntHolderY intHolder2
         )
         {
             this.intHolder = intHolder;
@@ -30,7 +30,7 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
+    [Bean]
     public class IntHolderY
     {
         public readonly int heldValue = 42;

@@ -4,18 +4,18 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class TypeMismatchFactory : IOCCFactory
+    [Bean]
+    public class TypeMismatchFactory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             return 42;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class TypeMismatch : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(TypeMismatchFactory))] public string memberString;
+        [BeanReference(Factory = typeof(TypeMismatchFactory))] public string memberString;
 
         public dynamic GetResults()
         {

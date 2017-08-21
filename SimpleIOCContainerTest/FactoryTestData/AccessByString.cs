@@ -4,7 +4,7 @@ using System.Dynamic;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
+    [Bean]
     public class AccessByString : IResultGetter
     {
         public dynamic GetResults()

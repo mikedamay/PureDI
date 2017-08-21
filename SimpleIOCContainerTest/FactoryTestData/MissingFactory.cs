@@ -7,10 +7,10 @@ namespace IOCCTest.FactoryTestData
     public class FactoryWithoutFactoryAttribute {
     
     }
-    [IOCCBean]
+    [Bean]
     public class MissingFactory : IResultGetter
     {
-        [IOCCBeanReference(Factory 
+        [BeanReference(Factory 
           = typeof(FactoryWithoutFactoryAttribute))] private int Abc;
 
         public dynamic GetResults()

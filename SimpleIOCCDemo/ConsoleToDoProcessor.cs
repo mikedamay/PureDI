@@ -2,11 +2,11 @@
 
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
+    [Bean]
     public class ConsoleToDoProcessor : TodoProcessor
     {
-        [IOCCBeanReference(Factory=typeof(ProviderFactory))] private ListProvider listProvider;
-        [IOCCBeanReference(Factory=typeof(DisplayFactory))] private ListDisplay listDisplay;
+        [BeanReference(Factory=typeof(ProviderFactory))] private ListProvider listProvider;
+        [BeanReference(Factory=typeof(DisplayFactory))] private ListDisplay listDisplay;
         public void Process()
         {
             TodoList list = listProvider.LoadList();

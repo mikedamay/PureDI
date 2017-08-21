@@ -4,11 +4,11 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ScopeTestData
 {
-    [IOCCBean]
+    [Bean]
     public class FactoryPrototype : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int firstNumber;
-        [IOCCBeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int secondNumber;
+        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int firstNumber;
+        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int secondNumber;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -17,8 +17,8 @@ namespace IOCCTest.ScopeTestData
             return eo;
         }
     }
-    [IOCCBean]
-    public class MyPrototyeFactory : IOCCFactory
+    [Bean]
+    public class MyPrototyeFactory : IFactory
     {
         private int accumulator;
 

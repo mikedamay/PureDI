@@ -2,9 +2,9 @@
 
 namespace IOCCTest.TestCode
 {
-    [IOCCBean]
+    [Bean]
     public class MissingType
     {
-        [IOCCBeanReference] public int ii;
+        [BeanReference] public int ii;
     }
 }

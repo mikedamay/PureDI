@@ -4,14 +4,14 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class CyclicalDependency : IResultGetter
     {
         private Level1 level1;
 
-        [IOCCConstructor]
+        [Constructor]
         public CyclicalDependency(
-          [IOCCBeanReference]Level1 level1)
+          [BeanReference]Level1 level1)
         {
             this.level1 = level1;
         }
@@ -23,13 +23,13 @@ namespace IOCCTest.ConstructorTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level1 : IResultGetter
     {
         private Level2 level2;
-        [IOCCConstructor]
+        [Constructor]
         public Level1(
-          [IOCCBeanReference]Level2 level2)
+          [BeanReference]Level2 level2)
         {
             this.level2 = level2;
         }
@@ -41,12 +41,12 @@ namespace IOCCTest.ConstructorTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level2
     {
-        [IOCCConstructor]
+        [Constructor]
         public Level2(
-          [IOCCBeanReference] Level1 level1)
+          [BeanReference] Level1 level1)
         {
             
         }

@@ -4,21 +4,21 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class DuplicateConstructors : IResultGetter
     {
         private IntHolder intHolder;
-        [IOCCConstructor]
+        [Constructor]
         public DuplicateConstructors(
-          [IOCCBeanReference]IntHolder intHolder
+          [BeanReference]IntHolder intHolder
           )
         {
             this.intHolder = intHolder;
         }
-        [IOCCConstructor]
+        [Constructor]
         public DuplicateConstructors(
-            [IOCCBeanReference]IntHolder intHolder
-            , [IOCCBeanReference] IntHolder intHolder2
+            [BeanReference]IntHolder intHolder
+            , [BeanReference] IntHolder intHolder2
         )
         {
             this.intHolder = intHolder;
@@ -32,7 +32,7 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
+    [Bean]
     public class IntHolder
     {
         public readonly int heldValue = 42;

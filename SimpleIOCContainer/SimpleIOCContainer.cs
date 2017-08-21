@@ -80,7 +80,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     1) the object tree (i.e. the program's static model) is required to be static.
     ///     if objects are added to the tree through code at run-time this will not be 
     ///     reflected in the IOC container.
-    ///     2) The root class has to be visible to the caller of GetOrCreateObjectTree.
+    ///     2) The root class has to be visible to the caller of CreateAndInjectDependencies.
     ///     2a) The root of the tree cannot be specified using reflection.  I'll probably regret that.
     ///     3) static classes and members are not handled.
     ///     4) If a member is incorrectly marked as [IOCCBeanReference] then
@@ -90,7 +90,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///        distinguish multiple implementations of the same interfacr.
     ///        Of course classes referenced by factories don't have to be beans.
     /// </remarks>
-    [IOCCBean]
+    [Bean]
     public class SimpleIOCContainer
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
@@ -99,44 +99,29 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
 
-        private bool getOrCreateObjectTreeCalled = false;
+        private bool CreateAndInjectDependenciesCalled = false;
         private IList<string> assemblyNames = new List<string>();
-        private readonly IDictionary<string, IOCObjectTreeContainer> mapObjectTreeContainers 
-          = new Dictionary<string, IOCObjectTreeContainer>();
+        private readonly IDictionary<string, ObjectTreeContainer> mapObjectTreeContainers 
+          = new Dictionary<string, ObjectTreeContainer>();
         // the key in the objects created so far map comprises 2 types.  The first is the
         // intended concrete type that will be instantiated.  This works well for
         // non-generic types but for generics the concrete type, which is taken from the typeMap,
         // is a generic type definition.  The builder needs to lay its hands on the type argument
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
-        IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
+        private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
             new Dictionary<(Type, string), object>();
 
         private bool excludeRootAssembly;
         private IDictionary<(Type beanType, string beanName), Type> typeMap;
 
-        private class AssemblyNameComparer : IEqualityComparer<string>
-        {
-            public bool Equals(string x, string y)
-            {
-                return x.Equals(y, StringComparison.OrdinalIgnoreCase);
-            }
-
-            public int GetHashCode(string obj)
-            {
-                return base.GetHashCode();
-            }
-        }
-        /// <summary>
-        /// for testing only
-        /// </summary>
         public SimpleIOCContainer()
         {
         }
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
         /// for beans.  Any bean to be injected must be defined in one
-        /// of these assemblies and must be marked with the [IOCCBean] attribute.
+        /// of these assemblies and must be marked with the [Bean] attribute.
         /// </summary>
         /// <remarks>
         /// The assembly containing SimpleIOCCBean class itself is always included
@@ -146,12 +131,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
         /// <param name="excludeRootAssembly">By default the assembly containing the type
-        /// passed to GetOrCreateObjectTree() is included automatically.
+        /// passed to CreateAndInjectDependencies() is included automatically.
         /// Pass true here to ensure it is not scanned for beans.
         /// Note that if you include the root assembly in the list
         /// of assemblies then the excludeRootAssembly flag is ignored.
         /// Note that if a string containing the root type is passed
-        /// to GetOrCreateObjectTree() then the system behaves as if
+        /// to CreateAndInjectDependencies() then the system behaves as if
         /// the flag was set to true as there is no easy way for the container
         /// to know the assembly from which it was called.</param>
         public void SetAssemblies(bool excludeRootAssembly, params string[] assemblyNames)
@@ -162,10 +147,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <example>SetAssemblies("MyApp", "MyLib")</example>
         public void SetAssemblies(params string[] assemblyNames)
         {
-            if (getOrCreateObjectTreeCalled)
+            if (CreateAndInjectDependenciesCalled)
             {
                 throw new InvalidOperationException(
-                  "SetAssemblies has been called after GetOrCreateObjectTree."
+                  "SetAssemblies has been called after CreateAndInjectDependencies."
                   + "  This is not permitted.");
             }
             this.assemblyNames = assemblyNames.ToList();
@@ -183,7 +168,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an ojbect of root type</returns>
-        public TRootType GetOrCreateObjectTree<TRootType>(string profile = DEFAULT_PROFILE
+        public TRootType CreateAndInjectDependencies<TRootType>(string profile = DEFAULT_PROFILE
            , string beanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             IOCCDiagnostics diagnostics = null;
@@ -191,7 +176,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             try
             {
                 diagnostics = new DiagnosticBuilder().Diagnostics;
-                rootObject = GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, beanName, rootConstructorName, scope);
+                rootObject = CreateAndInjectDependenciesEx<TRootType>(ref diagnostics, profile, beanName, rootConstructorName, scope);
             }
             finally
             {
@@ -220,7 +205,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns></returns>
-        public object GetOrCreateObjectTree(string rootTypeName, out IOCCDiagnostics diagnostics
+        public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics
           ,string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
           , BeanScope scope = BeanScope.Singleton)
         {
@@ -236,17 +221,17 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
-            IOCObjectTreeContainer container;
+            ObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
                 container = mapObjectTreeContainers[profile];
             }
             else
             {
-                container = new IOCObjectTreeContainer(profile, typeMap);
+                container = new ObjectTreeContainer(profile, typeMap);
             }
 		    mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-            var rootObject = container.GetOrCreateObjectTree(
+            var rootObject = container.CreateAndInjectDependencies(
               rootType, ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
@@ -259,28 +244,28 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// top of the tree - as instantiated by rootType
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
-        public TRootType GetOrCreateObjectTree<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             diagnostics = new DiagnosticBuilder().Diagnostics;
-            return GetOrCreateObjectTreeEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
+            return CreateAndInjectDependenciesEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
         }
 
         /// <summary>
-        /// <see cref="GetOrCreateObjectTree"/>
+        /// <see cref="CreateAndInjectDependencies"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
         /// <param name="profile"></param>
         /// <param name="rootBeanName"></param>
         /// <param name="scope"></param>
-        private TRootType GetOrCreateObjectTreeEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
+        private TRootType CreateAndInjectDependenciesEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
         {
-            return GetOrCreateObjectTreeExEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
+            return CreateAndInjectDependenciesExEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
         }
 
-        private TRootType GetOrCreateObjectTreeExEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
+        private TRootType CreateAndInjectDependenciesExEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
         {
-            getOrCreateObjectTreeCalled = true;
+            CreateAndInjectDependenciesCalled = true;
             if (!excludeRootAssembly)
             {
                 assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
@@ -292,17 +277,17 @@ namespace com.TheDisappointedProgrammer.IOCC
             	    typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
                       , ref diagnostics, profile, os);
 	        }
-            IOCObjectTreeContainer container;
+            ObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
                 container = mapObjectTreeContainers[profile];
             }
             else
             {
-                container = new IOCObjectTreeContainer(profile, typeMap);
+                container = new ObjectTreeContainer(profile, typeMap);
             }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-            var rootObject = container.GetOrCreateObjectTree(typeof(TRootType), ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
+            var rootObject = container.CreateAndInjectDependencies(typeof(TRootType), ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
@@ -356,19 +341,19 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static bool HasAFactory(this MemberInfo type)
         {
             return type.GetCustomAttributes().Any(ca => ca.GetType()
-              == typeof(IOCCBeanReferenceAttribute) &&
-              (ca as IOCCBeanReferenceAttribute).Factory != null);
+              == typeof(BeanReferenceAttribute) &&
+              (ca as BeanReferenceAttribute).Factory != null);
         }
 
-        public static IOCCBeanReferenceAttribute GetBeanReferenceAttribute(this MemberInfo type)
+        public static BeanReferenceAttribute GetBeanReferenceAttribute(this MemberInfo type)
         {
-            return (IOCCBeanReferenceAttribute)type.GetCustomAttributes().Where(
-                ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
+            return (BeanReferenceAttribute)type.GetCustomAttributes().Where(
+                ca => ca is BeanReferenceAttribute).FirstOrDefault();
         }
-        public static IOCCBeanReferenceAttribute GetBeanReferenceAttribute(this ParameterInfo type)
+        public static BeanReferenceAttribute GetBeanReferenceAttribute(this ParameterInfo type)
         {
-            return (IOCCBeanReferenceAttribute)type.GetCustomAttributes().Where(
-                ca => ca is IOCCBeanReferenceAttribute).FirstOrDefault();
+            return (BeanReferenceAttribute)type.GetCustomAttributes().Where(
+                ca => ca is BeanReferenceAttribute).FirstOrDefault();
         }
     }
 }

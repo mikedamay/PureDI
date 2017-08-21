@@ -5,7 +5,7 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
+    [Bean]
     internal class ConsoleDisplay : ListDisplay
     {
         public void DisplayList(TodoList todoList)

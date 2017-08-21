@@ -14,33 +14,33 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <remarks>
     /// The generic parameter TRootType determines which tree will be returned
     /// </remarks>
-    internal class IOCObjectTreeContainer
+    internal class ObjectTreeContainer
     {
         private string profile;
-        private IDictionary<(Type, string), IOCObjectTree> mapTrees = new Dictionary<(Type, string), IOCObjectTree>();
+        private IDictionary<(Type, string), ObjectTree> mapTrees = new Dictionary<(Type, string), ObjectTree>();
         private readonly IDictionary<(Type type, string name), Type> typeMap;
  
-        internal IOCObjectTreeContainer(string profile, IDictionary<(Type, string), Type> typeMap)
+        internal ObjectTreeContainer(string profile, IDictionary<(Type, string), Type> typeMap)
         {
             this.profile = profile;
             this.typeMap = typeMap;
         }
-        public object GetOrCreateObjectTree(Type rootType
+        public object CreateAndInjectDependencies(Type rootType
           , ref IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
           , BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
-            IOCObjectTree tree;
+            ObjectTree tree;
             if (mapTrees.ContainsKey((rootType, rootBeanName)))
             {
                 tree = mapTrees[(rootType, rootBeanName)];
             }
             else
             {
-                tree = new IOCObjectTree(profile, typeMap);
+                tree = new ObjectTree(profile, typeMap);
                 mapTrees[(rootType, rootBeanName)] = tree;
                  
             }
-            return tree.GetOrCreateObjectTree(rootType, ref diagnostics
+            return tree.CreateAndInjectDependencies(rootType, ref diagnostics
               ,rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
         }
     }

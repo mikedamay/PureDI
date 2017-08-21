@@ -15,7 +15,7 @@ namespace IOCCTest
             SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
-              = iocc.GetOrCreateObjectTree<TestRoot>();
+              = iocc.CreateAndInjectDependencies<TestRoot>();
             Assert.IsNotNull(twf.test);
         }
         [TestMethod]
@@ -23,7 +23,7 @@ namespace IOCCTest
         {
             void DoTest()
             {
-                new SimpleIOCContainer().GetOrCreateObjectTree<int>();
+                new SimpleIOCContainer().CreateAndInjectDependencies<int>();
             }
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
@@ -33,14 +33,14 @@ namespace IOCCTest
             void DoTest()
             {
                 
-                new SimpleIOCContainer().GetOrCreateObjectTree<Mike>();
+                new SimpleIOCContainer().CreateAndInjectDependencies<Mike>();
             }
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = SimpleIOCContainer.Instance.GetOrCreateObjectTree<DeepHierahy>();
+            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<DeepHierahy>();
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -53,7 +53,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeWithSelfReferentialClass()
         {
-            SelfReferring sr = SimpleIOCContainer.Instance.GetOrCreateObjectTree<SelfReferring>();
+            SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependencies<SelfReferring>();
             Assert.IsNotNull(sr);
         }
         [TestMethod, Timeout(100)]
@@ -62,7 +62,7 @@ namespace IOCCTest
             try
             {
                 // this should not run forever
-                CyclicalDependency cd = SimpleIOCContainer.Instance.GetOrCreateObjectTree<CyclicalDependency>();
+                CyclicalDependency cd = SimpleIOCContainer.Instance.CreateAndInjectDependencies<CyclicalDependency>();
                 Assert.IsNotNull(cd);
                 Assert.IsNotNull(cd?.GetResults().Child);
                 Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -78,7 +78,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfaces()
         {
             ParentWithInterface cd 
-              = SimpleIOCContainer.Instance.GetOrCreateObjectTree<ParentWithInterface>();
+              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ParentWithInterface>();
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
@@ -87,7 +87,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClasses()
         {
             BaseClass cd 
-              = SimpleIOCContainer.Instance.GetOrCreateObjectTree<BaseClass>();
+              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<BaseClass>();
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
@@ -95,7 +95,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
-            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.GetOrCreateObjectTree<WithNames.DeepHierahy>();
+            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.DeepHierahy>();
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -108,7 +108,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForBeansWithNames()
         {
             WithNames.CyclicalDependency cd 
-              = SimpleIOCContainer.Instance.GetOrCreateObjectTree<
+              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
                     WithNames.CyclicalDependency>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-A");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
@@ -120,7 +120,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {
             WithNames.ParentWithInterface cd
-                = SimpleIOCContainer.Instance.GetOrCreateObjectTree<WithNames.ParentWithInterface>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-B");
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.ParentWithInterface>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-B");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
@@ -130,17 +130,17 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
         {
             WithNames.BaseClass cd
-                = SimpleIOCContainer.Instance.GetOrCreateObjectTree<WithNames.BaseClass>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "basest");
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.BaseClass>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "basest");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);
         }
     }
-    [IOCCBean]
+    [Bean]
     internal class TestRoot
     {
 #pragma warning disable 649
-        [IOCCBeanReference]
+        [BeanReference]
         public ITest test;
     }
 
@@ -149,7 +149,7 @@ namespace IOCCTest
         
     }
 
-    [IOCCBean]
+    [Bean]
     class Test : ITest
     {
         

@@ -4,18 +4,18 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    internal class MemberFactory : IOCCFactory
+    [Bean]
+    internal class MemberFactory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             return new MemberBean();
         }
     }
-    [IOCCBean]
+    [Bean]
     public class FactoryWithMemberBeans : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(MemberFactory))]
+        [BeanReference(Factory = typeof(MemberFactory))]
         private MemberBean Member;
 
         public dynamic GetResults()
@@ -25,10 +25,10 @@ namespace IOCCTest.FactoryTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class MemberBean : IResultGetter
     {
-        [IOCCBeanReference] public SubMember subMember;
+        [BeanReference] public SubMember subMember;
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -36,7 +36,7 @@ namespace IOCCTest.FactoryTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class SubMember
     {
 

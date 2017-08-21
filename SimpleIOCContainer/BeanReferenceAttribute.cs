@@ -12,7 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
     }
     [IOCCIgnore]
-    public interface IOCCFactory
+    public interface IFactory
     {
         object Execute(BeanFactoryArgs args);
     }
@@ -20,7 +20,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
       | AttributeTargets.Parameter
       , Inherited = false, AllowMultiple = false)]
-    public class IOCCBeanReferenceAttribute : Attribute
+    public class BeanReferenceAttribute : Attribute
     {
         public string Name = SimpleIOCContainer.DEFAULT_BEAN_NAME;
         public Type Factory = null;

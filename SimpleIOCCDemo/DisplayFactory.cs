@@ -2,19 +2,19 @@
 using com.TheDisappointedProgrammer.IOCC;
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
-    internal class DisplayFactory : IOCCFactory
+    [Bean]
+    internal class DisplayFactory : IFactory
     {
-        [IOCCBeanReference] private SimpleIOCContainer iocContainer;
+        [BeanReference] private SimpleIOCContainer iocContainer;
         public object Execute(BeanFactoryArgs args)
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                return iocContainer.GetOrCreateObjectTree<VSOutputWindow>(beanName : "outputWindow");
+                return iocContainer.CreateAndInjectDependencies<VSOutputWindow>(beanName : "outputWindow");
             }
             else
             {
-                return iocContainer.GetOrCreateObjectTree<ConsoleDisplay>();
+                return iocContainer.CreateAndInjectDependencies<ConsoleDisplay>();
             }
         }
     }

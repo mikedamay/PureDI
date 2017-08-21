@@ -4,14 +4,14 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class DeepHierarchy : IResultGetter
     {
         private Level1X level1;
 
-        [IOCCConstructor]
+        [Constructor]
         public DeepHierarchy(
-          [IOCCBeanReference]Level1X level1)
+          [BeanReference]Level1X level1)
         {
             this.level1 = level1;
         }
@@ -23,13 +23,13 @@ namespace IOCCTest.ConstructorTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level1X : IResultGetter
     {
         private Level2X level2;
-        [IOCCConstructor]
+        [Constructor]
         public Level1X(
-          [IOCCBeanReference]Level2X level2)
+          [BeanReference]Level2X level2)
         {
             this.level2 = level2;
         }
@@ -41,7 +41,7 @@ namespace IOCCTest.ConstructorTestData
             return eo;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class Level2X
     {
     }

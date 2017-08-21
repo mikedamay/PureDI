@@ -66,7 +66,7 @@
     <severity>Warning</severity>
     <intro>A reference to a missing bean has been encountered</intro>
     <userGuide>The most likely cause of this issue is that 
-      you forgot to mark a ben with [IOCCBean] or there are 
+      you forgot to mark a ben with [Bean] or there are 
       duplicate beans or that the bean referred to was
       not a concrete class or struct.  The details should be listed
       in the relevant diagnostics above.  Also you may have attempted
@@ -83,9 +83,9 @@
   <group>
     <causeCode>MissingRoot</causeCode>
     <severity>Warning</severity>
-    <intro>The root of the class tree was not marked as [IOCCBean] or the bean was invalid - see diagnostics above</intro>
+    <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
     <userGuide>The most likely cause of this issue is that the type passed
-    to IOCC.GetOrCreateObjectTree was not marked as a bean.  [IOCCBean] or the concrete class
+    to IOCC.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
     to be invalid - see above</userGuide>
     <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
@@ -99,7 +99,7 @@
     <severity>Warning</severity>
     <intro>No factory has been found for member(s) marked with a factory bean</intro>
     <userGuide>
-      Factory beans must be marked as beans [IOCCBean].  They must be in an assembly passed to IOCC.SetAssemblies().
+      Factory beans must be marked as beans [Bean].  They must be in an assembly passed to IOCC.SetAssemblies().
     </userGuide>
     <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
@@ -113,7 +113,7 @@
     <severity>Warning</severity>
     <intro>A factory has been found but it does not implement the required IOCCFactory interface</intro>
     <userGuide>
-      Factory beans must be marked as beans [IOCCBean].  They must also implement IOCCFactory.
+      Factory beans must be marked as beans [Bean].  They must also implement IOCCFactory.
     </userGuide>
     <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>

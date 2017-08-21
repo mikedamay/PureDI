@@ -5,26 +5,26 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class FactoryDependenciesFactory : IOCCFactory
+    [Bean]
+    public class FactoryDependenciesFactory : IFactory
     {
-        [IOCCBeanReference]
+        [BeanReference]
         private NumberProvider numberProvider;
         public object Execute(BeanFactoryArgs args)
         {
             return numberProvider.number;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class NumberProvider
     {
         public int number = 17;
     }
 
-    [IOCCBean]
+    [Bean]
     public class FactoryDependencies : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(FactoryDependenciesFactory))] private int someValue;
+        [BeanReference(Factory = typeof(FactoryDependenciesFactory))] private int someValue;
 
         public dynamic GetResults()
         {

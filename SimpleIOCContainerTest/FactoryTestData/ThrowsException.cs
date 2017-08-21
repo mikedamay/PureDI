@@ -5,18 +5,18 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCBean]
-    public class ThrowsExceptionFactory : IOCCFactory
+    [Bean]
+    public class ThrowsExceptionFactory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
             throw new Exception("test exception");
         }
     }
-    [IOCCBean]
+    [Bean]
     public class ThrowsException : IResultGetter
     {
-        [IOCCBeanReference(Factory = typeof(ThrowsExceptionFactory))] public object someValue;
+        [BeanReference(Factory = typeof(ThrowsExceptionFactory))] public object someValue;
 
         public dynamic GetResults()
         {

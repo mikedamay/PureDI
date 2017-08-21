@@ -2,19 +2,19 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDemo
 {
-	[IOCCBean]
-	public class ProviderFactory : IOCCFactory
+	[Bean]
+	public class ProviderFactory : IFactory
 	{
-		[IOCCBeanReference] private SimpleIOCContainer iocContainer;
+		[BeanReference] private SimpleIOCContainer iocContainer;
 		public object Execute(BeanFactoryArgs args)
 		{
 			if (System.Environment.GetCommandLineArgs().Length > 1)
 			{
-				return iocContainer.GetOrCreateObjectTree<FileListProvider>();
+				return iocContainer.CreateAndInjectDependencies<FileListProvider>();
 			}
 			else
 			{
-				return iocContainer.GetOrCreateObjectTree<UsageListProvider>(beanName : "usage");
+				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(beanName : "usage");
 			}
 			
 		}

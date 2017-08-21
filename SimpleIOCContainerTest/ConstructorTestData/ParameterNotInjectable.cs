@@ -4,12 +4,12 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class ParameterNotInjectable : IResultGetter
     {
-        [IOCCConstructor]
+        [Constructor]
         public ParameterNotInjectable(
-          [IOCCBeanReference] int abc)
+          [BeanReference] int abc)
         {
             
         }

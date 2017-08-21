@@ -6,7 +6,7 @@ using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
-    internal partial class IOCObjectTree
+    internal partial class ObjectTree
     {
         private readonly string profile;
 
@@ -17,7 +17,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         // from the point of view of generics the key.type may contain a generic type definition
         // and the value may be a constructed generic type
 
-        public IOCObjectTree(string profile
+        public ObjectTree(string profile
             , IDictionary<(Type type, string name), Type> typeMap)
         {
             this.profile = profile;
@@ -37,7 +37,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="mapObjectsCreatedSoFar"></param>
         /// <param name="mapObjectsCreatedSoFar1"></param>
         /// <returns>an ojbect of root type</returns>
-        public object GetOrCreateObjectTree(Type rootType
+        public object CreateAndInjectDependencies(Type rootType
             , ref IOCCDiagnostics diagnostics
             , string rootBeanName, string rootConstructorName, BeanScope scope,
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
@@ -69,7 +69,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         }
 
         /// <summary>
-        /// see documentation for GetOrCreateObjectTree
+        /// see documentation for CreateAndInjectDependencies
         /// </summary>
         /// <param name="beanId">the type + beanName for which a bean is to be created.
         ///     The bean will not necessarily have the type passed in as this
@@ -129,8 +129,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
             void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members)
             {
-                IOCCBeanReferenceAttribute attr;
-                if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<IOCCBeanReferenceAttribute>()) != null)
+                BeanReferenceAttribute attr;
+                if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceAttribute>()) != null)
                 {
                     //Assert(fieldOrPropertyInfo is FieldInfo
                     //       || fieldOrPropertyInfo is PropertyInfo);
@@ -162,7 +162,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                                     , ("Factory", attr.Factory.FullName)
                                     , ("ExpectedType", fieldOrPropertyInfo.Type));
                             }
-                            else if (!(o is IOCCFactory))
+                            else if (!(o is IFactory))
                             {
                                 RecordDiagnostic(diagnostics, "BadFactory"
                                     , ("DeclaringBean", declaringBeanType.FullName)
@@ -172,7 +172,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             }
                             else // factory successfully created
                             {
-                                IOCCFactory factoryBean = (o as IOCCFactory);
+                                IFactory factoryBean = (o as IFactory);
                                 members.Add(new ChildBeanSpec(fieldOrPropertyInfo, factoryBean, true));
                             }
                         }
@@ -238,7 +238,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         try
                         {
-                            IOCCFactory factory = memberSpec.MemberOrFactoryBean as IOCCFactory;
+                            IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
                             object memberBean = factory.Execute(new BeanFactoryArgs(
                                 memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
                             CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers);
@@ -346,12 +346,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         {
             ConstructorInfo[] constructors
               = declaringBeanType.GetConstructors(constructorFlags
-              ).Where(co => co.GetCustomAttributes<IOCCConstructorAttribute>()
+              ).Where(co => co.GetCustomAttributes<ConstructorAttribute>()
               .Any(ca => ca.Name == constructorName)).ToArray();
             if (declaringBeanType.GetConstructors().Where(
-                    co => !co.GetCustomAttributes<IOCCConstructorAttribute>().Any())
+                    co => !co.GetCustomAttributes<ConstructorAttribute>().Any())
                 .Any(co => !co.GetParameters().All(
-                    p => p.GetCustomAttributes<IOCCBeanReferenceAttribute>().Any())))
+                    p => p.GetCustomAttributes<BeanReferenceAttribute>().Any())))
             {
                 dynamic diag = diagnostics.Groups["MissingConstructorAttribute"].CreateDiagnostic();
                 diag.Bean = declaringBeanType;
@@ -372,7 +372,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 ConstructorInfo constructor = constructors[0];
                 if (constructor.GetParameters().Length > 0
-                    && !constructor.GetParameters().All(p => p.GetCustomAttributes<IOCCBeanReferenceAttribute>().Any()))
+                    && !constructor.GetParameters().All(p => p.GetCustomAttributes<BeanReferenceAttribute>().Any()))
                 {
                     dynamic diag = diagnostics.Groups["MissingConstructorParameterAttribute"].CreateDiagnostic();
                     diag.Bean = declaringBeanType;
@@ -386,8 +386,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             Type declaringBeanTypeArg, string constructorNameArg)
             => declaringBeanTypeArg
                 .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
-                    => co.GetCustomAttribute<IOCCConstructorAttribute>() != null
-                       && co.GetCustomAttribute<IOCCConstructorAttribute>()?
+                    => co.GetCustomAttribute<ConstructorAttribute>() != null
+                       && co.GetCustomAttribute<ConstructorAttribute>()?
                            .Name == constructorNameArg)?.GetParameters();
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
@@ -465,7 +465,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="beanid">Typically this is the type ofa member 
         ///     marked as a bean reference with [IOCCBeanReference]
         ///     for generics bean type is a generic type definition</param>
-        /// <returns>This will be a concrete class marked as a bean with [IOCCBean] which
+        /// <returns>This will be a concrete class marked as a bean with [Bean] which
         ///     is derived from the beanId.beanType.  For generics this will be a
         ///     constructed generic type</returns>
         private Type GetImplementationFromTypeMap((Type beanType, string beanName, string constructorName) beanId)
@@ -516,7 +516,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         if (spec.IsFactory)
                         {
                             
-                            object obj = (spec.MemberOrFactoryBean as IOCCFactory)
+                            object obj = (spec.MemberOrFactoryBean as IFactory)
                               .Execute(new BeanFactoryArgs(
                               spec.ParameterInfo.GetBeanReferenceAttribute()
                               .FactoryParameter));

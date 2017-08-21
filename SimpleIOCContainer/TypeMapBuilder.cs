@@ -73,9 +73,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public static bool TypeIsABean(this Type type, string profile, SimpleIOCContainer.OS os)
         {
-            IOCCBeanAttribute ida 
-              = (IOCCBeanAttribute)type.GetCustomAttributes()
-              .FirstOrDefault(attr => attr is IOCCBeanAttribute);
+            BeanAttribute ida 
+              = (BeanAttribute)type.GetCustomAttributes()
+              .FirstOrDefault(attr => attr is BeanAttribute);
             return 
               ida != null 
               && (
@@ -95,7 +95,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public static string GetBeanName(this Type bean)
         {
-            return bean.GetCustomAttributes<IOCCBeanAttribute>().Select(attr => attr.Name).FirstOrDefault();
+            return bean.GetCustomAttributes<BeanAttribute>().Select(attr => attr.Name).FirstOrDefault();
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {

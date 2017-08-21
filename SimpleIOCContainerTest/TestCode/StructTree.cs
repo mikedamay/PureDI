@@ -8,16 +8,16 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode
 {
-    [IOCCBean]
+    [Bean]
     public struct StructTree
     {
-        [IOCCBeanReference]
+        [BeanReference]
         public StructChild structChild;
     }
-    [IOCCBean]
+    [Bean]
     public struct StructChild
     {
-        [IOCCBeanReference]
+        [BeanReference]
         public int someValue;
     }
 
@@ -26,54 +26,54 @@ namespace IOCCTest.TestCode
         
     }
 
-    [IOCCBean]
+    [Bean]
     public class ClassTree
     {
-        [IOCCBeanReference] private StructChild2 structChild2;
+        [BeanReference] private StructChild2 structChild2;
 
         public ref StructChild2 GetStructChild2()
         {
             return ref structChild2;
         }
     }
-    [IOCCBean]
+    [Bean]
     public struct StructChild2
     {
-        [IOCCBeanReference] private ClassChild classChild;
+        [BeanReference] private ClassChild classChild;
         public ClassChild GetClassChild()
         {
             return classChild;
         }
     }
-    [IOCCBean]
+    [Bean]
     public class ClassChild
     {
         public int someValue = 1;
     }
 
-    [IOCCBean]
+    [Bean]
     public class NoArgRoot
     {
         public NoArgRoot(int itnowhasanarg) { }
     }
-    [IOCCBean]
+    [Bean]
     public class NoArgClassTree
     {
         #pragma warning disable 414
-        [IOCCBeanReference] private NoArgStructChild2 structChild2 = new NoArgStructChild2();
+        [BeanReference] private NoArgStructChild2 structChild2 = new NoArgStructChild2();
     }
-    [IOCCBean]
+    [Bean]
     public struct NoArgStructChild2
     {
     }
 
-    [IOCCBean]
+    [Bean]
     public struct StructRoot
     {
-        [IOCCBeanReference] public SomeChild child;
+        [BeanReference] public SomeChild child;
     }
 
-    [IOCCBean]
+    [Bean]
     public class SomeChild
     {
         

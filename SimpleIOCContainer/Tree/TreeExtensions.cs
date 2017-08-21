@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
-    internal static class IOCCTreeExtensions
+    internal static class TreeExtensions
     {
         public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
         {
@@ -69,13 +69,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         public static bool HasInjectedConstructorParameters(this Type type, string constructorName)
         {
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Any(c => CustomAttributeExtensions.GetCustomAttributes((MemberInfo) c).Any(
-                ca => ca is IOCCConstructorAttribute
-                      && (ca as IOCCConstructorAttribute).Name == constructorName));
+                ca => ca is ConstructorAttribute
+                      && (ca as ConstructorAttribute).Name == constructorName));
         }
 
         public static string GetConstructorNameFromMember(this Type type)
         {
-            IOCCBeanReferenceAttribute attr = type.GetCustomAttribute<IOCCBeanReferenceAttribute>();
+            BeanReferenceAttribute attr = type.GetCustomAttribute<BeanReferenceAttribute>();
             if (attr != null)
             {
                 return attr.ConstructorName;
@@ -87,9 +87,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         {
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(co => co.GetCustomAttribute<
-                                          IOCCConstructorAttribute>() != null
+                                          ConstructorAttribute>() != null
                                       && co.GetCustomAttribute<
-                                          IOCCConstructorAttribute>().Name == name);
+                                          ConstructorAttribute>().Name == name);
         }
     }
 }

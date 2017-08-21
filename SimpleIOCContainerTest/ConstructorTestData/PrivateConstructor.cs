@@ -4,13 +4,13 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.ConstructorTestData
 {
-    [IOCCBean]
+    [Bean]
     public class PrivateConstructor : IResultGetter
     {
         private IntHolderL intHolder;
-        [IOCCConstructor]
+        [Constructor]
         private PrivateConstructor(
-          [IOCCBeanReference]IntHolderL intHolder
+          [BeanReference]IntHolderL intHolder
           )
         {
             this.intHolder = intHolder;
@@ -24,7 +24,7 @@ namespace IOCCTest.ConstructorTestData
         }
     }
 
-    [IOCCBean]
+    [Bean]
     public class IntHolderL
     {
         public readonly int heldValue = 42;

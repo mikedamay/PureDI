@@ -14,7 +14,7 @@ namespace IOCCTest
             CreateAndRunAssembly(string nameSpace, string className)
         {
             var iocc = CreateIOCCinAssembly(nameSpace, className);
-            object rootBean = iocc.GetOrCreateObjectTree(
+            object rootBean = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.{nameSpace}.{className}"
                 , out IOCCDiagnostics diagnostics);
             System.Diagnostics.Debug.WriteLine(diagnostics);

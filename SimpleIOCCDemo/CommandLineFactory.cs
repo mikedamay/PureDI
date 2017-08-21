@@ -4,8 +4,8 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDemo
 {
-    [IOCCBean]
-    public class CommandLineFactory : IOCCFactory
+    [Bean]
+    public class CommandLineFactory : IFactory
     {
         public object Execute(BeanFactoryArgs args)
         {
