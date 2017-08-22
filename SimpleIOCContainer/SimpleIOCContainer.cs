@@ -59,19 +59,21 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Test with nullables
     // TODO make SimpleIOCContainer instance a bean by default.
     // DONE generics for factories
-    // TODO decide if scope on factory reference refers to factory or reference to be created
-    // TODO it makes no sense for the created object as the scope is under the control of the factory
-    // TODO does it make any sense in the case of the factory
+    // DONE decide if scope on factory reference refers to factory or reference to be created
+    // DONE it makes no sense for the created object as the scope is under the control of the factory
+    // DONE does it make any sense in the case of the factory - it does, a little
     // TODO allow root type a prototype
     // TODO test with no namespace
     // DONE change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
     // TODO guard against static constructors
-    // TODO automatically add SimpleIOCContainer to the list of assemblies
-    // TODO write out the diagnostic schema - move to test project
-    // TODO document that IOCCFactory is ignored as an interface.  Workaround to create intermediate
+    // DONE automatically add SimpleIOCContainer to the list of assemblies
+    // TODO write out the diagnostic schema from resource before validation test
+    // TODO document that IFactory is ignored as an interface.  Workaround to create intermediate
     // TODO this is the first gotcha
     // TODO name and profile get mixed up - maybe a profile set will help - second gotcha
+    // TODO warn of factories that do not have IFactory as interface
+    // TODO warn of factories that do not have [Bean] attribute
     /// <summary>
     /// 
     /// </summary>
