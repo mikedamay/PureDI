@@ -74,6 +74,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO name and profile get mixed up - maybe a profile set will help - second gotcha
     // TODO warn of factories that do not have IFactory as interface
     // TODO warn of factories that do not have [Bean] attribute
+    // TODO make our own constructor to handle readonly properties
+    // TODO testing in untrusted environments
+    // TODO built-in factories for environement variables, command line arguments, config files
+    // TODO change FactoryParam to an object
     /// <summary>
     /// 
     /// </summary>
@@ -91,6 +95,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     6) Even if beans are referenced only by factories they still names to 
     ///        distinguish multiple implementations of the same interfacr.
     ///        Of course classes referenced by factories don't have to be beans.
+    ///     7) readonly properties cannot have their value set by injection.  A constructor
+    ///        or field must be involved.  - we could make our own constructor
     /// </remarks>
     [Bean]
     public class SimpleIOCContainer

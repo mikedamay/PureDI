@@ -350,7 +350,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
               .Any(ca => ca.Name == constructorName)).ToArray();
             if (declaringBeanType.GetConstructors().Where(
                     co => !co.GetCustomAttributes<ConstructorAttribute>().Any())
-                .Any(co => !co.GetParameters().All(
+                .Any(co => co.GetParameters().Any(
                     p => p.GetCustomAttributes<BeanReferenceAttribute>().Any())))
             {
                 dynamic diag = diagnostics.Groups["MissingConstructorAttribute"].CreateDiagnostic();

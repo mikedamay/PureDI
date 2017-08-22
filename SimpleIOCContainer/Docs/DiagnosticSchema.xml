@@ -24,12 +24,12 @@
     <causeCode>InvalidBean</causeCode>
     <severity>Warning</severity>
     <intro>A piece of code has been marked as a bean (with 
-      the "IOCCBean" attribute) which is not capable of being 
+      the "Bean" attribute) which is not capable of being 
       a bean.  The only types that can be beans are concrete classes.</intro>
     <userGuide>Typically this problem occurs with abstract 
       classes.  Note that although the bean reference 
       where the injection takes place may be specified as a base
-      class or interface, the "IOCCBean" attribute should be applied 
+      class or interface, the "Bean" attribute should be applied 
       only to the concrete implementation, not to a parent 
       or interface</userGuide>
     <template>{AbstractClass} is an abstract class</template>
@@ -85,7 +85,7 @@
     <severity>Warning</severity>
     <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
     <userGuide>The most likely cause of this issue is that the type passed
-    to IOCC.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
+    to SimpleIOCContainer.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
     to be invalid - see above</userGuide>
     <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
@@ -99,7 +99,7 @@
     <severity>Warning</severity>
     <intro>No factory has been found for member(s) marked with a factory bean</intro>
     <userGuide>
-      Factory beans must be marked as beans [Bean].  They must be in an assembly passed to IOCC.SetAssemblies().
+      Factory beans must be marked as beans [Bean].  They must be in an assembly passed to SimpleIOCContainer.SetAssemblies().
     </userGuide>
     <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
@@ -111,9 +111,9 @@
   <group>
     <causeCode>BadFactory</causeCode>
     <severity>Warning</severity>
-    <intro>A factory has been found but it does not implement the required IOCCFactory interface</intro>
+    <intro>A factory has been found but it does not implement the required IFactory interface</intro>
     <userGuide>
-      Factory beans must be marked as beans [Bean].  They must also implement IOCCFactory.
+      Factory beans must be marked as beans [Bean].  They must also implement IFactory.
     </userGuide>
     <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
@@ -181,7 +181,7 @@
     <userGuide>
       The container needs an exact specification of the constructor to be run.
       Where there are two candidate constructors then each should be given a differnt "Name"
-      and the "ConstructorName" parameter of the [IOCCBeanReference] should be used
+      and the "ConstructorName" parameter of the [BeanReference] should be used
       in the reference to the bean to indicate which constructor should be used.
     </userGuide>
     <template>The declaring bean {Bean} has more than one applicable constructor</template>
@@ -192,13 +192,13 @@
   <group>
     <causeCode>MissingConstructorParameterAttribute</causeCode>
     <severity>Warning</severity>
-    <intro>A constructor has been found marked as [IOCCConstructor] but one or more of whose parameters are not marked as [IOCCBeanReference]</intro>
+    <intro>A constructor has been found marked as [IOCConstructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
     <userGuide>
       In order to inject values into a class (bean) via the constructor its constructor must
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
-      must be marked as [IOCCBeanReference].  If a parameter to be injected is not a
+      must be marked as [BeanReference].  If a parameter to be injected is not a
       bean then a factory bean can be used to provide the value and the constructor
-      should be marked [IOCCBeanReference(Factory=typeof(SomeFactoryClass)]
+      should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
     </userGuide>
     <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
     <artefacts>
@@ -208,13 +208,13 @@
   <group>
     <causeCode>MissingConstructorAttribute</causeCode>
     <severity>Warning</severity>
-    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [IOCCBeanReference]</intro>
+    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
     <userGuide>
       In order to inject values into a class (bean) via the constructor its constructor must
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
-      must be marked as [IOCCBeanReference].
+      must be marked as [BeanReference].
     </userGuide>
-    <template>One or more of the declaring bean {Bean}'s constructor's is not marked as [IOCCConstructor] but has marked parameters</template>
+    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
     <artefacts>
       <Bean/>
     </artefacts>
@@ -222,13 +222,13 @@
   <group>
     <causeCode>MissingConstructorAttribute</causeCode>
     <severity>Warning</severity>
-    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [IOCCBeanReference]</intro>
+    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
     <userGuide>
       In order to inject values into a class (bean) via the constructor its constructor must
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
-      must be marked as [IOCCBeanReference].
+      must be marked as [BeanReference].
     </userGuide>
-    <template>One or more of the declaring bean {Bean}'s constructor's is not marked as [IOCCConstructor] but has marked parameters</template>
+    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
     <artefacts>
       <Bean/>
     </artefacts>

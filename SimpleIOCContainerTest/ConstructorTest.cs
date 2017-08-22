@@ -131,7 +131,12 @@ namespace IOCCTest
                 Assert.IsTrue(true);
             }
         }
-
-
+        [TestMethod]
+        public void ShouldNotWarnIfCpnstructorsAndParamatersNotMarked()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedConstructorUnmarkedParameters");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
     }
 }
