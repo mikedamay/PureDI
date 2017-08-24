@@ -78,6 +78,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO testing in untrusted environments
     // TODO built-in factories for environement variables, command line arguments, config files
     // TODO change FactoryParam to an object
+    // TODO make bean names and profiles case insensitive
     /// <summary>
     /// 
     /// </summary>
