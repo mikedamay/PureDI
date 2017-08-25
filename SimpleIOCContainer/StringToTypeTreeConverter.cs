@@ -1,4 +1,7 @@
-﻿namespace com.TheDisappointedProgrammer.IOCC
+﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+
+namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class StringToTypeTreeConverter
     {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -11,23 +12,24 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         private readonly List<TypeNameTree> genericArguments = new List<TypeNameTree>();
         private string typeFullName;
+
         /// <param name="typeSpec">namespace.classname&lt;genericAgrument&gt;</param>
-        public TypeNameTree(string typeSpec) : this(new TwoWayEnumerator<char>(typeSpec.GetEnumerator())
-          , new TypeNameTree(new TwoWayEnumerator<char>("".GetEnumerator()), null))
+        public TypeNameTree(string typeSpec)
         {
             // embedded spaces must be dealt with by caller
             System.Diagnostics.Debug.Assert(!typeSpec.Contains(" "));
             System.Diagnostics.Debug.Assert(!typeSpec.Contains("\t"));
+            ProcessTypeSpec(typeSpec.GetEnumerator(), new TypeNameTree("".GetEnumerator(), null, out var dummy));
         }
 
-        private TypeNameTree(ITwoWayEnumerator<char> typeSpec, TypeNameTree parent)
+        private TypeNameTree(IEnumerator<char> typeSpec, TypeNameTree parent, out bool _continue)
         {
-            ProcessTypeSpec(typeSpec, parent);
+            _continue = ProcessTypeSpec(typeSpec, parent);
         }
         public string TypeFullName => typeFullName;
         public List<TypeNameTree> GenericArguments => genericArguments;
 
-        private void ProcessTypeSpec(ITwoWayEnumerator<char> typeSpec, TypeNameTree parent)
+        private bool ProcessTypeSpec(IEnumerator<char> typeSpec, TypeNameTree parent)
         {
             StringBuilder sb = new StringBuilder();
             while (typeSpec.MoveNext())
@@ -40,13 +42,13 @@ namespace com.TheDisappointedProgrammer.IOCC
                         AddChildren(typeSpec);
                         this.typeFullName = sb.ToString() + "`" + genericArguments.Count;
                         sb.Clear();
-                        typeSpec.MoveNext();    // eat the trailing ">"
-                        return;
+                        bool bResult = typeSpec.MoveNext();    // eat the trailing ">"
+                        return bResult;
                     case ',':
                         this.typeFullName = sb.ToString();
                         sb.Clear();
                         parent.GenericArguments.Add(this);
-                        return;
+                        return true;
                     case '>':
                         if (sb.ToString() != string.Empty)
                         {
@@ -54,7 +56,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                             sb.Clear();
                             parent.GenericArguments.Add(this);
                         }
-                        return;
+                        return true;
                     default:
                         sb.Append(ch);
                         break;
@@ -65,14 +67,16 @@ namespace com.TheDisappointedProgrammer.IOCC
                 this.typeFullName = sb.ToString();
                 parent.GenericArguments.Add(this);
             }
+            return false;
         }
 
-        private void AddChildren(ITwoWayEnumerator<char> typeSpec)
+        private void AddChildren(IEnumerator<char> typeSpec)
         {
             do
             {
-                new TypeNameTree(typeSpec, this);
-                if (typeSpec.Current != ',')
+                bool _continue;
+                new TypeNameTree(typeSpec, this, out _continue);
+                if (!_continue || typeSpec.Current != ',')
                 {
                     return;     // no more children
                 }
