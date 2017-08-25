@@ -32,9 +32,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO run code analysis
     // DONE make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures
-    // TODO use immutable collections
+    // N/A use immutable collections - I don't think they do anything for us at any level
     // TODO license
-    // TODO An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
+    // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
     // TODO address static fields and beans.  Beans are invalid or maybe not
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
@@ -332,7 +332,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             return typeFullName == IOCCUserEnteredName;
         }
     }       // SimpleIOCContainer
+
     public enum BeanScope { Singleton, Prototype}
+
     internal static class IOCCLocalExtensions
     {
         public static string ListContents(this IList<string> assemblyNames, string separator = ", ")

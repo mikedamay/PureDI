@@ -11,7 +11,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         private HashSet<Type> types = new HashSet<Type>();
         private Stack<Type> typeStack = new Stack<Type>();
-        private HashSet<Type> cyclicalDependencies = new HashSet<Type>();
         public void Push(Type type)
         {
             Assert(!types.Contains(type));

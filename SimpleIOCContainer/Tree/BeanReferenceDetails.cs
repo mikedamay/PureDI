@@ -4,9 +4,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
         internal class BeanReferenceDetails
         {
-            private Type declaringType;
-            private string memberName;
-            private string memberBeanName;
+            private readonly Type declaringType;
+            private readonly string memberName;
+            private readonly string memberBeanName;
             public bool IsRoot { get; }
 
             public Type DeclaringType

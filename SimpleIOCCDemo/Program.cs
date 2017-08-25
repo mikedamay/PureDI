@@ -12,6 +12,7 @@ namespace SimpleIOCCDemo
             TodoProcessor tdp = sic.CreateAndInjectDependencies<TodoProcessor>();
             tdp.Process();
             Thread.Sleep(5000);
+            Console.Read();
         }
     }
 }

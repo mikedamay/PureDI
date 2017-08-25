@@ -4,7 +4,7 @@ using System.Text;
 namespace com.TheDisappointedProgrammer.IOCC
 {
     /// <summary>
-    /// takes a string like "MyClass&lt;MyClass2&gt; and builds a tree
+    /// takes a string like "MyClass&lt;MyClass2&gt;" and builds a tree
     /// TreeMap of "MyClass`1" -> TreeMap of "MyClass2"
     /// </summary>
     internal class TypeNameTree

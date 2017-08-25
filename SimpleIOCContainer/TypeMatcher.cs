@@ -7,7 +7,7 @@ namespace IOCCTest
 {
     /// <summary>
     /// compares a type in the assembly with an ioc type spec
-    /// such as "MyClass&lt;string&gt;
+    /// such as "MyClass&lt;string&gt;"
     /// </summary>
     internal class TypeMatcher
     {
