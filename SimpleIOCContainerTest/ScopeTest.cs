@@ -10,6 +10,13 @@ namespace IOCCTest
     public class ScopeTest
     {
         [TestMethod]
+        public void TestAssemblyMaker()
+        {
+            new AssemblyMaker().MakeAssembly("class mike {}");
+    
+
+        }
+        [TestMethod]
         public void shouldBuildTreeWithSimplePrototype()
         {
             (var result, var diagnostics) = CommonScopeTest("SimpleScope");

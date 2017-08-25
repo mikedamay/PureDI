@@ -1,11 +1,15 @@
 ﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace IOCCTest
 {
@@ -31,7 +35,7 @@ namespace IOCCTest
         /// <param name="targetAssemblyName"></param>
         /// <param name="ExtraAssemblies"></param>
         /// <returns>An assembly suitable for use in SimpleIOCContainer testing</returns>
-        public Assembly MakeAssembly(string CodeText
+        public Assembly MakeAssembly_obolsete(string CodeText
             , string TargetAssemblyName = null, string[] ExtraAssemblies = null, bool InMemory = true)
         {
             Assembly assembly;
@@ -57,6 +61,41 @@ namespace IOCCTest
             }
             return assembly;
         }
+
+        public Assembly MakeAssembly(string CodeText, string TargetAssemblyName = null
+          , Assembly[] ExtraAssemblies = null, bool InMemory = true)
+        {
+            Assembly assembly = null;
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(CodeText);
+            var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+            var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+            var refAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+              .Where(a => !a.IsDynamic)
+              .Where(a => !string.IsNullOrWhiteSpace(a?.Location)).Select(
+              a => MetadataReference.CreateFromFile(a.Location))
+              .ToArray();
+            //var extraRefAssemblies = ExtraAssemblies.Select(a => MetadataReference.CreateFromAssembly(a)).ToArray();
+            var comp = CSharpCompilation.Create(SelectAssemblyName(TargetAssemblyName)).AddSyntaxTrees(tree)
+              .AddReferences(refAssemblies).WithOptions(options);
+            //foreach (Assembly localRef in AppDomain.CurrentDomain.GetAssemblies())
+            //{
+            //    var refAssembly = MetadataReference.CreateFromFile(localRef.Location);
+            //    comp.AddReferences(new [] {refAssembly});
+            //}
+            MemoryStream ms = new MemoryStream();
+            if (InMemory)
+            {
+                var res = comp.Emit(ms);
+                assembly = Assembly.Load(ms.GetBuffer());
+            }
+            else
+            {
+                var res = comp.Emit(TargetAssemblyName + ".dll");
+                assembly = Assembly.LoadFrom(TargetAssemblyName + ".dll");
+            }
+            return assembly;
+        }
+
 
         private static string SelectAssemblyName(string targetAssemblyName)
           => targetAssemblyName ?? RandomString(8);

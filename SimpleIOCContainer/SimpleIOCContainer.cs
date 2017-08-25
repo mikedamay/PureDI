@@ -22,7 +22,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO references held as objects
     // TODO references to arrays
     // DONE use fully qualified type names in comparisons
-    // TODO use immutable collections
+    // N/A use immutable collections - they don't do much for us at any level
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     // DONE handle or document generic classes
     // TODO handle dynamic types

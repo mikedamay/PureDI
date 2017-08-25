@@ -33,7 +33,7 @@ namespace IOCCTest
 
         public static Assembly CreateAssembly(string resourceName)
         {
-#if !NETCOREAPP2_0
+#if !USE_CODE_DOM_ON_DOTNETCORE_V2
             string codeText = GetResource(
                 resourceName);
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
@@ -81,7 +81,7 @@ namespace IOCCTest
         ///   simply returns the value passed in</returns>
         public static bool Falsify(bool expr)
         {
-#if NETCOREAPP2_0
+#if USE_CODE_DOM_ON_DOTNETCORE_V2
             return false;
 #else
             return expr;
@@ -90,6 +90,7 @@ namespace IOCCTest
 
         public static int LessThanIsGoodEnough(int expected, int actual)
         {
+#if USE_CODE_DOM_ON_DOTNETCORE_V2
             if (expected < actual)
             {
                 return actual;  // make "Assert.AreEqual(expected, actual);" return true;
@@ -98,7 +99,8 @@ namespace IOCCTest
             {
                 return expected;
             }
-            
+#endif
+            return expected;
        }
     }
 }
