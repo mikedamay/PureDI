@@ -72,24 +72,11 @@ namespace IOCCTest
             CommonScopeTest(string className)
         {
             return Utils.CreateAndRunAssembly($"ScopeTestData", className);
-            //var iocc = MakeIOCCForTestAssembly(className);
-            //object rootBean = iocc.CreateAndInjectDependencies(
-            //    $"IOCCTest.ScopeTestData.{className}"
-            //    , out IOCCDiagnostics diagnostics);
-            //System.Diagnostics.Debug.WriteLine(diagnostics);
-            //dynamic result = (IResultGetter)rootBean;
-            //return (result, diagnostics);
         }
 
         private static SimpleIOCContainer MakeIOCCForTestAssembly(string className)
         {
             return Utils.CreateIOCCinAssembly($"ScopeTestData", className);
-            //string codeText = FactoryTest.GetResource(
-            //    $"IOCCTest.ScopeTestData.{className}.cs");
-            //Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
-            //SimpleIOCContainer iocc = new SimpleIOCContainer();
-            //iocc.SetAssemblies(assembly.GetName().Name);
-            //return iocc;
         }
     }
 }

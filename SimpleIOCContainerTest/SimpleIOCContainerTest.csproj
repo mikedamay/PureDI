@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFramekcwork>net47</TargetFramekcwork>-->
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
+    <!--<TargetFramework>netcoreapp2.0</TargetFramework>-->
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -32,6 +32,9 @@
     <Compile Remove="FactoryTestData\SimpleBean.cs" />
     <Compile Remove="FactoryTestData\ThrowsException.cs" />
     <Compile Remove="FactoryTestData\TypeMismatch.cs" />
+    <Compile Remove="NoNamespaceData\NoNamespace.cs" />
+    <Compile Remove="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
+    <Compile Remove="NoNamespaceData\ReferenceToNamespacedClass.cs" />
     <Compile Remove="ScopeTestData\FactoryPrototype.cs" />
     <Compile Remove="ScopeTestData\ProtoTypesWithSingletons.cs" />
     <Compile Remove="ScopeTestData\RootProtoType.cs" />
@@ -78,6 +81,9 @@
    <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
    <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
+   <EmbeddedResource Include="NoNamespaceData\NoNamespace.cs" />
+   <EmbeddedResource Include="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
+   <EmbeddedResource Include="NoNamespaceData\ReferenceToNamespacedClass.cs" />
    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
    <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
    <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />

@@ -36,7 +36,7 @@ namespace IOCCTest
                 string schemaName
                   = $"{TestResourcePrefix}.TestData.BadDiagnosticScema.xml";
                 using (Stream s
-                    = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
+                    = typeof(HierarchyTest).Assembly.GetManifestResourceStream(schemaName))
                 {
                     DiagnosticBuilder db = new DiagnosticBuilder(s);
                 }
@@ -50,7 +50,7 @@ namespace IOCCTest
                 string schemaName
                   = $"{TestResourcePrefix}.TestData.SchemaWithNoXML.badxml";
                 using (Stream s
-                    = typeof(IOCCTest).Assembly.GetManifestResourceStream(schemaName))
+                    = typeof(HierarchyTest).Assembly.GetManifestResourceStream(schemaName))
                 {
                     DiagnosticBuilder db = new DiagnosticBuilder(s);
                 }

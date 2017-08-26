@@ -7,6 +7,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <summary>
     /// takes a string like "MyClass&lt;MyClass2&gt;" and builds a tree
     /// TreeMap of "MyClass`1" -> TreeMap of "MyClass2"
+    /// TODO make this more readable - not sure what happened.
     /// </summary>
     internal class TypeNameTree
     {
@@ -22,9 +23,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             ProcessTypeSpec(typeSpec.GetEnumerator(), new TypeNameTree("".GetEnumerator(), null, out var dummy));
         }
 
-        private TypeNameTree(IEnumerator<char> typeSpec, TypeNameTree parent, out bool _continue)
+        private TypeNameTree(IEnumerator<char> typeSpec, TypeNameTree parent, out bool @continue)
         {
-            _continue = ProcessTypeSpec(typeSpec, parent);
+            @continue = ProcessTypeSpec(typeSpec, parent);
         }
         public string TypeFullName => typeFullName;
         public List<TypeNameTree> GenericArguments => genericArguments;
@@ -74,9 +75,9 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             do
             {
-                bool _continue;
-                new TypeNameTree(typeSpec, this, out _continue);
-                if (!_continue || typeSpec.Current != ',')
+                bool @continue;
+                new TypeNameTree(typeSpec, this, out @continue);
+                if (!@continue || typeSpec.Current != ',')
                 {
                     return;     // no more children
                 }

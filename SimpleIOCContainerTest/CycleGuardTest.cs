@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.TestCode;
 
 namespace IOCCTest
 {
@@ -12,6 +13,68 @@ namespace IOCCTest
     [TestClass]
     public class CycleGuardTest
     {
+        [TestMethod]
+        public void ShouldBuildTreeWithSelfReferentialClass()
+        {
+            SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependencies<SelfReferring>();
+            Assert.IsNotNull(sr);
+        }
+        [TestMethod, Timeout(100)]
+        public void ShouldWorkWithCyclicalDependencies()
+        {
+            try
+            {
+                // this should not run forever
+                CyclicalDependency cd = SimpleIOCContainer.Instance.CreateAndInjectDependencies<CyclicalDependency>();
+                Assert.IsNotNull(cd);
+                Assert.IsNotNull(cd?.GetResults().Child);
+                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
+                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
+                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
+            }
+            catch (StackOverflowException soe)
+            {
+                Assert.Fail("The stack overflowed indicating cyclical dependencies");
+            }
+        }
+        [TestMethod, Timeout(100)]
+        public void ShouldWorkWithCyclicalInterfaces()
+        {
+            ParentWithInterface cd
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ParentWithInterface>();
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd.GetResults().IChild);
+            Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
+        }
+        [TestMethod, Timeout(100)]
+        public void ShouldCreateTreeForCyclicalBaseClasses()
+        {
+            BaseClass cd
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<BaseClass>();
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd?.GetResults().ChildClass);
+            Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
+        }
+        [TestMethod, Timeout(100)]
+        public void ShouldWorkWithCyclicalInterfacesWithNames()
+        {
+            TestCode.WithNames.ParentWithInterface cd
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<TestCode.WithNames.ParentWithInterface>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-B");
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd.GetResults().IChild);
+            Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
+            Assert.AreEqual("name-B2", cd.GetResults().IChild?.GetResults().IParent2?.GetResults().Name);
+        }
+        [TestMethod, Timeout(100)]
+        public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
+        {
+            TestCode.WithNames.BaseClass cd
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<TestCode.WithNames.BaseClass>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "basest");
+            Assert.IsNotNull(cd);
+            Assert.IsNotNull(cd?.GetResults().ChildClass);
+            Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);
+        }
+    
         public CycleGuardTest()
         {
             //

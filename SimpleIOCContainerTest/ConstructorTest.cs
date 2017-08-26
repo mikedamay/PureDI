@@ -1,4 +1,5 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;
 
@@ -8,6 +9,32 @@ namespace IOCCTest
     public class ConstructorTest
     {
         private const string CONSTRUCTOR_TEST_NAMESPACE = "ConstructorTestData";
+        [TestMethod]
+        public void ShouldThrowExceptionForNoArgConstructor()
+        {
+            Assert.ThrowsException<IOCCException>(() =>
+            {
+                NoArgRoot st = new SimpleIOCContainer().CreateAndInjectDependencies<
+                    NoArgRoot>(out IOCCDiagnostics diags);
+                Assert.IsTrue(diags.HasWarnings);
+            });
+        }
+        [TestMethod]
+        public void ShouldWarnForNoArgClassTree()
+        {
+            NoArgClassTree nact = new SimpleIOCContainer().CreateAndInjectDependencies<
+                NoArgClassTree>(out IOCCDiagnostics diags);
+            Assert.IsTrue(diags.HasWarnings);
+        }
+
+        [TestMethod]
+        public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
+        {
+            ClassWithMultipleInterfaces cwmi
+                = new SimpleIOCContainer().CreateAndInjectDependencies<ClassWithMultipleInterfaces>();
+            Assert.IsNotNull(cwmi?.GetResults().Interface1);
+            Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
+        }
         [TestMethod]
         public void ShouldCreateTreeWithSimpleConstructor()
         {

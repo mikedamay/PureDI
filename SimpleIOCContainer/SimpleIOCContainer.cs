@@ -54,7 +54,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
     // TODO the explanation is expanded to include that.
-    // TODO remove 2-way enumerator
+    // DONE remove 2-way enumerator
     // TODO Perf
     // TODO Test with nullables
     // TODO make SimpleIOCContainer instance a bean by default.
@@ -62,8 +62,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE decide if scope on factory reference refers to factory or reference to be created
     // DONE it makes no sense for the created object as the scope is under the control of the factory
     // DONE does it make any sense in the case of the factory - it does, a little
-    // TODO allow root type a prototype
-    // TODO test with no namespace
+    // DONE allow root type a prototype
+    // DONE test with no namespace
     // DONE change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
     // TODO guard against static constructors
@@ -79,6 +79,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO built-in factories for environement variables, command line arguments, config files
     // TODO change FactoryParam to an object
     // TODO make bean names and profiles case insensitive
+    // TODO test with private classes
+    // TODO test with attributes as beans
     /// <summary>
     /// 
     /// </summary>

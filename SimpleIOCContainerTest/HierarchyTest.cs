@@ -7,7 +7,7 @@ using WithNames = IOCCTest.TestCode.WithNames;
 namespace IOCCTest
 {
     [TestClass]
-    public class IOCCTest
+    public class HierarchyTest
     {
         [TestMethod]
         public void SelfTest()
@@ -28,6 +28,7 @@ namespace IOCCTest
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
         enum Mike { Mike1}
+        [TestMethod]
         public void ShouldNotTreatEnumAsClass()
         {
             void DoTest()
@@ -50,48 +51,6 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
        
-        [TestMethod]
-        public void ShouldBuildTreeWithSelfReferentialClass()
-        {
-            SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependencies<SelfReferring>();
-            Assert.IsNotNull(sr);
-        }
-        [TestMethod, Timeout(100)]
-        public void ShouldWorkWithCyclicalDependencies()
-        {
-            try
-            {
-                // this should not run forever
-                CyclicalDependency cd = SimpleIOCContainer.Instance.CreateAndInjectDependencies<CyclicalDependency>();
-                Assert.IsNotNull(cd);
-                Assert.IsNotNull(cd?.GetResults().Child);
-                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
-                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
-                Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
-            }
-            catch (StackOverflowException soe)
-            {
-                Assert.Fail("The stack overflowed indicating cyclical dependencies");
-            }
-        }
-        [TestMethod, Timeout(100)]
-        public void ShouldWorkWithCyclicalInterfaces()
-        {
-            ParentWithInterface cd 
-              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ParentWithInterface>();
-            Assert.IsNotNull(cd);
-            Assert.IsNotNull(cd.GetResults().IChild);
-            Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
-        }
-        [TestMethod, Timeout(100)]
-        public void ShouldCreateTreeForCyclicalBaseClasses()
-        {
-            BaseClass cd 
-              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<BaseClass>();
-            Assert.IsNotNull(cd);
-            Assert.IsNotNull(cd?.GetResults().ChildClass);
-            Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
-        }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
@@ -116,24 +75,12 @@ namespace IOCCTest
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
         }
-        [TestMethod, Timeout(100)]
-        public void ShouldWorkWithCyclicalInterfacesWithNames()
+        [TestMethod]
+        public void ShouldCreateASingleInstanceForMultipleReferences()
         {
-            WithNames.ParentWithInterface cd
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.ParentWithInterface>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-B");
-            Assert.IsNotNull(cd);
-            Assert.IsNotNull(cd.GetResults().IChild);
-            Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
-            Assert.AreEqual("name-B2", cd.GetResults().IChild?.GetResults().IParent2?.GetResults().Name);
-        }
-        [TestMethod, Timeout(100)]
-        public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
-        {
-            WithNames.BaseClass cd
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.BaseClass>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "basest");
-            Assert.IsNotNull(cd);
-            Assert.IsNotNull(cd?.GetResults().ChildClass);
-            Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);
+            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependencies<CrossConnections>();
+            Assert.IsNotNull(cc?.ChildA?.Common);
+            Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }
     }
     [Bean]

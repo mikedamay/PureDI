@@ -22,10 +22,10 @@ namespace IOCCTest
             return (result, diagnostics);
         }
 
-        public static SimpleIOCContainer CreateIOCCinAssembly(string nameSpace
+        public static SimpleIOCContainer CreateIOCCinAssembly(string testDataFolderName
             , string className)
         {
-            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{nameSpace}.{className}.cs");
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
             SimpleIOCContainer iocc = new SimpleIOCContainer();
             iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
