@@ -122,14 +122,28 @@ namespace IOCCTest
                     errorsAndWarnings = true;
                 }
             }
+
+            string schemaSchemaName = "DiagnosticSchemaSchema.xsd";
             string schemaName
-                //= "com.TheDisappointedProgrammer.IOCC.Docs.DiagnosticSchema.xml";
                 = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
+            string schemaSchemaResourcePath
+                = $"{ResourceLocationPrefix}.Docs.{schemaSchemaName}";
+            using (Stream @in
+                = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaSchemaResourcePath))
+            using (Stream @out = File.Open(schemaSchemaName, FileMode.Create))
+            {
+                byte[] bytes = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = @in.Read(bytes, 0, bytes.Length)) > 0)
+                {
+                    @out.Write(bytes, 0, bytesRead);
+                }
+            }
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
                 XDocument doc = XDocument.Load(s);
-                ValidateXml(doc, "Docs/DiagnosticSchemaSchema.xsd");
+                ValidateXml(doc, schemaSchemaName);
             }
             Assert.IsFalse(errorsAndWarnings);
         }

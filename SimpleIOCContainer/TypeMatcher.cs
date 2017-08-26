@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using com.TheDisappointedProgrammer.IOCC;
 
-namespace IOCCTest
+namespace com.TheDisappointedProgrammer.IOCC
 {
     /// <summary>
     /// compares a type in the assembly with an ioc type spec

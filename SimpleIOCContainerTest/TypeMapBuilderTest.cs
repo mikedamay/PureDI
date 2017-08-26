@@ -186,7 +186,7 @@ namespace IOCCTest
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.StructDependency.cs", mapExpected);
 
         }
-#if !NETCOREAPP2_0
+#if !USE_THIS_ASSEMBLY
         [TestMethod]
         public void ShouldRecognizeConnectionsAcrossAssemblies()
         {

@@ -4,6 +4,7 @@ using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 
+
 namespace IOCCTest
 {
     internal static class Utils
@@ -33,7 +34,7 @@ namespace IOCCTest
 
         public static Assembly CreateAssembly(string resourceName)
         {
-#if !USE_CODE_DOM_ON_DOTNETCORE_V2
+#if !USE_THIS_ASSEMBLY
             string codeText = GetResource(
                 resourceName);
             Assembly assembly = new AssemblyMaker().MakeAssembly(codeText);
@@ -81,7 +82,7 @@ namespace IOCCTest
         ///   simply returns the value passed in</returns>
         public static bool Falsify(bool expr)
         {
-#if USE_CODE_DOM_ON_DOTNETCORE_V2
+#if USE_THIS_ASSEMBLY
             return false;
 #else
             return expr;
@@ -90,7 +91,7 @@ namespace IOCCTest
 
         public static int LessThanIsGoodEnough(int expected, int actual)
         {
-#if USE_CODE_DOM_ON_DOTNETCORE_V2
+#if USE_THIS_ASSEMBLY
             if (expected < actual)
             {
                 return actual;  // make "Assert.AreEqual(expected, actual);" return true;
