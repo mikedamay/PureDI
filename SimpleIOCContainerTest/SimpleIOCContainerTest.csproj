@@ -6,7 +6,7 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <!--
+  
   <ItemGroup>
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
@@ -105,7 +105,7 @@
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
   </ItemGroup>
--->
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
@@ -121,6 +121,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET47, USE_THIS_ASSEMBLY</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET47</DefineConstants>
   </PropertyGroup>
 </Project>

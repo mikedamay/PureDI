@@ -45,7 +45,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODo ensure there is a test that uses an object multiple times in the tree.
     // TODO document the fact that member type is based on the type's GetIOCCName() attribute
     // TODO and that generics have the for classname`1[TypeParam]
-    // TODO move the majority of unit tests to separate assemblies
+    // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
     // DONE test generics with nested parameters
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
@@ -68,7 +68,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO optimised build
     // TODO guard against static constructors
     // DONE automatically add SimpleIOCContainer to the list of assemblies
-    // TODO write out the diagnostic schema from resource before validation test
+    // DONE write out the diagnostic schema from resource before validation test
     // TODO document that IFactory is ignored as an interface.  Workaround to create intermediate
     // TODO this is the first gotcha
     // TODO name and profile get mixed up - maybe a profile set will help - second gotcha
