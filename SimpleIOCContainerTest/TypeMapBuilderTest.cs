@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define USE_THIS_ASSEMBLY
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
