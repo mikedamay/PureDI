@@ -12,7 +12,7 @@ namespace IOCCTest
         private class TrivialBean
         {
             [BeanReference]
-            public SimpleIOCContainer child;
+            public SimpleIOCContainer child = null;
 
         }
 

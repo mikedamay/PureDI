@@ -10,7 +10,7 @@ namespace IOCCTest.TestCode
     [Bean]
     internal class RefersToGeneric
     {
-        [BeanReference] private Generic<int> genericInt;
+        [BeanReference] private Generic<int> genericInt = null;
         public Generic<int> GenericInt => genericInt;
     }
 
@@ -18,13 +18,13 @@ namespace IOCCTest.TestCode
     internal class GenericHolderParent
     {
         [BeanReference]
-        private GenericHolder<GenericHeld> genericHolder;
+        private GenericHolder<GenericHeld> genericHolder = null;
         public GenericHolder<GenericHeld> GenericHolder => genericHolder;
     }
     [Bean]
     internal class GenericHolder<T>
     {
-        [BeanReference] private T injectedT;
+        [BeanReference] private T injectedT = default(T);
         public T GenericHeld => injectedT;
     }
 
@@ -44,7 +44,7 @@ namespace IOCCTest.TestCode
     {
         public GenericWith3Params<int, int, int> Multiple => multiple;
         [BeanReference]
-        private GenericWith3Params<int, int, int> multiple;
+        private GenericWith3Params<int, int, int> multiple = null;
     }
 
     [Bean]
@@ -62,6 +62,6 @@ namespace IOCCTest.TestCode
     {
         public WrapperGeneric<NestedGeneric<int>> Nested => nested;
         [BeanReference]
-        private WrapperGeneric<NestedGeneric<int>> nested;
+        private WrapperGeneric<NestedGeneric<int>> nested = null;
     }
 }

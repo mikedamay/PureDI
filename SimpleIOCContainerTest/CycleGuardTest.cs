@@ -32,7 +32,7 @@ namespace IOCCTest
                 Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild);
                 Assert.IsNotNull(cd?.GetResults().Child?.GetResults().GrandChild?.GetResults().GrandParent);
             }
-            catch (StackOverflowException soe)
+            catch (StackOverflowException)
             {
                 Assert.Fail("The stack overflowed indicating cyclical dependencies");
             }

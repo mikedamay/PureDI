@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<diagnosticSchema>
+<diagnosticSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="file://. DiagnosticSchemaSchema.xsd">
   <group>
     <causeCode>DuplicateBean</causeCode>
     <severity>Warning</severity>

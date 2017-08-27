@@ -6,8 +6,8 @@ namespace IOCCTest.TestCode
     [Bean]
     internal class CrossConnections
     {
-        [BeanReference] private ChildA childA;
-        [BeanReference] private ChildB childB;
+        [BeanReference] private ChildA childA = null;
+        [BeanReference] private ChildB childB = null;
         public ChildA ChildA => childA;
         public ChildB ChildB => childB;
     }
@@ -15,8 +15,8 @@ namespace IOCCTest.TestCode
     [Bean]
     internal class ChildB
     {
-        [BeanReference] private Common common;
-        [BeanReference] private GrandChildB grandChildB;
+        [BeanReference] private Common common = null;
+        [BeanReference] private GrandChildB grandChildB = null;
         public Common Common => common;
         public GrandChildB GrandChildB => grandChildB;
     }
@@ -41,8 +41,8 @@ namespace IOCCTest.TestCode
     [Bean]
     internal class ChildA
     {
-        [BeanReference] private Common common;
-        [BeanReference] private GrandChildA grandChildA;
+        [BeanReference] private Common common = null;
+        [BeanReference] private GrandChildA grandChildA = null;
         public Common Common => common;
         public GrandChildA GrandChildA => grandChildA;
     }
