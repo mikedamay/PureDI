@@ -82,9 +82,28 @@ namespace IOCCTest
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 "DifficultTypeTestData", "Dynamic");
             dynamic diag = diagnostics.Groups["MissingBean"].Occurrences[0];
+            Assert.IsTrue(diagnostics.HasWarnings);
             Assert.AreEqual("anotherDynamic", diag.MemberName);
             Assert.AreEqual("IOCCTest.DifficultTypeTestData.Dynamic", diag.Bean);
+        }
+        [TestMethod]
+        public void ShouldWarnOfTuple()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "Tuple");
+            Assert.IsNull(result.GetResults().Stuff.Item1);
             Assert.IsTrue(diagnostics.HasWarnings);
+        }
+        [TestMethod]
+        public void ShouldWarnOfInvalidTypes()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "InvalidTypes");
+            Assert.IsTrue(diagnostics.HasWarnings);
+            dynamic diag0 = diagnostics.Groups["MissingBean"].Occurrences[0];
+            Assert.AreEqual("someArray", diag0.MemberName);
+            dynamic diag1 = diagnostics.Groups["MissingBean"].Occurrences[1];
+            Assert.AreEqual("someObject", diag1.MemberName);
         }
     }
 }

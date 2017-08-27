@@ -33,7 +33,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures
     // N/A use immutable collections - I don't think they do anything for us at any level
-    // TODO license
+    // DONE license
     // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
     // TODO address static fields and beans.  Beans are invalid or maybe not
     // DONE readonly fields

@@ -6,7 +6,7 @@ using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
-    internal partial class ObjectTree
+    internal class ObjectTree
     {
         private readonly string profile;
 
@@ -132,8 +132,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 BeanReferenceAttribute attr;
                 if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceAttribute>()) != null)
                 {
-                    //Assert(fieldOrPropertyInfo is FieldInfo
-                    //       || fieldOrPropertyInfo is PropertyInfo);
                     (Type type, string beanName, string constructorName) memberBeanId =
                         MakeMemberBeanId(fieldOrPropertyInfo.Type
                             , attr.Name, attr.ConstructorName, beanId);
@@ -482,7 +480,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="beanid"><see cref="GetImplementationFromTypeMap"/></param>
         private bool IsBeanPresntInTypeMap((Type beanType, string beanName, string constructorName) beanId)
         {
-            char[] a = beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
+            char[] a = beanId.beanType.IsArray 
+              ? beanId.beanType.FullName.ToArray() 
+              : beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
             return typeMap.Keys.Any(k => k.type.FullName == beanTypeName && k.beanName == beanId.beanName);
