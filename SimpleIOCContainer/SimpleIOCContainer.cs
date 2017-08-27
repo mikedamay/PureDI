@@ -17,10 +17,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE handle properties
     // DONE object factories
     // DONE handle multiple assemblies - Done
-    // TODO references held in tuples
+    // DONE references held in tuples
     // TODO references held in embedded structs 
-    // TODO references held as objects
-    // TODO references to arrays
+    // DONE references held as objects
+    // DONE references to arrays
     // DONE use fully qualified type names in comparisons
     // N/A use immutable collections - they don't do much for us at any level
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
@@ -50,7 +50,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test generics with nested parameters
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
     // TODO Apply the SimpleIOCContainer to the Calculation Server and Maven docs
-    // TODO Release Build
+    // DONE Release Build
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
     // TODO the explanation is expanded to include that.
