@@ -26,7 +26,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.typeMap = typeMap;
         }
         public object CreateAndInjectDependencies(Type rootType
-          , ref IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
+          , IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
           , BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             ObjectTree tree;
@@ -40,7 +40,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 mapTrees[(rootType, rootBeanName)] = tree;
                  
             }
-            return tree.CreateAndInjectDependencies(rootType, ref diagnostics
+            return tree.CreateAndInjectDependencies(rootType, diagnostics
               ,rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
         }
     }

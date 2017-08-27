@@ -38,7 +38,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="mapObjectsCreatedSoFar1"></param>
         /// <returns>an ojbect of root type</returns>
         public object CreateAndInjectDependencies(Type rootType
-            , ref IOCCDiagnostics diagnostics
+            , IOCCDiagnostics diagnostics
             , string rootBeanName, string rootConstructorName, BeanScope scope,
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {

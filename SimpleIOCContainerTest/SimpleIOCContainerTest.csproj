@@ -22,6 +22,7 @@
     <Compile Remove="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
+    <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="FactoryTestData\AccessByString.cs" />
     <Compile Remove="FactoryTestData\BadFactory.cs" />
     <Compile Remove="FactoryTestData\FactoryDependencies.cs" />
@@ -71,6 +72,7 @@
    <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
    <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
    <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
+   <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
    <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
    <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
    <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />

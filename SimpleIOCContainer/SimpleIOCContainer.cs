@@ -25,7 +25,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A use immutable collections - they don't do much for us at any level
     // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     // DONE handle or document generic classes
-    // TODO handle dynamic types
+    // DONE handle dynamic types
     // DONE change "dependency" to "bean"
     // TODO check arguments' validity for externally facing methods
     // DONE unit test to validate XML - Done
@@ -166,6 +166,15 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             this.assemblyNames = assemblyNames.ToList();
         }
+        /// <param name="scope">scope refers to the scope of the root bean i.e. the
+        /// top of the tree - as instantiated by rootType
+        /// It does not affect the rest of the tree.  The other nodes on the tree will
+        /// honour the Scope property of [IOCCBeanReference]</param>
+        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        {
+            (typeMap, diagnostics) = CreateTypeMap(typeof(TRootType), profile);
+            return (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profile, rootBeanName, rootConstructorName, scope);
+        }
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window
         /// <summary>
@@ -186,21 +195,22 @@ namespace com.TheDisappointedProgrammer.IOCC
             TRootType rootObject = default(TRootType);
             try
             {
-                diagnostics = new DiagnosticBuilder().Diagnostics;
-                rootObject = CreateAndInjectDependenciesEx<TRootType>(ref diagnostics, profile, beanName, rootConstructorName, scope);
+                (typeMap, diagnostics) = CreateTypeMap(typeof(TRootType), profile);
+                rootObject = (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profile, beanName, rootConstructorName, scope);
             }
             finally
             {
-                if (System.Diagnostics.Debugger.IsAttached)
-                {
-                    System.Diagnostics.Debug.WriteLine(diagnostics);
-
+                if (diagnostics != null)
+                {                  
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debug.WriteLine(diagnostics);
+                    }
+                    else
+                    {
+                        Console.WriteLine(diagnostics);    
+                    }                 
                 }
-                else
-                {
-                    Console.WriteLine(diagnostics);    
-                }
-                 
             }
             return rootObject;
         }
@@ -220,74 +230,34 @@ namespace com.TheDisappointedProgrammer.IOCC
           ,string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
           , BeanScope scope = BeanScope.Singleton)
         {
-            diagnostics = new DiagnosticBuilder().Diagnostics;
-            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-	        if (typeMap == null )
-	        {
-          	    typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-                  , ref diagnostics, profile, os);
-    	    }
-            (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
+            IDictionary<(Type beanType, string beanName), Type> typeMap;
+            (typeMap, diagnostics) = CreateTypeMap(this.GetType(), profile);
+            (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
+              => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
                 throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
-            ObjectTreeContainer container;
-            if (mapObjectTreeContainers.ContainsKey(profile))
-            {
-                container = mapObjectTreeContainers[profile];
-            }
-            else
-            {
-                container = new ObjectTreeContainer(profile, typeMap);
-            }
-		    mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-            var rootObject = container.CreateAndInjectDependencies(
-              rootType, ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
-            if (rootObject == null && diagnostics.HasWarnings)
-            {
-                throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
-            }
-            return rootObject;
-        }
-
-        /// <param name="scope">scope refers to the scope of the root bean i.e. the
-        /// top of the tree - as instantiated by rootType
-        /// It does not affect the rest of the tree.  The other nodes on the tree will
-        /// honour the Scope property of [IOCCBeanReference]</param>
-        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
-        {
-            diagnostics = new DiagnosticBuilder().Diagnostics;
-            return CreateAndInjectDependenciesEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
+            return CreateAndInjectDependenciesExCommon(rootType
+                ,diagnostics, profile, rootBeanName
+                ,rootConstructorName, scope);
         }
 
         /// <summary>
         /// <see cref="CreateAndInjectDependencies"/>
         /// this overload does not print out the diagnostics
         /// </summary>
+        /// <param name="rootType"></param>
         /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
         /// <param name="profile"></param>
         /// <param name="rootBeanName"></param>
+        /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
-        private TRootType CreateAndInjectDependenciesEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
-        {
-            return CreateAndInjectDependenciesExEx<TRootType>(ref diagnostics, profile, rootBeanName, rootConstructorName, scope);
-        }
-
-        private TRootType CreateAndInjectDependenciesExEx<TRootType>(ref IOCCDiagnostics diagnostics, string profile, string rootBeanName, string rootConstructorName, BeanScope scope)
+        private object CreateAndInjectDependenciesExCommon(Type rootType
+          , IOCCDiagnostics diagnostics, string profile, string rootBeanName
+          , string rootConstructorName, BeanScope scope)
         {
             CreateAndInjectDependenciesCalled = true;
-            if (!excludeRootAssembly)
-            {
-                assemblyNames.Add(typeof(TRootType).Assembly.GetName().Name);
-            }
-            assemblyNames.Add(this.GetType().Assembly.GetName().Name);
-            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-	        if (typeMap == null)
-	        {
-            	    typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-                      , ref diagnostics, profile, os);
-	        }
             ObjectTreeContainer container;
             if (mapObjectTreeContainers.ContainsKey(profile))
             {
@@ -298,18 +268,35 @@ namespace com.TheDisappointedProgrammer.IOCC
                 container = new ObjectTreeContainer(profile, typeMap);
             }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-            var rootObject = container.CreateAndInjectDependencies(typeof(TRootType), ref diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
+            var rootObject = container.CreateAndInjectDependencies(rootType, diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
             }
-            Assert(rootObject is TRootType);
-            return (TRootType)rootObject;
+            Assert(rootObject.GetType() == rootType);
+            return rootObject;
         }
-        struct st
+
+        private (IDictionary<(Type beanType, string beanName), Type>, IOCCDiagnostics diagnostics)
+          CreateTypeMap(Type rootType, string profile)
         {
-            private int a;
+            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
+            if (!excludeRootAssembly)
+            {
+                assemblyNames.Add(rootType.Assembly.GetName().Name);
+            }
+            assemblyNames.Add(this.GetType().Assembly.GetName().Name);
+            // make sure that the IOC Container itself is available as a bean
+            // particularly to factories
+            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
+            if (typeMap == null)
+            {
+                typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+                    , ref diagnostics, profile, os);
+            }
+            return (typeMap, diagnostics);
         }
+
         /// <summary>
         /// builds list of all the assemblies involved in the dependency tree
         /// </summary>

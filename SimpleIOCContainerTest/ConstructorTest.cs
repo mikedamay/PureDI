@@ -1,4 +1,5 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using System.Dynamic;
+using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;

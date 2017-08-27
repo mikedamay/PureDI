@@ -69,9 +69,9 @@
       you forgot to mark a bean with [Bean] or omitted its name for the [BeanReference] 
       or there are 
       duplicate beans or that the bean referred to was
-      not a concrete class or struct.  The details should be listed
-      in the relevant diagnostics above.  Also you may have attempted
-      to mark as injectable a non-bean class such as a primitive or library class.
+      not a concrete class or struct.  (In the case of duplicates the details should be listed
+      in the relevant diagnostics above).  Alternatively you may have attempted
+      to mark as injectable a non-bean class such as a primitive, dynamic or 3rd party library class.
       This, of course, amounts to much the same thing.
       You may be attempting the bean through an interface that it does not implement.</userGuide>
     <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>

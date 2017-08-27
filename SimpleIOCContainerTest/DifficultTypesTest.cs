@@ -2,6 +2,7 @@
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -74,6 +75,16 @@ namespace IOCCTest
                 System.Diagnostics.Debug.WriteLine(ex);
                 Assert.Fail();
             }
+        }
+        [TestMethod]
+        public void ShouldWarnOfDynamicReference()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "Dynamic");
+            dynamic diag = diagnostics.Groups["MissingBean"].Occurrences[0];
+            Assert.AreEqual("anotherDynamic", diag.MemberName);
+            Assert.AreEqual("IOCCTest.DifficultTypeTestData.Dynamic", diag.Bean);
+            Assert.IsTrue(diagnostics.HasWarnings);
         }
     }
 }
