@@ -81,6 +81,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO make bean names and profiles case insensitive
     // TODO test with private classes
     // TODO test with attributes as beans
+    // TODO test passing an interface as root type
     /// <summary>
     /// 
     /// </summary>

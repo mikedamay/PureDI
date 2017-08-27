@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <!--<TargetFramework>net47</TargetFramework>-->
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  
   <ItemGroup>
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
@@ -60,39 +57,39 @@
     <Compile Remove="TestData\TreeWithFields.cs" />
   </ItemGroup>
   <ItemGroup>
-   <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
-   <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
-   <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
-   <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
-   <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
-   <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
-   <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
-   <EmbeddedResource Include="ConstructorTestData\ParameterNotInjectable.cs" />
-   <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
-   <EmbeddedResource Include="ConstructorTestData\SimpleConstructor.cs" />
-   <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructor.cs" />
-   <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
-   <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
-   <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
-   <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
-   <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
-   <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
-   <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
-   <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
-   <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
-   <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
-   <EmbeddedResource Include="FactoryTestData\Generic.cs" />
-   <EmbeddedResource Include="FactoryTestData\GenericFactory.cs" />
-   <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
-   <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
-   <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
-   <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
-   <EmbeddedResource Include="NoNamespaceData\NoNamespace.cs" />
-   <EmbeddedResource Include="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
-   <EmbeddedResource Include="NoNamespaceData\ReferenceToNamespacedClass.cs" />
-   <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
-   <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
-   <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />
+    <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
+    <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
+    <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
+    <EmbeddedResource Include="ConstructorTestData\ParameterNotInjectable.cs" />
+    <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\SimpleConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
+    <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
+    <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
+    <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <EmbeddedResource Include="FactoryTestData\Generic.cs" />
+    <EmbeddedResource Include="FactoryTestData\GenericFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
+    <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
+    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
+    <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
+    <EmbeddedResource Include="NoNamespaceData\NoNamespace.cs" />
+    <EmbeddedResource Include="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
+    <EmbeddedResource Include="NoNamespaceData\ReferenceToNamespacedClass.cs" />
+    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
+    <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
+    <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />
     <EmbeddedResource Include="ScopeTestData\SimpleScope.cs" />
     <EmbeddedResource Include="TestData\AbstractClass.cs" />
     <EmbeddedResource Include="TestData\BadGeneric.cs" />
@@ -111,15 +108,14 @@
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
   </ItemGroup>
-
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     <PackageReference Include="System.CodeDom" Version="4.4.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SimpleIOCContainer\SimpleIOCContainer.csproj" />
   </ItemGroup>
