@@ -14,7 +14,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
-                var query
+                var wellFormedBeanSpecs
                   = assembly.GetTypes().Where(d => d.TypeIsABean(profile, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                   .Select(i => ((i, d.GetBeanName()), d)));
@@ -23,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 Type beanInterface;
                 string name;
                 Type beanImplementation;
-                foreach (((Type beanInterfaceArg, string nameArg) beanInterfaceAndName, Type beanImplementationArg) beanId in query)
+                foreach (((Type beanInterfaceArg, string nameArg) beanInterfaceAndName, Type beanImplementationArg) beanId in wellFormedBeanSpecs)
                 {
                     beanInterface = beanId.beanInterfaceAndName.beanInterfaceArg;
                     name = beanId.beanInterfaceAndName.nameArg;
