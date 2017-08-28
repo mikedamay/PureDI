@@ -262,4 +262,14 @@
       <MemberName/>
     </artefacts>
   </group>
+  <group>
+    <causeCode>UnreachableConstructor</causeCode>
+    <severity>Warning</severity>
+    <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
+    <userGuide>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</userGuide>
+    <template>{Type} has an unreachable constructor</template>
+    <artefacts>
+      <Type/>
+    </artefacts>
+  </group>
 </diagnosticSchema>

@@ -337,7 +337,18 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             }
             return bean;
         }
-
+        /// <summary>
+        /// errros if: 
+        ///     a) multiple candidate constructors
+        ///     b) missing parameters
+        /// warns if:
+        ///     there are parameters marked as bean references
+        ///     for constructors that aren't marked
+        /// </summary>
+        /// <param name="declaringBeanType">whose constructor are we talking about</param>
+        /// <param name="constructorName">which of a number of competing construcors are we talking about</param>
+        /// <param name="diagnostics"></param>
+        /// <param name="beanReferenceDetails">context about the member referring to this bean+constructor</param>
         private void ValidateConstructors(Type declaringBeanType
           ,string constructorName, IOCCDiagnostics diagnostics
           ,BeanReferenceDetails beanReferenceDetails)

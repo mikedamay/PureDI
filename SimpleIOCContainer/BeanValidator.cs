@@ -9,6 +9,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public void ValidateAssemblies(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
+            DetectUnreachableMembers(assemblies, diagnostics);
+            DetectUnreachableConstructors(assemblies, diagnostics);
+        }
+
+        public void DetectUnreachableMembers(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        {
             var typesAndMembers = assemblies.SelectMany(a =>
               a.GetTypes().SelectMany(
               t => t.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
@@ -24,6 +30,25 @@ namespace com.TheDisappointedProgrammer.IOCC
                 diag.Type = typeAndMember.type;
                 diag.MemberName = typeAndMember.member.Name;
                 diag.MemberType = typeAndMember.member.GetPropertyOrFieldType();
+                group.Add(diag);
+            }
+        }
+
+        public void DetectUnreachableConstructors(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        {
+            var typesAndConstructors = assemblies.SelectMany(a =>
+                a.GetTypes().SelectMany(
+                    t => t.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+                        .Select(c => new { type = t, constructor = c })));
+            var nonBeanAndConstructors =
+                typesAndConstructors.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanAttribute>().Any());
+            var nonBeanTypesWithBeanConstructors =
+                nonBeanAndConstructors.Where(tm => tm.constructor.GetCustomAttributes<ConstructorAttribute>().Any());
+            IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableConstructor"];
+            foreach (var typeAndMember in nonBeanTypesWithBeanConstructors)
+            {
+                dynamic diag = group.CreateDiagnostic();
+                diag.Type = typeAndMember.type;
                 group.Add(diag);
             }
         }
