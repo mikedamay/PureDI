@@ -31,7 +31,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE unit test to validate XML - Done
     // N/A run code analysis - doesn't seem to do anything
     // DONE make Diagnostics constructor private
-    // TODO improve names of queries assigned from complex linq structures
+    // DONE improve names of queries assigned from complex linq structures
     // N/A use immutable collections - I don't think they do anything for us at any level
     // DONE license
     // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
@@ -39,7 +39,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
-    // TODO suppress code analysis messages
+    // N/A suppress code analysis messages - doesn't seem to work
     // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document / investigate other classes derived from ValueType
     // TODo ensure there is a test that uses an object multiple times in the tree.
@@ -56,8 +56,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO the explanation is expanded to include that.
     // DONE remove 2-way enumerator
     // TODO Perf
-    // TODO Test with nullables
-    // TODO make SimpleIOCContainer instance a bean by default.
+    // DONE Test with nullables
+    // DONE make SimpleIOCContainer instance a bean by default.
     // DONE generics for factories
     // DONE decide if scope on factory reference refers to factory or reference to be created
     // DONE it makes no sense for the created object as the scope is under the control of the factory
@@ -66,7 +66,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test with no namespace
     // DONE change name to SimpleIOCContainer from SimpleIOCContainer
     // TODO optimised build
-    // TODO guard against static constructors
+    // DONE guard against static constructors
     // DONE automatically add SimpleIOCContainer to the list of assemblies
     // DONE write out the diagnostic schema from resource before validation test
     // TODO document that IFactory is ignored as an interface.  Workaround to create intermediate

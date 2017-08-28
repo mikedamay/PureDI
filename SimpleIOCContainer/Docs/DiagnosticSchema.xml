@@ -56,7 +56,7 @@
     <causeCode>MissingNoArgConstructor</causeCode>
     <severity>Warning</severity>
     <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
-    <userGuide>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a constructor
+    <userGuide>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a non-static constructor
       which takes no arguments.</userGuide>
     <template>{Class} needs a no-arg constructor</template>
     <artefacts>

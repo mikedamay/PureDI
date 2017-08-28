@@ -22,7 +22,9 @@
     <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
+    <Compile Remove="DifficultTypeTestData\Nullable.cs" />
     <Compile Remove="DifficultTypeTestData\StaticClass.cs" />
+    <Compile Remove="DifficultTypeTestData\StaticConstructor.cs" />
     <Compile Remove="DifficultTypeTestData\Tuple.cs" />
     <Compile Remove="DifficultTypeTestData\Unreachable.cs" />
     <Compile Remove="EntryPointTestData\RootInterface.cs" />
@@ -82,7 +84,9 @@
     <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\Nullable.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\StaticClass.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\StaticConstructor.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />

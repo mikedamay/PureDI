@@ -128,6 +128,22 @@ namespace IOCCTest
                 Assert.Fail();
             }
         }
+        [TestMethod]
+        public void ShouldWarnOfNullable()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "Nullable");
+            Assert.IsTrue(diagnostics.HasWarnings);
+        }
 
+        [TestMethod]
+        public void ShouldWarnOfStaticConstructor()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "StaticConstructor");
+            Assert.IsTrue(diagnostics.HasWarnings);
+            Assert.AreEqual(1, diagnostics.Groups["MissingNoArgConstructor"].Occurrences.Count);
+            
+        }
     }
 }
