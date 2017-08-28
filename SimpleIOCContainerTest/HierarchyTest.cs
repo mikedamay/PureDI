@@ -68,7 +68,7 @@ namespace IOCCTest
         {
             WithNames.CyclicalDependency cd 
               = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.CyclicalDependency>(out IOCCDiagnostics diags, SimpleIOCContainer.DEFAULT_PROFILE, "name-A");
+                    WithNames.CyclicalDependency>(out IOCCDiagnostics diags, rootBeanName: "name-A");
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);

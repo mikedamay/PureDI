@@ -14,7 +14,7 @@ namespace SimpleIOCCDemo
 			}
 			else
 			{
-				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(beanName : "usage");
+				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(beanName: "usage");
 			}
 			
 		}

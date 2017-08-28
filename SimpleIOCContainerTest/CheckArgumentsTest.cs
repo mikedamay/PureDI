@@ -26,8 +26,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags
-                        , SimpleIOCContainer.DEFAULT_PROFILE, null);
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags, rootBeanName: null);
                 });
 
         }
@@ -39,8 +38,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags
-                        , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.DEFAULT_BEAN_NAME, null
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags, rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -53,8 +51,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(
-                        SimpleIOCContainer.DEFAULT_PROFILE, null);
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(beanName: null);
                 });
 
         }
@@ -66,8 +63,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(
-                        SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.DEFAULT_BEAN_NAME, null
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(beanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -92,8 +88,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags
-                        , SimpleIOCContainer.DEFAULT_PROFILE, null);
+                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags, rootBeanName: null);
                 });
 
         }
@@ -105,8 +100,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags
-                        , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.DEFAULT_BEAN_NAME, null
+                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags, rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
