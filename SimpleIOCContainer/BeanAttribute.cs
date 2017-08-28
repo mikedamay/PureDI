@@ -9,8 +9,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public class BeanAttribute : Attribute
     {
-        public string Name = "";
-        public string Profile = "";
+        public string Name = SimpleIOCContainer.DEFAULT_BEAN_NAME;
+        public string Profile = SimpleIOCContainer.DEFAULT_PROFILE_ARG;
         public SimpleIOCContainer.OS OS = SimpleIOCContainer.OS.Any;
     }
 

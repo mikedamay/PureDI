@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 //using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using static com.TheDisappointedProgrammer.IOCC.Common;
 
@@ -79,10 +81,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO built-in factories for environement variables, command line arguments, config files
     // TODO change FactoryParam to an object
     // TODO make bean names and profiles case insensitive
-    // TODO test with private classes
-    // TODO test with attributes as beans
+    // DONE test with private classes
+    // DONE test with attributes as beans - nothing special
     // DONE test passing an interface as root type
-    // TODO test with multiple attributes
+    // DONE test with multiple attributes
     /// <summary>
     /// 
     /// </summary>
@@ -102,13 +104,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///        Of course classes referenced by factories don't have to be beans.
     ///     7) readonly properties cannot have their value set by injection.  A constructor
     ///        or field must be involved.  - we could make our own constructor
+    ///     8) Note that beans are not available within constructors
     /// </remarks>
     [Bean]
     public class SimpleIOCContainer
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
         public static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
-        internal const string DEFAULT_PROFILE = "";
+        internal const string[] DEFAULT_PROFILE = null;
+        internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
 
@@ -174,13 +178,14 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// top of the tree - as instantiated by rootType
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
-        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string[] profile = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
-            CheckArgument(profile);
+            //CheckArgument(profile);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
-            (typeMap, diagnostics) = CreateTypeMap(typeof(TRootType), profile);
-            return (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profile, rootBeanName, rootConstructorName, scope);
+            ISet<string> profileSet;
+            (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType), profile ?? new string[0]);
+            return (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profileSet, rootBeanName, rootConstructorName, scope);
         }
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window
@@ -195,18 +200,19 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an ojbect of root type</returns>
-        public TRootType CreateAndInjectDependencies<TRootType>(string profile = DEFAULT_PROFILE
+        public TRootType CreateAndInjectDependencies<TRootType>(string[] profile = null
            , string beanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
-            CheckArgument(profile);
+            //CheckArgument(profile);
             CheckArgument(beanName);
             CheckArgument(rootConstructorName);
+            ISet<string> profileSet;
             IOCCDiagnostics diagnostics = null;
             TRootType rootObject = default(TRootType);
             try
             {
-                (typeMap, diagnostics) = CreateTypeMap(typeof(TRootType), profile);
-                rootObject = (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profile, beanName, rootConstructorName, scope);
+                (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType), profile ?? new string[0]);
+                rootObject = (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profileSet, beanName, rootConstructorName, scope);
             }
             finally
             {
@@ -237,15 +243,16 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// honour the Scope property of [IOCCBeanReference]</param>
         /// <returns></returns>
         public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics
-          ,string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
+          ,string[] profile = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
           , BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
-            CheckArgument(profile);
+            //CheckArgument(profile);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
             IDictionary<(Type beanType, string beanName), Type> typeMap;
-            (typeMap, diagnostics) = CreateTypeMap(this.GetType(), profile);
+            ISet<string> profileSet;
+            (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType(), profile ?? new string[0]);
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
@@ -253,7 +260,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
             return CreateAndInjectDependenciesExCommon(rootType
-                ,diagnostics, profile, rootBeanName
+                ,diagnostics, profileSet, rootBeanName
                 ,rootConstructorName, scope);
         }
 
@@ -268,18 +275,19 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
         private object CreateAndInjectDependenciesExCommon(Type rootType
-          , IOCCDiagnostics diagnostics, string profile, string rootBeanName
+          , IOCCDiagnostics diagnostics, ISet<string> profileSet, string rootBeanName
           , string rootConstructorName, BeanScope scope)
         {
             CreateAndInjectDependenciesCalled = true;
             ObjectTreeContainer container;
-            if (mapObjectTreeContainers.ContainsKey(profile))
+            string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
+            if (mapObjectTreeContainers.ContainsKey(profileSetKey))
             {
-                container = mapObjectTreeContainers[profile];
+                container = mapObjectTreeContainers[profileSetKey];
             }
             else
             {
-                container = new ObjectTreeContainer(profile, typeMap);
+                container = new ObjectTreeContainer(profileSetKey, typeMap);
             }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             var rootObject = container.CreateAndInjectDependencies(rootType, diagnostics, rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
@@ -291,9 +299,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             return rootObject;
         }
 
-        private (IDictionary<(Type beanType, string beanName), Type>, IOCCDiagnostics diagnostics)
-          CreateTypeMap(Type rootType, string profile)
+        private (IDictionary<(Type beanType, string beanName), Type>, IOCCDiagnostics diagnostics, ISet<string> profileSet)
+          CreateTypeMap(Type rootType, string[] profile)
         {
+            Assert(profile != null);
+            HashSet<string> profileSet = new HashSet<string>(profile, new CaseInsensitiveEqualityComparer());
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             if (!excludeRootAssembly)
             {
@@ -307,9 +317,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             if (typeMap == null)
             {
                 typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
-                    , ref diagnostics, profile, os);
+                    , ref diagnostics, profileSet, os);
             }
-            return (typeMap, diagnostics);
+            return (typeMap, diagnostics, profileSet);
         }
 
         /// <summary>
@@ -343,7 +353,21 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-    }       // SimpleIOCContainer
+    }
+
+    internal class CaseInsensitiveEqualityComparer : IEqualityComparer<string>
+    {
+        public bool Equals(string x, string y)
+        {
+            return x.ToLower() == y.ToLower();
+        }
+
+        public int GetHashCode(string obj)
+        {
+            return obj.ToLower().GetHashCode();
+        }
+    }
+// SimpleIOCContainer
 
     public enum BeanScope { Singleton, Prototype}
 

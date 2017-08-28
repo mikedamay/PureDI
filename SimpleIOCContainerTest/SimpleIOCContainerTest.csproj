@@ -23,6 +23,7 @@
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
     <Compile Remove="DifficultTypeTestData\Nullable.cs" />
+    <Compile Remove="DifficultTypeTestData\PrivateClass.cs" />
     <Compile Remove="DifficultTypeTestData\StaticClass.cs" />
     <Compile Remove="DifficultTypeTestData\StaticConstructor.cs" />
     <Compile Remove="DifficultTypeTestData\Tuple.cs" />
@@ -41,6 +42,8 @@
     <Compile Remove="NoNamespaceData\NoNamespace.cs" />
     <Compile Remove="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
     <Compile Remove="NoNamespaceData\ReferenceToNamespacedClass.cs" />
+    <Compile Remove="ProfileTestData\ComplexProfile.cs" />
+    <Compile Remove="ProfileTestData\SimpleProfile.cs" />
     <Compile Remove="ScopeTestData\FactoryPrototype.cs" />
     <Compile Remove="ScopeTestData\ProtoTypesWithSingletons.cs" />
     <Compile Remove="ScopeTestData\RootProtoType.cs" />
@@ -85,9 +88,12 @@
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Nullable.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\PrivateClass.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\StaticClass.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\StaticConstructor.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
+    <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
+    <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />
     <EmbeddedResource Include="ValidatorTestData\MultipleAttributes.cs" />

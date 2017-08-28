@@ -20,18 +20,6 @@ namespace IOCCTest
         }
 
         [TestMethod]
-        public void ShouldThrowExceptionForNullProfile()
-        {
-            Assert.ThrowsException<ArgumentNullException>(
-                () =>
-                {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags, null);
-                });
-
-        }
-
-        [TestMethod]
         public void ShouldThrowExceptionForNullBeanName()
         {
             Assert.ThrowsException<ArgumentNullException>(
@@ -54,18 +42,6 @@ namespace IOCCTest
                     sic.CreateAndInjectDependencies<CheckArgumentsTest>(out var diags
                         , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.DEFAULT_BEAN_NAME, null
                     );
-                });
-
-        }
-
-        [TestMethod]
-        public void ShouldThrowExceptionForNullProfile2()
-        {
-            Assert.ThrowsException<ArgumentNullException>(
-                () =>
-                {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(null);
                 });
 
         }
@@ -105,18 +81,6 @@ namespace IOCCTest
                 {
                     var sic = new SimpleIOCContainer();
                     sic.CreateAndInjectDependencies(null, out var diags);
-                });
-
-        }
-
-        [TestMethod]
-        public void ShouldThrowExceptionForNullProfile3()
-        {
-            Assert.ThrowsException<ArgumentNullException>(
-                () =>
-                {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags, null);
                 });
 
         }

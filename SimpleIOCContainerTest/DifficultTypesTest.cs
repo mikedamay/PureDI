@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC;
+using IOCCTest.DifficultTypeTestData;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;
@@ -144,6 +145,24 @@ namespace IOCCTest
             Assert.IsTrue(diagnostics.HasWarnings);
             Assert.AreEqual(1, diagnostics.Groups["MissingNoArgConstructor"].Occurrences.Count);
             
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForPrivateClass()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "PrivateClass");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.IsNotNull(result.GetResults().Inner);
+
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForAttributeBean()
+        {
+            // couldn't create assembly for this
+            var result = new SimpleIOCContainer()
+              .CreateAndInjectDependencies<AttributeAsBean>(
+              out var diagnostics) as IResultGetter;
+            Assert.IsNull( result.GetResults().SomeOtherValue);
         }
     }
 }

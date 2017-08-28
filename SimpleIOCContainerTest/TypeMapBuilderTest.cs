@@ -121,7 +121,7 @@ namespace IOCCTest
                 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), SimpleIOCContainer.OS.Any);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(2, diagnostics.Groups["InvalidBean"].Occurrences.Count)
                 , diagnostics.Groups["InvalidBean"].Occurrences.Count);
 
@@ -137,7 +137,8 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.CheckProfileAndOs8", ""),"IOCCTest.TestData.CheckProfileAndOs8"}
                 ,{("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
-            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected, "someProfile", SimpleIOCContainer.OS.Windows);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected
+              , new HashSet<string> { "someProfile" }, SimpleIOCContainer.OS.Windows);
         }
         [TestMethod]
         public void ShouldIgnoreNamedProfileAndOsWhenNoParamsPassed()
@@ -147,7 +148,7 @@ namespace IOCCTest
                 {("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected
-              , SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+              , new HashSet<string>(), SimpleIOCContainer.OS.Any);
         }
         [TestMethod]
         public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
@@ -172,7 +173,7 @@ namespace IOCCTest
 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), SimpleIOCContainer.OS.Any);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(4, map.Keys.Count), map.Keys.Count);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(1, diagnostics.Groups["DuplicateBean"].Occurrences.Count)
                 , diagnostics.Groups["DuplicateBean"].Occurrences.Count);
@@ -206,7 +207,7 @@ namespace IOCCTest
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assemblyInterface, assemblyImplementation }
-              , ref diagnostics, SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+              , ref diagnostics, new HashSet<string>(), SimpleIOCContainer.OS.Any);
             Assert.AreEqual(3, map.Keys.Count);
         }
 #endif
@@ -242,13 +243,13 @@ namespace IOCCTest
                 Assembly assembly = Utils.CreateAssembly(resourceName);
                 IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
                 var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                    new List<Assembly>() {assembly}, ref diagnostics, profile, os);
+                    new List<Assembly>() {assembly}, ref diagnostics, new HashSet<string>(), os);
                 string str = map.OutputToString();
                 System.Diagnostics.Debug.WriteLine(str);
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE, SimpleIOCContainer.OS.Any);
+            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE_ARG, SimpleIOCContainer.OS.Any);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace IOCCTest
 #endif
         public static void CommonTypeMapTest(string resourceName
           , IDictionary<(string, string), string> mapExpected
-          , string profile = SimpleIOCContainer.DEFAULT_PROFILE
+          , ISet<string> profile = null
           , SimpleIOCContainer.OS os = SimpleIOCContainer.OS.Any)
         {
             Assembly assembly = Utils.CreateAssembly(resourceName);
