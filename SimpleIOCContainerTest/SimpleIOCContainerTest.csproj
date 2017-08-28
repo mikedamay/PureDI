@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!--<TargetFramework>net47</TargetFramework>-->
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
+    <!--<TargetFramework>netcoreapp2.0</TargetFramework>-->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   
@@ -22,7 +22,10 @@
     <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
+    <Compile Remove="DifficultTypeTestData\StaticClass.cs" />
     <Compile Remove="DifficultTypeTestData\Tuple.cs" />
+    <Compile Remove="DifficultTypeTestData\Unreachable.cs" />
+    <Compile Remove="EntryPointTestData\RootInterface.cs" />
     <Compile Remove="FactoryTestData\AccessByString.cs" />
     <Compile Remove="FactoryTestData\BadFactory.cs" />
     <Compile Remove="FactoryTestData\FactoryDependencies.cs" />
@@ -56,6 +59,9 @@
     <Compile Remove="TestData\SingleImplementation.cs" />
     <Compile Remove="TestData\StructDependency.cs" />
     <Compile Remove="TestData\TreeWithFields.cs" />
+    <Compile Remove="ValidatorTestData\MultipleAttributes.cs" />
+    <Compile Remove="ValidatorTestData\NonBeanNonStatic.cs" />
+    <Compile Remove="ValidatorTestData\Unreachable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
@@ -74,7 +80,12 @@
     <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\StaticClass.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
+    <EmbeddedResource Include="ValidatorTestData\MultipleAttributes.cs" />
+    <EmbeddedResource Include="ValidatorTestData\NonBeanNonStatic.cs" />
+    <EmbeddedResource Include="ValidatorTestData\Unreachable.cs" />
+    <EmbeddedResource Include="EntryPointTestData\RootInterface.cs" />
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />

@@ -68,11 +68,12 @@ namespace IOCCTest
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
                 dynamic diag = diags.Groups["InvalidBean"].CreateDiagnostic();
-                diag.AbstractClass = "testBaseClassType";
+                diag.AbstractOrStaticClass = "testBaseClassType";
+                diag.ClassMode = "MyClassMode";
                 diags.Groups["InvalidBean"].Add(diag);
             }
             Assert.AreEqual("testBaseClassType"
-                , ((dynamic)diags.Groups["InvalidBean"].Occurrences[0]).AbstractClass);
+                , ((dynamic)diags.Groups["InvalidBean"].Occurrences[0]).AbstractOrStaticClass);
         }
         [TestMethod]
         public void ShouldReturnSubstitutionsInString()
@@ -86,7 +87,8 @@ namespace IOCCTest
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
                 dynamic diag = diags.Groups["InvalidBean"].CreateDiagnostic();
-                diag.AbstractClass = "testBaseClassType";
+                diag.AbstractOrStaticClass = "testBaseClassType";
+                diag.ClassMode = "MyClassMode";
                 diags.Groups["InvalidBean"].Add(diag);
             }
             string str = diags.ToString();

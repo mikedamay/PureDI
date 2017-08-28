@@ -8,8 +8,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
     {
         public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
         {
-            Common.Assert( memberInfo is FieldInfo || memberInfo is PropertyInfo);
+            Common.Assert(memberInfo is FieldInfo || memberInfo is PropertyInfo);
             return (memberInfo as FieldInfo)?.FieldType ?? (memberInfo as PropertyInfo).PropertyType;
+        }
+        public static bool IsPropertyOrField(this MemberInfo memberInfo)
+        {
+            return memberInfo is FieldInfo || memberInfo is PropertyInfo;
         }
 
         public static void SetValue(this MemberInfo memberInfo, object bean, object memberBean)

@@ -35,11 +35,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                         // should be hidden, so we ignore it
                         continue;
                     }
-                    if (beanImplementation.IsAbstract)
+                    if (beanImplementation.IsAbstract && beanImplementation.IsSealed)
                     {
                         IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
-                        diag.AbstractClass = beanImplementation.GetIOCCName();
+                        diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
+                        diag.ClassMode = "static";
+                        group.Add(diag);
+                    }
+                    else if (beanImplementation.IsAbstract)
+                    {
+                        IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
+                        dynamic diag = group.CreateDiagnostic();
+                        diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
+                        diag.ClassMode = "abstract";
                         group.Add(diag);
                     }
                     else

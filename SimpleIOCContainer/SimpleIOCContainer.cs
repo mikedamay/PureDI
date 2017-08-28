@@ -27,15 +27,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE handle or document generic classes
     // DONE handle dynamic types
     // DONE change "dependency" to "bean"
-    // TODO check arguments' validity for externally facing methods
+    // DONE check arguments' validity for externally facing methods
     // DONE unit test to validate XML - Done
-    // TODO run code analysis
+    // N/A run code analysis - doesn't seem to do anything
     // DONE make Diagnostics constructor private
     // TODO improve names of queries assigned from complex linq structures
     // N/A use immutable collections - I don't think they do anything for us at any level
     // DONE license
     // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
-    // TODO address static fields and beans.  Beans are invalid or maybe not
+    // DONE address static fields and beans.  Beans are invalid
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
@@ -81,7 +81,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO make bean names and profiles case insensitive
     // TODO test with private classes
     // TODO test with attributes as beans
-    // TODO test passing an interface as root type
+    // DONE test passing an interface as root type
+    // TODO test with multiple attributes
     /// <summary>
     /// 
     /// </summary>
@@ -159,6 +160,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <example>SetAssemblies("MyApp", "MyLib")</example>
         public void SetAssemblies(params string[] assemblyNames)
         {
+            CheckArgument(assemblyNames);
             if (CreateAndInjectDependenciesCalled)
             {
                 throw new InvalidOperationException(
@@ -167,12 +169,16 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             this.assemblyNames = assemblyNames.ToList();
         }
+
         /// <param name="scope">scope refers to the scope of the root bean i.e. the
         /// top of the tree - as instantiated by rootType
         /// It does not affect the rest of the tree.  The other nodes on the tree will
         /// honour the Scope property of [IOCCBeanReference]</param>
         public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
+            CheckArgument(profile);
+            CheckArgument(rootBeanName);
+            CheckArgument(rootConstructorName);
             (typeMap, diagnostics) = CreateTypeMap(typeof(TRootType), profile);
             return (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profile, rootBeanName, rootConstructorName, scope);
         }
@@ -192,6 +198,9 @@ namespace com.TheDisappointedProgrammer.IOCC
         public TRootType CreateAndInjectDependencies<TRootType>(string profile = DEFAULT_PROFILE
            , string beanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
+            CheckArgument(profile);
+            CheckArgument(beanName);
+            CheckArgument(rootConstructorName);
             IOCCDiagnostics diagnostics = null;
             TRootType rootObject = default(TRootType);
             try
@@ -231,6 +240,10 @@ namespace com.TheDisappointedProgrammer.IOCC
           ,string profile = DEFAULT_PROFILE, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
           , BeanScope scope = BeanScope.Singleton)
         {
+            CheckArgument(rootTypeName);
+            CheckArgument(profile);
+            CheckArgument(rootBeanName);
+            CheckArgument(rootConstructorName);
             IDictionary<(Type beanType, string beanName), Type> typeMap;
             (typeMap, diagnostics) = CreateTypeMap(this.GetType(), profile);
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
@@ -274,7 +287,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
             }
-            Assert(rootObject.GetType() == rootType);
+            Assert(rootType.IsAssignableFrom(rootObject.GetType()));
             return rootObject;
         }
 
@@ -290,6 +303,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
+            new BeanValidator().ValidateAssemblies(assemblies, diagnostics);
             if (typeMap == null)
             {
                 typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
@@ -321,6 +335,14 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             return typeFullName == IOCCUserEnteredName;
         }
+        private void CheckArgument(object o)
+        {
+            if (o == null)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
     }       // SimpleIOCContainer
 
     public enum BeanScope { Singleton, Prototype}

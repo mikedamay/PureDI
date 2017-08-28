@@ -24,18 +24,19 @@
   <group>
     <causeCode>InvalidBean</causeCode>
     <severity>Warning</severity>
-    <intro>A piece of code has been marked as a bean (with 
+    <intro>A class has been marked as a bean (with 
       the "Bean" attribute) which is not capable of being 
-      a bean.  The only types that can be beans are concrete classes.</intro>
-    <userGuide>Typically this problem occurs with abstract 
+      a bean.  The only types that can be beans are concrete non-static classes.</intro>
+    <userGuide>Typically this problem occurs with abstract and static
       classes.  Note that although the bean reference 
       where the injection takes place may be specified as a base
       class or interface, the "Bean" attribute should be applied 
       only to the concrete implementation, not to a parent 
       or interface</userGuide>
-    <template>{AbstractClass} is an abstract class</template>
+    <template>{AbstractOrStaticClass} is {ClassMode}</template>
     <artefacts>
-      <AbstractClass/>
+      <AbstractOrStaticClass/>
+      <ClassMode/>
     </artefacts>
   </group>  
   <group>
@@ -247,6 +248,18 @@
     <template>{Bean} has a cyclical dependency</template>
     <artefacts>
       <Bean/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>UnreachableReference</causeCode>
+    <severity>Warning</severity>
+    <intro>A bean reference exists in a context where a bean cannot be injected</intro>
+    <userGuide>All members for which beans can be injected must exist within classes validly marked as [bean]s.</userGuide>
+    <template>{Type} has an unreachable member {MemberType} {MemberName}</template>
+    <artefacts>
+      <Type/>
+      <MemberType/>
+      <MemberName/>
     </artefacts>
   </group>
 </diagnosticSchema>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -105,5 +107,27 @@ namespace IOCCTest
             dynamic diag1 = diagnostics.Groups["MissingBean"].Occurrences[1];
             Assert.AreEqual("someObject", diag1.MemberName);
         }
+
+        [TestMethod]
+        public void ShouldWarnIfRootIsStatic()
+        {
+            try
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    "DifficultTypeTestData", "StaticClass");
+                System.Diagnostics.Debug.WriteLine(diagnostics);
+                Assert.Fail();
+            }
+            catch (IOCCException iex)
+            {
+                System.Diagnostics.Debug.WriteLine(iex.Diagnostics);
+                Assert.IsTrue(iex.Diagnostics.HasWarnings);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
     }
 }
