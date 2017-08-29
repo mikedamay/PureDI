@@ -272,4 +272,14 @@
       <Type/>
     </artefacts>
   </group>
+  <group>
+    <causeCode>NonBeanFactory</causeCode>
+    <severity>Warning</severity>
+    <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
+    <userGuide>Factories must implement IFactory and be marked with the [Bean] attribute.</userGuide>
+    <template>{Type} implements IFactory but is not a bean</template>
+    <artefacts>
+      <Type/>
+    </artefacts>
+  </group>
 </diagnosticSchema>

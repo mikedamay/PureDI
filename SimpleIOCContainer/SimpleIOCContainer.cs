@@ -67,15 +67,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE allow root type a prototype
     // DONE test with no namespace
     // DONE change name to SimpleIOCContainer from SimpleIOCContainer
-    // TODO optimised build
+    // N/A optimised build - there doesn't seem to be any optimisation tuning
     // DONE guard against static constructors
     // DONE automatically add SimpleIOCContainer to the list of assemblies
     // DONE write out the diagnostic schema from resource before validation test
-    // TODO document that IFactory is ignored as an interface.  Workaround to create intermediate
-    // TODO this is the first gotcha
+    // DONE document that IFactory is ignored as an interface.  Workaround to create intermediate
+    // DONE this is the first gotcha
     // DONE name and profile get mixed up - maybe a profile set will help - second gotcha
-    // TODO warn of factories that do not have IFactory as interface
-    // TODO warn of factories that do not have [Bean] attribute
+    // DONE warn of factories that do not have IFactory as interface
+    // DONE warn of factories that do not have [Bean] attribute
     // TODO make our own constructor to handle readonly properties
     // TODO testing in untrusted environments
     // TODO built-in factories for environement variables, command line arguments, config files
@@ -85,6 +85,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test with attributes as beans - nothing special
     // DONE test passing an interface as root type
     // DONE test with multiple attributes
+    // TODO inherited attributes
     /// <summary>
     /// 
     /// </summary>
@@ -106,6 +107,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///        or field must be involved.  - we could make our own constructor
     ///     8) Note that beans are not available within constructors
     ///     7) bean names, constructor names and profiles are case insensitive
+    ///     8) IFactory is ignored in resolving a bean reference - gotcha
     /// </remarks>
     [Bean]
     public class SimpleIOCContainer

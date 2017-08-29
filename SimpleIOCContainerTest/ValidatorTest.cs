@@ -49,6 +49,24 @@ namespace IOCCTest
             new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(2, diags.Groups["UnreachableConstructor"].Occurrences.Count);
         }
+        [TestMethod]
+        public void ShouldWarnOFNonBeanFactory()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.NonBeanFactory.cs");
+            var diags = new DiagnosticBuilder().Diagnostics;
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
+            Assert.AreEqual(1, diags.Groups["NonBeanFactory"].Occurrences.Count);
+            System.Diagnostics.Debug.WriteLine(diags);
+        }
+        [TestMethod]
+        public void ShouldWarnOFComplexNonBeanFactory()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.ComplexNonBeanFactory.cs");
+            var diags = new DiagnosticBuilder().Diagnostics;
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
+            Assert.AreEqual(3, diags.Groups["NonBeanFactory"].Occurrences.Count);
+            System.Diagnostics.Debug.WriteLine(diags);
+        }
 
     }
 }

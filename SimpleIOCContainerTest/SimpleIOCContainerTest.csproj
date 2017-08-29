@@ -64,9 +64,11 @@
     <Compile Remove="TestData\SingleImplementation.cs" />
     <Compile Remove="TestData\StructDependency.cs" />
     <Compile Remove="TestData\TreeWithFields.cs" />
+    <Compile Remove="ValidatorTestData\ComplexNonBeanFactory.cs" />
     <Compile Remove="ValidatorTestData\Constructors.cs" />
     <Compile Remove="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />
     <Compile Remove="ValidatorTestData\MultipleAttributes.cs" />
+    <Compile Remove="ValidatorTestData\NonBeanFactory.cs" />
     <Compile Remove="ValidatorTestData\NonBeanNonStatic.cs" />
     <Compile Remove="ValidatorTestData\Unreachable.cs" />
   </ItemGroup>
@@ -94,9 +96,11 @@
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
+    <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />
     <EmbeddedResource Include="ValidatorTestData\MultipleAttributes.cs" />
+    <EmbeddedResource Include="ValidatorTestData\NonBeanFactory.cs" />
     <EmbeddedResource Include="ValidatorTestData\NonBeanNonStatic.cs" />
     <EmbeddedResource Include="ValidatorTestData\Unreachable.cs" />
     <EmbeddedResource Include="EntryPointTestData\RootInterface.cs" />

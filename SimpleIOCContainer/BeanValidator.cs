@@ -11,6 +11,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             DetectUnreachableMembers(assemblies, diagnostics);
             DetectUnreachableConstructors(assemblies, diagnostics);
+            DetectNonBeanWithFactoryInterface(assemblies, diagnostics);
         }
 
         public void DetectUnreachableMembers(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
@@ -52,5 +53,22 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
+        private void DetectNonBeanWithFactoryInterface(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        {
+            var classesWithFactoryInterface
+                = assemblies.SelectMany(a => a.GetTypes())
+                    .Where(t => t.GetInterfaces()
+                        .Any(i => i.FullName == typeof(IFactory).FullName));
+            var nonBeanFactories
+                = classesWithFactoryInterface.Where(c => !c.GetCustomAttributes<BeanAttribute>().Any());
+            IOCCDiagnostics.Group group = diagnostics.Groups["NonBeanFactory"];
+            foreach (var type in nonBeanFactories)
+            {
+                dynamic diag = group.CreateDiagnostic();
+                diag.Type = type.FullName;
+                group.Add(diag);
+            }
+        }
+
     }
 }
