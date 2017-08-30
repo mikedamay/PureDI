@@ -28,6 +28,8 @@
     <Compile Remove="DifficultTypeTestData\StaticConstructor.cs" />
     <Compile Remove="DifficultTypeTestData\Tuple.cs" />
     <Compile Remove="DifficultTypeTestData\Unreachable.cs" />
+    <Compile Remove="DuplicateTestData\Duplicate.cs" />
+    <Compile Remove="DuplicateTestData\Os.cs" />
     <Compile Remove="EntryPointTestData\RootInterface.cs" />
     <Compile Remove="FactoryTestData\AccessByString.cs" />
     <Compile Remove="FactoryTestData\BadFactory.cs" />
@@ -95,6 +97,8 @@
     <EmbeddedResource Include="DifficultTypeTestData\StaticClass.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\StaticConstructor.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
+    <EmbeddedResource Include="DuplicateTestData\Duplicate.cs" />
+    <EmbeddedResource Include="DuplicateTestData\Os.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />

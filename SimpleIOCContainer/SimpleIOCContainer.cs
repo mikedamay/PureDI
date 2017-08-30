@@ -137,9 +137,9 @@ namespace com.TheDisappointedProgrammer.IOCC
         private bool excludeRootAssembly;
         private IDictionary<(Type beanType, string beanName), Type> typeMap;
 
-        public SimpleIOCContainer( string[] profiles = null)
+        public SimpleIOCContainer( params string[] profiles)
         {
-            profileSet = new HashSet<string>(profiles ?? new string[0], new CaseInsensitiveEqualityComparer());
+            profileSet = new HashSet<string>(profiles.Length > 0 ? profiles : new string[0], new CaseInsensitiveEqualityComparer());
         }
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
