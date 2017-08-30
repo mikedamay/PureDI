@@ -25,7 +25,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE references to arrays
     // DONE use fully qualified type names in comparisons
     // N/A use immutable collections - they don't do much for us at any level
-    // TODO detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
+    // DONE detect duplicate type, name, profile, os combos (ensure any are compared to specific os and profile)
     // DONE handle or document generic classes
     // DONE handle dynamic types
     // DONE change "dependency" to "bean"
@@ -40,23 +40,28 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE address static fields and beans.  Beans are invalid
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
-    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
-    // N/A suppress code analysis messages - doesn't seem to work
-    // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document / investigate other classes derived from ValueType
-    // TODo ensure there is a test that uses an object multiple times in the tree.
+    // TODO testing in untrusted environments
+    // TODO built-in factories for environement variables, command line arguments, config files
+    //
+    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
+    // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document the fact that member type is based on the type's GetIOCCName() attribute
     // TODO and that generics have the for classname`1[TypeParam]
+    // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
     // DONE test generics with nested parameters
+    // TODo ensure there is a test that uses an object multiple times in the tree.
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
-    // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
-    // DONE Release Build
-    // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that
     // TODO the explanation is expanded to include that.
+    // TODO make our own constructor to handle readonly properties
+    // TODO inherited attributes
+    // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
+    // DONE Release Build
     // DONE remove 2-way enumerator
+    // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO Perf
     // DONE Test with nullables
     // DONE make SimpleIOCContainer instance a bean by default.
@@ -76,16 +81,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE name and profile get mixed up - maybe a profile set will help - second gotcha
     // DONE warn of factories that do not have IFactory as interface
     // DONE warn of factories that do not have [Bean] attribute
-    // TODO make our own constructor to handle readonly properties
-    // TODO testing in untrusted environments
-    // TODO built-in factories for environement variables, command line arguments, config files
     // DONE change FactoryParam to an object
     // DONE make bean names and profiles case insensitive
     // DONE test with private classes
     // DONE test with attributes as beans - nothing special
     // DONE test passing an interface as root type
     // DONE test with multiple attributes
-    // TODO inherited attributes
     /// <summary>
     /// 
     /// </summary>
