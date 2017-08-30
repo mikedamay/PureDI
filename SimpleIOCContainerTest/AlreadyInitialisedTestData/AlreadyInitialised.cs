@@ -1,5 +1,4 @@
-﻿using System.Drawing.Text;
-using System.Dynamic;
+﻿using System.Dynamic;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 
