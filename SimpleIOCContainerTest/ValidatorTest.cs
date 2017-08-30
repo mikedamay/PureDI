@@ -67,6 +67,15 @@ namespace IOCCTest
             Assert.AreEqual(3, diags.Groups["NonBeanFactory"].Occurrences.Count);
             System.Diagnostics.Debug.WriteLine(diags);
         }
+        [TestMethod]
+        public void ShouldWarnOFUnreachableStruct()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.UnreachableStruct.cs");
+            var diags = new DiagnosticBuilder().Diagnostics;
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
+            Assert.AreEqual(1, diags.Groups["UnreachableStruct"].Occurrences.Count);
+            System.Diagnostics.Debug.WriteLine(diags);
+        }
 
     }
 }

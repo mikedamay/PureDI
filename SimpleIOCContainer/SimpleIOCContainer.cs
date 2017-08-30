@@ -13,14 +13,14 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     // DONE constructor paramter injection
     // DONE prototypes
-    // TODO warning when a field or property has already been initialised
+    // DONE warning when a field or property has already been initialised
     // DONE guard against circular references - Done
     // DONE handle structs
     // DONE handle properties
     // DONE object factories
     // DONE handle multiple assemblies - Done
     // DONE references held in tuples
-    // TODO references held in embedded structs 
+    // DONE references held in embedded structs 
     // DONE references held as objects
     // DONE references to arrays
     // DONE use fully qualified type names in comparisons
@@ -51,7 +51,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test generics with multiple parameters
     // DONE test generics with nested parameters
     // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
-    // TODO Apply the SimpleIOCContainer to the Calculation Server and Maven docs
+    // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
     // DONE Release Build
     // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
     // TODO make sure that root failure when passing type string is handled via diagnostics and that

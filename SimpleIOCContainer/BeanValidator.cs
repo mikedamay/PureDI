@@ -12,6 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             DetectUnreachableMembers(assemblies, diagnostics);
             DetectUnreachableConstructors(assemblies, diagnostics);
             DetectNonBeanWithFactoryInterface(assemblies, diagnostics);
+            DetectUnreachableStructs(assemblies, diagnostics);
         }
 
         public void DetectUnreachableMembers(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
@@ -69,6 +70,26 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
+        private void DetectUnreachableStructs(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        {
+            var nonBeanStructMembers
+                = assemblies.SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers().Select(m => new {type = t, member = m}))
+                    .Where(tm => tm.member is FieldInfo || tm.member is PropertyInfo)
+                    .Where(tm => tm.member.GetPropertyOrFieldType().IsStruct())
+                    .Where(tm => !tm.member.GetCustomAttributes<BeanReferenceAttribute>().Any())
+                    .Select(tm => new {declaration = tm, structType = tm.member.GetPropertyOrFieldType()})
+                    .Where(ds => ds.structType.GetCustomAttributes<BeanAttribute>().Any());
+            IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableStruct"];
+            foreach (var ds in nonBeanStructMembers)
+            {
+                dynamic diag = group.CreateDiagnostic();
+                diag.DeclaringType = ds.declaration.type.FullName;
+                diag.MemberType = ds.structType.FullName;
+                diag.MemberName = ds.declaration.member.Name;
+                group.Add(diag);
+            }
+        }
+
 
     }
 }

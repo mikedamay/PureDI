@@ -71,6 +71,7 @@
     <Compile Remove="ValidatorTestData\NonBeanFactory.cs" />
     <Compile Remove="ValidatorTestData\NonBeanNonStatic.cs" />
     <Compile Remove="ValidatorTestData\Unreachable.cs" />
+    <Compile Remove="ValidatorTestData\UnreachableStruct.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
@@ -137,6 +138,7 @@
     <EmbeddedResource Include="TestData\SingleImplementation.cs" />
     <EmbeddedResource Include="TestData\StructDependency.cs" />
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
+    <EmbeddedResource Include="ValidatorTestData\UnreachableStruct.cs" />
   </ItemGroup>
   
   <ItemGroup>

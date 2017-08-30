@@ -282,4 +282,30 @@
       <Type/>
     </artefacts>
   </group>
+  <group>
+    <causeCode>AlreadyInitialised</causeCode>
+    <severity>Warning</severity>
+    <intro>A value is being injected into a member that has already been initialized</intro>
+    <userGuide>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
+      have occurred.  Any preceding initialisation will be obliterated by the injection</userGuide>
+    <template>The member, {Member}, of {DeclaringType} was already initialized with {ExistingValue}.  The
+      value, {ExistingValue}, has been overwritten</template>
+    <artefacts>
+      <DeclaringType/>
+      <Member/>
+      <ExistingValue/>
+    </artefacts>
+  </group>
+  <group>
+    <causeCode>UnreachableStruct</causeCode>
+    <severity>Warning</severity>
+    <intro>An embedded struct bean exists which will never be instantiated</intro>
+    <userGuide>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</userGuide>
+    <template>{DeclaringType} has an unreachable member struct {MemberType} {MemberName}</template>
+    <artefacts>
+      <DeclaringType/>
+      <MemberType/>
+      <MemberName/>
+    </artefacts>
+  </group>
 </diagnosticSchema>

@@ -230,18 +230,35 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             void AssignMembers(object declaringBean
                 , List<ChildBeanSpec> childrenArg)
             {
+                void AssignBean(ChildBeanSpec memberSpec, object memberBean)
+                {
+                    if (memberBean != null)
+                    {
+                        object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
+                        if (existingValue != null && existingValue.ToString() != "0")
+                        {
+                            RecordDiagnostic(diagnostics, "AlreadyInitialised"
+                                , ("DeclaringType", declaringBean.GetType().FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("ExistingValue", existingValue.ToString())
+                            );
+                        }
+                        memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+                    }
+                }
                 foreach (var memberSpec in childrenArg)
                 {
+                    object memberBean = null;
                     if (memberSpec.IsFactory)
                     {
                         try
                         {
                             IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
-                            object memberBean = factory.Execute(new BeanFactoryArgs(
+                            memberBean = factory.Execute(new BeanFactoryArgs(
                                 memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
                             CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers);
                             AssignMembers(memberBean, memberBeanMembers);
-                            memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+                            AssignBean(memberSpec, memberBean);
                         }
                         catch (ArgumentException ae)
                         {
@@ -263,13 +280,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                                 , ("Exception", ex));
                         }
                     }
-                    else
+                    else    // non-factory
                     {
-                        memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberSpec.MemberOrFactoryBean);
+                        memberBean = memberSpec.MemberOrFactoryBean;
+                        AssignBean(memberSpec, memberBean);
                     }
-
-                }
-            }
+                }       // foreach memberSpec
+            }           // AssignMembers()
 
 
             CycleGuard cycleGuard = creationContext.CycleGuard;
