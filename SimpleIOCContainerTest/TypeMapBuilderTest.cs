@@ -15,7 +15,9 @@ namespace IOCCTest
     [TestClass]
     public class TypeMapBuilderTest
     {
-#if !NETCOREAPP2_0
+#if NETCOREAPP2_0
+        [Microsoft.VisualStudio.TestTools.UnitTesting.Ignore]
+#endif
         [TestMethod]
         public void TestAssembly()
         {
@@ -42,7 +44,6 @@ namespace IOCCTest
             }
             Assert.IsNotNull(assembly);
         }
-#endif
         [TestMethod]
         public void ShouldCrewateTypeMapFromThisAssembly()
         {

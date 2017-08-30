@@ -25,7 +25,7 @@ namespace IOCCTest
                 Assert.IsNull(result?.GetResults().Child);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException iex)
+            catch (IOCCException)
             {
                 Assert.Fail();
             }
@@ -48,7 +48,7 @@ namespace IOCCTest
                 Assert.IsNull(result?.GetResults().ChildP4);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException iex)
+            catch (IOCCException)
             {
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.Fail();
@@ -80,7 +80,7 @@ namespace IOCCTest
                 Assert.IsNotNull(result2?.GetResults().ChildP4);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException iex)
+            catch (IOCCException)
             {
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.Fail();
