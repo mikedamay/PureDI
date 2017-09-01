@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -22,13 +23,17 @@ namespace IOCCTest.LoadTest
             var assembly = BuildAssembly();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.SetAssemblies(assembly.GetName().Name);
-            object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
+            for (int ii = 0; ii < 1000; ii++)
+            {
+                SimpleIOCContainer sic = new SimpleIOCContainer();
+                sic.SetAssemblies(assembly.GetName().Name);
+                object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
+                
+            }
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
-            System.Diagnostics.Debug.WriteLine(diagnostics);
-            Assert.IsNotNull(root);
+            //System.Diagnostics.Debug.WriteLine(diagnostics);
+            //Assert.IsNotNull(root);
         }
 
         private Assembly BuildAssembly()
@@ -47,7 +52,7 @@ namespace IOCCTest.LoadTest
             var ms = new MemoryStream();
             cmp.Emit(ms);
             Assembly assembly = Assembly.Load(ms.GetBuffer());
-            System.Diagnostics.Debug.WriteLine(tree);
+            //System.Diagnostics.Debug.WriteLine(tree);
             return assembly;
         }
 
@@ -142,14 +147,36 @@ namespace IOCCTest.LoadTest
         {
             List<ClassDeclarationSyntax> list = new List<ClassDeclarationSyntax>
             {
-                MakeClass("Level1", "Level2a", "Level2b"),
-                MakeClass("Level2a", "Level2a3a", "Level2a3b"),
-                MakeClass("Level2b", "Level2b3a", "Level2b3b"),
-                MakeLeafClass("Level2a3a"),
-                MakeLeafClass("Level2a3b"),
-                MakeLeafClass("Level2b3a"),
-                MakeLeafClass("Level2b3b")
+                MakeClass("Level1", "Level12a", "Level12b"),
+                //MakeClass("Level2a", "Level2a3a", "Level2a3b"),
+                //MakeClass("Level2b", "Level2b3a", "Level2b3b"),
+                //MakeLeafClass("Level2a3a"),
+                //MakeLeafClass("Level2a3b"),
+                //MakeLeafClass("Level2b3a"),
+                //MakeLeafClass("Level2b3b")
             };
+
+            void ExtendList(string classNameRoot, int level)
+            {
+                if (level == 6)
+                {
+                    string newRoot = $"{classNameRoot}{level}a";
+                    list.Add(MakeLeafClass(newRoot));
+                    newRoot = $"{classNameRoot}{level}b";
+                    list.Add(MakeLeafClass(newRoot));
+                }
+                else
+                {
+                    string newRoot = $"{classNameRoot}{level}a";
+                    list.Add(MakeClass(newRoot, $"{newRoot}{level + 1}a", $"{newRoot}{level + 1}b"));
+                    ExtendList(newRoot, level + 1);
+                    newRoot = $"{classNameRoot}{level}b";
+                    list.Add(MakeClass(newRoot, $"{newRoot}{level + 1}a", $"{newRoot}{level + 1}b"));
+                    ExtendList(newRoot, level + 1);
+                }
+            }
+
+            ExtendList("Level1", 2);
             return list;
 
         }
