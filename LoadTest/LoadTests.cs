@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using com.TheDisappointedProgrammer.IOCC;
@@ -11,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static System.Console;
+//using static System.Diagnostics.Debug;
 
 namespace IOCCTest.LoadTest
 {
@@ -21,57 +23,98 @@ namespace IOCCTest.LoadTest
             var assembly = BuildAssembly();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            for (int ii = 0; ii < 1; ii++)
-            {
-                SimpleIOCContainer sic = new SimpleIOCContainer();
-                sic.SetAssemblies(assembly.GetName().Name);
-                object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
-                
-            }
+            SimpleIOCContainer sic = new SimpleIOCContainer();
+            sic.SetAssemblies(assembly.GetName().Name);
+            object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
             sw.Stop();
             WriteLine(sw.Elapsed);
-            //WriteLine(diagnostics);
-            //Assert.IsNotNull(root);
+            WriteLine(diagnostics);
         }
 
         private Assembly BuildAssembly()
         {
-            var tree = MakeTree();
+            var tree = MakeTreeFull();
+            string codeText = tree.ToString();
+            codeText = @"
+using com.TheDisappointedProgrammer.IOCC;
+
+[Bean]
+public class Vanilla
+{
+}
+";
+            //tree = CSharpSyntaxTree.ParseText(codeText);
             //byte[] by = File.ReadAllBytes(@"c:\projects\SimpleIOCContainer\SimpleIOCContainerTest\Test1.cs");
             //string str = new String(Encoding.UTF8.GetChars(by));
             //tree = CSharpSyntaxTree.ParseText(str);
+            var refAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .Where(a => !string.IsNullOrWhiteSpace(a?.Location)).Select(
+                    a => MetadataReference.CreateFromFile(a.Location))
+                .ToArray();
             CSharpCompilation cmp = CSharpCompilation.Create(
-                    "LoadTest").AddReferences(new[]
-                {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(SimpleIOCContainer).Assembly.Location)
-                })
+                    "LoadTest").AddReferences(refAssemblies
+                //new[]
+                //{
+                //    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                //    MetadataReference.CreateFromFile(typeof(SimpleIOCContainer).Assembly.Location)
+                //}
+                )
                 .AddSyntaxTrees(tree).WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            var ms = new MemoryStream();
+            //WriteLine(tree);
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = new FileStream(Path.Combine(Environment.CurrentDirectory,"Vanilla.dll"), FileMode.Create);
             cmp.Emit(ms);
+            fs.Close();
+            fs.Dispose();
             Assembly assembly = Assembly.Load(ms.GetBuffer());
-            //System.Diagnostics.Debug.WriteLine(tree);
+            //Assembly assembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "Vanilla.dll"));
             return assembly;
         }
 
         private SyntaxTree MakeTree()
         {
             CompilationUnitSyntax cus = CompilationUnit()
-            .WithUsings(
-                SingletonList<UsingDirectiveSyntax>(
-                    UsingDirective(
-                        QualifiedName(
-                            QualifiedName(
-                                IdentifierName("com"),
-                                IdentifierName("TheDisappointedProgrammer")),
-                            IdentifierName("IOCC")))))
-            .WithMembers(
-                List<MemberDeclarationSyntax>( MakeClassList().ToArray()
+                    .WithUsings(
+                        SingletonList<UsingDirectiveSyntax>(
+                            UsingDirective(
+                                QualifiedName(
+                                    QualifiedName(
+                                        IdentifierName("com"),
+                                        IdentifierName("TheDisappointedProgrammer")),
+                                    IdentifierName("IOCC")))))
+                    .WithMembers(MakeVanillaWithBeanClass()
+                        //List<MemberDeclarationSyntax>(new MemberDeclarationSyntax[]
+                        //    {
+                        //        MakeClass("Level1", "Level2a", "Level2b")
+                        //        ,MakeLeafClass("Level2a")
+                        //        ,MakeLeafClass("Level2b")
+                        //    })
 
-                    //}
-        ))
-            .NormalizeWhitespace()
-            ;
+                        )
+                    .NormalizeWhitespace()
+                ;
+            SyntaxTree tree = CSharpSyntaxTree.Create(cus);
+            return tree;
+        }
+        private SyntaxTree MakeTreeFull()
+        {
+            CompilationUnitSyntax cus = CompilationUnit()
+                    .WithUsings(
+                        SingletonList<UsingDirectiveSyntax>(
+                            UsingDirective(
+                                QualifiedName(
+                                    QualifiedName(
+                                        IdentifierName("com"),
+                                        IdentifierName("TheDisappointedProgrammer")),
+                                    IdentifierName("IOCC")))))
+                    .WithMembers(
+                        List<MemberDeclarationSyntax>(MakeClassList().ToArray()
+
+                            //}
+                        ))
+                    .NormalizeWhitespace()
+                ;
             SyntaxTree tree = CSharpSyntaxTree.Create(cus);
             return tree;
         }
@@ -150,7 +193,7 @@ namespace IOCCTest.LoadTest
 
             void ExtendList(string classNameRoot, int level)
             {
-                if (level == 13)
+                if (level == 15)
                 {
                     string newRoot = $"{classNameRoot}{level}a";
                     list.Add(MakeLeafClass(newRoot));
@@ -171,6 +214,31 @@ namespace IOCCTest.LoadTest
             ExtendList("Level1", 2);
             return list;
 
+        }
+
+        private SyntaxList<MemberDeclarationSyntax> MakeVanillaClass()
+        {
+            return SingletonList<MemberDeclarationSyntax>(
+                ClassDeclaration("Vanilla")
+                    .WithModifiers(
+                        TokenList(
+                            Token(SyntaxKind.PublicKeyword))));
+        }
+        private SyntaxList<MemberDeclarationSyntax> MakeVanillaWithBeanClass()
+        {
+            return 
+                SingletonList<MemberDeclarationSyntax>(
+                ClassDeclaration("Vanilla")
+                    .WithModifiers(
+                        TokenList(
+                            Token(SyntaxKind.PublicKeyword)))
+                    .WithAttributeLists(
+                        SingletonList<AttributeListSyntax>(
+                            AttributeList(
+                                SingletonSeparatedList<AttributeSyntax>(
+                                    Attribute(
+                                        IdentifierName("Bean")))))))
+                            ;
         }
     }
 }
