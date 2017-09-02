@@ -33,46 +33,23 @@ namespace IOCCTest.LoadTest
 
         private Assembly BuildAssembly()
         {
-            var tree = MakeTreeFull();
-            string codeText = tree.ToString();
-            codeText = @"
-using com.TheDisappointedProgrammer.IOCC;
-
-[Bean]
-public class Vanilla
-{
-}
-";
-            //tree = CSharpSyntaxTree.ParseText(codeText);
-            //byte[] by = File.ReadAllBytes(@"c:\projects\SimpleIOCContainer\SimpleIOCContainerTest\Test1.cs");
-            //string str = new String(Encoding.UTF8.GetChars(by));
-            //tree = CSharpSyntaxTree.ParseText(str);
+            var tree = MakeTree();
+            //WriteLine(tree);
             var refAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.IsDynamic)
                 .Where(a => !string.IsNullOrWhiteSpace(a?.Location)).Select(
                     a => MetadataReference.CreateFromFile(a.Location))
                 .ToArray();
             CSharpCompilation cmp = CSharpCompilation.Create(
-                    "LoadTest").AddReferences(refAssemblies
-                //new[]
-                //{
-                //    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                //    MetadataReference.CreateFromFile(typeof(SimpleIOCContainer).Assembly.Location)
-                //}
-                )
+                    "LoadTest").AddReferences(refAssemblies)
                 .AddSyntaxTrees(tree).WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            //WriteLine(tree);
             MemoryStream ms = new MemoryStream();
-            FileStream fs = new FileStream(Path.Combine(Environment.CurrentDirectory,"Vanilla.dll"), FileMode.Create);
             cmp.Emit(ms);
-            fs.Close();
-            fs.Dispose();
             Assembly assembly = Assembly.Load(ms.GetBuffer());
-            //Assembly assembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "Vanilla.dll"));
             return assembly;
         }
 
-        private SyntaxTree MakeTree()
+        private SyntaxTree MakeTreeMinor()
         {
             CompilationUnitSyntax cus = CompilationUnit()
                     .WithUsings(
@@ -97,7 +74,7 @@ public class Vanilla
             SyntaxTree tree = CSharpSyntaxTree.Create(cus);
             return tree;
         }
-        private SyntaxTree MakeTreeFull()
+        private SyntaxTree MakeTree()
         {
             CompilationUnitSyntax cus = CompilationUnit()
                     .WithUsings(
@@ -193,7 +170,7 @@ public class Vanilla
 
             void ExtendList(string classNameRoot, int level)
             {
-                if (level == 15)
+                if (level == 13)
                 {
                     string newRoot = $"{classNameRoot}{level}a";
                     list.Add(MakeLeafClass(newRoot));
@@ -212,6 +189,7 @@ public class Vanilla
             }
 
             ExtendList("Level1", 2);
+            WriteLine($"{list.Count} classes created");
             return list;
 
         }
