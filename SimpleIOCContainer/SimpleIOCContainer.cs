@@ -40,7 +40,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE address static fields and beans.  Beans are invalid
     // DONE readonly fields
     // TODO look at MEF implementations - heard on dnr 8-8-17
-    // TODO document / investigate other classes derived from ValueType
+    // DONE document / investigate other classes derived from ValueType - nothing much to say
     // TODO testing in untrusted environments
     // TODO built-in factories for environement variables, command line arguments, config files
     //
