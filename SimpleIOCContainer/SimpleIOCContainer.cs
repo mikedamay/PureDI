@@ -61,8 +61,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
     // DONE Release Build
     // DONE remove 2-way enumerator
-    // TODO improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling
-    // TODO Perf
+    // N/A improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling - no prob with perf
+    // DONE Perf
     // DONE Test with nullables
     // DONE make SimpleIOCContainer instance a bean by default.
     // DONE generics for factories
