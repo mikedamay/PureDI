@@ -183,6 +183,38 @@ namespace IOCCTest
                 , diagnostics.Groups["DuplicateBean"].Occurrences.Count);
         }
         [TestMethod]
+        public void ShouldWarnOfInterfaceImplmentedByBaseExtendedByDerived()
+        {
+            Assembly assembly = Utils.CreateAssembly(
+                $"{Utils.TestResourcePrefix}.TestData.BeanBase.cs");
+            IOCCDiagnostics diagnostics;
+            using (Stream stream = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
+                $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
+            {
+                diagnostics = new DiagnosticBuilder(stream).Diagnostics;
+
+            }
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), SimpleIOCContainer.OS.Any);
+            System.Diagnostics.Debug.WriteLine(diagnostics);
+            Assert.AreEqual(Utils.LessThanIsGoodEnough(3, map.Keys.Count), map.Keys.Count);
+            Assert.AreEqual(Utils.LessThanIsGoodEnough(2, diagnostics.Groups["DuplicateBean"].Occurrences.Count)
+                , diagnostics.Groups["DuplicateBean"].Occurrences.Count);
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForInterfaceImplementedByBaseExtendedByDerivedWithNames()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("SimpleIOCContainerTest.TestData.NamedBeanBase", ""),"SimpleIOCContainerTest.TestData.NamedBeanBase"}
+                ,{("SimpleIOCContainerTest.TestData.INamedBean", ""),"SimpleIOCContainerTest.TestData.NamedBeanBase"}
+                ,{("SimpleIOCContainerTest.TestData.ANamedBean", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
+                ,{("SimpleIOCContainerTest.TestData.NamedBeanBase", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
+                ,{("SimpleIOCContainerTest.TestData.INamedBean", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
+            };
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NamedBeanBase.cs", mapExpected);
+
+        }
         public void ShouldCreateTypeMapForStruct()
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
@@ -253,7 +285,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.IgnoreHelper.cs", SimpleIOCContainer.DEFAULT_PROFILE_ARG, SimpleIOCContainer.OS.Any);
+            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.NamedBeanBase.cs", SimpleIOCContainer.DEFAULT_PROFILE_ARG, SimpleIOCContainer.OS.Any);
         }
 
         /// <summary>

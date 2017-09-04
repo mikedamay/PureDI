@@ -52,6 +52,7 @@
     <Compile Remove="ScopeTestData\SimpleScope.cs" />
     <Compile Remove="TestData\AbstractClass.cs" />
     <Compile Remove="TestData\BadGeneric.cs" />
+    <Compile Remove="TestData\BeanBase.cs" />
     <Compile Remove="TestData\BlankAssembly.cs" />
     <Compile Remove="TestData\CheckProfileAndOs.cs" />
     <Compile Remove="TestData\DependencyHierarchy.cs" />
@@ -61,6 +62,7 @@
     <Compile Remove="TestData\IgnoreHelper.cs" />
     <Compile Remove="TestData\ImplementationClass.cs" />
     <Compile Remove="TestData\InterfaceClass.cs" />
+    <Compile Remove="TestData\NamedBeanBase.cs" />
     <Compile Remove="TestData\NamedDependencies.cs" />
     <Compile Remove="TestData\NestedClasses.cs" />
     <Compile Remove="TestData\SingleImplementation.cs" />
@@ -101,6 +103,8 @@
     <EmbeddedResource Include="DuplicateTestData\Os.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
+    <EmbeddedResource Include="TestData\BeanBase.cs" />
+    <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />

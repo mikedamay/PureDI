@@ -23,7 +23,12 @@ namespace IOCCTest
             dynamic result = (IResultGetter)rootBean;
             return (result, diagnostics);
         }
-
+        /// <summary>
+        /// Creates an assembly for the className and returns a container with assembly assigned 
+        /// </summary>
+        /// <param name="testDataFolderName">e.g. "ScopeTestData" - no prefix requireed</param>
+        /// <param name="className">e.g. "FactoryPrototype" - no ".cs" required</param>
+        /// <returns>instantiated container with an assembly based on className but no tree</returns>
         public static SimpleIOCContainer CreateIOCCinAssembly(string testDataFolderName
             , string className)
         {

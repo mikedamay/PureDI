@@ -52,12 +52,14 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
     // DONE test generics with nested parameters
-    // TODo ensure there is a test that uses an object multiple times in the tree.
-    // TODO ensure where interface->base class->derived class occurs there is no problem with duplication of beans
-    // TODO make sure that root failure when passing type string is handled via diagnostics and that
-    // TODO the explanation is expanded to include that.
-    // TODO make our own constructor to handle readonly properties
+    // DONE ensure there is a test that uses an object multiple times in the tree. - ShouldCreateASingleInstanceForMultipleReferences
+    // DONE ensure where interface->base class->derived class occurs there is no problem with duplication of beans
+    // DONE make sure that root failure when passing type string is handled via diagnostics and that
+    // DONE the explanation is expanded to include that.
+    // N/A make our own constructor to handle readonly properties - not a good idea
     // TODO inherited attributes
+    // TODO change HasWarnings to HasDiagnostics
+    // TODO change Docs folder to resources folder
     // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
     // DONE Release Build
     // DONE remove 2-way enumerator
@@ -265,6 +267,11 @@ namespace com.TheDisappointedProgrammer.IOCC
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
+                IOCCDiagnostics.Group group = diagnostics.Groups["MissingRootBean"];
+                dynamic diag = group.CreateDiagnostic();
+                diag.BeanType = rootTypeName;
+                diag.BeanName = rootBeanName;
+                group.Add(diag);
                 throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
             return CreateAndInjectDependenciesExCommon(rootType

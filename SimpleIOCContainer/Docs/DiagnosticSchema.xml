@@ -85,6 +85,25 @@
     </artefacts>  
   </group>  
   <group>
+    <causeCode>MissingRootBean</causeCode>
+    <severity>Warning</severity>
+    <intro>The bean specified as the root of the tree cannot be found</intro>
+    <userGuide>The most likely cause of this issue is that 
+      you forgot to mark a bean with [Bean] 
+      or there are 
+      duplicate beans or that the bean referred to was
+      not a concrete class or struct.  (In the case of duplicates the details should be listed
+      in the relevant diagnostics above).  Alternatively you may have attempted
+      to access a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
+      This, of course, amounts to much the same thing.
+      You may be attempting the bean through an interface that it does not implement.</userGuide>
+    <template>Missing bean: {BeanType}({BeanName})</template>
+    <artefacts>
+      <BeanType/>
+      <BeanName/>
+    </artefacts>  
+  </group>  
+  <group>
     <causeCode>MissingRoot</causeCode>
     <severity>Warning</severity>
     <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
