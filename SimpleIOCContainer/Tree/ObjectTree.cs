@@ -251,7 +251,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 }
                 foreach (var memberSpec in childrenArg)
                 {
-                    object memberBean = null;
+                    object memberBean = default;
                     if (memberSpec.IsFactory)
                     {
                         try

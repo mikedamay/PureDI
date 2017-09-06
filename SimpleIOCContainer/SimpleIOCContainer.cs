@@ -42,6 +42,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // DONE document / investigate other classes derived from ValueType - nothing much to say
     // TODO testing in untrusted environments
+    // TODO inherited attributes
     // TODO built-in factories for environement variables, command line arguments, config files
     //
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
@@ -57,7 +58,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE make sure that root failure when passing type string is handled via diagnostics and that
     // DONE the explanation is expanded to include that.
     // N/A make our own constructor to handle readonly properties - not a good idea
-    // TODO inherited attributes
     // TODO change HasWarnings to HasDiagnostics
     // TODO change Docs folder to resources folder
     // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
@@ -117,7 +117,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
         public static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
-        internal const string[] DEFAULT_PROFILE = null;
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
@@ -220,7 +219,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             CheckArgument(rootConstructorName);
             ISet<string> profileSet;
             IOCCDiagnostics diagnostics = null;
-            TRootType rootObject = default(TRootType);
+            TRootType rootObject = default;
             try
             {
                 (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType));
