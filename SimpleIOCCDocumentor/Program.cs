@@ -14,7 +14,8 @@ namespace SimpleIOCCDocumentor
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            BuildWebHost(args).Start();
+            Console.ReadLine();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

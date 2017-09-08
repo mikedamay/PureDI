@@ -9,7 +9,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.13.3" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WebApiContrib.Core.TagHelpers.Markdown">
+      <HintPath>..\..\WebAPIContrib.Core\src\WebApiContrib.Core.TagHelpers.Markdown\bin\Debug\netstandard1.6\WebApiContrib.Core.TagHelpers.Markdown.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
