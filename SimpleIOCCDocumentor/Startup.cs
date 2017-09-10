@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using com.TheDisappointedProgrammer.IOCC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,19 +15,25 @@ namespace SimpleIOCCDocumentor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IMarkdownProcessor, MarkdownProcessor>();
+            services.Add(new ServiceDescriptor(typeof(IDiagnosticProcessor)
+              , new SimpleIOCContainer().CreateAndInjectDependencies<IDiagnosticProcessor>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMarkdownProcessor markdownProcessor)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env
+          , IDiagnosticProcessor diagnosticProcessor)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseFileServer();
+
             app.Run(async (context) =>
             {
-                string str = markdownProcessor.ProcessFragment("some *markdown* Processor");
+                string str = diagnosticProcessor.ProcessDiagnostic(
+                  new String(context.Request.Path.Value.Skip(1).ToArray()));
                 await context.Response.WriteAsync(str);
             });
         }

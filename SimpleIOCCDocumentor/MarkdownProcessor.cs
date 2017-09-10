@@ -1,5 +1,8 @@
-﻿namespace SimpleIOCCDocumentor
+﻿using com.TheDisappointedProgrammer.IOCC;
+
+namespace SimpleIOCCDocumentor
 {
+    [Bean]
     public class MarkdownProcessor : IMarkdownProcessor
     {
         public string ProcessFragment(string someMarkdown)

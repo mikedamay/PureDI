@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="ascii" ?>
+<root>
+    <mychild>abc</mychild>
+    <mychild>def</mychild>
+</root>
