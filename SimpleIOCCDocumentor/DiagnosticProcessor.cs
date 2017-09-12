@@ -12,12 +12,12 @@ namespace SimpleIOCCDocumentor
     public class DiagnosticProcessor : IDiagnosticProcessor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor;
-        [BeanReference(Factory = typeof(ResourceFactory)
-            , FactoryParameter = new object[] {typeof(ResourceFactory)
-            , "SimpleIOCContainer.Docs.DiagnosticSchema.xml"})
-          ]
-        private string diagnosticSchema;
-        private Stream diagnoStream;
+        //[BeanReference(Factory = typeof(ResourceFactory)
+        //    , FactoryParameter = new object[] {typeof(ResourceFactory)
+        //    , "SimpleIOCContainer.Docs.DiagnosticSchema.xml"})
+        //  ]
+        //private string diagnosticSchema;
+        //private Stream diagnoStream;
 
         [BeanReference] private DocumentParser documentParser;
 
@@ -39,9 +39,9 @@ namespace SimpleIOCCDocumentor
         //}
         public string ProcessDiagnostic(string diagnosticName)
         {
-            byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
-            diagnoStream = new MemoryStream(by);
-            return documentParser.GetFragment(diagnoStream, "userGuide", diagnosticName);             
+            //byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
+            //diagnoStream = new MemoryStream(by);
+            return documentParser.GetFragment( "userGuide", diagnosticName);             
         }
 
     }

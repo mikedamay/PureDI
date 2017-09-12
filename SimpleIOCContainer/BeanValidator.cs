@@ -61,7 +61,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                     .Where(t => t.GetInterfaces()
                         .Any(i => i.FullName == typeof(IFactory).FullName));
             var nonBeanFactories
-                = classesWithFactoryInterface.Where(c => !c.GetCustomAttributes<BeanAttribute>().Any());
+                = classesWithFactoryInterface.Where(c => 
+                !c.GetCustomAttributes<BeanAttribute>().Any()
+                && !c.GetCustomAttributes<IOCCIgnoreAttribute>().Any());
             IOCCDiagnostics.Group group = diagnostics.Groups["NonBeanFactory"];
             foreach (var type in nonBeanFactories)
             {

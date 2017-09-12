@@ -2,7 +2,7 @@
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    internal static class Common
+    public static class Common
     {
         public static bool Assert(bool expr)
         {

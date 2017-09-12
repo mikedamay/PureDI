@@ -55,7 +55,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     throw new IOCCInternalException(
                         $"object created by IOC container is not {rootType.Name} as expected");
                 }
-            Console.WriteLine($"number of assignments: {s_nAssignments}");
                 Assert(rootObject == null
                        || rootType.IsInstanceOfType(rootObject));
                 return rootObject;

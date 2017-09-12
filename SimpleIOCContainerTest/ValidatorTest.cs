@@ -68,6 +68,15 @@ namespace IOCCTest
             System.Diagnostics.Debug.WriteLine(diags);
         }
         [TestMethod]
+        public void ShouldAllowIgnoredNonBeanFactory()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.IgnoredNonBeanFactory.cs");
+            var diags = new DiagnosticBuilder().Diagnostics;
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
+            System.Diagnostics.Debug.WriteLine(diags);
+            Assert.AreEqual(0, diags.Groups["NonBeanFactory"].Occurrences.Count);
+        }
+        [TestMethod]
         public void ShouldWarnOFUnreachableStruct()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.UnreachableStruct.cs");

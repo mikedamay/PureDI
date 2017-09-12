@@ -49,6 +49,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document the fact that member type is based on the type's GetIOCCName() attribute
     // TODO and that generics have the for classname`1[TypeParam]
+    // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
+    // TODO are combined to support inheritance.  Execute must be virtual.
+    // TODO document that names apply to factories not the target reference bean.
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters

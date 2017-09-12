@@ -93,6 +93,13 @@ namespace IOCCTest
             Assert.IsTrue(diagnostics.HasWarnings);
         }
 
+        [TestMethod]
+        public void ShouldCreateTreeWithNamedFactory()
+        {
+            (dynamic result, var diagnostics) = CommonFactoryTest("FactoryWithName");
+            Assert.AreEqual(42, result.GetResults().MysteryNumber);
+            Assert.IsFalse(diagnostics.HasWarnings);
+        }
         private static
             (dynamic result, IOCCDiagnostics diagnostics)
             CommonFactoryTest(string className)
