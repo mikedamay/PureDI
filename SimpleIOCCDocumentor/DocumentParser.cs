@@ -1,7 +1,9 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Xml.XPath;
 using com.TheDisappointedProgrammer.IOCC;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SimpleIOCCDocumentor
 {
@@ -15,8 +17,6 @@ namespace SimpleIOCCDocumentor
         private XPathNavigator navigator;
         public string GetFragment(string fragmentType, string fragmentName)
         {
-            //XPathDocument xdoc = new XPathDocument(diagnosticStream);
-            //XPathNavigator navigator = xdoc.CreateNavigator();
             XPathNodeIterator nodes = navigator.Select(
               $"/diagnosticSchema/group/causeCode[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
@@ -27,6 +27,20 @@ namespace SimpleIOCCDocumentor
             {
                 throw new Exception();
             }
+        }
+
+        public IDictionary<string, string> GetDocumentIndex()
+        {
+            IDictionary<string, string> map = new ConcurrentDictionary<string, string>();
+            XPathNodeIterator nodes = navigator.Select(
+                "/diagnosticSchema/group/causeCode");
+            while (nodes.MoveNext())
+            {
+                map.Add(new KeyValuePair<string, string>(
+                  $"[{nodes.Current.InnerXml}](http://localhost:60653/{nodes.Current.InnerXml})"
+                  , $"({nodes.Current.InnerXml})"));
+            }
+            return map;
         }
     }
 }

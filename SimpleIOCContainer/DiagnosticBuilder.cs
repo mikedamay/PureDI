@@ -47,7 +47,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                       , (IOCCDiagnostics.Severity) Enum.Parse(
                       typeof(IOCCDiagnostics.Severity), group.Element("severity").Value)
                       , group.Element("intro").Value
-                      , group.Element("userGuide").Value
+                      , group.Element("background").Value
                       , group.Element("template").Value
                       , group.Element("artefacts").Elements()
                       .ToHashSet(a => a.Name.ToString())

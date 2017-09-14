@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using com.TheDisappointedProgrammer.IOCC;
 
@@ -12,36 +13,30 @@ namespace SimpleIOCCDocumentor
     public class DiagnosticProcessor : IDiagnosticProcessor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor;
-        //[BeanReference(Factory = typeof(ResourceFactory)
-        //    , FactoryParameter = new object[] {typeof(ResourceFactory)
-        //    , "SimpleIOCContainer.Docs.DiagnosticSchema.xml"})
-        //  ]
-        //private string diagnosticSchema;
-        //private Stream diagnoStream;
-
         [BeanReference] private DocumentParser documentParser;
+        [BeanReference(Factory = typeof(ResourceFactory)
+                , FactoryParameter = new object[] {typeof(Program)
+                    , "SimpleIOCCDocumentor.wwwroot.docwrapper.html"})
+        ]
+        private string htmlWrapper;
 
-        //public DiagnosticProcessor([BeanReference(Factory=typeof(ResourceFactory)
-        //  , FactoryParameter = new object[] {typeof(ResourceFactory)
-        //  , "SimpleIOCContainer.Docs.DiagnosticSchema.xml"})] string diagnosticSchema
-        //)
-        //{ 
-        //    byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
-        //    diagnoStream = new MemoryStream(by);            
-        //}
-
-        //~DiagnosticProcessor()
-        //{
-        //    if (diagnoStream != null)
-        //    {
-        //        diagnoStream.Dispose();
-        //    }
-        //}
         public string ProcessDiagnostic(string diagnosticName)
         {
-            //byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
-            //diagnoStream = new MemoryStream(by);
-            return documentParser.GetFragment( "userGuide", diagnosticName);             
+            if (string.IsNullOrWhiteSpace(diagnosticName))
+            {
+                var index = documentParser.GetDocumentIndex();
+                string str = markdownProcessor.ProcessFragment(string.Join(Environment.NewLine + Environment.NewLine, index.Keys));
+                return str;
+            }
+            else
+            {
+                var titleMD = documentParser.GetFragment("userGuideTitle", diagnosticName);
+                var titleHtml = markdownProcessor.ProcessFragment(titleMD);
+                var userGuideMD = documentParser.GetFragment("userGuide", diagnosticName);
+                var userGuideHtml = markdownProcessor.ProcessFragment(userGuideMD);
+                var wrapper = htmlWrapper.Replace("{userGuideTitle}", titleHtml).Replace("{userGuide}", userGuideHtml);
+                return wrapper;
+            }
         }
 
     }

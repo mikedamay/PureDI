@@ -7,10 +7,46 @@
     <intro>Duplicate beans have been detected.  
            The IOC container will be unable to determine which 
            class an injected reference refers to</intro>
-    <userGuide>If there are multiple implementations of some 
+    <background>If there are multiple implementations of some 
                interface or base class then use the bean's "name" 
                property to distinguish them and then include that 
-               name in the bean reference whose value is to be injected</userGuide>
+               name in the bean reference whose value is to be injected</background>
+    <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
+    <userGuide>
+      *Beans* can be referenced through interfaces or base classes (as long as the  base classes are not themselves beans).
+      ```
+      [Bean]
+      class Myclass
+      {
+      [BeanReference(Name="Impl1")] private MyInterface myInterface;
+      public void UseReference()
+      {
+      myInterface.DoStuff();
+      }
+      }
+      public interface MyInterface
+      {
+      void DoStuff();
+      }
+      [Bean(Name="Impl1")]
+      public class OneImplementation
+      {
+      public void DoStuff()
+      {
+      System.Console.WriteLine("One");
+      }
+      }
+      [Bean(Name="Impl2")]
+      public class TwoImplementation
+      {
+      public void DoStuff()
+      {
+      System.Console.WriteLine("Two");
+      }
+      }
+      ```
+    </userGuide>
+    <userGuideSeeAlso/>
     <template>attempt to add duplicate bean: {Interface1} {BeanName}, 
               attempting to add ${NewBean}, when ${ExistingBean} is already included.
               </template>
@@ -27,12 +63,15 @@
     <intro>A class has been marked as a bean (with 
       the "Bean" attribute) which is not capable of being 
       a bean.  The only types that can be beans are concrete non-static classes.</intro>
-    <userGuide>Typically this problem occurs with abstract and static
+    <background>Typically this problem occurs with abstract and static
       classes.  Note that although the bean reference 
       where the injection takes place may be specified as a base
       class or interface, the "Bean" attribute should be applied 
       only to the concrete implementation, not to a parent 
-      or interface</userGuide>
+      or interface</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{AbstractOrStaticClass} is {ClassMode}</template>
     <artefacts>
       <AbstractOrStaticClass/>
@@ -44,8 +83,11 @@
     <severity>Warning</severity>
     <intro>An attempt has been made to set the value of an auto property.  The container
            cannot do this.</intro>
-    <userGuide>The container cannot set the value of an auto property as the
-               operation is not supported by reflection.</userGuide>
+    <background>The container cannot set the value of an auto property as the
+               operation is not supported by reflection.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Member} is an auto property on {Class}</template>
     <artefacts>
       <Class/>
@@ -56,8 +98,11 @@
     <causeCode>MissingNoArgConstructor</causeCode>
     <severity>Warning</severity>
     <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
-    <userGuide>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a non-static constructor
-      which takes no arguments.</userGuide>
+    <background>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a non-static constructor
+      which takes no arguments.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Class} needs a no-arg constructor</template>
     <artefacts>
       <Class/>
@@ -67,7 +112,7 @@
     <causeCode>MissingBean</causeCode>
     <severity>Warning</severity>
     <intro>A reference to a missing bean has been encountered</intro>
-    <userGuide>The most likely cause of this issue is that 
+    <background>The most likely cause of this issue is that 
       you forgot to mark a bean with [Bean] or omitted its name for the [BeanReference] 
       or there are 
       duplicate beans or that the bean referred to was
@@ -75,7 +120,10 @@
       in the relevant diagnostics above).  Alternatively you may have attempted
       to mark as injectable a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
       This, of course, amounts to much the same thing.
-      You may be attempting the bean through an interface that it does not implement.</userGuide>
+      You may be attempting the bean through an interface that it does not implement.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>
     <artefacts>
       <MemberType/>
@@ -88,7 +136,7 @@
     <causeCode>MissingRootBean</causeCode>
     <severity>Warning</severity>
     <intro>The bean specified as the root of the tree cannot be found</intro>
-    <userGuide>The most likely cause of this issue is that 
+    <background>The most likely cause of this issue is that 
       you forgot to mark a bean with [Bean] 
       or there are 
       duplicate beans or that the bean referred to was
@@ -96,7 +144,10 @@
       in the relevant diagnostics above).  Alternatively you may have attempted
       to access a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
       This, of course, amounts to much the same thing.
-      You may be attempting the bean through an interface that it does not implement.</userGuide>
+      You may be attempting the bean through an interface that it does not implement.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing bean: {BeanType}({BeanName})</template>
     <artefacts>
       <BeanType/>
@@ -107,10 +158,13 @@
     <causeCode>MissingRoot</causeCode>
     <severity>Warning</severity>
     <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
-    <userGuide>The most likely cause of this issue is that the type passed
+    <background>The most likely cause of this issue is that the type passed
     to SimpleIOCContainer.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
-    to be invalid - see above</userGuide>
+    to be invalid - see above</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
     <artefacts>
       <BeanType/>
@@ -121,9 +175,12 @@
     <causeCode>MissingFactory</causeCode>
     <severity>Warning</severity>
     <intro>No factory has been found for member(s) marked with a factory bean</intro>
-    <userGuide>
+    <background>
       Factory beans must be marked as beans [Bean].  They must be in an assembly passed to SimpleIOCContainer.SetAssemblies().
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
       <DeclaringBean/>
@@ -135,9 +192,12 @@
     <causeCode>BadFactory</causeCode>
     <severity>Warning</severity>
     <intro>A factory has been found but it does not implement the required IFactory interface</intro>
-    <userGuide>
+    <background>
       Factory beans must be marked as beans [Bean].  They must also implement IFactory.
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
       <DeclaringBean/>
@@ -149,10 +209,13 @@
     <causeCode>TypeMismatch</causeCode>
     <severity>Warning</severity>
     <intro>The type assigned to a member by a factory was incompatible</intro>
-    <userGuide>
+    <background>
       The type of the object returned by the Execute() method of a factory must be compatible with the
       type of the member to which it is being assigned
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>
       The type returne from {Factory} for {DeclaringBean}.{Member}
       {ExpectedType} was expected.Excepton: {Exception}
@@ -169,9 +232,12 @@
     <causeCode>FactoryExecutionFailure</causeCode>
     <severity>Warning</severity>
     <intro>An error occurred when creating a bean using bean factory</intro>
-    <userGuide>
+    <background>
       An exception was thrown during the Execute() method of a bean factory
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>
       The exception thrown by {Factory} for {DeclaringBean}.{Member}
       was {Exception}
@@ -187,10 +253,13 @@
     <causeCode>CyclicalDepndency</causeCode>
     <severity>Warning</severity>
     <intro>A cyclical dependency was found in the object tree.  This is not supported</intro>
-    <userGuide>A cyclical dependency occurs when a class constructor includes
+    <background>A cyclical dependency occurs when a class constructor includes
       a parameter whose own constructor includes a parameter of the original class.
       Add in intermediate ancestors to make this interesting
-      a parent bean or </userGuide>
+      a parent bean or </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
     <artefacts>
       <DeclaringBean/>
@@ -201,12 +270,15 @@
     <causeCode>DuplicateConstructors</causeCode>
     <severity>Warning</severity>
     <intro>More than one suitable constructor is available for injection</intro>
-    <userGuide>
+    <background>
       The container needs an exact specification of the constructor to be run.
       Where there are two candidate constructors then each should be given a differnt "Name"
       and the "ConstructorName" parameter of the [BeanReference] should be used
       in the reference to the bean to indicate which constructor should be used.
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {Bean} has more than one applicable constructor</template>
     <artefacts>
       <Bean/>
@@ -216,13 +288,16 @@
     <causeCode>MissingConstructorParameterAttribute</causeCode>
     <severity>Warning</severity>
     <intro>A constructor has been found marked as [IOCConstructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
-    <userGuide>
+    <background>
       In order to inject values into a class (bean) via the constructor its constructor must
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
       must be marked as [BeanReference].  If a parameter to be injected is not a
       bean then a factory bean can be used to provide the value and the constructor
       should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
     <artefacts>
       <Bean/>
@@ -232,25 +307,14 @@
     <causeCode>MissingConstructorAttribute</causeCode>
     <severity>Warning</severity>
     <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
-    <userGuide>
+    <background>
       In order to inject values into a class (bean) via the constructor its constructor must
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
       must be marked as [BeanReference].
-    </userGuide>
-    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
-    <artefacts>
-      <Bean/>
-    </artefacts>
-  </group>
-  <group>
-    <causeCode>MissingConstructorAttribute</causeCode>
-    <severity>Warning</severity>
-    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
-    <userGuide>
-      In order to inject values into a class (bean) via the constructor its constructor must
-      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
-      must be marked as [BeanReference].
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
     <artefacts>
       <Bean/>
@@ -260,10 +324,13 @@
     <causeCode>CyclicalDependency</causeCode>
     <severity>Warning</severity>
     <intro>Two beans has been found that are mutually dependent using constructor injection.  This is not supported</intro>
-    <userGuide>
+    <background>
       If a reference to Bean A is injected into Bean B's constructor and a reference to Bean B is
       injected into Bean A's constructor then there is no way to construct both beans.
-    </userGuide>
+    </background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Bean} has a cyclical dependency</template>
     <artefacts>
       <Bean/>
@@ -273,7 +340,10 @@
     <causeCode>UnreachableReference</causeCode>
     <severity>Warning</severity>
     <intro>A bean reference exists in a context where a bean cannot be injected</intro>
-    <userGuide>All members for which beans can be injected must exist within classes validly marked as [bean]s.</userGuide>
+    <background>All members for which beans can be injected must exist within classes validly marked as [bean]s.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} has an unreachable member {MemberType} {MemberName}</template>
     <artefacts>
       <Type/>
@@ -285,7 +355,10 @@
     <causeCode>UnreachableConstructor</causeCode>
     <severity>Warning</severity>
     <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
-    <userGuide>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</userGuide>
+    <background>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} has an unreachable constructor</template>
     <artefacts>
       <Type/>
@@ -295,7 +368,10 @@
     <causeCode>NonBeanFactory</causeCode>
     <severity>Warning</severity>
     <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
-    <userGuide>Factories must implement IFactory and be marked with the [Bean] attribute.</userGuide>
+    <background>Factories must implement IFactory and be marked with the [Bean] attribute.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} implements IFactory but is not a bean</template>
     <artefacts>
       <Type/>
@@ -305,8 +381,11 @@
     <causeCode>AlreadyInitialised</causeCode>
     <severity>Warning</severity>
     <intro>A value is being injected into a member that has already been initialized</intro>
-    <userGuide>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
-      have occurred.  Any preceding initialisation will be obliterated by the injection</userGuide>
+    <background>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
+      have occurred.  Any preceding initialisation will be obliterated by the injection</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The member, {Member}, of {DeclaringType} was already initialized with {ExistingValue}.  The
       value, {ExistingValue}, has been overwritten</template>
     <artefacts>
@@ -319,7 +398,10 @@
     <causeCode>UnreachableStruct</causeCode>
     <severity>Warning</severity>
     <intro>An embedded struct bean exists which will never be instantiated</intro>
-    <userGuide>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</userGuide>
+    <background>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{DeclaringType} has an unreachable member struct {MemberType} {MemberName}</template>
     <artefacts>
       <DeclaringType/>
