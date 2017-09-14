@@ -12,37 +12,36 @@
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</background>
     <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
-    <userGuide>
-      *Beans* can be referenced through interfaces or base classes (as long as the  base classes are not themselves beans).
-      ```
+    <userGuide>*Beans* can be referenced through interfaces or base classes (as long as the  base classes are not themselves beans).
+```
       [Bean]
       class Myclass
       {
-      [BeanReference(Name="Impl1")] private MyInterface myInterface;
-      public void UseReference()
-      {
-      myInterface.DoStuff();
-      }
+        [BeanReference(Name="Impl1")] private MyInterface myInterface;
+        public void UseReference()
+        {
+          myInterface.DoStuff();
+        }
       }
       public interface MyInterface
       {
-      void DoStuff();
+        void DoStuff();
       }
       [Bean(Name="Impl1")]
       public class OneImplementation
       {
-      public void DoStuff()
-      {
-      System.Console.WriteLine("One");
-      }
+        public void DoStuff()
+        {
+          System.Console.WriteLine("One");
+        }
       }
       [Bean(Name="Impl2")]
       public class TwoImplementation
       {
-      public void DoStuff()
-      {
-      System.Console.WriteLine("Two");
-      }
+        public void DoStuff()
+        {
+          System.Console.WriteLine("Two");
+        }
       }
       ```
     </userGuide>
