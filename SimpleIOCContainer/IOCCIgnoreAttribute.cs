@@ -12,9 +12,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// beans which might otherwise occurs.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class
-      ,Inherited = false, AllowMultiple = false)]
-    public class IOCCIgnoreAttribute : Attribute
+        , Inherited = false, AllowMultiple = false)]
+    public abstract class IgnoreBaseAttribute : Attribute
     {
-        
+
+    }
+    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class
+        , Inherited = false, AllowMultiple = false)]
+    public sealed class IOCCIgnoreAttribute : IgnoreBaseAttribute
+    {
+
     }
 }

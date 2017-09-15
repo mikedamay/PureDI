@@ -75,13 +75,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         public static bool HasInjectedConstructorParameters(this Type type, string constructorName)
         {
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Any(c => CustomAttributeExtensions.GetCustomAttributes((MemberInfo) c).Any(
-                ca => ca is ConstructorAttribute
-                      && (ca as ConstructorAttribute).Name == constructorName));
+                ca => ca is ConstructorBaseAttribute
+                      && (ca as ConstructorBaseAttribute).Name == constructorName));
         }
 
         public static string GetConstructorNameFromMember(this Type type)
         {
-            BeanReferenceAttribute attr = type.GetCustomAttribute<BeanReferenceAttribute>();
+            BeanReferenceBaseAttribute attr = type.GetCustomAttribute<BeanReferenceBaseAttribute>();
             if (attr != null)
             {
                 return attr.ConstructorName;
@@ -93,9 +93,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         {
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(co => co.GetCustomAttribute<
-                                          ConstructorAttribute>() != null
+                                          ConstructorBaseAttribute>() != null
                                       && string.Compare(co.GetCustomAttribute<
-                                          ConstructorAttribute>().Name, name, StringComparison.OrdinalIgnoreCase) == 0);
+                                          ConstructorBaseAttribute>().Name, name, StringComparison.OrdinalIgnoreCase) == 0);
         }
     }
 }

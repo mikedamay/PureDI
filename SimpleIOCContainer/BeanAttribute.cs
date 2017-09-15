@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace com.TheDisappointedProgrammer.IOCC
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-    public class BeanAttribute : Attribute
+    public abstract class BeanBaseAttribute : Attribute
     {
         public string  Name
         {
@@ -19,4 +19,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         public SimpleIOCContainer.OS OS = SimpleIOCContainer.OS.Any;
     }
 
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
+    public sealed class BeanAttribute : BeanBaseAttribute
+    {
+    }
 }

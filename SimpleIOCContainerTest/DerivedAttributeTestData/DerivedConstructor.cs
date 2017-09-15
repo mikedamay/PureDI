@@ -6,7 +6,7 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData
 {
-    public class DerivedConstructAttribute : ConstructorAttribute
+    public class DerivedConstructAttribute : ConstructorBaseAttribute
     {
         public DerivedConstructAttribute()
         {

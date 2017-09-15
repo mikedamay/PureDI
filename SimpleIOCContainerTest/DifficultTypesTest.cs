@@ -72,6 +72,8 @@ namespace IOCCTest
             {
                 props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyAutoProp>(out IOCCDiagnostics diags);
                 Assert.IsTrue(diags.HasWarnings);
+                IOCCDiagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
+                Assert.AreEqual(1, grp.Occurrences.Count);
             }
             catch (Exception ex)
             {

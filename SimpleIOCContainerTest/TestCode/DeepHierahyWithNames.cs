@@ -3,6 +3,7 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace IOCCTest.TestCode.WithNames
 {
+    [IOCCIgnore]
     public interface IResultGetter
     {
         dynamic GetResults();

@@ -82,9 +82,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public static bool TypeIsABean(this Type type, ISet<string> profileSet, SimpleIOCContainer.OS os)
         {
-            BeanAttribute ida 
-              = (BeanAttribute)type.GetCustomAttributes()
-              .FirstOrDefault(attr => attr is BeanAttribute);
+            BeanBaseAttribute ida 
+              = (BeanBaseAttribute)type.GetCustomAttributes()
+              .FirstOrDefault(attr => attr is BeanBaseAttribute);
             return 
               ida != null 
               && (
@@ -104,17 +104,17 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public static string GetBeanName(this Type bean)
         {
-            return bean.GetCustomAttributes<BeanAttribute>().Select(attr => attr.Name).FirstOrDefault();
+            return bean.GetCustomAttributes<BeanBaseAttribute>().Select(attr => attr.Name).FirstOrDefault();
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {
             return type.BaseType == typeof(object)
-                ? type.GetInterfaces().Where( ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IOCCIgnoreAttribute)))
+                ? type.GetInterfaces().Where( ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IgnoreBaseAttribute)))
                 : Enumerable
                     .Repeat(type.BaseType, 1)
                     .Concat(type.GetInterfaces())
                     .Concat(type.BaseType.GetBaseClassesAndInterfaces())
-                    .Distinct().Where(ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IOCCIgnoreAttribute)));
+                    .Distinct().Where(ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IgnoreBaseAttribute)));
         }
     }
 

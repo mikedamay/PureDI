@@ -4,7 +4,7 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData
 {
-    public class DerivedBeanAttribute : BeanAttribute
+    public class DerivedBeanAttribute : BeanBaseAttribute
     {
         
     }

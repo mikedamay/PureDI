@@ -72,6 +72,7 @@
     <Compile Remove="TestData\NamedBeanBase.cs" />
     <Compile Remove="TestData\NamedDependencies.cs" />
     <Compile Remove="TestData\NestedClasses.cs" />
+    <Compile Remove="TestData\NonBeanDerivedFromBean.cs" />
     <Compile Remove="TestData\SingleImplementation.cs" />
     <Compile Remove="TestData\StructDependency.cs" />
     <Compile Remove="TestData\TreeWithFields.cs" />
@@ -122,6 +123,7 @@
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
+    <EmbeddedResource Include="TestData\NonBeanDerivedFromBean.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />

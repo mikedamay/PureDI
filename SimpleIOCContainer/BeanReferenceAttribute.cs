@@ -20,7 +20,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
       | AttributeTargets.Parameter
       , Inherited = false, AllowMultiple = false)]
-    public class BeanReferenceAttribute : Attribute
+    public abstract class BeanReferenceBaseAttribute : Attribute
     {
         public string Name
         {
@@ -38,5 +38,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         public object FactoryParameter = null;
         public BeanScope Scope = BeanScope.Singleton;
         private string constructorName = SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME;
+    }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
+      | AttributeTargets.Parameter
+      , Inherited = false, AllowMultiple = false)]
+    public sealed class BeanReferenceAttribute : BeanReferenceBaseAttribute
+    {
+
     }
 }

@@ -130,8 +130,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
             void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members)
             {
-                BeanReferenceAttribute attr;
-                if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceAttribute>()) != null)
+                BeanReferenceBaseAttribute attr;
+                if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
                 {
                     (Type type, string beanName, string constructorName) memberBeanId =
                         MakeMemberBeanId(fieldOrPropertyInfo.Type
@@ -374,12 +374,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         {
             ConstructorInfo[] constructors
               = declaringBeanType.GetConstructors(constructorFlags
-              ).Where(co => co.GetCustomAttributes<ConstructorAttribute>()
+              ).Where(co => co.GetCustomAttributes<ConstructorBaseAttribute>()
               .Any(ca => ca.Name == constructorName)).ToArray();
             if (declaringBeanType.GetConstructors().Where(
-                    co => !co.GetCustomAttributes<ConstructorAttribute>().Any())
+                    co => !co.GetCustomAttributes<ConstructorBaseAttribute>().Any())
                 .Any(co => co.GetParameters().Any(
-                    p => p.GetCustomAttributes<BeanReferenceAttribute>().Any())))
+                    p => p.GetCustomAttributes<BeanReferenceBaseAttribute>().Any())))
             {
                 dynamic diag = diagnostics.Groups["MissingConstructorAttribute"].CreateDiagnostic();
                 diag.Bean = declaringBeanType;
@@ -400,7 +400,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 ConstructorInfo constructor = constructors[0];
                 if (constructor.GetParameters().Length > 0
-                    && !constructor.GetParameters().All(p => p.GetCustomAttributes<BeanReferenceAttribute>().Any()))
+                    && !constructor.GetParameters().All(p => p.GetCustomAttributes<BeanReferenceBaseAttribute>().Any()))
                 {
                     dynamic diag = diagnostics.Groups["MissingConstructorParameterAttribute"].CreateDiagnostic();
                     diag.Bean = declaringBeanType;
@@ -414,8 +414,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             Type declaringBeanTypeArg, string constructorNameArg)
             => declaringBeanTypeArg
                 .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
-                    => co.GetCustomAttribute<ConstructorAttribute>() != null
-                       && string.Compare(co.GetCustomAttribute<ConstructorAttribute>()?
+                    => co.GetCustomAttribute<ConstructorBaseAttribute>() != null
+                       && string.Compare(co.GetCustomAttribute<ConstructorBaseAttribute>()?
                            .Name, constructorNameArg, StringComparison.OrdinalIgnoreCase) == 0)?.GetParameters();
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)

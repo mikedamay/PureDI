@@ -1,10 +1,14 @@
-﻿using System.Dynamic;
+﻿using System;
+using System.Dynamic;
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData
 {
-    public class DerivedReferenceAttribute : BeanReferenceAttribute
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
+                    | AttributeTargets.Parameter
+        , Inherited = false, AllowMultiple = false)]
+    public class DerivedReferenceAttribute : BeanReferenceBaseAttribute
     {
         
     }

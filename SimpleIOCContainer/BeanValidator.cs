@@ -22,9 +22,9 @@ namespace com.TheDisappointedProgrammer.IOCC
               t => t.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
               .Select(m => new { type = t, member = m}))).Where(tm => tm.member.IsPropertyOrField());
             var nonBeanAndMembers =
-              typesAndMembers.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanAttribute>().Any());
+              typesAndMembers.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanBaseAttribute>().Any());
             var nonBeanTypesWithBeanReferences =
-                nonBeanAndMembers.Where(tm => tm.member.GetCustomAttributes<BeanReferenceAttribute>().Any());
+                nonBeanAndMembers.Where(tm => tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any());
             IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableReference"];
             foreach (var typeAndMember in nonBeanTypesWithBeanReferences)
             {
@@ -43,9 +43,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                     t => t.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
                         .Select(c => new { type = t, constructor = c })));
             var nonBeanAndConstructors =
-                typesAndConstructors.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanAttribute>().Any());
+                typesAndConstructors.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanBaseAttribute>().Any());
             var nonBeanTypesWithBeanConstructors =
-                nonBeanAndConstructors.Where(tm => tm.constructor.GetCustomAttributes<ConstructorAttribute>().Any());
+                nonBeanAndConstructors.Where(tm => tm.constructor.GetCustomAttributes<ConstructorBaseAttribute>().Any());
             IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableConstructor"];
             foreach (var typeAndMember in nonBeanTypesWithBeanConstructors)
             {
@@ -62,8 +62,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                         .Any(i => i.FullName == typeof(IFactory).FullName));
             var nonBeanFactories
                 = classesWithFactoryInterface.Where(c => 
-                !c.GetCustomAttributes<BeanAttribute>().Any()
-                && !c.GetCustomAttributes<IOCCIgnoreAttribute>().Any());
+                !c.GetCustomAttributes<BeanBaseAttribute>().Any()
+                && !c.GetCustomAttributes<IgnoreBaseAttribute>().Any());
             IOCCDiagnostics.Group group = diagnostics.Groups["NonBeanFactory"];
             foreach (var type in nonBeanFactories)
             {
@@ -78,9 +78,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                 = assemblies.SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers().Select(m => new {type = t, member = m}))
                     .Where(tm => tm.member is FieldInfo || tm.member is PropertyInfo)
                     .Where(tm => tm.member.GetPropertyOrFieldType().IsStruct())
-                    .Where(tm => !tm.member.GetCustomAttributes<BeanReferenceAttribute>().Any())
+                    .Where(tm => !tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any())
                     .Select(tm => new {declaration = tm, structType = tm.member.GetPropertyOrFieldType()})
-                    .Where(ds => ds.structType.GetCustomAttributes<BeanAttribute>().Any());
+                    .Where(ds => ds.structType.GetCustomAttributes<BeanBaseAttribute>().Any());
             IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableStruct"];
             foreach (var ds in nonBeanStructMembers)
             {

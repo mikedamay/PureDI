@@ -267,6 +267,17 @@ namespace IOCCTest
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.Generic.cs", mapExpected);
 
         }
+
+        [TestMethod]
+        public void ShouldIgnoreNonBeanDerivedFromBean()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("SimpleIOCContainerTest.TestData.NonBeanDerivedFromBean+BeanClass", ""),"SimpleIOCContainerTest.TestData.NonBeanDerivedFromBean+BeanClass"}
+            };
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NonBeanDerivedFromBean.cs", mapExpected);
+
+        }
         /// <summary>
         /// usage:
         /// 1) change the resource name in the code below to refer to
@@ -288,7 +299,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.NamedBeanBase.cs", SimpleIOCContainer.DEFAULT_PROFILE_ARG, SimpleIOCContainer.OS.Any);
+            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.NonBeanDerivedFromBean.cs", SimpleIOCContainer.DEFAULT_PROFILE_ARG, SimpleIOCContainer.OS.Any);
         }
 
         /// <summary>

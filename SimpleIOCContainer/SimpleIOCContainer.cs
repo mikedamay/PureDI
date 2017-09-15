@@ -409,19 +409,19 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static bool HasAFactory(this MemberInfo type)
         {
             return type.GetCustomAttributes().Any(ca => ca.GetType()
-              == typeof(BeanReferenceAttribute) &&
-              (ca as BeanReferenceAttribute).Factory != null);
+              == typeof(BeanReferenceBaseAttribute) &&
+              (ca as BeanReferenceBaseAttribute).Factory != null);
         }
 
-        public static BeanReferenceAttribute GetBeanReferenceAttribute(this MemberInfo type)
+        public static BeanReferenceBaseAttribute GetBeanReferenceAttribute(this MemberInfo type)
         {
-            return (BeanReferenceAttribute)type.GetCustomAttributes().Where(
-                ca => ca is BeanReferenceAttribute).FirstOrDefault();
+            return (BeanReferenceBaseAttribute)type.GetCustomAttributes().Where(
+                ca => ca is BeanReferenceBaseAttribute).FirstOrDefault();
         }
-        public static BeanReferenceAttribute GetBeanReferenceAttribute(this ParameterInfo type)
+        public static BeanReferenceBaseAttribute GetBeanReferenceAttribute(this ParameterInfo type)
         {
-            return (BeanReferenceAttribute)type.GetCustomAttributes().Where(
-                ca => ca is BeanReferenceAttribute).FirstOrDefault();
+            return (BeanReferenceBaseAttribute)type.GetCustomAttributes().Where(
+                ca => ca is BeanReferenceBaseAttribute).FirstOrDefault();
         }
     }
 }
