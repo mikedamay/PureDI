@@ -149,7 +149,7 @@ namespace IOCCTest
         {
             try
             {
-                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                (dynamic result, var diagnostics) = CreateAndRunAssembly(
                     CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependency");
                 Assert.Fail();
             }
@@ -160,10 +160,23 @@ namespace IOCCTest
             }
         }
         [TestMethod]
-        public void ShouldNotWarnIfCpnstructorsAndParamatersNotMarked()
+        public void ShouldNotWarnIfConstructorsAndParamatersNotMarked()
         {
-            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedConstructorUnmarkedParameters");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
+        [TestMethod]
+        public void ShouldCreateTreeWithNamedRootConstructor()
+        {
+            SimpleIOCContainer sic =
+                CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
+                , "NamedRootConstructor");
+            var result = sic.CreateAndInjectDependencies(
+              "IOCCTest.ConstructorTestData.NamedRootConstructor"
+              , out var diagnostics, rootConstructorName : "TestConstructor") as IResultGetter;
+            System.Diagnostics.Debug.WriteLine(diagnostics);
+            Assert.AreEqual("stuff", result?.GetResults().Stuff);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
     }

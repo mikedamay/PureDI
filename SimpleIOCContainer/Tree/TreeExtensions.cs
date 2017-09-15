@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
@@ -92,8 +94,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(co => co.GetCustomAttribute<
                                           ConstructorAttribute>() != null
-                                      && co.GetCustomAttribute<
-                                          ConstructorAttribute>().Name == name);
+                                      && string.Compare(co.GetCustomAttribute<
+                                          ConstructorAttribute>().Name, name, StringComparison.OrdinalIgnoreCase) == 0);
         }
     }
 }

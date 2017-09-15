@@ -8,11 +8,13 @@
   <ItemGroup>
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
+    <Compile Remove="ConstructorTestData\DerivedConstructor.cs" />
     <Compile Remove="ConstructorTestData\DuplicateConstructors.cs" />
     <Compile Remove="ConstructorTestData\Factory.cs" />
     <Compile Remove="ConstructorTestData\FactoryConstructor.cs" />
     <Compile Remove="ConstructorTestData\MultipleConstructors.cs" />
     <Compile Remove="ConstructorTestData\MultipleParams.cs" />
+    <Compile Remove="ConstructorTestData\NamedRootConstructor.cs" />
     <Compile Remove="ConstructorTestData\ParameterNotInjectable.cs" />
     <Compile Remove="ConstructorTestData\PrivateConstructor.cs" />
     <Compile Remove="ConstructorTestData\SimpleConstructor.cs" />
@@ -20,6 +22,7 @@
     <Compile Remove="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
+    <Compile Remove="DerivedAttributeTestData\DerivedConstructor.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
     <Compile Remove="DifficultTypeTestData\Nullable.cs" />
@@ -79,10 +82,15 @@
     <Compile Remove="ValidatorTestData\Unreachable.cs" />
     <Compile Remove="ValidatorTestData\UnreachableStruct.cs" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConstructorTestData\CyclicalDependency.cs" />
     <EmbeddedResource Include="ConstructorTestData\DeepHierarchy.cs" />
     <EmbeddedResource Include="ConstructorTestData\DuplicateConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\NamedRootConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
     <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />

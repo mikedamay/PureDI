@@ -12,38 +12,59 @@
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</background>
     <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
-    <userGuide>*Beans* can be referenced through interfaces or base classes (as long as the  base classes are not themselves beans).
+    <userGuide>*Bean*s can be referenced through interfaces or base classes 
+    (as long as the  base classes are not themselves beans).
 ```
+      using com.TheDisappointedProgrammer.IOCC;
       [Bean]
-      class Myclass
+      class MyClass
       {
-        [BeanReference(Name="Impl1")] private MyInterface myInterface;
-        public void UseReference()
-        {
-          myInterface.DoStuff();
-        }
+          [BeanReference(Name="Impl1")] private IMyInterface myInterface = null;
+          public void UseReference()
+          {
+              myInterface.DoStuff();
+          }
+          public static void Main()
+          {
+              var sic = new SimpleIOCContainer();
+              MyClass myClass = sic.CreateAndInjectDependencies&lt;MyClass&gt;();
+              myClass.UseReference();     // will display "One"
+          }
       }
-      public interface MyInterface
+      public interface IMyInterface
       {
-        void DoStuff();
+            void DoStuff();
       }
       [Bean(Name="Impl1")]
-      public class OneImplementation
+      public class OneImplementation :  IMyInterface
       {
-        public void DoStuff()
-        {
-          System.Console.WriteLine("One");
-        }
+          public void DoStuff()
+          {
+              System.Console.WriteLine("One");
+          }
       }
       [Bean(Name="Impl2")]
-      public class TwoImplementation
+      public class TwoImplementation : IMyInterface
       {
-        public void DoStuff()
-        {
-          System.Console.WriteLine("Two");
-        }
+          public void DoStuff()
+          {
+              System.Console.WriteLine("Two");
+          }
       }
-      ```
+```
+When the container instantiiates *MyClass* in the example above 
+through a call to *CreateAndInjectDependencies()* it has to make a decision
+about which implementation of IMyInterface to assign to the *myInterface*
+member.  The choice is made by matching the *Name* parameter of the
+*Bean* attribute with that of the *BeanReference* attribute.  In the
+above case it instantiates *OneImplementation* and assigns it to
+*myInterface*.  The same decision would apply if the instantiation of 
+*MyClass* occurred indirectly (i.e. MyClass was referenced by
+some other class in the object tree).
+
+A bean with no name is considered distinct from a bean with a non-empty name.
+It will be matched to a bean reference without a *Name* attribute or one with
+an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]* or *[BeanReference]*.
     </userGuide>
     <userGuideSeeAlso/>
     <template>attempt to add duplicate bean: {Interface1} {BeanName}, 

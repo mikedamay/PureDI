@@ -415,8 +415,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             => declaringBeanTypeArg
                 .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
                     => co.GetCustomAttribute<ConstructorAttribute>() != null
-                       && co.GetCustomAttribute<ConstructorAttribute>()?
-                           .Name == constructorNameArg)?.GetParameters();
+                       && string.Compare(co.GetCustomAttribute<ConstructorAttribute>()?
+                           .Name, constructorNameArg, StringComparison.OrdinalIgnoreCase) == 0)?.GetParameters();
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
             => implementationTypeArg.IsGenericType

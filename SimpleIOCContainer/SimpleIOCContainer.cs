@@ -46,6 +46,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO built-in factories for environement variables, command line arguments, config files
     //
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
+    // TODO test case-sensitivity
     // TODO change wording of no-arg constructor diagnostic to include constructor based injections
     // TODO document the fact that member type is based on the type's GetIOCCName() attribute
     // TODO and that generics have the for classname`1[TypeParam]
@@ -181,6 +182,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                 throw new InvalidOperationException(
                   "SetAssemblies has been called after CreateAndInjectDependencies."
                   + "  This is not permitted.");
+            }
+            if (this.assemblyNames.Count > 0)
+            {
+                throw new IOCCException("SimpleIOCContainer.SetAssemblies() should be called only once"
+                  ,null);
             }
             this.assemblyNames = assemblyNames.ToList();
         }

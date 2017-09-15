@@ -12,13 +12,13 @@ namespace SimpleIOCCDocumentor
     [Bean]
     public class DiagnosticProcessor : IDiagnosticProcessor
     {
-        [BeanReference] private MarkdownProcessor markdownProcessor;
-        [BeanReference] private DocumentParser documentParser;
+        [BeanReference] private MarkdownProcessor markdownProcessor = null;
+        [BeanReference] private DocumentParser documentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)
                     , "SimpleIOCCDocumentor.wwwroot.docwrapper.html"})
         ]
-        private string htmlWrapper;
+        private string htmlWrapper = null;
 
         public string ProcessDiagnostic(string diagnosticName)
         {

@@ -1,8 +1,8 @@
-using com.TheDisappointedProgrammer.IOCC;
-[Bean]
+      using com.TheDisappointedProgrammer.IOCC;
+      [Bean]
       class MyClass
       {
-        [BeanReference(Name="Impl1")] private MyInterface myInterface = null;
+        [BeanReference(Name="Impl1")] private IMyInterface myInterface = null;
         public void UseReference()
         {
           myInterface.DoStuff();
@@ -14,12 +14,12 @@ using com.TheDisappointedProgrammer.IOCC;
             myClass.UseReference();     // will display "One"
         }
       }
-      public interface MyInterface
+      public interface IMyInterface
       {
         void DoStuff();
       }
       [Bean(Name="Impl1")]
-      public class OneImplementation :  MyInterface
+      public class OneImplementation :  IMyInterface
       {
         public void DoStuff()
         {
@@ -27,7 +27,7 @@ using com.TheDisappointedProgrammer.IOCC;
         }
       }
       [Bean(Name="Impl2")]
-      public class TwoImplementation : MyInterface
+      public class TwoImplementation : IMyInterface
       {
         public void DoStuff()
         {

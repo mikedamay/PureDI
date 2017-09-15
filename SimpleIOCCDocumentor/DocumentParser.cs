@@ -14,7 +14,7 @@ namespace SimpleIOCCDocumentor
                 , FactoryParameter = new object[] {typeof(SimpleIOCContainer)
                     , "SimpleIOCContainer.Docs.DiagnosticSchema.xml"})
         ]
-        private XPathNavigator navigator;
+        private XPathNavigator navigator = null;
         public string GetFragment(string fragmentType, string fragmentName)
         {
             XPathNodeIterator nodes = navigator.Select(
