@@ -8,7 +8,7 @@ using static com.TheDisappointedProgrammer.IOCC.Common;
 namespace SimpleIOCCDocumentor
 {
     [Bean(Name="navigator")]
-    public class XPathNavigatorResourceFactory : ResourceFactory
+    public class XPathNavigatorResourceFactory : ResourceFactoryBase
     {
         public XPathNavigator ConvertResourceToXPathNavigator(Type assemblyFinder, string resourcePath)
         {

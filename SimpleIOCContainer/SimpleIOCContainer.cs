@@ -53,6 +53,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
     // TODO are combined to support inheritance.  Execute must be virtual.
     // TODO document that names apply to factories not the target reference bean.
+    // TODO document lack of thread safety
+    // TODO document the point that injected members are not available in the constructor
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters

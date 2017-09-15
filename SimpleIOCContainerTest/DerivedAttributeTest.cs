@@ -42,10 +42,11 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithDerivedFactory()
         {
-            //(dynamic result, var diagnostics) = CreateAndRunAssembly(
-            //    DERIVED_ATTRIBUTE_TEST_NAMESPACE, "Factory");
-            //Assert.IsNotNull(result?.GetResults().Resource);
-            //Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                DERIVED_ATTRIBUTE_TEST_NAMESPACE, "Factory");
+            Assert.IsNotNull(result?.GetResults().Resource);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
     }
 }

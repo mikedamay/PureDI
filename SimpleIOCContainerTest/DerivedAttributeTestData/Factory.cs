@@ -6,24 +6,17 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData
 {
-    public class ResourceAttribute : BeanReferenceAttribute
+    public class ResourceAttribute : BeanReferenceBaseAttribute
     {
-        public Type AssemblyFinder = null;
-        public string ResourcePath = null;
+        [Bean]
         private class ResourceFactory : ResourceFactoryBase {}
-        ResourceFactory resourceFactory = new ResourceFactory();
-        public ResourceAttribute(Type assemblyFinder, string resourcePath)
+
+        public ResourceAttribute(Type assemblyFinder = null, string resourcePath = null)
         {
-            this.AssemblyFinder = assemblyFinder;
-            this.ResourcePath = resourcePath;
             base.Name = this.Name;
             base.ConstructorName = this.ConstructorName;
-            base.Factory = this.Factory;
-        }
-
-        public object Execute(BeanFactoryArgs args)
-        {
-            return resourceFactory.Execute(args);
+            base.Factory = typeof(ResourceFactory);
+            base.FactoryParameter = new object[] {assemblyFinder, resourcePath};
         }
     }
 
