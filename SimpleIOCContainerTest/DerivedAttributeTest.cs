@@ -23,5 +23,29 @@ namespace IOCCTest
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
 
+        [TestMethod]
+        public void ShouldCreateTreeWithDerivedReference()
+        {
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                DERIVED_ATTRIBUTE_TEST_NAMESPACE, "BeanReference");
+            Assert.IsNotNull(result?.GetResults().Referred);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
+        [TestMethod]
+        public void ShouldCreateTreeWithDerivedBeanAndRoot()
+        {
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                DERIVED_ATTRIBUTE_TEST_NAMESPACE, "Bean");
+            Assert.IsNotNull(result?.GetResults().Child);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
+        [TestMethod]
+        public void ShouldCreateTreeWithDerivedFactory()
+        {
+            //(dynamic result, var diagnostics) = CreateAndRunAssembly(
+            //    DERIVED_ATTRIBUTE_TEST_NAMESPACE, "Factory");
+            //Assert.IsNotNull(result?.GetResults().Resource);
+            //Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
     }
 }

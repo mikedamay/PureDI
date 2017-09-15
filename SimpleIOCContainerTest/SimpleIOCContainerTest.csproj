@@ -22,7 +22,10 @@
     <Compile Remove="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
     <Compile Remove="ConstructorTestData\UnmarkedParameter.cs" />
+    <Compile Remove="DerivedAttributeTestData\Bean.cs" />
+    <Compile Remove="DerivedAttributeTestData\BeanReference.cs" />
     <Compile Remove="DerivedAttributeTestData\DerivedConstructor.cs" />
+    <Compile Remove="DerivedAttributeTestData\Factory.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
     <Compile Remove="DifficultTypeTestData\Nullable.cs" />
@@ -84,6 +87,8 @@
   </ItemGroup>
   
   <ItemGroup>
+    <EmbeddedResource Include="DerivedAttributeTestData\Bean.cs" />
+    <EmbeddedResource Include="DerivedAttributeTestData\BeanReference.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +107,7 @@
     <EmbeddedResource Include="ConstructorTestData\UnmarkedConstructorUnmarkedParameters.cs" />
     <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
+    <EmbeddedResource Include="DerivedAttributeTestData\Factory.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Nullable.cs" />
