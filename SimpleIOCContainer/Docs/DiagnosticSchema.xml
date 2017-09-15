@@ -118,8 +118,10 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     <causeCode>MissingNoArgConstructor</causeCode>
     <severity>Warning</severity>
     <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
-    <background>The container needs to be able to construct the objects in the tree by reflection.  For this it needs a non-static constructor
-      which takes no arguments.</background>
+    <background>The container needs to be able to construct the objects in the tree by reflection
+    .For this it needs a non-static constructor
+    which takes no arguments.  Alternatively a constructor annotated with the [Constructor] attribute
+    can be specified together with all of its parameters annotated as [BeanReference]</background>
     <userGuideTitle/>
     <userGuide/>
     <userGuideSeeAlso/>

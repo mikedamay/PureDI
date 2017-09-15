@@ -48,5 +48,23 @@ namespace IOCCTest
             Assert.IsNotNull(result?.GetResults().Resource);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
+
+        [TestMethod]
+        public void ShouldIgnoreInterfacesWithDerivedAttribute()
+        {
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                DERIVED_ATTRIBUTE_TEST_NAMESPACE, "Ignore");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));            
+        }
+
+        [TestMethod]
+        public void ShouldCreateTreeWithNamedDerivedAttributes()
+        {
+            (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                DERIVED_ATTRIBUTE_TEST_NAMESPACE, "WithNames");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));    
+            Assert.AreEqual(42, result?.GetResults().Val);
+            
+        }
     }
 }

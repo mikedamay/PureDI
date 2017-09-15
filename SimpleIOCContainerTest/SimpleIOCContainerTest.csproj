@@ -26,6 +26,8 @@
     <Compile Remove="DerivedAttributeTestData\BeanReference.cs" />
     <Compile Remove="DerivedAttributeTestData\DerivedConstructor.cs" />
     <Compile Remove="DerivedAttributeTestData\Factory.cs" />
+    <Compile Remove="DerivedAttributeTestData\Ignore.cs" />
+    <Compile Remove="DerivedAttributeTestData\WithNames.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
     <Compile Remove="DifficultTypeTestData\Nullable.cs" />
@@ -109,6 +111,8 @@
     <EmbeddedResource Include="ConstructorTestData\UnmarkedMatchingConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\UnmarkedParameter.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\Factory.cs" />
+    <EmbeddedResource Include="DerivedAttributeTestData\Ignore.cs" />
+    <EmbeddedResource Include="DerivedAttributeTestData\WithNames.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Nullable.cs" />
