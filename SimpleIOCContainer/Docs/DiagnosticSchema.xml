@@ -2,7 +2,7 @@
 <diagnosticSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="file://. DiagnosticSchemaSchema.xsd">
   <group>
-    <causeCode>DuplicateBean</causeCode>
+    <topic>DuplicateBean</topic>
     <severity>Warning</severity>
     <intro>Duplicate beans have been detected.  
            The IOC container will be unable to determine which 
@@ -78,7 +78,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>InvalidBean</causeCode>
+    <topic>InvalidBean</topic>
     <severity>Warning</severity>
     <intro>A class has been marked as a bean (with 
       the "Bean" attribute) which is not capable of being 
@@ -99,7 +99,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>  
   <group>
-    <causeCode>ReadOnlyProperty</causeCode>
+    <topic>ReadOnlyProperty</topic>
     <severity>Warning</severity>
     <intro>An attempt has been made to set the value of an auto property.  The container
            cannot do this.</intro>
@@ -115,7 +115,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>MissingNoArgConstructor</causeCode>
+    <topic>MissingNoArgConstructor</topic>
     <severity>Warning</severity>
     <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
     <background>The container needs to be able to construct the objects in the tree by reflection
@@ -131,7 +131,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>   
   </group>
   <group>
-    <causeCode>MissingBean</causeCode>
+    <topic>MissingBean</topic>
     <severity>Warning</severity>
     <intro>A reference to a missing bean has been encountered</intro>
     <background>The most likely cause of this issue is that 
@@ -155,7 +155,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>  
   </group>  
   <group>
-    <causeCode>MissingRootBean</causeCode>
+    <topic>MissingRootBean</topic>
     <severity>Warning</severity>
     <intro>The bean specified as the root of the tree cannot be found</intro>
     <background>The most likely cause of this issue is that 
@@ -177,7 +177,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>  
   </group>  
   <group>
-    <causeCode>MissingRoot</causeCode>
+    <topic>MissingRoot</topic>
     <severity>Warning</severity>
     <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
     <background>The most likely cause of this issue is that the type passed
@@ -194,7 +194,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>  
   </group>
   <group>
-    <causeCode>MissingFactory</causeCode>
+    <topic>MissingFactory</topic>
     <severity>Warning</severity>
     <intro>No factory has been found for member(s) marked with a factory bean</intro>
     <background>
@@ -211,7 +211,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>BadFactory</causeCode>
+    <topic>BadFactory</topic>
     <severity>Warning</severity>
     <intro>A factory has been found but it does not implement the required IFactory interface</intro>
     <background>
@@ -228,7 +228,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>TypeMismatch</causeCode>
+    <topic>TypeMismatch</topic>
     <severity>Warning</severity>
     <intro>The type assigned to a member by a factory was incompatible</intro>
     <background>
@@ -251,7 +251,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>FactoryExecutionFailure</causeCode>
+    <topic>FactoryExecutionFailure</topic>
     <severity>Warning</severity>
     <intro>An error occurred when creating a bean using bean factory</intro>
     <background>
@@ -272,7 +272,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>CyclicalDepndency</causeCode>
+    <topic>CyclicalDepndency</topic>
     <severity>Warning</severity>
     <intro>A cyclical dependency was found in the object tree.  This is not supported</intro>
     <background>A cyclical dependency occurs when a class constructor includes
@@ -289,7 +289,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>DuplicateConstructors</causeCode>
+    <topic>DuplicateConstructors</topic>
     <severity>Warning</severity>
     <intro>More than one suitable constructor is available for injection</intro>
     <background>
@@ -307,7 +307,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>MissingConstructorParameterAttribute</causeCode>
+    <topic>MissingConstructorParameterAttribute</topic>
     <severity>Warning</severity>
     <intro>A constructor has been found marked as [IOCConstructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
     <background>
@@ -326,7 +326,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>MissingConstructorAttribute</causeCode>
+    <topic>MissingConstructorAttribute</topic>
     <severity>Warning</severity>
     <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
     <background>
@@ -343,7 +343,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>CyclicalDependency</causeCode>
+    <topic>CyclicalDependency</topic>
     <severity>Warning</severity>
     <intro>Two beans has been found that are mutually dependent using constructor injection.  This is not supported</intro>
     <background>
@@ -359,7 +359,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>UnreachableReference</causeCode>
+    <topic>UnreachableReference</topic>
     <severity>Warning</severity>
     <intro>A bean reference exists in a context where a bean cannot be injected</intro>
     <background>All members for which beans can be injected must exist within classes validly marked as [bean]s.</background>
@@ -374,7 +374,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>UnreachableConstructor</causeCode>
+    <topic>UnreachableConstructor</topic>
     <severity>Warning</severity>
     <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
     <background>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</background>
@@ -387,7 +387,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>NonBeanFactory</causeCode>
+    <topic>NonBeanFactory</topic>
     <severity>Warning</severity>
     <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
     <background>Factories must implement IFactory and be marked with the [Bean] attribute.</background>
@@ -400,7 +400,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>AlreadyInitialised</causeCode>
+    <topic>AlreadyInitialised</topic>
     <severity>Warning</severity>
     <intro>A value is being injected into a member that has already been initialized</intro>
     <background>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
@@ -417,7 +417,7 @@ an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]
     </artefacts>
   </group>
   <group>
-    <causeCode>UnreachableStruct</causeCode>
+    <topic>UnreachableStruct</topic>
     <severity>Warning</severity>
     <intro>An embedded struct bean exists which will never be instantiated</intro>
     <background>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</background>

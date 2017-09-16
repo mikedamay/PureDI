@@ -18,7 +18,7 @@ namespace SimpleIOCCDocumentor
         public string GetFragment(string fragmentType, string fragmentName)
         {
             XPathNodeIterator nodes = navigator.Select(
-              $"/diagnosticSchema/group/causeCode[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
+              $"/diagnosticSchema/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
             {
                 return nodes.Current.InnerXml;
@@ -33,7 +33,7 @@ namespace SimpleIOCCDocumentor
         {
             IDictionary<string, string> map = new ConcurrentDictionary<string, string>();
             XPathNodeIterator nodes = navigator.Select(
-                "/diagnosticSchema/group/causeCode");
+                "/diagnosticSchema/group/topic");
             while (nodes.MoveNext())
             {
                 map.Add(new KeyValuePair<string, string>(

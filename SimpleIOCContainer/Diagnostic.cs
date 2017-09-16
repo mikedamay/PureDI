@@ -12,10 +12,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     diag.dependentBean = someOtherType.GetIOCCName();
     ///     diagnostics.groups["InvalidBeanType"].Add(diag);
     /// alternatively:
-    ///     Diagnostic diag = diagnostics.groups["SomeOtherCauseCode"].CreateDiagnostic();
+    ///     Diagnostic diag = diagnostics.groups["SomeOthertopic"].CreateDiagnostic();
     ///     diag.someField = someValue;
     ///     diag.someField2 = someValue2
-    ///     diagnostics.Groups["SomeOtherCauseCode"].Add(diag);
+    ///     diagnostics.Groups["SomeOthertopic"].Add(diag);
     /// The cause codes and the members of diag must tie up with DiagnosticSchema.xml
     /// </summary>
     public abstract class Diagnostic : DynamicObject

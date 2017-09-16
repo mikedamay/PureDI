@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <diagnosticSchema>
   <group>
-    <causeCode>DuplicateBean</causeCode>
+    <topic>DuplicateBean</topic>
     <BAD>Warning</BAD>
     <intro>Duplicate beans have been detected.  
            The IOC container will be unable to determine which 
@@ -17,7 +17,7 @@
     </artefacts>
   </group>
   <group>
-    <causeCode>InvalidBean</causeCode>
+    <topic>InvalidBean</topic>
     <severity>Warning</severity>
     <intro>A piece of code has been marked as a bean (with 
           the "IOCCBean" attribute) which is not capable of being 

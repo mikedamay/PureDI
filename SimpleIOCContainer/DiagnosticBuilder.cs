@@ -41,9 +41,9 @@ namespace com.TheDisappointedProgrammer.IOCC
                 foreach (var group in groups)
                 {
                     groupx = group;
-                    string causeCode;
+                    string topic;
                     var dg = new IOCCDiagnostics.Group(
-                      causeCode = group.Element("causeCode").Value
+                      topic = group.Element("topic").Value
                       , (IOCCDiagnostics.Severity) Enum.Parse(
                       typeof(IOCCDiagnostics.Severity), group.Element("severity").Value)
                       , group.Element("intro").Value
@@ -52,7 +52,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                       , group.Element("artefacts").Elements()
                       .ToHashSet(a => a.Name.ToString())
                     );
-                    diagnostics.Groups[causeCode] = dg;
+                    diagnostics.Groups[topic] = dg;
                 }
             }
             catch (ArgumentNullException ane)

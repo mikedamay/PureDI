@@ -20,13 +20,13 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public class Group
         {
-            public Group(string causeCode
+            public Group(string topic
               , Severity severity
               , string intro, string userGuide
               , string diagnosticTemplate
               , ISet<string> artefactSchema)
             {
-                this.CauseCode = causeCode;
+                this.topic = topic;
                 this.Severity = severity;
                 this.Intro = intro;
                 this.UserGuide = userGuide;
@@ -34,7 +34,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 this.ArtefactSchema = artefactSchema;
             }
 
-            public string CauseCode { get; }
+            public string topic { get; }
             public Severity Severity { get; }
             public string Intro { get; }
             public string UserGuide { get; }
@@ -87,7 +87,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 {
                     continue;
                 }
-                sb.Append(group.CauseCode);
+                sb.Append(group.topic);
                 sb.Append(Environment.NewLine);
                 sb.Append(group.Severity);
                 sb.Append(Environment.NewLine);
