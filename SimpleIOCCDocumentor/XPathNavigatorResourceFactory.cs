@@ -12,7 +12,6 @@ namespace SimpleIOCCDocumentor
     {
         public XPathNavigator ConvertResourceToXPathNavigator(Type assemblyFinder, string resourcePath)
         {
-
             string diagnosticSchema = GetResourceAsString(assemblyFinder, resourcePath);
             byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
             using (Stream diagnosticStream = new MemoryStream(by))

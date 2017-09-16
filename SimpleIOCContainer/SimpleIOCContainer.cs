@@ -42,8 +42,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO look at MEF implementations - heard on dnr 8-8-17
     // DONE document / investigate other classes derived from ValueType - nothing much to say
     // TODO testing in untrusted environments
-    // TODO inherited attributes
+    // DONE inherited attributes
     // TODO built-in factories for environement variables, command line arguments, config files
+    // TODO attach existing object to object tree
     //
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test case-sensitivity
@@ -55,6 +56,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document that names apply to factories not the target reference bean.
     // TODO document lack of thread safety
     // TODO document the point that injected members are not available in the constructor
+    // TODO handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
@@ -315,6 +317,8 @@ namespace com.TheDisappointedProgrammer.IOCC
                 container = new ObjectTreeContainer(profileSetKey, typeMap);
             }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                    // factories and possibly other beans may need access to the SimpleIOCContainer itself
+                    // so we include it as a bean by default
             var rootObject = container.CreateAndInjectDependencies(rootType, diagnostics, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {

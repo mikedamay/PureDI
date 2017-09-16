@@ -13,10 +13,15 @@
   <ItemGroup>
     <None Remove="Docs\DiagnosticSchema.xml" />
     <None Remove="Docs\DiagnosticSchemaSchema.xsd" />
+    <None Remove="Docs\UserGuide.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
+    <EmbeddedResource Include="Docs\UserGuide.xml" />
+    <EmbeddedResource Include="Docs\UserGuide.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

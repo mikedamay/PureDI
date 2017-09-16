@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<userGuide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="file://. UserGuide.xsd">
+  <group>
+    <topic>Introduction</topic>
+    <userGuideTitle>Introduction to SimpleIOCContainer</userGuideTitle>
+    <userGuide>
+The SimpleIOCContainer (Simple Inversion of Control Container) is a
+Dependency Injection (DI) framework focused on simplicity of use and
+rich diagnostics.
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+</userGuide>
