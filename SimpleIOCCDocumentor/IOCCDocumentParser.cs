@@ -14,7 +14,7 @@ namespace SimpleIOCCDocumentor
         IDictionary<string, string> GetDocumentIndex();
     }
     [Bean]
-    internal class DiagnosticDocumentParser : IDocumentParser
+    internal class IOCCDocumentParser : IDocumentParser
     {
         private XPathNavigator navigator;
         private string resourcePath;
@@ -29,18 +29,17 @@ namespace SimpleIOCCDocumentor
                 XPathNavigatorResourceFactory factory = value;
                 navigator = factory.ConvertResourceToXPathNavigator(typeof(SimpleIOCContainer), resourcePath);
             }
-           // get { return factory; }
         }
 
         // inhibit IOCC diagnostic for no arg constructor
-        public DiagnosticDocumentParser() { }
+        public IOCCDocumentParser() { }
 
         /// <param name="resourcePath">either "SimpleIOCContainer.Docs.DiagnosticSchema.xml"}
         ///   or "SimpleIOCContainer.Docs.UserGuide.xml"} if it's anyhing else
         ///   then the resource needs to be in the SimpleIOCContainer assembly </param>
         /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
         ///   then the document must be a superset of UserGuide.xml </param>
-        public DiagnosticDocumentParser(string resourcePath, string xmlRoot)
+        public IOCCDocumentParser(string resourcePath, string xmlRoot)
         {
             this.xmlRoot = xmlRoot;
             this.resourcePath = resourcePath;
@@ -89,7 +88,7 @@ namespace SimpleIOCCDocumentor
                     object[] @params = (object[]) args.FactoryParmeter;
                     string documentPath = (string) @params[0];
                     string xmlRoot = (string) @params[1];
-                    DiagnosticDocumentParser ddp = new DiagnosticDocumentParser(
+                    IOCCDocumentParser ddp = new IOCCDocumentParser(
                         documentPath, xmlRoot);
                     simpleIocContainer.CreateAndInjectDependencies(ddp, out var diagnostics);
                     return ddp;

@@ -16,10 +16,13 @@ namespace SimpleIOCCDocumentor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor = null;
         [IOCCDocumentParser(
-          DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
-          , XmlRoot : "diagnosticSchema")]
-          private DiagnosticDocumentParser diagnosticDocumentParser = null;
-        [BeanReference] private UserGuideDocumentParser userGuideDocumentParser = null;
+            DocumentPath: "SimpleIOCContainer.Docs.UserGuide.xml"
+            , XmlRoot: "userGuide")]
+        private IOCCDocumentParser userGuideDocumentParser = null;
+        [IOCCDocumentParser(
+            DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
+            , XmlRoot: "diagnosticSchema")]
+        private IOCCDocumentParser diagnosticSchemaDocumentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)
                     , "SimpleIOCCDocumentor.wwwroot.docwrapper.html"})
@@ -30,7 +33,7 @@ namespace SimpleIOCCDocumentor
         {
             if (string.IsNullOrWhiteSpace(document))
             {
-                var diagnosticIndex = diagnosticDocumentParser.GetDocumentIndex();
+                var diagnosticIndex = diagnosticSchemaDocumentParser.GetDocumentIndex();
                 var userGuideIndex = userGuideDocumentParser.GetDocumentIndex();
                 string str = markdownProcessor.ProcessFragment(string.Join(Environment.NewLine + Environment.NewLine
                   , diagnosticIndex.Keys.Union(userGuideIndex.Keys).OrderBy(k => k)));
@@ -40,7 +43,7 @@ namespace SimpleIOCCDocumentor
             {
                 IDocumentParser parser = string.Compare(document, "diagnosticSchema",
                     StringComparison.InvariantCultureIgnoreCase) == 0
-                        ? diagnosticDocumentParser as IDocumentParser
+                        ? diagnosticSchemaDocumentParser as IDocumentParser
                         : userGuideDocumentParser;
                 var titleMD = parser.GetFragment("userGuideTitle", fragment);
                 var titleHtml = markdownProcessor.ProcessFragment(titleMD);
