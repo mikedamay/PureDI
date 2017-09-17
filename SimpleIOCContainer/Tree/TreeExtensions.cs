@@ -66,6 +66,21 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
             }
         }
+        public static bool CanReadFromFieldOrProperty(this MemberInfo memberInfo)
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo field:
+                    return true;
+                case PropertyInfo property:
+                    return property.CanRead;
+                default:
+                    throw new IOCCInternalException(
+                        $"CanWrite extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
+                        , null);
+
+            }
+        }
 
         public static bool IsStruct(this Type type)
         {

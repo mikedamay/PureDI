@@ -30,6 +30,7 @@
     <Compile Remove="DerivedAttributeTestData\WithNames.cs" />
     <Compile Remove="DifficultTypeTestData\Dynamic.cs" />
     <Compile Remove="DifficultTypeTestData\InvalidTypes.cs" />
+    <Compile Remove="DifficultTypeTestData\NoGetter.cs" />
     <Compile Remove="DifficultTypeTestData\Nullable.cs" />
     <Compile Remove="DifficultTypeTestData\PrivateClass.cs" />
     <Compile Remove="DifficultTypeTestData\StaticClass.cs" />
@@ -115,6 +116,7 @@
     <EmbeddedResource Include="DerivedAttributeTestData\WithNames.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Dynamic.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\InvalidTypes.cs" />
+    <EmbeddedResource Include="DifficultTypeTestData\NoGetter.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\Nullable.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\PrivateClass.cs" />
     <EmbeddedResource Include="DifficultTypeTestData\StaticClass.cs" />

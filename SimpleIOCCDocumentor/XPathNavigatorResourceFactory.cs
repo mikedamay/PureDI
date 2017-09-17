@@ -10,6 +10,11 @@ namespace SimpleIOCCDocumentor
     [Bean(Name="navigator")]
     public class XPathNavigatorResourceFactory : ResourceFactoryBase
     {
+        /// <param name="assemblyFinder">any type whose assembly matches that where the resource is stored</param>
+        /// <param name="resourcePath">absolute path of resource, e.g. "SimpleIOCContainer.IOCC.DiagnosticSchema.xml"
+        ///   in case of doubt run ildasm against the assembly's binary and inspect the manifest
+        ///   to ascertain the absolute path</param>
+        /// <returns>an XPath navigator ready for calls to navigator.Select(xpath)</returns>
         public XPathNavigator ConvertResourceToXPathNavigator(Type assemblyFinder, string resourcePath)
         {
             string diagnosticSchema = GetResourceAsString(assemblyFinder, resourcePath);

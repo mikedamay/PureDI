@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDocumentor
@@ -14,7 +15,10 @@ namespace SimpleIOCCDocumentor
     public class DocumentProcessor : IDocumentProcessor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor = null;
-        [BeanReference] private DiagnosticDocumentParser diagnosticDocumentParser = null;
+        [IOCCDocumentParser(
+          DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
+          , XmlRoot : "diagnosticSchema")]
+          private DiagnosticDocumentParser diagnosticDocumentParser = null;
         [BeanReference] private UserGuideDocumentParser userGuideDocumentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)

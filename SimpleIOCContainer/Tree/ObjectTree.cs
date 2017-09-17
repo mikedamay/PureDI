@@ -313,14 +313,17 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 if (memberBean != null)
                 {
-                    object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
-                    if (existingValue != null && existingValue.ToString() != "0")
+                    if (memberSpec.FieldOrPropertyInfo.CanReadFromFieldOrProperty())
                     {
-                        RecordDiagnostic(diagnostics, "AlreadyInitialised"
-                            , ("DeclaringType", declaringBean.GetType().FullName)
-                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
-                            , ("ExistingValue", existingValue.ToString())
-                        );
+                        object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
+                        if (existingValue != null && existingValue.ToString() != "0")
+                        {
+                            RecordDiagnostic(diagnostics, "AlreadyInitialised"
+                                , ("DeclaringType", declaringBean.GetType().FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("ExistingValue", existingValue.ToString())
+                            );
+                        }
                     }
                     s_nAssignments++;
                     memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);

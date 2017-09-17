@@ -61,6 +61,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO constructor name needs to be included in the cached tree
     // TODO document use of profiles with factories
     // TODO deal with exceptions on nested calls to CreateAndInject...()
+    // TODO document the variable parameters issue or possibly implement a solution
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters

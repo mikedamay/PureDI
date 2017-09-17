@@ -166,5 +166,14 @@ namespace IOCCTest
               out var diagnostics) as IResultGetter;
             Assert.IsNull( result.GetResults().SomeOtherValue);
         }
+        [TestMethod]
+        public void ShouldCreateTreeForNoGetterProperties()
+        {
+            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                "DifficultTypeTestData", "NoGetter");
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.IsNotNull(result.GetResults().Prop);
+
+        }
     }
 }
