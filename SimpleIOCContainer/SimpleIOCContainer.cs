@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using com.TheDisappointedProgrammer.IOCC.Tree;
 using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
@@ -57,6 +58,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document lack of thread safety
     // TODO document the point that injected members are not available in the constructor
     // TODO handle DocumentParser scenario where two beans are required with varying parameters.
+    // TODO constructor name needs to be included in the cached tree
+    // TODO document use of profiles with factories
+    // TODO deal with exceptions on nested calls to CreateAndInject...()
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
@@ -291,6 +295,31 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ,rootConstructorName, scope);
         }
 
+        public void CreateAndInjectDependencies(object rootObject, out IOCCDiagnostics diagnostics)
+        {
+            IDictionary<(Type beanType, string beanName), Type> typeMap;
+            ISet<string> profileSet;
+            (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
+            CreateAndInjectDependenciesCalled = true;
+            ObjectTreeContainer container;
+            string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
+            if (mapObjectTreeContainers.ContainsKey(profileSetKey))
+            {
+                container = mapObjectTreeContainers[profileSetKey];
+            }
+            else
+            {
+                container = new ObjectTreeContainer(profileSetKey, typeMap);
+            }
+            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
+            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+            //container.CreateAndInjectDependencies(rootObject, diagnostics, mapObjectsCreatedSoFar);
+            string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
+            ObjectTree tree = new ObjectTree(profile, typeMap);
+            tree.CreateAndInjectDependencies(rootObject, diagnostics
+                , mapObjectsCreatedSoFar);
+
+        }
         /// <summary>
         /// <see cref="CreateAndInjectDependencies"/>
         /// this overload does not print out the diagnostics

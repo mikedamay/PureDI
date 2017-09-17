@@ -26,8 +26,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.typeMap = typeMap;
         }
         public object CreateAndInjectDependencies(Type rootType
-          , IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
-          , BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+            , IOCCDiagnostics diagnostics, string rootBeanName, string rootConstructorName
+            , BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             ObjectTree tree;
             if (mapTrees.ContainsKey((rootType, rootBeanName)))
@@ -38,10 +38,17 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 tree = new ObjectTree(profile, typeMap);
                 mapTrees[(rootType, rootBeanName)] = tree;
-                 
+
             }
             return tree.CreateAndInjectDependencies(rootType, diagnostics
-              ,rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
+                , rootBeanName, rootConstructorName, scope, mapObjectsCreatedSoFar);
+        }
+        public void CreateAndInjectDependencies(object rootObject, IOCCDiagnostics diagnostics
+            , IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        {
+            ObjectTree tree = new ObjectTree(profile, typeMap);
+            tree.CreateAndInjectDependencies(rootObject, diagnostics
+                , mapObjectsCreatedSoFar);
         }
     }
 }

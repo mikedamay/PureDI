@@ -68,6 +68,15 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     diagnostics);
             }
         }
+        public void CreateAndInjectDependencies(object rootObject
+            ,IOCCDiagnostics diagnostics
+            ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        {
+            CreationContext cc = new CreationContext(mapObjectsCreatedSoFar
+              , new CycleGuard(), new HashSet<Type>());
+            CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, diagnostics);
+            AssignMembers(rootObject, memberSpecs, diagnostics, cc);
+        }
 
         /// <summary>
         /// see documentation for CreateAndInjectDependencies
@@ -89,8 +98,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="bean">a class already instantiated by SimpleIOCContainer whose
         ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName, string constructorName) beanId,
-            CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
-            BeanScope beanScope)
+          CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
+          BeanScope beanScope)
         {
              Type implementationType;
 
@@ -128,14 +137,124 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 return (false, constructedBean);
             } // MakeBean()
 
-            void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members)
+            // throws an exception for invalid constructors.
+            // With member references there's a good chance that
+            // we can hang around to collect more
+            // diagnostics but with constructors hanging around is
+            // more liable to cause chaos
+            void CreateConstructorTrees(Type declaringBeanType
+                , out List<ChildBeanSpec> members)
             {
-                BeanReferenceBaseAttribute attr;
+                members = new List<ChildBeanSpec>();
+                string constructorName = beanId.Item3;
+                ValidateConstructors(declaringBeanType, constructorName, diagnostics, beanReferenceDetails);
+                if (declaringBeanType.GetConstructors(
+                  BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                  .Length > 0)
+                {
+                    var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
+                    if (paramInfos != null)
+                    {
+                        foreach (var paramInfo in paramInfos)
+                        {
+                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members, creationContext,diagnostics);
+                        } // for each constructor parameter
+                    }
+
+                }
+            } // CreateConstructorTrees()
+
+            CycleGuard cycleGuard = creationContext.CycleGuard;
+            ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
+            bool complete;
+            object bean;
+            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, diagnostics)) == null)
+            {
+                return null; // no implementation type found corresponding to this beanId
+                // TODO don't we need some diangostics here
+            }
+            Type constructableType = MakeConstructableType(beanId, implementationType);
+            bool cyclicalDependencyFound = false;
+            try
+            {
+                cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Push(constructableType);
+                    CreateMemberTrees(constructableType, out var memberSpecs, creationContext, diagnostics);
+                    CreateConstructorTrees(constructableType, out var parameterSpec);
+                    (complete, bean) = MakeBean(parameterSpec);
+                    Assert(!cyclicalDependencies.Contains(constructableType)
+                           || cyclicalDependencies.Contains(constructableType)
+                           && complete
+                           && bean != null); // "complete && bean != null" indicates that
+                    // MakeBean found a bean cached in mapObjectsCreatedSoFar.
+                    // 
+                    // if a cyclical dependency was found lower
+                    // in the stack then a bean must have been
+                    // created for it at that time. So wtf!
+                    if (complete && !cyclicalDependencies.Contains(constructableType))
+                    {
+                        return bean; // either the bean and therefore its children had already been created
+                        // or we were unable to create the bean (null)
+                    }
+                    cyclicalDependencies.Remove(constructableType);
+                    AssignMembers(bean, memberSpecs, diagnostics, creationContext);
+                }
+                else // there is a cyclical dependency so we
+                    // need to just create the bean itself and defer child creation
+                    // until the implementationType is encountered again
+                    // further up the stack
+                {
+                    if (constructableType.HasInjectedConstructorParameters(SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME))
+                    {
+                        dynamic diag = diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
+                        diag.Bean = constructableType.FullName;
+                        diagnostics.Groups["CyclicalDependency"].Add(diag);
+                        throw new IOCCException("Cannot create this bean due to a cyclical dependency", diagnostics);
+                    }
+                    (complete, bean) = MakeBean();
+                    if (bean != null)
+                    {
+                        cyclicalDependencies.Add(constructableType);
+                    }
+                }
+            }
+            finally
+            {
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Pop();
+                }
+            }
+            return bean;
+        }       // CreateObjectTree
+
+        void CreateMemberTrees(Type declaringBeanType
+            , out List<ChildBeanSpec> members, CreationContext creationContext,
+            IOCCDiagnostics diagnostics)
+        {
+            members = new List<ChildBeanSpec>();
+            var fieldOrPropertyInfos = declaringBeanType.GetMembers(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(f => f is FieldInfo || f is PropertyInfo);
+            foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
+            {
+                CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType
+                    , members, creationContext, diagnostics);
+            } // for each property or field
+        } // CreateMemberTrees()
+
+        private void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members
+            , CreationContext creationContext,
+            IOCCDiagnostics diagnostics)
+        {
+                 BeanReferenceBaseAttribute attr;
                 if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
                 {
                     (Type type, string beanName, string constructorName) memberBeanId =
                         MakeMemberBeanId(fieldOrPropertyInfo.Type
-                            , attr.Name, attr.ConstructorName, beanId);
+                            , attr.Name, attr.ConstructorName);
                     object memberBean;
                     if (!fieldOrPropertyInfo.IsWriteable)
                     {
@@ -185,177 +304,70 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         } // not a factory
                     } // writeable member
                 } // this is a bean reference
+        }
+        // declaringBean - the bean just returned by MakeBean()
+        void AssignMembers(object declaringBean
+            , List<ChildBeanSpec> childrenArg, IOCCDiagnostics diagnostics, CreationContext creationContext)
+        {
+            void AssignBean(ChildBeanSpec memberSpec, object memberBean)
+            {
+                if (memberBean != null)
+                {
+                    object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
+                    if (existingValue != null && existingValue.ToString() != "0")
+                    {
+                        RecordDiagnostic(diagnostics, "AlreadyInitialised"
+                            , ("DeclaringType", declaringBean.GetType().FullName)
+                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                            , ("ExistingValue", existingValue.ToString())
+                        );
+                    }
+                    s_nAssignments++;
+                    memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+                }
             }
-
-            void CreateMemberTrees(Type declaringBeanType
-                , out List<ChildBeanSpec> members)
+            foreach (var memberSpec in childrenArg)
             {
-                members = new List<ChildBeanSpec>();
-                var fieldOrPropertyInfos = declaringBeanType.GetMembers(
-                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(f => f is FieldInfo || f is PropertyInfo);
-                foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
+                object memberBean = default;
+                if (memberSpec.IsFactory)
                 {
-                    CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType, members);
-                } // for each property or field
-            } // CreateMemberTrees()
-
-            // throws an exception for invalid constructors.
-            // With member references there's a good chance that
-            // we can hang around to collect more
-            // diagnostics but with constructors hanging around is
-            // more liable to cause chaos
-            void CreateConstructorTrees(Type declaringBeanType
-                , out List<ChildBeanSpec> members)
-            {
-                members = new List<ChildBeanSpec>();
-                string constructorName = beanId.Item3;
-                ValidateConstructors(declaringBeanType, constructorName, diagnostics, beanReferenceDetails);
-                if (declaringBeanType.GetConstructors(
-                  BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                  .Length > 0)
-                {
-                    var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
-                    if (paramInfos != null)
+                    try
                     {
-                        foreach (var paramInfo in paramInfos)
-                        {
-                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members);
-                        } // for each constructor parameter
-                    }
-
-                }
-            } // CreateMemberTrees()
-
-            // declaringBean - the bean just returned by MakeBean()
-            void AssignMembers(object declaringBean
-                , List<ChildBeanSpec> childrenArg)
-            {
-                void AssignBean(ChildBeanSpec memberSpec, object memberBean)
-                {
-                    if (memberBean != null)
-                    {
-                        object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
-                        if (existingValue != null && existingValue.ToString() != "0")
-                        {
-                            RecordDiagnostic(diagnostics, "AlreadyInitialised"
-                                , ("DeclaringType", declaringBean.GetType().FullName)
-                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
-                                , ("ExistingValue", existingValue.ToString())
-                            );
-                        }
-                        s_nAssignments++;
-                        memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
-                    }
-                }
-                foreach (var memberSpec in childrenArg)
-                {
-                    object memberBean = default;
-                    if (memberSpec.IsFactory)
-                    {
-                        try
-                        {
-                            IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
-                            memberBean = factory.Execute(new BeanFactoryArgs(
-                                memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
-                            CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers);
-                            AssignMembers(memberBean, memberBeanMembers);
-                            AssignBean(memberSpec, memberBean);
-                        }
-                        catch (ArgumentException ae)
-                        {
-                            RecordDiagnostic(diagnostics, "TypeMismatch"
-                                , ("DeclaringBean", declaringBean.GetType().FullName)
-                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
-                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
-                                    .FullName)
-                                , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
-                                , ("Exception", ae));
-                        }
-                        catch (Exception ex)
-                        {
-                            RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
-                                , ("DeclaringBean", declaringBean.GetType().FullName)
-                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
-                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
-                                    .FullName)
-                                , ("Exception", ex));
-                        }
-                    }
-                    else    // non-factory
-                    {
-                        memberBean = memberSpec.MemberOrFactoryBean;
+                        IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
+                        memberBean = factory.Execute(new BeanFactoryArgs(
+                            memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
+                        CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, diagnostics);
+                        AssignMembers(memberBean, memberBeanMembers, diagnostics, creationContext);
                         AssignBean(memberSpec, memberBean);
                     }
-                }       // foreach memberSpec
-            }           // AssignMembers()
+                    catch (ArgumentException ae)
+                    {
+                        RecordDiagnostic(diagnostics, "TypeMismatch"
+                            , ("DeclaringBean", declaringBean.GetType().FullName)
+                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                            , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                .FullName)
+                            , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
+                            , ("Exception", ae));
+                    }
+                    catch (Exception ex)
+                    {
+                        RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
+                            , ("DeclaringBean", declaringBean.GetType().FullName)
+                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                            , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                .FullName)
+                            , ("Exception", ex));
+                    }
+                }
+                else    // non-factory
+                {
+                    memberBean = memberSpec.MemberOrFactoryBean;
+                    AssignBean(memberSpec, memberBean);
+                }
+            }       // foreach memberSpec
+        }           // AssignMembers()
 
-
-            CycleGuard cycleGuard = creationContext.CycleGuard;
-            ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
-            bool complete;
-            object bean;
-            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, diagnostics)) == null)
-            {
-                return null; // no implementation type found corresponding to this beanId
-                // TODO don't we need some diangostics here
-            }
-            Type constructableType = MakeConstructableType(beanId, implementationType);
-            bool cyclicalDependencyFound = false;
-            try
-            {
-                cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
-                if (!cyclicalDependencyFound)
-                {
-                    cycleGuard.Push(constructableType);
-                    CreateMemberTrees(constructableType, out var memberSpecs);
-                    CreateConstructorTrees(constructableType, out var parameterSpec);
-                    (complete, bean) = MakeBean(parameterSpec);
-                    Assert(!cyclicalDependencies.Contains(constructableType)
-                           || cyclicalDependencies.Contains(constructableType)
-                           && complete
-                           && bean != null); // "complete && bean != null" indicates that
-                    // MakeBean found a bean cached in mapObjectsCreatedSoFar.
-                    // 
-                    // if a cyclical dependency was found lower
-                    // in the stack then a bean must have been
-                    // created for it at that time. So wtf!
-                    if (complete && !cyclicalDependencies.Contains(constructableType))
-                    {
-                        return bean; // either the bean and therefore its children had already been created
-                        // or we were unable to create the bean (null)
-                    }
-                    cyclicalDependencies.Remove(constructableType);
-                    AssignMembers(bean, memberSpecs);
-                }
-                else // there is a cyclical dependency so we
-                    // need to just create the bean itself and defer child creation
-                    // until the implementationType is encountered again
-                    // further up the stack
-                {
-                    if (constructableType.HasInjectedConstructorParameters(SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME))
-                    {
-                        dynamic diag = diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
-                        diag.Bean = constructableType.FullName;
-                        diagnostics.Groups["CyclicalDependency"].Add(diag);
-                        throw new IOCCException("Cannot create this bean due to a cyclical dependency", diagnostics);
-                    }
-                    (complete, bean) = MakeBean();
-                    if (bean != null)
-                    {
-                        cyclicalDependencies.Add(constructableType);
-                    }
-                }
-            }
-            finally
-            {
-                if (!cyclicalDependencyFound)
-                {
-                    cycleGuard.Pop();
-                }
-            }
-            return bean;
-        }
         /// <summary>
         /// errros if: 
         ///     a) multiple candidate constructors
@@ -472,7 +484,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         (Type type, string beanName, string constructorName)
             MakeMemberBeanId(Type memberDeclaredBeanType
                 , string memberDeclaredBeanName, string constructorName
-                , (Type type, string beanName, string constructorName) declaringBeanId)
+                )
         {
             Assert(!memberDeclaredBeanType.IsGenericParameter);
             return (memberDeclaredBeanType, memberDeclaredBeanName, constructorName);
