@@ -68,6 +68,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO seed the tree with a specific implementation
     // TODO profile should take the best fit of implementation
     // TODO document that it is not possible to have OS.Any along with OS.Specific
+    // TODO implement constructor parameters
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
