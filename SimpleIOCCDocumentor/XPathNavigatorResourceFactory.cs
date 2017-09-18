@@ -8,8 +8,9 @@ using static com.TheDisappointedProgrammer.IOCC.Common;
 namespace SimpleIOCCDocumentor
 {
     [Bean(Name="navigator")]
-    public class XPathNavigatorResourceFactory : ResourceFactoryBase
+    public class XPathNavigatorResourceFactory : IFactory
     {
+        [BeanReference] private IDocumentMaker documentMaker;
         /// <param name="assemblyFinder">any type whose assembly matches that where the resource is stored</param>
         /// <param name="resourcePath">absolute path of resource, e.g. "SimpleIOCContainer.IOCC.DiagnosticSchema.xml"
         ///   in case of doubt run ildasm against the assembly's binary and inspect the manifest
@@ -17,7 +18,7 @@ namespace SimpleIOCCDocumentor
         /// <returns>an XPath navigator ready for calls to navigator.Select(xpath)</returns>
         public XPathNavigator ConvertResourceToXPathNavigator(Type assemblyFinder, string resourcePath)
         {
-            string diagnosticSchema = GetResourceAsString(assemblyFinder, resourcePath);
+            string diagnosticSchema = documentMaker.GetResourceAsString(assemblyFinder, resourcePath);
             byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
             using (Stream diagnosticStream = new MemoryStream(by))
             {
@@ -26,7 +27,7 @@ namespace SimpleIOCCDocumentor
             }
         }
 
-        public override object Execute(BeanFactoryArgs args)
+        public object Execute(BeanFactoryArgs args)
         {
             object[] @params = (object[])args.FactoryParmeter;
             Assert(@params.Length == 2);
@@ -34,5 +35,23 @@ namespace SimpleIOCCDocumentor
             Assert(@params[1] is String);
             return ConvertResourceToXPathNavigator(@params[0] as Type, @params[1] as String);
         }
+    }
+
+    internal interface IDocumentMaker
+    { 
+        string GetResourceAsString(Type assemblyFinder, string path);
+    }
+    [Bean(Profile="authoring")]
+    internal class FileDocumentMaker : IDocumentMaker
+    {
+        public string GetResourceAsString(Type assemblyFinder, string path)
+        {
+            return File.ReadAllText(path);
+        }
+    }
+    [Bean]
+    internal class ResourceDocumentMaker : ResourceFactoryBase, IDocumentMaker
+    {
+        
     }
 }

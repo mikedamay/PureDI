@@ -86,5 +86,40 @@ namespace IOCCTest
                 Assert.Fail();
             }
         }
+
+        [TestMethod]
+        public void ShouldSelectBestCandidate()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
+            SimpleIOCContainer sic = new SimpleIOCContainer(new string[] { "dobest" });
+            sic.SetAssemblies(assembly.GetName().Name);
+            IResultGetter result = sic.CreateAndInjectDependencies(
+                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.AreEqual(42, result?.GetResults().Val);
+        }
+        // the following ensures a different branch is taken in some tricky logic
+        [TestMethod]
+        public void ShouldSelectBestCandidateNewest()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
+            SimpleIOCContainer sic = new SimpleIOCContainer(new string[] { "thirdbest" });
+            sic.SetAssemblies(assembly.GetName().Name);
+            IResultGetter result = sic.CreateAndInjectDependencies(
+                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.AreEqual(33, result?.GetResults().Val);
+        }
+        [TestMethod]
+        public void ShouldSelectBestCandidateWithoutProfile()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
+            SimpleIOCContainer sic = new SimpleIOCContainer();
+            sic.SetAssemblies(assembly.GetName().Name);
+            IResultGetter result = sic.CreateAndInjectDependencies(
+                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.AreEqual(24, result?.GetResults().Val);
+        }
     }
 }

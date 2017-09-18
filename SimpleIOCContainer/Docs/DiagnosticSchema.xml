@@ -13,7 +13,8 @@
                name in the bean reference whose value is to be injected</background>
     <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
     <userGuide>*Bean*s can be referenced through interfaces or base classes 
-    (as long as the  base classes are not themselves beans).
+    (as long as the  base classes are not themselves beans) as well as directly
+    through the implementation.
 ```
       using com.TheDisappointedProgrammer.IOCC;
       [Bean]

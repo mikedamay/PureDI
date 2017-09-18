@@ -17,7 +17,7 @@ namespace SimpleIOCCDocumentor
         {
             services.AddSingleton<IMarkdownProcessor, MarkdownProcessor>();
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
-              , new SimpleIOCContainer().CreateAndInjectDependencies<IDocumentProcessor>(out diagnostics)));
+              , new SimpleIOCContainer(new string[] {"authoring"}).CreateAndInjectDependencies<IDocumentProcessor>(out diagnostics)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

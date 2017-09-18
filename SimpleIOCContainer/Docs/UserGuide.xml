@@ -8,6 +8,13 @@
 The SimpleIOCContainer (Simple Inversion of Control Container) is a
 Dependency Injection (DI) framework focused on simplicity of use and
 rich diagnostics.
+
+Usage follows a simple pattern the caller instantiates some key object
+with a call to SimpleIOCContainer.CreateAndInjectDependnecies and that
+object is instiated together with dependencies to which it refers
+and so forth recursively through the tree of dependencies.
+
+Even more stuff here.
     </userGuide>
     <userGuideSeeAlso/>
   </group>

@@ -62,6 +62,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document use of profiles with factories
     // TODO deal with exceptions on nested calls to CreateAndInject...()
     // TODO document the variable parameters issue or possibly implement a solution
+    // TODO handle situation / document where sometimes in same program you want
+    // TODO alternative implementations and sometimes you want parallel
+    // TODO implementations a la IPropertyMap
+    // TODO seed the tree with a specific implementation
+    // TODO profile should take the best fit of implementation
+    // TODO document that it is not possible to have OS.Any along with OS.Specific
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters

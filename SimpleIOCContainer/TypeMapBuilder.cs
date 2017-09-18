@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using static com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -17,9 +18,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                 var wellFormedBeanSpecs
                   = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                  .Select(i => ((i, d.GetBeanName()), d)));
+                  .Select(i => ((i, d.GetBeanName()), d))).OrderBy(b => b.Item2.FullName);
+                        // only sorting so that testing will cover a couple of tricky branches.
                 // 'inferred' names for tuple elements not supported by
-                // .NET standard - apparently a 7.1 feature
+                // .NET standard - apparently a 7.1 feature - it doesn't seem to work for me
                 Type beanInterface;
                 string name;
                 Type beanImplementation;
@@ -55,20 +57,61 @@ namespace com.TheDisappointedProgrammer.IOCC
                     {
                         if (map.ContainsKey((beanInterface, name)))
                         {
-                            IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
-                            dynamic diag = group.CreateDiagnostic();
-                            diag.Interface1 = beanInterface.GetIOCCName();
-                            diag.BeanName = name;
-                            diag.NewBean = beanImplementation.GetIOCCName();
-                            diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
-                            group.Add(diag);
-                            continue;
+                            BestFit bestFit = QueryRemoveDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
+                            if (bestFit == BestFit.Duplicate)
+                            {
+                                IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
+                                dynamic diag = group.CreateDiagnostic();
+                                diag.Interface1 = beanInterface.GetIOCCName();
+                                diag.BeanName = name;
+                                diag.NewBean = beanImplementation.GetIOCCName();
+                                diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
+                                group.Add(diag);
+                                continue;       // don't add the new one - we're in a mess, don't make it worse
+                            }
+                            else if (bestFit == BestFit.NewItemBest)
+                            {
+                                map.Remove((beanInterface, name));  // get rid of this so we can add the new one
+                            }
+                            else if (bestFit == BestFit.ExistingItemBest)
+                            {
+                                continue;   // don't add the new one - we're already ok.
+                            }
                         }
                         map.Add((beanInterface, name), beanImplementation);                        
                     }
                 }
             }
             return map;
+        }
+        enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
+        private BestFit QueryRemoveDuplicate(IDictionary<(Type, string), Type> map
+          , (Type beanInterface, string name) beanId, Type beanImplementation, ISet<string> profileSet)
+        {
+            Assert(map.ContainsKey(beanId));
+            Type existingType = map[beanId];
+            string existingProfile = existingType.GetBeanProfile();
+            string newProfile = beanImplementation.GetBeanProfile();
+            bool existingProfileMatch = profileSet.Contains(existingProfile);
+            bool newProfileMatch = profileSet.Contains(newProfile);
+            if (profileSet.Count == 0)
+            {
+                // no profile has been specified
+                return BestFit.Duplicate;
+            }
+            else if (existingProfileMatch && newProfileMatch)
+            {
+                // both candidates are consistent with profile
+                return BestFit.Duplicate;
+            }
+            else if (newProfileMatch)
+            {
+                return BestFit.NewItemBest;
+            }
+            else // if (existingProfileMatch
+            {
+                return BestFit.ExistingItemBest;
+            }
         }
 
         private void LogWarning(string s)
@@ -105,6 +148,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         public static string GetBeanName(this Type bean)
         {
             return bean.GetCustomAttributes<BeanBaseAttribute>().Select(attr => attr.Name).FirstOrDefault();
+        }
+        public static string GetBeanProfile(this Type bean)
+        {
+            return bean.GetCustomAttributes<BeanBaseAttribute>().Select(attr => attr.Profile).FirstOrDefault();
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {

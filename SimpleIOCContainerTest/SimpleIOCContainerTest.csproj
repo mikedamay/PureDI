@@ -54,6 +54,7 @@
     <Compile Remove="NoNamespaceData\NoNamespace.cs" />
     <Compile Remove="NoNamespaceData\ReferenceFromNamespacedClass.cs" />
     <Compile Remove="NoNamespaceData\ReferenceToNamespacedClass.cs" />
+    <Compile Remove="ProfileTestData\BestCandidate.cs" />
     <Compile Remove="ProfileTestData\ComplexProfile.cs" />
     <Compile Remove="ProfileTestData\SimpleProfile.cs" />
     <Compile Remove="ScopeTestData\FactoryPrototype.cs" />
@@ -125,6 +126,7 @@
     <EmbeddedResource Include="DuplicateTestData\Duplicate.cs" />
     <EmbeddedResource Include="DuplicateTestData\Os.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithName.cs" />
+    <EmbeddedResource Include="ProfileTestData\BestCandidate.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
