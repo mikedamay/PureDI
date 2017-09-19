@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using com.TheDisappointedProgrammer.IOCC.Common;
 using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
@@ -15,12 +16,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-        private readonly IImmutableDictionary<(Type type, string beanName), Type> typeMap;
+        private readonly IWouldBeImmutableDictionary<(Type type, string beanName), Type> typeMap;
         // from the point of view of generics the key.type may contain a generic type definition
         // and the value may be a constructed generic type
 
         public ObjectTree(string profile
-            , IImmutableDictionary<(Type type, string name), Type> typeMap)
+            , IWouldBeImmutableDictionary<(Type type, string name), Type> typeMap)
         {
             this.profile = profile;
             this.typeMap = typeMap;

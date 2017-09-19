@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using com.TheDisappointedProgrammer.IOCC.Common;
 using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class TypeMapBuilder
     {
-        public IImmutableDictionary<(Type type, string name), Type> 
+        public IWouldBeImmutableDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref IOCCDiagnostics diagnostics, ISet<string> profileSet, SimpleIOCContainer.OS os)
         {
-            ImmutableDictionary<(Type, string), Type>.Builder map 
-              = ImmutableDictionary.CreateBuilder<(Type, string), Type>();
+            WouldBeImmutableDictionary<(Type, string), Type>.Builder map 
+              = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs

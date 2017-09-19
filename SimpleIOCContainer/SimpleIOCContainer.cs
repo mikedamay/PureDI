@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using com.TheDisappointedProgrammer.IOCC.Common;
 using com.TheDisappointedProgrammer.IOCC.Tree;
 using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
@@ -163,7 +164,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
             new Dictionary<(Type, string), object>();
 
-        private IImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+        private IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -344,7 +345,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             return rootObject;
         }
 
-        private (IImmutableDictionary<(Type beanType, string beanName)
+        private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
           , Type>, IOCCDiagnostics diagnostics, ISet<string> profileSet)
           CreateTypeMap(Type rootType)
         {
