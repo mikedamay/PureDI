@@ -141,13 +141,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
 
-        private IList<string> assemblyNames = new List<string>();
-        private IList<string> explicitAssemblyNames;
         [Flags]
         public enum AssemblyExclusion { ExcludedNone = 0
           , ExcludeSimpleIOCCContainer = 1
           , ExcludeRootTypeAssembly = 2}
         private AssemblyExclusion excludedAssemblies;
+        private readonly ImmutableArray<Assembly> explicitAssemblies;
+        private IImmutableList<Assembly> allAssemblies;
 
         private readonly ISet<string> profileSet;
         // the key in the objects created so far map comprises 2 types.  The first is the
@@ -161,19 +161,6 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         private IImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
-        public SimpleIOCContainer( string[] Profiles = null
-          , Assembly[] Assemblies = null, string[] AssemblyNames = null
-          , AssemblyExclusion ExcludeAssemblies =  AssemblyExclusion.ExcludedNone)
-        {
-            excludedAssemblies = ExcludeAssemblies;
-            string[] assemblyNames = AssemblyNames ?? new string[0];
-            Assembly[] specifiedAssemblies = Assemblies ?? new Assembly[0];
-            explicitAssemblyNames 
-              = specifiedAssemblies.Select(sa => sa.GetName().Name)
-              .Union(assemblyNames).ToList();
-            profileSet = new HashSet<string>( Profiles 
-              ?? new string[0], new CaseInsensitiveEqualityComparer());
-        }
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
         /// for beans.  Any bean to be injected must be defined in one
@@ -195,28 +182,17 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// to CreateAndInjectDependencies() then the system behaves as if
         /// the flag was set to true as there is no easy way for the container
         /// to know the assembly from which it was called.</param>
-        //public void SetAssemblies(bool excludeRootAssembly, params string[] assemblyNames)
-        //{
-        //    this.excludeRootAssembly = excludeRootAssembly;
-        //    SetAssemblies(assemblyNames);
-        //}
-        ///// <example>SetAssemblies("MyApp", "MyLib")</example>
-        //public void SetAssemblies(params string[] assemblyNames)
-        //{
-        //    CheckArgument(assemblyNames);
-        //    if (CreateAndInjectDependenciesCalled)
-        //    {
-        //        throw new InvalidOperationException(
-        //          "SetAssemblies has been called after CreateAndInjectDependencies."
-        //          + "  This is not permitted.");
-        //    }
-        //    if (this.assemblyNames.Count > 0)
-        //    {
-        //        throw new IOCCException("SimpleIOCContainer.SetAssemblies() should be called only once"
-        //          ,null);
-        //    }
-        //    this.assemblyNames = assemblyNames.ToList();
-        //}
+        public SimpleIOCContainer( string[] Profiles = null
+          , Assembly[] Assemblies = null
+          , AssemblyExclusion ExcludeAssemblies =  AssemblyExclusion.ExcludedNone)
+        {
+            excludedAssemblies = ExcludeAssemblies;
+            explicitAssemblies = (Assemblies != null 
+              ? ImmutableArray.Create<Assembly>(Assemblies) 
+              : ImmutableArray<Assembly>.Empty).ToImmutableArray();
+            profileSet = new HashSet<string>( Profiles 
+              ?? new string[0], new CaseInsensitiveEqualityComparer());
+        }
 
         /// <param name="diagnostics"></param>
         /// <param name="rootBeanName"></param>
@@ -304,7 +280,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 diag.BeanType = rootTypeName;
                 diag.BeanName = rootBeanName;
                 group.Add(diag);
-                throw new IOCCException($"Unable to find a type in assembly {assemblyNames.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
+                throw new IOCCException($"Unable to find a type in assembly {allAssemblies.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
             return CreateAndInjectDependenciesExCommon(rootType
                 ,diagnostics, profileSet, rootBeanName
@@ -369,22 +345,20 @@ namespace com.TheDisappointedProgrammer.IOCC
           CreateTypeMap(Type rootType)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            assemblyNames = explicitAssemblyNames;
-            if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
-            {
-                assemblyNames.Add(rootType.Assembly.GetName().Name);
-            }
-            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
-            {
-                assemblyNames.Add(this.GetType().Assembly.GetName().Name);
-            }
+
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
-            IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);
-            new BeanValidator().ValidateAssemblies(assemblies, diagnostics);
+            var builder = ImmutableList.CreateBuilder<Assembly>();
+                builder.AddRange(explicitAssemblies
+                    .Union(new[] {rootType.Assembly}.Where( a =>
+                        (excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+                        .Union(new[] {this.GetType().Assembly}.Where( a =>
+                        (excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)));
+            allAssemblies = builder.ToImmutable();
+            new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
             {
-                typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(assemblies
+                typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(allAssemblies
                     , ref diagnostics, profileSet, os);
             }
             return (typeMap, diagnostics, profileSet);
@@ -451,6 +425,11 @@ namespace com.TheDisappointedProgrammer.IOCC
                 sb.Append(name);
             }
             return sb.ToString();
+        }
+        public static string ListContents(this IImmutableList<Assembly> assemblies, string separator = ", ")
+        {
+            IList<string> assemblyNames = assemblies.Select(a => a.GetName().Name).ToList();
+            return ListContents(assemblyNames);
         }
 
         public static bool HasAFactory(this MemberInfo type)

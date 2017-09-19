@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using com.TheDisappointedProgrammer.IOCC.Tree;
@@ -7,7 +8,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class BeanValidator
     {
-        public void ValidateAssemblies(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void ValidateAssemblies( IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
             DetectUnreachableMembers(assemblies, diagnostics);
             DetectUnreachableConstructors(assemblies, diagnostics);
@@ -15,7 +16,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             DetectUnreachableStructs(assemblies, diagnostics);
         }
 
-        public void DetectUnreachableMembers(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void DetectUnreachableMembers(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
             var typesAndMembers = assemblies.SelectMany(a =>
               a.GetTypes().SelectMany(
@@ -36,7 +37,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-        public void DetectUnreachableConstructors(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void DetectUnreachableConstructors(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
             var typesAndConstructors = assemblies.SelectMany(a =>
                 a.GetTypes().SelectMany(
@@ -54,7 +55,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
-        private void DetectNonBeanWithFactoryInterface(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        private void DetectNonBeanWithFactoryInterface(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
             var classesWithFactoryInterface
                 = assemblies.SelectMany(a => a.GetTypes())
@@ -72,7 +73,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
-        private void DetectUnreachableStructs(IList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        private void DetectUnreachableStructs(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
         {
             var nonBeanStructMembers
                 = assemblies.SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers().Select(m => new {type = t, member = m}))
