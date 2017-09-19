@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SimpleIOCContainerMinorMethods.cs" />
     <Compile Remove="TestIOCC.cs" />
   </ItemGroup>
 
@@ -25,6 +26,10 @@
     <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="SimpleIOCContainerMinorMethods.cs" />
   </ItemGroup>
 
   <ItemGroup>

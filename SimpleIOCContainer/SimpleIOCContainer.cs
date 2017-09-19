@@ -67,8 +67,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document that it is not possible to have OS.Any along with OS.Specific
     // TODO implement constructor parameters
     // TODO add logging for inspection of assemblies and disposition of types
-    // TODO check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
-    // TODO make assembly lists immutable
+    // TODO add constructor name to map...CreatedSoFar...
+    // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
+    // DONE make assembly lists immutable
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
@@ -131,9 +132,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     ///     8) Note that beans are not available within constructors
     ///     7) bean names, constructor names and profiles are case insensitive
     ///     8) IFactory is ignored in resolving a bean reference - gotcha
+    ///     9) Gotcha is having multiple entry points and forgetting to add assemblies.
+    ///        It may be good to test root types against the list of assemblies and issue
+    ///        warnings
     /// </remarks>
     [Bean]
-    public class SimpleIOCContainer
+    public partial class SimpleIOCContainer
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
         public static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
@@ -298,7 +302,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
             {
-                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
+                mapObjectsCreatedSoFar[(rootObject.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
             }
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree(profile, typeMap);

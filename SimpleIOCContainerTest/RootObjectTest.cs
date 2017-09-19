@@ -39,5 +39,16 @@ namespace IOCCTest
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
+
+        [TestMethod]
+        public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
+        {
+            SimpleIOCContainer sic = new SimpleIOCContainer(
+              Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
+            object obj;
+            sic.CreateAndInjectDependencies((obj = new DeepHierarchy()), out var diangnostics);
+            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>();
+            Assert.IsNotNull(someUser.deep);
+        }
     }
 }
