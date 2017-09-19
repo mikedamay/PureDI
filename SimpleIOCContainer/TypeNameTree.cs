@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using static com.TheDisappointedProgrammer.IOCC.Common;
+using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {

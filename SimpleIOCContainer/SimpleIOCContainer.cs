@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 //using System.Net.Http.Headers;
@@ -8,7 +9,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using com.TheDisappointedProgrammer.IOCC.Tree;
-using static com.TheDisappointedProgrammer.IOCC.Common;
+using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -158,7 +159,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             new Dictionary<(Type, string), object>();
 
         private bool excludeRootAssembly;
-        private IDictionary<(Type beanType, string beanName), Type> typeMap;
+        private IImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
         public SimpleIOCContainer( params string[] profiles)
         {
@@ -285,7 +286,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             //CheckArgument(profile);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
-            IDictionary<(Type beanType, string beanName), Type> typeMap;
+            //IDictionary<(Type beanType, string beanName), Type> typeMap;
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
@@ -306,7 +307,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public void CreateAndInjectDependencies(object rootObject, out IOCCDiagnostics diagnostics)
         {
-            IDictionary<(Type beanType, string beanName), Type> typeMap;
+            //IDictionary<(Type beanType, string beanName), Type> typeMap;
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
             CreateAndInjectDependenciesCalled = true;
@@ -366,7 +367,8 @@ namespace com.TheDisappointedProgrammer.IOCC
             return rootObject;
         }
 
-        private (IDictionary<(Type beanType, string beanName), Type>, IOCCDiagnostics diagnostics, ISet<string> profileSet)
+        private (IImmutableDictionary<(Type beanType, string beanName)
+          , Type>, IOCCDiagnostics diagnostics, ISet<string> profileSet)
           CreateTypeMap(Type rootType)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;

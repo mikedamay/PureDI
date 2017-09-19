@@ -3,14 +3,14 @@ using System.IO;
 using System.Text;
 using System.Xml.XPath;
 using com.TheDisappointedProgrammer.IOCC;
-using static com.TheDisappointedProgrammer.IOCC.Common;
+using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace SimpleIOCCDocumentor
 {
     [Bean(Name="navigator")]
     public class XPathNavigatorResourceFactory : IFactory
     {
-        [BeanReference] private IDocumentMaker documentMaker;
+        [BeanReference] private IDocumentMaker documentMaker = null;
         /// <param name="assemblyFinder">any type whose assembly matches that where the resource is stored</param>
         /// <param name="resourcePath">absolute path of resource, e.g. "SimpleIOCContainer.IOCC.DiagnosticSchema.xml"
         ///   in case of doubt run ildasm against the assembly's binary and inspect the manifest

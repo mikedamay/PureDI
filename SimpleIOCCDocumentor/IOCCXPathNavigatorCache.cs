@@ -30,7 +30,7 @@ namespace SimpleIOCCDocumentor
     [Bean(Profile = "authoring")]
     internal class XPathNavigatorNoCache : IIOCCXPathNavigatorCache
     {
-        public XPathNavigator navigator;
+        public XPathNavigator navigator = null;
         public XPathNavigator Navigator => MakeNavigator();
         private XPathNavigatorResourceFactory factory;
         public XPathNavigatorResourceFactory Factory { set { factory = value; } }

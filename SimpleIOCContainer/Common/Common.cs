@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace com.TheDisappointedProgrammer.IOCC.Common
 {
     public static class Common
     {

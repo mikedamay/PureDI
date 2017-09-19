@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using static com.TheDisappointedProgrammer.IOCC.Common;
+using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class TypeMapBuilder
     {
-        public IDictionary<(Type type, string name), Type> 
+        public IImmutableDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref IOCCDiagnostics diagnostics, ISet<string> profileSet, SimpleIOCContainer.OS os)
         {
-            IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
+            ImmutableDictionary<(Type, string), Type>.Builder map 
+              = ImmutableDictionary.CreateBuilder<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs
@@ -82,7 +84,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     }
                 }
             }
-            return map;
+            return map.ToImmutable();
         }
         enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
         private BestFit QueryRemoveDuplicate(IDictionary<(Type, string), Type> map

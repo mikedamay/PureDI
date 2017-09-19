@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
@@ -10,7 +8,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
     {
         public static Type GetPropertyOrFieldType(this MemberInfo memberInfo)
         {
-            Common.Assert(memberInfo is FieldInfo || memberInfo is PropertyInfo);
+            Common.Common.Assert(memberInfo is FieldInfo || memberInfo is PropertyInfo);
             return (memberInfo as FieldInfo)?.FieldType ?? (memberInfo as PropertyInfo).PropertyType;
         }
         public static bool IsPropertyOrField(this MemberInfo memberInfo)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime;
 using System.Text;
@@ -18,9 +19,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         private string profile;
         private IDictionary<(Type, string), ObjectTree> mapTrees = new Dictionary<(Type, string), ObjectTree>();
-        private readonly IDictionary<(Type type, string name), Type> typeMap;
+        private readonly IImmutableDictionary<(Type type, string name), Type> typeMap;
  
-        internal ObjectTreeContainer(string profile, IDictionary<(Type, string), Type> typeMap)
+        internal ObjectTreeContainer(string profile, IImmutableDictionary<(Type, string), Type> typeMap)
         {
             this.profile = profile;
             this.typeMap = typeMap;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static com.TheDisappointedProgrammer.IOCC.Common;
+using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {

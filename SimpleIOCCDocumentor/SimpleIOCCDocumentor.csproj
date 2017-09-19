@@ -5,6 +5,11 @@
     <!--<TargetFramework>net47</TargetFramework>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Remove="wwwroot\docwrapper.html" />
   </ItemGroup>

@@ -8,9 +8,9 @@ namespace SimpleIOCCDocumentor
         [Bean]
         private class IOCCDocumentParserFactory : IFactory
         {
-            [BeanReference] private SimpleIOCContainer simpleIocContainer;
-            [BeanReference] private IPropertyMap propertyMap;
-            [BeanReference(Name="navigator")] private XPathNavigatorResourceFactory navigatorFactory;
+            [BeanReference] private SimpleIOCContainer simpleIocContainer = null;
+            [BeanReference] private IPropertyMap propertyMap = null;
+            [BeanReference(Name="navigator")] private XPathNavigatorResourceFactory navigatorFactory = null;
             public object Execute(BeanFactoryArgs args)
             {
                 try
@@ -26,6 +26,7 @@ namespace SimpleIOCCDocumentor
                 }
                 catch (Exception ex)
                 {
+                    Exception dummy = ex;
                     throw;
                 }
             }
