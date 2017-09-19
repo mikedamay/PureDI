@@ -6,15 +6,44 @@
     <userGuideTitle>Introduction to SimpleIOCContainer</userGuideTitle>
     <userGuide>
 The SimpleIOCContainer (Simple Inversion of Control Container) is a
-Dependency Injection (DI) framework focused on simplicity of use and
+Dependency Injection (DI) framework promoting simplicity of use and
 rich diagnostics.
 
-Usage follows a simple pattern the caller instantiates some key object
-with a call to SimpleIOCContainer.CreateAndInjectDependnecies and that
+Usage follows a simple pattern: the caller instantiates some key object
+with a call to *SimpleIOCContainer.CreateAndInjectDependnecies* and that
 object is instiated together with dependencies to which it refers
 and so forth recursively through the tree of dependencies.
 
-Even more stuff here.
+The call to *CreateAndInjectDependencies* is typically made at program
+startup.  The framework is principally concerned with singletons that
+have the same life span as the program.
+
+A simple esample is as follows:
+```
+using com.TheDisappointedProgrammer.IOCC;
+[Bean]
+public class Program
+{
+  [BeanReference] private Logger logger;
+  public static void Main()
+  {
+    SimpleIOCContainer sic = new SimpleIOCContainer();
+    Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;();
+    prog.SaySomething();
+  }
+  private void SaySomething()
+  {
+    logger.Log("Hello Simple");
+  }
+}
+[Bean]
+public class Logger
+{
+  public void Log(string message) => System.Console.WriteLine(message);
+}
+```
+Note:
+* classes to be injected are annotated with the *Bean* attribute.
     </userGuide>
     <userGuideSeeAlso/>
   </group>
