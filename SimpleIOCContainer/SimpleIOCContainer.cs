@@ -64,9 +64,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO alternative implementations and sometimes you want parallel
     // TODO implementations a la IPropertyMap
     // TODO seed the tree with a specific implementation
-    // TODO profile should take the best fit of implementation
+    // DONE profile should take the best fit of implementation
     // TODO document that it is not possible to have OS.Any along with OS.Specific
-    // TODO implement constructor parameters
     // TODO add logging for inspection of assemblies and disposition of types
     // TODO add constructor name to map...CreatedSoFar...
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
@@ -111,6 +110,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test with attributes as beans - nothing special
     // DONE test passing an interface as root type
     // DONE test with multiple attributes
+    // TODO Later: implement constructor parameters
+    // TODO Later: allow arbitrary objects to be attached to the tree.
     /// <summary>
     /// 
     /// </summary>

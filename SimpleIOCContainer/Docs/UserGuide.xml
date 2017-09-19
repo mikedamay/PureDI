@@ -18,7 +18,7 @@ The call to *CreateAndInjectDependencies* is typically made at program
 startup.  The framework is principally concerned with singletons that
 have the same life span as the program.
 
-A simple esample is as follows:
+A simple example is as follows:
 ```
 using com.TheDisappointedProgrammer.IOCC;
 [Bean]
@@ -43,7 +43,96 @@ public class Logger
 }
 ```
 Note:
-* classes to be injected are annotated with the *Bean* attribute.
+* Classes to be injected are annotated with the *Bean* attribute.
+* The site of the injection is annotated with the *BeanReference* attribute
+* The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean
+* Once *CreateAndInjectDependencies has been called all beans will have been instantiated and assigned to any matching bean references.
+
+See Also:
+
+[Assemblies (or An early gotcha)](/diagnosticSchema/MissingBean)
+
+[Profiles (or why bother with DI)](/userGuide/Profiles)
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>Profiles</topic>
+    <userGuideTitle>Profiles</userGuideTitle>
+    <userGuide><![CDATA[
+The essential purpose of dependency injection is to
+allow classes to be used by some class in the program
+to be swapped out without need to recode the calling
+class in any way.
+
+With the SimpleIOCContainer we accomplish that by
+allowing a profile string to be associated with any
+bean (class to be instantiated) by including
+the string as a parameter to the *[Bean]* attribute.
+The container can
+be set up with a matching profile to ensure a
+matching set of beans are instantiated.
+
+The archetypical case is for testing which
+is particularly pertinent for the SimpleIOCContainer
+with its emphasis on injection into private
+member variables.
+
+The following example shows how mock functionality
+can be injected:
+```
+using com.TheDisappointedProgrammer.IOCC;
+public class Program
+{
+  public void Main()
+  {
+      SimpleIOCContainer sic = new SimpleIOCContainer();
+      IMyService ms = sic.CreateAndInjectDependencies<MyService>();
+      ms.DoStuff();   // prints "doing the real thing"
+  }
+}
+[Bean]
+public class MyService
+{
+  [BeanReference] private IMyRepository myRepository;
+  public void DoStuff()
+  {
+    myRepository.DoSomething();
+  }
+}
+public interface IMyRepository 
+{
+  void DoSomething();
+}
+[Bean]
+public class MyRepository : IMyRepository
+{
+  public void DoSomething()
+  {
+    System.Console.WriteLine("doing the real thing");
+  }
+}
+[Bean(Profile="test")]
+public class MyTestRepository : IMyRepository
+{
+  public void DoSomething()
+  {
+    System.Console.WriteLine("this is just a test");
+  }
+}
+[TestClass]
+public class SomeTest
+{
+  [TestMethod]
+  public void ShouldPrintThisIsJustATest()
+  {
+    Assert.AreEqual("this is just a test"
+      ,new SimpleIOCContainer(Profiles: new [] {"test"}).CreateAndInjectDependencies<IMyService>().DoStuff()
+      );
+  }
+}
+```
+]]>
     </userGuide>
     <userGuideSeeAlso/>
   </group>
