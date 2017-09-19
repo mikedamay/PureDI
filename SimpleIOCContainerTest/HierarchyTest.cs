@@ -12,8 +12,9 @@ namespace IOCCTest
         [TestMethod]
         public void SelfTest()
         {
-            SimpleIOCContainer iocc = new SimpleIOCContainer();
-            iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
+            SimpleIOCContainer iocc 
+              = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
+            //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
               = iocc.CreateAndInjectDependencies<TestRoot>();
             Assert.IsNotNull(twf.test);

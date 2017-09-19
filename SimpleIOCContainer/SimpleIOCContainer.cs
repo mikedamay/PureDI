@@ -67,6 +67,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document that it is not possible to have OS.Any along with OS.Specific
     // TODO implement constructor parameters
     // TODO add logging for inspection of assemblies and disposition of types
+    // TODO check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
+    // TODO make assembly lists immutable
     // N/A suppress code analysis messages - doesn't seem to work
     // DONE move the majority of unit tests to separate assemblies
     // DONE test generics with multiple parameters
@@ -139,8 +141,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
 
-        private bool CreateAndInjectDependenciesCalled = false;
         private IList<string> assemblyNames = new List<string>();
+        private IList<string> explicitAssemblyNames;
+        [Flags]
+        public enum AssemblyExclusion { ExcludedNone = 0
+          , ExcludeSimpleIOCCContainer = 1
+          , ExcludeRootTypeAssembly = 2}
+        private AssemblyExclusion excludedAssemblies;
 
         private readonly ISet<string> profileSet;
         // the key in the objects created so far map comprises 2 types.  The first is the
@@ -152,12 +159,20 @@ namespace com.TheDisappointedProgrammer.IOCC
         private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
             new Dictionary<(Type, string), object>();
 
-        private bool excludeRootAssembly;
         private IImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
-        public SimpleIOCContainer( params string[] profiles)
+        public SimpleIOCContainer( string[] Profiles = null
+          , Assembly[] Assemblies = null, string[] AssemblyNames = null
+          , AssemblyExclusion ExcludeAssemblies =  AssemblyExclusion.ExcludedNone)
         {
-            profileSet = new HashSet<string>(profiles.Length > 0 ? profiles : new string[0], new CaseInsensitiveEqualityComparer());
+            excludedAssemblies = ExcludeAssemblies;
+            string[] assemblyNames = AssemblyNames ?? new string[0];
+            Assembly[] specifiedAssemblies = Assemblies ?? new Assembly[0];
+            explicitAssemblyNames 
+              = specifiedAssemblies.Select(sa => sa.GetName().Name)
+              .Union(assemblyNames).ToList();
+            profileSet = new HashSet<string>( Profiles 
+              ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -180,28 +195,28 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// to CreateAndInjectDependencies() then the system behaves as if
         /// the flag was set to true as there is no easy way for the container
         /// to know the assembly from which it was called.</param>
-        public void SetAssemblies(bool excludeRootAssembly, params string[] assemblyNames)
-        {
-            this.excludeRootAssembly = excludeRootAssembly;
-            SetAssemblies(assemblyNames);
-        }
-        /// <example>SetAssemblies("MyApp", "MyLib")</example>
-        public void SetAssemblies(params string[] assemblyNames)
-        {
-            CheckArgument(assemblyNames);
-            if (CreateAndInjectDependenciesCalled)
-            {
-                throw new InvalidOperationException(
-                  "SetAssemblies has been called after CreateAndInjectDependencies."
-                  + "  This is not permitted.");
-            }
-            if (this.assemblyNames.Count > 0)
-            {
-                throw new IOCCException("SimpleIOCContainer.SetAssemblies() should be called only once"
-                  ,null);
-            }
-            this.assemblyNames = assemblyNames.ToList();
-        }
+        //public void SetAssemblies(bool excludeRootAssembly, params string[] assemblyNames)
+        //{
+        //    this.excludeRootAssembly = excludeRootAssembly;
+        //    SetAssemblies(assemblyNames);
+        //}
+        ///// <example>SetAssemblies("MyApp", "MyLib")</example>
+        //public void SetAssemblies(params string[] assemblyNames)
+        //{
+        //    CheckArgument(assemblyNames);
+        //    if (CreateAndInjectDependenciesCalled)
+        //    {
+        //        throw new InvalidOperationException(
+        //          "SetAssemblies has been called after CreateAndInjectDependencies."
+        //          + "  This is not permitted.");
+        //    }
+        //    if (this.assemblyNames.Count > 0)
+        //    {
+        //        throw new IOCCException("SimpleIOCContainer.SetAssemblies() should be called only once"
+        //          ,null);
+        //    }
+        //    this.assemblyNames = assemblyNames.ToList();
+        //}
 
         /// <param name="diagnostics"></param>
         /// <param name="rootBeanName"></param>
@@ -300,10 +315,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
-            CreateAndInjectDependenciesCalled = true;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
-            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
+            {
+                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+            }
+            if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
+            {
+                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
+            }
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree(profile, typeMap);
             tree.CreateAndInjectDependencies(rootObject, diagnostics
@@ -324,7 +344,6 @@ namespace com.TheDisappointedProgrammer.IOCC
           , IOCCDiagnostics diagnostics, ISet<string> profileSet, string rootBeanName
           , string rootConstructorName, BeanScope scope)
         {
-            CreateAndInjectDependenciesCalled = true;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
                     // factories and possibly other beans may need access to the SimpleIOCContainer itself
@@ -350,11 +369,15 @@ namespace com.TheDisappointedProgrammer.IOCC
           CreateTypeMap(Type rootType)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            if (!excludeRootAssembly)
+            assemblyNames = explicitAssemblyNames;
+            if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
             {
                 assemblyNames.Add(rootType.Assembly.GetName().Name);
             }
-            assemblyNames.Add(this.GetType().Assembly.GetName().Name);
+            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
+            {
+                assemblyNames.Add(this.GetType().Assembly.GetName().Name);
+            }
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
             IList<Assembly> assemblies = AssembleAssemblies(assemblyNames);

@@ -23,8 +23,8 @@ namespace IOCCTest.LoadTest
             var assembly = BuildAssembly();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.SetAssemblies(assembly.GetName().Name);
+            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies : new []{assembly});
+            //sic.SetAssemblies(assembly.GetName().Name);
             object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
             sw.Stop();
             WriteLine(sw.Elapsed);

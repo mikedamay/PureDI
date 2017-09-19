@@ -33,8 +33,8 @@ namespace IOCCTest
             , string className)
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
-            SimpleIOCContainer iocc = new SimpleIOCContainer();
-            iocc.SetAssemblies(assembly.GetName().Name);
+            SimpleIOCContainer iocc = new SimpleIOCContainer(Assemblies: new[] { assembly });
+            //iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
         }
 

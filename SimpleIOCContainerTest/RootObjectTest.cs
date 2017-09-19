@@ -14,8 +14,8 @@ namespace IOCCTest
         public void SHouldCreateTreeForInstantiatedObject()
         {
             Simple simple = new Simple();
-            SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
+            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
+            //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
             sic.CreateAndInjectDependencies(simple, out var diagnostics);
             Assert.IsNotNull(simple.GetResults().Child);
         }

@@ -16,8 +16,8 @@ namespace IOCCTest
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.SimpleProfile.cs");
-                SimpleIOCContainer sic = new SimpleIOCContainer(new string[] {"Simple"});
-                sic.SetAssemblies(assembly.GetName().Name);
+                SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"Simple"}, Assemblies: new[] { assembly });
+                //sic.SetAssemblies(assembly.GetName().Name);
                  var result =
                     sic.CreateAndInjectDependencies("IOCCTest.ProfileTestData.SimpleProfile", out diagnostics) as
                         IResultGetter;
@@ -37,8 +37,8 @@ namespace IOCCTest
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.ComplexProfile.cs");
-                SimpleIOCContainer sic = new SimpleIOCContainer(new string[] { "P1", "P2", "P3" });
-                sic.SetAssemblies(assembly.GetName().Name);
+                SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] { "P1", "P2", "P3" }, Assemblies: new[] { assembly });
+                //sic.SetAssemblies(assembly.GetName().Name);
                 var result =
                     sic.CreateAndInjectDependencies("IOCCTest.ProfileTestData.ComplexProfile", out diagnostics) as
                         IResultGetter;
@@ -61,10 +61,10 @@ namespace IOCCTest
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.ComplexProfile.cs");
-                SimpleIOCContainer sic1 = new SimpleIOCContainer(new string[] { "P1", "P2", "P3" });
-                sic1.SetAssemblies(assembly.GetName().Name);
-                SimpleIOCContainer sic2 = new SimpleIOCContainer(new string[] { "P1", "P4" });
-                sic2.SetAssemblies(assembly.GetName().Name);
+                SimpleIOCContainer sic1 = new SimpleIOCContainer(Profiles: new string[] { "P1", "P2", "P3" }, Assemblies: new[] { assembly });
+                //sic1.SetAssemblies(assembly.GetName().Name);
+                SimpleIOCContainer sic2 = new SimpleIOCContainer(Profiles: new string[] { "P1", "P4" }, Assemblies : new[] { assembly });
+                //sic2.SetAssemblies(assembly.GetName().Name);
                 var result1 =
                     sic1.CreateAndInjectDependencies("IOCCTest.ProfileTestData.ComplexProfile", out diagnostics) as
                         IResultGetter;
@@ -91,8 +91,8 @@ namespace IOCCTest
         public void ShouldSelectBestCandidate()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
-            SimpleIOCContainer sic = new SimpleIOCContainer(new string[] { "dobest" });
-            sic.SetAssemblies(assembly.GetName().Name);
+            SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] { "dobest" }, Assemblies: new[] { assembly });
+            //sic.SetAssemblies(assembly.GetName().Name);
             IResultGetter result = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
@@ -103,8 +103,8 @@ namespace IOCCTest
         public void ShouldSelectBestCandidateNewest()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
-            SimpleIOCContainer sic = new SimpleIOCContainer(new string[] { "thirdbest" });
-            sic.SetAssemblies(assembly.GetName().Name);
+            SimpleIOCContainer sic = new SimpleIOCContainer(Profiles:new string[] { "thirdbest" }, Assemblies: new[] { assembly });
+            //sic.SetAssemblies(assembly.GetName().Name);
             IResultGetter result = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
@@ -114,8 +114,8 @@ namespace IOCCTest
         public void ShouldSelectBestCandidateWithoutProfile()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
-            SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.SetAssemblies(assembly.GetName().Name);
+            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { assembly });
+            //sic.SetAssemblies(assembly.GetName().Name);
             IResultGetter result = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
