@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
-//using System.Net.Http.Headers;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using com.TheDisappointedProgrammer.IOCC.Tree;
 using static com.TheDisappointedProgrammer.IOCC.Common.Common;
@@ -145,8 +141,6 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         private bool CreateAndInjectDependenciesCalled = false;
         private IList<string> assemblyNames = new List<string>();
-        private readonly IDictionary<string, ObjectTreeContainer> mapObjectTreeContainers 
-          = new Dictionary<string, ObjectTreeContainer>();
 
         private readonly ISet<string> profileSet;
         // the key in the objects created so far map comprises 2 types.  The first is the
@@ -241,7 +235,6 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <returns>an ojbect of root type</returns>
         public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
-            //CheckArgument(profile);
             CheckArgument(beanName);
             CheckArgument(rootConstructorName);
             ISet<string> profileSet;
@@ -283,10 +276,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
-            //CheckArgument(profile);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
-            //IDictionary<(Type beanType, string beanName), Type> typeMap;
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
@@ -307,23 +298,12 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public void CreateAndInjectDependencies(object rootObject, out IOCCDiagnostics diagnostics)
         {
-            //IDictionary<(Type beanType, string beanName), Type> typeMap;
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
             CreateAndInjectDependenciesCalled = true;
-            ObjectTreeContainer container;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            if (mapObjectTreeContainers.ContainsKey(profileSetKey))
-            {
-                container = mapObjectTreeContainers[profileSetKey];
-            }
-            else
-            {
-                container = new ObjectTreeContainer(profileSetKey, typeMap);
-            }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-            //container.CreateAndInjectDependencies(rootObject, diagnostics, mapObjectsCreatedSoFar);
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree(profile, typeMap);
             tree.CreateAndInjectDependencies(rootObject, diagnostics
@@ -345,20 +325,18 @@ namespace com.TheDisappointedProgrammer.IOCC
           , string rootConstructorName, BeanScope scope)
         {
             CreateAndInjectDependenciesCalled = true;
-            ObjectTreeContainer container;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            if (mapObjectTreeContainers.ContainsKey(profileSetKey))
-            {
-                container = mapObjectTreeContainers[profileSetKey];
-            }
-            else
-            {
-                container = new ObjectTreeContainer(profileSetKey, typeMap);
-            }
             mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
                     // factories and possibly other beans may need access to the SimpleIOCContainer itself
                     // so we include it as a bean by default
-            var rootObject = container.CreateAndInjectDependencies(rootType, diagnostics, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
+            if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
+            {
+                return mapObjectsCreatedSoFar[(rootType, rootBeanName)];
+            }
+            ObjectTree tree = new ObjectTree(profileSetKey, typeMap);
+            var rootObject = tree.CreateAndInjectDependencies(
+              rootType, diagnostics, rootBeanName.ToLower(), rootConstructorName.ToLower()
+              , scope, mapObjectsCreatedSoFar);
             if (rootObject == null && diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", diagnostics);
