@@ -38,36 +38,45 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
     // DONE address static fields and beans.  Beans are invalid
     // DONE readonly fields
-    // TODO look at MEF implementations - heard on dnr 8-8-17
     // DONE document / investigate other classes derived from ValueType - nothing much to say
-    // TODO testing in untrusted environments
     // DONE inherited attributes
-    // TODO built-in factories for environement variables, command line arguments, config files
-    // TODO attach existing object to object tree
     //
-    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
-    // TODO test case-sensitivity
-    // TODO change wording of no-arg constructor diagnostic to include constructor based injections
-    // TODO document the fact that member type is based on the type's GetIOCCName() attribute
+    // DONE change wording of no-arg constructor diagnostic to include constructor based injections
+    // TODO Research:
+    // TODO look at MEF implementations - heard on dnr 8-8-17
+    // TODO testing in untrusted environments
+    // TODO ninject
+    // TODO spring
+    // TODO ASP.NET
+    // TODO documentation:
+    // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // TODO and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
     // TODO are combined to support inheritance.  Execute must be virtual.
     // TODO document that names apply to factories not the target reference bean.
     // TODO document lack of thread safety
     // TODO document the point that injected members are not available in the constructor
-    // TODO handle DocumentParser scenario where two beans are required with varying parameters.
-    // TODO constructor name needs to be included in the cached tree
-    // TODO document use of profiles with factories
-    // TODO deal with exceptions on nested calls to CreateAndInject...()
     // TODO document the variable parameters issue or possibly implement a solution
     // TODO handle situation / document where sometimes in same program you want
     // TODO alternative implementations and sometimes you want parallel
     // TODO implementations a la IPropertyMap
-    // TODO seed the tree with a specific implementation
-    // DONE profile should take the best fit of implementation
     // TODO document that it is not possible to have OS.Any along with OS.Specific
+    // TODO document bean, bean definition and other technical terms
+    // TODO developer guide: policy on diagnostics and variation for constructors
+    // DONE handle DocumentParser scenario where two beans are required with varying parameters.
+    // N/A constructor name needs to be included in the cached tree
+    // N/A document use of profiles with factories
+    // DONE profile should take the best fit of implementation
+    // TODO Implementation:
+    // TODO deal with exceptions on nested calls to CreateAndInject...()
     // TODO add logging for inspection of assemblies and disposition of types
     // TODO add constructor name to map...CreatedSoFar...
+    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
+    // TODO test case-sensitivity
+    // TODO nuget
+    // TODO  Mass Test
+    // TODO change HasWarnings to HasDiagnostics
+    // TODO test with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
     // DONE make assembly lists immutable
     // N/A suppress code analysis messages - doesn't seem to work
@@ -79,8 +88,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE make sure that root failure when passing type string is handled via diagnostics and that
     // DONE the explanation is expanded to include that.
     // N/A make our own constructor to handle readonly properties - not a good idea
-    // TODO change HasWarnings to HasDiagnostics
-    // TODO change Docs folder to resources folder
+    // N/A change Docs folder to resources folder
     // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
     // DONE Release Build
     // DONE remove 2-way enumerator
@@ -112,6 +120,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE test with multiple attributes
     // TODO Later: implement constructor parameters
     // TODO Later: allow arbitrary objects to be attached to the tree.
+    // TODO Later: built-in factories for environement variables, command line arguments, config files
+    // TODO Later: seed the tree with a specific implementation
+    // TODO Later: syntax colorisation in documentation
+    // TODO Later: Code Analysis
     /// <summary>
     /// 
     /// </summary>
@@ -207,7 +219,9 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     top of the tree - as instantiated by rootType
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
-        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics
+          , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
+          , BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
@@ -230,7 +244,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an ojbect of root type</returns>
-        public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME
+          , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(beanName);
             CheckArgument(rootConstructorName);
@@ -269,8 +284,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     top of the tree - as instantiated by rootTypeName
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
-        /// <returns></returns>
-        public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        /// <returns>the root of the object tree with all dependencies instantiated</returns>
+        public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics
+          , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
+          , BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
             CheckArgument(rootBeanName);
@@ -327,9 +344,12 @@ namespace com.TheDisappointedProgrammer.IOCC
           , string rootConstructorName, BeanScope scope)
         {
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-                    // factories and possibly other beans may need access to the SimpleIOCContainer itself
-                    // so we include it as a bean by default
+            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
+            {
+                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                // factories and possibly other beans may need access to the SimpleIOCContainer itself
+                // so we include it as a bean by default
+            }
             if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
             {
                 return mapObjectsCreatedSoFar[(rootType, rootBeanName)];
@@ -371,7 +391,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
         /// <summary>
-        /// builds list of all the assemblies involved in the dependency tree
+        /// NOT USED: builds list of all the assemblies involved in the dependency tree
         /// </summary>
         /// <param name="assemblyNames">list of names provided by caller.
         ///     This should include the names of all assemblies containing dependencies (concrete classes)
@@ -401,7 +421,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-    }
+    }   // SimpleIOCContainer
 
     internal class CaseInsensitiveEqualityComparer : IEqualityComparer<string>
     {
@@ -415,7 +435,6 @@ namespace com.TheDisappointedProgrammer.IOCC
             return obj.ToLower().GetHashCode();
         }
     }
-// SimpleIOCContainer
 
     public enum BeanScope { Singleton, Prototype}
 

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ResourceFactory.cs" />
     <Compile Remove="SimpleIOCContainerMinorMethods.cs" />
     <Compile Remove="TestIOCC.cs" />
   </ItemGroup>

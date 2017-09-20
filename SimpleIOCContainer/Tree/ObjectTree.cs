@@ -97,8 +97,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     maps the name of the class or struct of
         ///     the object to the instance of the object.</param>
         /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
-        /// <param name="bean">a class already instantiated by SimpleIOCContainer whose
-        ///                    fields and properties may need to be injuected</param>
         private object CreateObjectTree((Type beanType, string beanName, string constructorName) beanId,
           CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
           BeanScope beanScope)
@@ -172,8 +170,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             object bean;
             if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, diagnostics)) == null)
             {
+                Assert(diagnostics.HasWarnings);    // diagnostics recorded by callee.
                 return null; // no implementation type found corresponding to this beanId
-                // TODO don't we need some diangostics here
+                             // we can still carry on and a) this might not be fatal b) other diagnostics may show up
+                            
             }
             Type constructableType = MakeConstructableType(beanId, implementationType);
             bool cyclicalDependencyFound = false;
@@ -184,21 +184,29 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 {
                     cycleGuard.Push(constructableType);
                     CreateMemberTrees(constructableType, out var memberSpecs, creationContext, diagnostics);
-                    CreateConstructorTrees(constructableType, out var parameterSpec);
-                    (complete, bean) = MakeBean(parameterSpec);
+                    CreateConstructorTrees(constructableType, out var parameterSpecs);
+                    (complete, bean) = MakeBean(parameterSpecs);
                     Assert(!cyclicalDependencies.Contains(constructableType)
                            || cyclicalDependencies.Contains(constructableType)
                            && complete
-                           && bean != null); // "complete && bean != null" indicates that
-                    // MakeBean found a bean cached in mapObjectsCreatedSoFar.
-                    // 
-                    // if a cyclical dependency was found lower
-                    // in the stack then a bean must have been
-                    // created for it at that time. So wtf!
+                           && bean != null); 
+                            // "complete && bean != null" indicates that
+                            // MakeBean found a bean cached in mapObjectsCreatedSoFar.
+                            // 
+                            // if a cyclical dependency was found lower
+                            // in the stack then a bean must have been
+                            // created for it at that time. So wtf!
+                    /// There are 3 cases where complete == true (i.e. attempted bean instantiation is complete)
+                    /// 1) bean instantiation failed; in which case we will return null - caller can deal
+                    /// 2) bean already existed (all of its members will have already been created and assigned).
+                    /// 3) bean already existed but because it was a cyclical dependency its
+                    ///    members had not been created and assigned and that needs to be done now.
+                    ///    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
+                    ///     case of 3) it wrongly reports that the bean creation is complete)
                     if (complete && !cyclicalDependencies.Contains(constructableType))
                     {
                         return bean; // either the bean and therefore its children had already been created
-                        // or we were unable to create the bean (null)
+                                     // or we were unable to create the bean (null)
                     }
                     cyclicalDependencies.Remove(constructableType);
                     AssignMembers(bean, memberSpecs, diagnostics, creationContext);
