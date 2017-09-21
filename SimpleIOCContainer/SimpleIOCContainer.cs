@@ -69,13 +69,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
-    // TODO deal with exceptions on nested calls to CreateAndInject...()
     // TODO add logging for inspection of assemblies and disposition of types
     // TODO add constructor name to map...CreatedSoFar...
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test case-sensitivity
     // TODO nuget
-    // TODO  Mass Test
+    // TODO Mass Test
     // TODO change HasWarnings to HasDiagnostics
     // TODO test with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // TODO prevent user from passing null or empty string to container constructor
@@ -126,6 +125,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: seed the tree with a specific implementation
     // TODO Later: syntax colorisation in documentation
     // TODO Later: Code Analysis
+    // TODO Later: deal with exceptions on nested calls to CreateAndInject...()
     /// <summary>
     /// 
     /// </summary>
