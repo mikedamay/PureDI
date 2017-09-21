@@ -42,7 +42,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<DeepHierahy>();
+            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>();
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);

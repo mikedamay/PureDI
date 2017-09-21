@@ -64,6 +64,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document bean, bean definition and other technical terms
     // TODO developer guide: policy on diagnostics and variation for constructors
     // TODO assert that attribute parameters are non-null and of the correct type.
+    // TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
@@ -75,9 +76,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test case-sensitivity
     // TODO nuget
     // TODO Mass Test
-    // TODO change HasWarnings to HasDiagnostics
-    // TODO test with same type from multiple assemblies using aliases - I think this will defeat the IOCC
-    // TODO prevent user from passing null or empty string to container constructor
+    // TODO test global:: and document that it won't work for root type passed as string
+    // N/A change HasWarnings to HasDiagnostics
+    // DONE prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
     // DONE make assembly lists immutable
     // N/A suppress code analysis messages - doesn't seem to work
@@ -126,6 +127,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: syntax colorisation in documentation
     // TODO Later: Code Analysis
     // TODO Later: deal with exceptions on nested calls to CreateAndInject...()
+    // TODO Later: handle extern alias situations
     /// <summary>
     /// 
     /// </summary>
@@ -206,6 +208,7 @@ namespace com.TheDisappointedProgrammer.IOCC
           , Assembly[] Assemblies = null
           , AssemblyExclusion ExcludeAssemblies =  AssemblyExclusion.ExcludedNone)
         {
+            CheckProfilesArgument(Profiles);
             excludedAssemblies = ExcludeAssemblies;
             explicitAssemblies = (Assemblies != null 
               ? ImmutableArray.Create<Assembly>(Assemblies) 
@@ -418,6 +421,17 @@ namespace com.TheDisappointedProgrammer.IOCC
         private void CheckArgument(object o)
         {
             if (o == null)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+        private void CheckProfilesArgument(object[] o)
+        {
+            if (o == null)
+            {
+                return;
+            }
+            if (((string[])o).Any(string.IsNullOrWhiteSpace))
             {
                 throw new ArgumentNullException();
             }

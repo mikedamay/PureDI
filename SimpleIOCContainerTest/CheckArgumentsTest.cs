@@ -106,5 +106,45 @@ namespace IOCCTest
                 });
 
         }
+        [TestMethod]
+        public void ShouldThrowExceptionForEmptyProfile()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var sic = new SimpleIOCContainer(Profiles: new[] { (string)null });
+                });
+
+        }
+        [TestMethod]
+        public void ShouldThrowExceptionForEmptyProfile2()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var sic = new SimpleIOCContainer(Profiles: new[] { "" });
+                });
+
+        }
+        [TestMethod]
+        public void ShouldThrowExceptionForEmptyProfile3()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var sic = new SimpleIOCContainer(Profiles: new[] { " " });
+                });
+
+        }
+        [TestMethod]
+        public void ShouldThrowExceptionForEmptyProfile4()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var sic = new SimpleIOCContainer(Profiles: new[] { "goodstuff", null });
+                });
+
+        }
     }
 }

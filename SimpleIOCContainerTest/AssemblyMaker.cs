@@ -74,15 +74,9 @@ namespace IOCCTest
               .Where(a => !string.IsNullOrWhiteSpace(a?.Location)).Select(
               a => MetadataReference.CreateFromFile(a.Location))
               .ToArray();
-            //var extraRefAssemblies = ExtraAssemblies.Select(a => MetadataReference.CreateFromAssembly(a)).ToArray();
             var comp = CSharpCompilation.Create(SelectAssemblyName(TargetAssemblyName)).AddSyntaxTrees(tree)
               .AddReferences(refAssemblies).WithOptions(options);
-            //foreach (Assembly localRef in AppDomain.CurrentDomain.GetAssemblies())
-            //{
-            //    var refAssembly = MetadataReference.CreateFromFile(localRef.Location);
-            //    comp.AddReferences(new [] {refAssembly});
-            //}
-            MemoryStream ms = new MemoryStream();
+             MemoryStream ms = new MemoryStream();
             if (InMemory)
             {
                 var res = comp.Emit(ms);
