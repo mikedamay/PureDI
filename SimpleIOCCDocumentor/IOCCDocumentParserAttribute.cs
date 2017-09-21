@@ -3,12 +3,14 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDocumentor
 {
+    /// <summary>
+    /// e.g. [IOCCDocumentPaarser(DocumentPath : "SimpleIOCContainer.Docs.UserGuide.xml", XmlRoot : "userGuide")]
+    /// </summary>
     public class IOCCDocumentParserAttribute : BeanReferenceBaseAttribute
     {
         [Bean]
         private class IOCCDocumentParserFactory : IFactory
         {
-            [BeanReference] private SimpleIOCContainer simpleIocContainer = null;
             [BeanReference] private IPropertyMap propertyMap = null;
             [BeanReference(Name="navigator")] private XPathNavigatorResourceFactory navigatorFactory = null;
             public object Execute(BeanFactoryArgs args)
@@ -21,7 +23,6 @@ namespace SimpleIOCCDocumentor
                     IOCCDocumentParser ddp = new IOCCDocumentParser(
                         (string)propertyMap.Map(documentPath)
                         ,xmlRoot, navigatorFactory);
-                    simpleIocContainer.CreateAndInjectDependencies(ddp, out var diagnostics);
                     return ddp;
                 }
                 catch (Exception ex)

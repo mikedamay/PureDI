@@ -46,7 +46,7 @@ namespace SimpleIOCCDocumentor
                         ? diagnosticSchemaDocumentParser as IDocumentParser
                         : userGuideDocumentParser;
                 var titleMD = parser.GetFragment("userGuideTitle", fragment);
-                var titleHtml = markdownProcessor.ProcessFragment(titleMD);
+                var titleHtml = titleMD; // markdownProcessor.ProcessFragment(titleMD);
                 var userGuideMD = parser.GetFragment("userGuide", fragment);
                 var userGuideHtml = markdownProcessor.ProcessFragment(userGuideMD);
                 var wrapper = htmlWrapper.Replace("{userGuideTitle}", titleHtml).Replace("{userGuide}", userGuideHtml);

@@ -16,10 +16,9 @@ namespace SimpleIOCCDocumentor
     [Bean]
     internal class IOCCDocumentParser : IDocumentParser
     {
-        //private XPathNavigator navigator;
         private string resourcePath;
         private string xmlRoot;
-
+        [BeanReference] private ICodeFetcher codeFetcher = null;
         private IIOCCXPathNavigatorCache navigatorCache;
         [BeanReference(Scope=BeanScope.Prototype)]
         private IIOCCXPathNavigatorCache NavigatorCache
@@ -36,7 +35,6 @@ namespace SimpleIOCCDocumentor
 
         // inhibit IOCC diagnostic for no arg constructor
         public IOCCDocumentParser() { }
-
         /// <param name="resourcePath">either "SimpleIOCContainer.Docs.DiagnosticSchema.xml"}
         ///   or "SimpleIOCContainer.Docs.UserGuide.xml"} if it's anyhing else
         ///   then the resource needs to be in the SimpleIOCContainer assembly </param>
@@ -55,7 +53,7 @@ namespace SimpleIOCCDocumentor
                 $"/{xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
             {
-                return nodes.Current.InnerXml;
+                return codeFetcher.SubstituteCode(nodes.Current.InnerXml);
             }
             else
             {
@@ -78,6 +76,5 @@ namespace SimpleIOCCDocumentor
             return map;
         }
     }
-    // e.g. [IOCCDocumentPaarser(DocumentPath : "xxx.yyy.zzz.xml", XmlRoot : "myroot")]
 
 }

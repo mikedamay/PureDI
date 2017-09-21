@@ -18,29 +18,9 @@ The call to *CreateAndInjectDependencies* is typically made at program
 startup.  The framework is principally concerned with singletons that
 have the same life span as the program.
 
-A simple example is as follows:
+A simple example (Introduction.cs) is as follows:
 ```
-using com.TheDisappointedProgrammer.IOCC;
-[Bean]
-public class Program
-{
-  [BeanReference] private Logger logger;
-  public static void Main()
-  {
-    SimpleIOCContainer sic = new SimpleIOCContainer();
-    Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;();
-    prog.SaySomething();
-  }
-  private void SaySomething()
-  {
-    logger.Log("Hello Simple");
-  }
-}
-[Bean]
-public class Logger
-{
-  public void Log(string message) => System.Console.WriteLine(message);
-}
+{code-Introduction.cs}
 ```
 Note:
 * Classes to be injected are annotated with the *Bean* attribute.
@@ -59,7 +39,9 @@ See Also:
   <group>
     <topic>Profiles</topic>
     <userGuideTitle>Profiles</userGuideTitle>
-    <userGuide><![CDATA[
+    <userGuide>
+  <![CDATA[
+
 The essential purpose of dependency injection is to
 allow classes to be used by some class in the program
 to be swapped out without need to recode the calling
@@ -81,59 +63,40 @@ member variables.
 The following example shows how mock functionality
 can be injected:
 ```
-using com.TheDisappointedProgrammer.IOCC;
-public class Program
-{
-  public void Main()
-  {
-      SimpleIOCContainer sic = new SimpleIOCContainer();
-      IMyService ms = sic.CreateAndInjectDependencies<MyService>();
-      ms.DoStuff();   // prints "doing the real thing"
-  }
-}
-[Bean]
-public class MyService
-{
-  [BeanReference] private IMyRepository myRepository;
-  public void DoStuff()
-  {
-    myRepository.DoSomething();
-  }
-}
-public interface IMyRepository 
-{
-  void DoSomething();
-}
-[Bean]
-public class MyRepository : IMyRepository
-{
-  public void DoSomething()
-  {
-    System.Console.WriteLine("doing the real thing");
-  }
-}
-[Bean(Profile="test")]
-public class MyTestRepository : IMyRepository
-{
-  public void DoSomething()
-  {
-    System.Console.WriteLine("this is just a test");
-  }
-}
-[TestClass]
-public class SomeTest
-{
-  [TestMethod]
-  public void ShouldPrintThisIsJustATest()
-  {
-    Assert.AreEqual("this is just a test"
-      ,new SimpleIOCContainer(Profiles: new [] {"test"}).CreateAndInjectDependencies<IMyService>().DoStuff()
-      );
-  }
-}
+{code-Profiles.cs}
 ```
+Note:
+* The *myRepository bean* is referenced through an interface (*IMyRepository*)
+that the bean's class implements.
+Base classes can perform the same role as interfaces provided that they
+are not themselves marked as beans.
+* There are two implementations of the interface: 
+MyRepository which is the "production" implementation and *MyTestRepository*
+available for testing purposes.
+* The main program does not pass a profile when it creates the *SimpleIOCContainer*.
+  Therefore the production version of IMyRepository is instantiated.
+Howver the unit test passes a profile of "test" which matches the profile
+for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
+* *CreateAndInjectDependencies* will select a bean with a matching profile or, in the
+absence of a matching bean, a bean with no profile.
+* It is possible (and, in fact, usual) to specify multiple profiles to the 
+*SimpleIOCContainer* constructor.  This enables fine grained control at run-time
+of which implementations are to be used.
+
+See Also:
+
+[Bean Names (or one interface - two implementations)](/userGuide/BeanNames)
+
 ]]>
     </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>_RegexTest</topic>
+    <userGuideTitle>Regex Test</userGuideTitle>
+    <userGuide>some
+    code 
+    here</userGuide>
     <userGuideSeeAlso/>
   </group>
 </userGuide>

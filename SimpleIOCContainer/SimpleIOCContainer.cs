@@ -63,6 +63,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document that it is not possible to have OS.Any along with OS.Specific
     // TODO document bean, bean definition and other technical terms
     // TODO developer guide: policy on diagnostics and variation for constructors
+    // TODO assert that attribute parameters are non-null and of the correct type.
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
@@ -77,6 +78,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO  Mass Test
     // TODO change HasWarnings to HasDiagnostics
     // TODO test with same type from multiple assemblies using aliases - I think this will defeat the IOCC
+    // TODO prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
     // DONE make assembly lists immutable
     // N/A suppress code analysis messages - doesn't seem to work
