@@ -19,9 +19,7 @@ startup.  The framework is principally concerned with singletons that
 have the same life span as the program.
 
 A simple example (Introduction.cs) is as follows:
-```
-{code-Introduction.cs}
-```
+<div class="pre-scrollable"><pre><code>{code-introduction.cs}</code></pre></div>
 Note:
 * Classes to be injected are annotated with the *Bean* attribute.
 * The site of the injection is annotated with the *BeanReference* attribute
@@ -40,7 +38,6 @@ See Also:
     <topic>Profiles</topic>
     <userGuideTitle>Profiles</userGuideTitle>
     <userGuide>
-  <![CDATA[
 
 The essential purpose of dependency injection is to
 allow classes to be used by some class in the program
@@ -62,9 +59,8 @@ member variables.
 
 The following example shows how mock functionality
 can be injected:
-```
-{code-Profiles.cs}
-```
+<div class="pre-scrollable"><pre><code>{code-Profiles.cs}</code></pre></div>
+
 Note:
 * The *myRepository bean* is referenced through an interface (*IMyRepository*)
 that the bean's class implements.
@@ -87,7 +83,6 @@ See Also:
 
 [Bean Names (or one interface - two implementations)](/userGuide/BeanNames)
 
-]]>
     </userGuide>
     <userGuideSeeAlso/>
   </group>

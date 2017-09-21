@@ -1,4 +1,4 @@
-using com.TheDisappointedProgrammer.IOCC;
+﻿using com.TheDisappointedProgrammer.IOCC;
 
 [Bean]
 class MyClass

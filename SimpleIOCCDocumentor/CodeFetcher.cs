@@ -29,7 +29,7 @@ namespace SimpleIOCCDocumentor
             string resultDoc = null;
             void GetCodeText(string codefile, string pre, string post)
             {
-                string codeText = TrimCode(GetCodeFromFile(codefile));
+                string codeText = PrepareCode(GetCodeFromFile(codefile));
                 resultDoc = string.IsNullOrWhiteSpace(codefile) ? doc 
                   : new StringBuilder().Append(pre).Append(codeText).Append( post).ToString();
             }
@@ -37,14 +37,14 @@ namespace SimpleIOCCDocumentor
             return resultDoc;
         }
 
-        private string TrimCode(string codeText)
+        private string PrepareCode(string codeText)
         {
             Regex regex = new Regex("(?<displaycode>.*)namespace.*$", RegexOptions.Singleline);
             Match match = regex.Match(codeText);
             string str 
               = match.Groups.Where(g => g.Name == "displaycode")
               .Select(g => g.Value).FirstOrDefault();
-            return string.IsNullOrWhiteSpace(str) ? codeText : str;
+            return string.IsNullOrWhiteSpace(str) ? codeText : $"{str}";
         }
 
         /// <summary>

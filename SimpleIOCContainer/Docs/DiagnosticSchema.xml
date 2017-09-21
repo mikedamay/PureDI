@@ -15,44 +15,8 @@
     <userGuide>*Bean*s can be referenced through interfaces or base classes 
     (as long as the  base classes are not themselves beans) as well as directly
     through the implementation.
-```
-      using com.TheDisappointedProgrammer.IOCC;
-      [Bean]
-      class MyClass
-      {
-          [BeanReference(Name="Impl1")] private IMyInterface myInterface = null;
-          public void UseReference()
-          {
-              myInterface.DoStuff();
-          }
-          public static void Main()
-          {
-              var sic = new SimpleIOCContainer();
-              MyClass myClass = sic.CreateAndInjectDependencies&lt;MyClass&gt;();
-              myClass.UseReference();     // will display "One"
-          }
-      }
-      public interface IMyInterface
-      {
-            void DoStuff();
-      }
-      [Bean(Name="Impl1")]
-      public class OneImplementation :  IMyInterface
-      {
-          public void DoStuff()
-          {
-              System.Console.WriteLine("One");
-          }
-      }
-      [Bean(Name="Impl2")]
-      public class TwoImplementation : IMyInterface
-      {
-          public void DoStuff()
-          {
-              System.Console.WriteLine("Two");
-          }
-      }
-```
+<div class="pre-scrollable"><pre><code>{code-duplicateBean.cs}</code></pre></div>
+
 When the container instantiiates *MyClass* in the example above 
 through a call to *CreateAndInjectDependencies()* it has to make a decision
 about which implementation of IMyInterface to assign to the *myInterface*
