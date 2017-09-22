@@ -1,7 +1,4 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
-using Microsoft.Office.Tools.Excel;
-using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 
 [Bean]
 public class DuplicateBean
@@ -38,7 +35,9 @@ internal class MongoDB : IRepository
 {
     public string Id => "magnificent mongo";
 }
-namespace BeanNamesRunner{using Microsoft.VisualStudio.TestTools.UnitTesting;
-[TestClass] public class MainRunner    {
+namespace BeanNamesRunner
+{
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    [TestClass] public class MainRunner    {
 [TestMethod] public void RunMain() => DuplicateBean.Main();}}
 
