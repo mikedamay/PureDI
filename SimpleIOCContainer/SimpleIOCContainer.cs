@@ -49,6 +49,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO spring
     // TODO ASP.NET
     // TODO documentation:
+    // TODO user guide
+    // TODO API reference
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // TODO and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
@@ -65,6 +67,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO developer guide: policy on diagnostics and variation for constructors
     // TODO assert that attribute parameters are non-null and of the correct type.
     // TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
+    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
@@ -72,11 +75,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO add logging for inspection of assemblies and disposition of types
     // TODO add constructor name to map...CreatedSoFar...
-    // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test case-sensitivity
     // TODO nuget
     // TODO Mass Test
     // TODO test global:: and document that it won't work for root type passed as string
+    // TODO generate github docs
     // N/A change HasWarnings to HasDiagnostics
     // DONE prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)

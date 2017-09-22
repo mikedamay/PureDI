@@ -19,8 +19,17 @@ startup.  The framework is principally concerned with singletons that
 have the same life span as the program.
 
 A simple example (Introduction.cs) is as follows:
-<div class="pre-scrollable"><pre><code>{code-introduction.cs}</code></pre></div>
+
+<div class="pre-scrollable">
+
+```  
+{code-Introduction.cs}
+```
+
+</div>
+      
 Note:
+
 * Classes to be injected are annotated with the *Bean* attribute.
 * The site of the injection is annotated with the *BeanReference* attribute
 * The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean
@@ -59,9 +68,17 @@ member variables.
 
 The following example shows how mock functionality
 can be injected:
-<div class="pre-scrollable"><pre><code>{code-Profiles.cs}</code></pre></div>
+
+<div class="pre-scrollable">
+
+```  
+{code-Profiles.cs}
+```
+
+</div>
 
 Note:
+
 * The *myRepository bean* is referenced through an interface (*IMyRepository*)
 that the bean's class implements.
 Base classes can perform the same role as interfaces provided that they
@@ -87,11 +104,37 @@ See Also:
     <userGuideSeeAlso/>
   </group>
   <group>
-    <topic>_RegexTest</topic>
-    <userGuideTitle>Regex Test</userGuideTitle>
-    <userGuide>some
-    code 
-    here</userGuide>
+    <topic>BeanNames</topic>
+    <userGuideTitle>Bean Name</userGuideTitle>
+    <userGuide>
+Bean names address the case where there are multiple implementations of 
+some interface and a bean reference needs to specify which implementation is required.
+This is achieved by passing a `Name` property to the `[BeanReference]` attribute.
+
+The following code (BeanNames.cs) illustrates this:
+<div class="pre-scrollable">
+
+```
+{code-BeanNames.cs}
+```
+
+</div>
+      
+Note:
+
+* The bean reference can specify an interface (or a base class as long as it is
+not itself a bean) as an alternative to specifiying
+the implementation class.  It is left up to the
+container to associate the reference with a concrete class.
+* In the above example two repositories are instantiated; one for sql server 
+and one for Mongo.  They both have share an interface but the container
+uses the name specified in the bean reference to select the appropriate
+implementation.
+* If no name is spacified then this is equivalent to an empty string.  Unlike the case with 
+_Profiles_ if no bean is found with a name matching that of the bean reference
+then the bean instantiation will fail.
+* Bean names are case insensitive.
+    </userGuide>
     <userGuideSeeAlso/>
   </group>
 </userGuide>

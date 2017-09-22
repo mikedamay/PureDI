@@ -31,9 +31,6 @@
 
   <ItemGroup>
     <None Include="SimpleIOCContainerMinorMethods.cs" />
-    <None Include="Docs\duplicateBean.cs" />
-    <None Include="Docs\introduction.cs" />
-    <None Include="Docs\Profiles.cs" />
   </ItemGroup>
 
   <ItemGroup>

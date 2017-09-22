@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Sample Code Main Runner</Title>
+      <Shortcut>mr</Shortcut>
+      <Description>Code snippet to  provide the MainRunner invocation for 
+                   SimpleIOCContainer sample code</Description>
+      <Author>Michael May - TheDisappointedProgrammer</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>namespace</ID>
+          <ToolTip>Unique Namespace</ToolTip>
+          <Default>xxxxx</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp">
+        <![CDATA[
+namespace $namespace${using Microsoft.VisualStudio.TestTools.UnitTesting;
+[TestClass] public class MainRunner    {
+[TestMethod] public void RunMain() => DuplicateBean.Main();}}
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

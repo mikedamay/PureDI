@@ -12,24 +12,34 @@
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</background>
     <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
-    <userGuide>*Bean*s can be referenced through interfaces or base classes 
-    (as long as the  base classes are not themselves beans) as well as directly
-    through the implementation.
-<div class="pre-scrollable"><pre><code>{code-duplicateBean.cs}</code></pre></div>
+    <userGuide>
+Bean names address the case where there are multiple implementations of 
+some interface and a bean reference needs to specify which implementation is required.
+This is achieved by passing a `Name` property to the `[BeanReference]` attribute.
 
-When the container instantiiates *MyClass* in the example above 
-through a call to *CreateAndInjectDependencies()* it has to make a decision
-about which implementation of IMyInterface to assign to the *myInterface*
-member.  The choice is made by matching the *Name* parameter of the
-*Bean* attribute with that of the *BeanReference* attribute.  In the
-above case it instantiates *OneImplementation* and assigns it to
-*myInterface*.  The same decision would apply if the instantiation of 
-*MyClass* occurred indirectly (i.e. MyClass was referenced by
-some other class in the object tree).
+The following code (BeanNames.cs) illustrates this:
+<div class="pre-scrollable">
 
-A bean with no name is considered distinct from a bean with a non-empty name.
-It will be matched to a bean reference without a *Name* attribute or one with
-an empty string - *[Bean]* and *[Bean(Name="")]* match *[BeanReference(Name="")]* or *[BeanReference]*.
+```
+{code-BeanNames.cs}
+```
+
+</div>
+      
+Note:
+
+* The bean reference can specify an interface (or a base class as long as it is
+not itself a bean) as an alternative to specifiying
+the implementation class.  It is left up to the
+container to associate the reference with a concrete class.
+* In the above example two repositories are instantiated; one for sql server 
+and one for Mongo.  They both have share an interface but the container
+uses the name specified in the bean reference to select the appropriate
+implementation.
+* If no name is spacified then this is equivalent to an empty string.  Unlike the case with 
+_Profiles_ if no bean is found with a name matching that of the bean reference
+then the bean instantiation will fail.
+* Bean names are case insensitive.
     </userGuide>
     <userGuideSeeAlso/>
     <template>attempt to add duplicate bean: {Interface1} {BeanName}, 

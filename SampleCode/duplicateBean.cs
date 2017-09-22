@@ -1,41 +1,44 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
+using Microsoft.Office.Tools.Excel;
+using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 [Bean]
-class MyClass
+public class DuplicateBean
 {
-    [BeanReference(Name = "Impl1")] private IMyInterface myInterface = null;
-    public void UseReference()
-    {
-        myInterface.DoStuff();
-    }
+    [BeanReference] private IRepository mainDB;
+    [BeanReference(Name = "mongo")] private IRepository mongoDB;
+
     public static void Main()
     {
-        var sic = new SimpleIOCContainer();
-        MyClass myClass = sic.CreateAndInjectDependencies<MyClass>();
-        myClass.UseReference();     // will display "One"
+        var beans = new SimpleIOCContainer().CreateAndInjectDependencies<DuplicateBean>();
+        beans.ListDatabases();
     }
-}
-public interface IMyInterface
-{
-    void DoStuff();
-}
-[Bean(Name = "Impl1")]
-public class OneImplementation : IMyInterface
-{
-    public void DoStuff()
+    private void ListDatabases()
     {
-        System.Console.WriteLine("One");
-    }
-}
-[Bean(Name = "Impl2")]
-public class TwoImplementation : IMyInterface
-{
-    public void DoStuff()
-    {
-        System.Console.WriteLine("Two");
+        System.Console.WriteLine($"our main database is {mainDB.Id}");
+        // this will display "SqlServerDB"
+        System.Console.WriteLine($"our document database is {mongoDB.Id}");
+        // this will display "magnificent mongo""
     }
 }
 
-namespace DuplicateBeanRunner{ using Microsoft.VisualStudio.TestTools.UnitTesting;
-[TestClass] public class MainRunner{
-[TestMethod] public void RunMain() => Profiles.Main();}}
+internal interface IRepository
+{
+    string Id { get; }
+}
+[Bean]
+internal class SqlServerDB : IRepository
+{
+    public string Id => "SqlServerDB";
+}
+
+[Bean(Name = "Mongo")]
+internal class MongoDB : IRepository
+{
+    public string Id => "magnificent mongo";
+}
+namespace BeanNamesRunner{using Microsoft.VisualStudio.TestTools.UnitTesting;
+[TestClass] public class MainRunner    {
+[TestMethod] public void RunMain() => DuplicateBean.Main();}}
+
