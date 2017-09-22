@@ -98,42 +98,8 @@ of which implementations are to be used.
 
 See Also:
 
-[Bean Names (or one interface - two implementations)](/userGuide/BeanNames)
+[Bean Names (or one interface - two implementations)](/userGuide/DuplicateBean)
 
-    </userGuide>
-    <userGuideSeeAlso/>
-  </group>
-  <group>
-    <topic>BeanNames</topic>
-    <userGuideTitle>Bean Name</userGuideTitle>
-    <userGuide>
-Bean names address the case where there are multiple implementations of 
-some interface and a bean reference needs to specify which implementation is required.
-This is achieved by passing a `Name` property to the `[BeanReference]` attribute.
-
-The following code (BeanNames.cs) illustrates this:
-<div class="pre-scrollable">
-
-```
-{code-BeanNames.cs}
-```
-
-</div>
-      
-Note:
-
-* The bean reference can specify an interface (or a base class as long as it is
-not itself a bean) as an alternative to specifiying
-the implementation class.  It is left up to the
-container to associate the reference with a concrete class.
-* In the above example two repositories are instantiated; one for sql server 
-and one for Mongo.  They both have share an interface but the container
-uses the name specified in the bean reference to select the appropriate
-implementation.
-* If no name is spacified then this is equivalent to an empty string.  Unlike the case with 
-_Profiles_ if no bean is found with a name matching that of the bean reference
-then the bean instantiation will fail.
-* Bean names are case insensitive.
     </userGuide>
     <userGuideSeeAlso/>
   </group>

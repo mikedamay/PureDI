@@ -21,7 +21,7 @@ The following code (BeanNames.cs) illustrates this:
 <div class="pre-scrollable">
 
 ```
-{code-BeanNames.cs}
+{code-duplicateBean.cs}
 ```
 
 </div>
