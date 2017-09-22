@@ -79,8 +79,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO nuget
     // TODO Mass Test
     // TODO test global:: and document that it won't work for root type passed as string
-    // TODO generate github docs
-    // TODO diagnostics combination functionality
+    // DONE generate github docs
+    // TODO build project from a different path
     // N/A change HasWarnings to HasDiagnostics
     // DONE prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
@@ -133,6 +133,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: deal with exceptions on nested calls to CreateAndInject...()
     // TODO Later: handle extern alias situations
     // TODO Later: move documentation site to TheDisappointedProgrammer.com
+    // TODO Later: diagnostics combination functionality
     /// <summary>
     /// 
     /// </summary>
@@ -323,7 +324,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         public void CreateAndInjectDependencies(object rootObject, out IOCCDiagnostics diagnostics)
         {
             ISet<string> profileSet;
-            (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
+            (typeMap, diagnostics, profileSet) = CreateTypeMap(rootObject.GetType());
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {

@@ -2,6 +2,7 @@
 using com.TheDisappointedProgrammer.IOCC;
 using System.IO;
 using com.TheDisappointedProgrammer.IOCC.Common;
+using IOPath = System.IO.Path; 
 
 namespace SimpleIOCCDocumentor
 {
@@ -23,7 +24,15 @@ namespace SimpleIOCCDocumentor
             , XmlRoot: Constants.DIAGNOSTIC_SCHEMA_ROOT)]
         private IOCCDocumentParser diagnosticSchemaDocumentParser = null;
 
-        private string path = "c:/projects/SimpleIOCContainer/Simple";
+        private string path = null;
+
+        [Config(Key: "relativePath")]
+        private string Path
+        {
+            set { path = IOPath.Combine(
+              IOPath.GetDirectoryName(
+              this.GetType().Assembly.Location), value); }
+        }
 
         [BeanReference] private IDocumentProcessor documentProcessor = null;
 
@@ -37,7 +46,7 @@ namespace SimpleIOCCDocumentor
         private void GenerateIndex()
         {
             var index = documentProcessor.ProcessDocument(string.Empty, string.Empty);
-            File.WriteAllText(Path.Combine(path, "index.html"), index);
+            File.WriteAllText(IOPath.Combine(path, "index.html"), index);
         }
 
         private void GenerateFilesFromDocument(string documentName, IOCCDocumentParser documentParser)
@@ -63,7 +72,7 @@ namespace SimpleIOCCDocumentor
         /// <param name="fragment">a string of html which will sit quietly until rendered</param>
         private void SaveAsDocument(string documentName, string fragmentName, string fragment)
         {
-            File.WriteAllText(Path.Combine(Path.Combine(path, documentName), fragmentName) + ".html", fragment);
+            File.WriteAllText(IOPath.Combine(IOPath.Combine(path, documentName), fragmentName) + ".html", fragment);
         }
     }
 }

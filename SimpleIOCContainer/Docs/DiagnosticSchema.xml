@@ -158,7 +158,7 @@ then the bean instantiation will fail.
     <background>The most likely cause of this issue is that the type passed
     to SimpleIOCContainer.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
-    to be invalid - see above</background>
+    to be invalid - see above.</background>
     <userGuideTitle/>
     <userGuide/>
     <userGuideSeeAlso/>

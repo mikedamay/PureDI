@@ -13,11 +13,14 @@ namespace SimpleIOCCDocumentor
     {
         private IOCCDiagnostics diagnostics;
         private IOCCDiagnostics diagnostics2;
+        private IOCCDiagnostics diagnostics3;
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer(new string[] {"authoring"});
+            SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"authoring"});
+              //,Assemblies: new [] {this.GetType().Assembly});
+            sic.CreateAndInjectDependencies(new GenericConfig(("relativePath", "..\\..\\..\\..\\Simple")), out diagnostics3);
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
               , sic.CreateAndInjectDependencies<
               IDocumentProcessor>(out diagnostics)));

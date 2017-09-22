@@ -50,5 +50,14 @@ namespace IOCCTest
             SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>();
             Assert.IsNotNull(someUser.deep);
         }
+
+        [TestMethod]
+        public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
+        {
+            SimpleIOCContainer sic = new SimpleIOCContainer();
+            sic.CreateAndInjectDependencies(new InsertedAsObject(), out var diagnostics);
+            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(out var diagnostics2);
+            Assert.IsNotNull(infer.inserted);
+        }
     }
 }
