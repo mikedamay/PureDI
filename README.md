@@ -1,5 +1,5 @@
-#### SimpleIOCContainer
-## Version
+## SimpleIOCContainer
+#### Version
 Pre-alpha
-## Documentation
+#### Documentation
 Documentation can be found at [http://mikedamay.co.uk/Simple/index.html]
