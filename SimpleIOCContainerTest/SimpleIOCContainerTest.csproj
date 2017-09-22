@@ -6,6 +6,10 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Compile Remove="CaseSensitivityTestData\Hierarchy.cs" />
+    <Compile Remove="CaseSensitivityTestData\Interface.cs" />
+    <Compile Remove="CaseSensitivityTestData\Simple.cs" />
+    <Compile Remove="CaseSensitivityTestData\simple2.cs" />
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
     <Compile Remove="ConstructorTestData\DerivedConstructor.cs" />
@@ -94,6 +98,11 @@
   </ItemGroup>
   
   <ItemGroup>
+    <EmbeddedResource Include="CaseSensitivityTestData\Hierarchy.cs" />
+    <EmbeddedResource Include="CaseSensitivityTestData\Interface.cs" />
+    <EmbeddedResource Include="CaseSensitivityTestData\LoserSimple.cs" />
+    <EmbeddedResource Include="CaseSensitivityTestData\Simple.cs" />
+    <EmbeddedResource Include="CaseSensitivityTestData\simple2.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\Bean.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\BeanReference.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />

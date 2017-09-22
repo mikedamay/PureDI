@@ -19,7 +19,6 @@ namespace SimpleIOCCDocumentor
         public void ConfigureServices(IServiceCollection services)
         {
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"authoring"});
-              //,Assemblies: new [] {this.GetType().Assembly});
             sic.CreateAndInjectDependencies(new GenericConfig(("relativePath", "..\\..\\..\\..\\Simple")), out diagnostics3);
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
               , sic.CreateAndInjectDependencies<
