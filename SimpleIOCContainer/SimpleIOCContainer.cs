@@ -131,6 +131,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: Code Analysis
     // TODO Later: deal with exceptions on nested calls to CreateAndInject...()
     // TODO Later: handle extern alias situations
+    // TODO Later: move documentation site to TheDisappointedProgrammer.com
     /// <summary>
     /// 
     /// </summary>
