@@ -33,4 +33,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Simple\" />
+    <Folder Include="wwwroot\Simple\" />
+  </ItemGroup>
+
 </Project>

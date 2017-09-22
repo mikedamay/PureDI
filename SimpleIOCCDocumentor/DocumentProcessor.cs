@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 using com.TheDisappointedProgrammer.IOCC;
+using com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace SimpleIOCCDocumentor
 {
@@ -17,11 +15,11 @@ namespace SimpleIOCCDocumentor
         [BeanReference] private MarkdownProcessor markdownProcessor = null;
         [IOCCDocumentParser(
             DocumentPath: "SimpleIOCContainer.Docs.UserGuide.xml"
-            , XmlRoot: "userGuide")]
+            , XmlRoot: Constants.USER_GUIDE_ROOT)]
         private IOCCDocumentParser userGuideDocumentParser = null;
         [IOCCDocumentParser(
             DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
-            , XmlRoot: "diagnosticSchema")]
+            , XmlRoot: Constants.DIAGNOSTIC_SCHEMA_ROOT)]
         private IOCCDocumentParser diagnosticSchemaDocumentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)

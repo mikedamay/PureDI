@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
@@ -36,7 +37,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             try
             {
                 XDocument schema = XDocument.Load(diagnosticSchema);
-                IEnumerable<XElement> groups = schema.Element("diagnosticSchema")
+                IEnumerable<XElement> groups = schema.Element(Constants.DIAGNOSTIC_SCHEMA_ROOT)
                     .Elements("group");
                 foreach (var group in groups)
                 {

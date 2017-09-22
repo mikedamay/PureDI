@@ -57,7 +57,7 @@ namespace SimpleIOCCDocumentor
             }
             else
             {
-                throw new Exception();
+                throw new Exception($"fragment type: {fragmentType}, fragment name: {fragmentName}");
             }
         }
 
@@ -69,7 +69,7 @@ namespace SimpleIOCCDocumentor
             while (nodes.MoveNext())
             {
                 map.Add(new KeyValuePair<string, string>(
-                    $"[{nodes.Current.InnerXml}](/{xmlRoot}/{nodes.Current.InnerXml})"
+                    $"[{nodes.Current.InnerXml}](/Simple/{xmlRoot}/{nodes.Current.InnerXml}.html)"
                     // e.g. "[MissingBean](/diagnosticSchema/MissingBean)"
                     , $"({nodes.Current.InnerXml})"));
             }

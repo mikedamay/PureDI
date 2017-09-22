@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<userGuide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<UserGuide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="file://. UserGuide.xsd">
   <group>
     <topic>Introduction</topic>
@@ -37,9 +37,9 @@ Note:
 
 See Also:
 
-[Assemblies (or An early gotcha)](/diagnosticSchema/MissingBean)
+[Assemblies (or An early gotcha)](/Simple/diagnosticSchema/MissingBean.html)
 
-[Profiles (or why bother with DI)](/userGuide/Profiles)
+[Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
     </userGuide>
     <userGuideSeeAlso/>
   </group>
@@ -98,9 +98,9 @@ of which implementations are to be used.
 
 See Also:
 
-[Bean Names (or one interface - two implementations)](/DiagnosticSchema/DuplicateBean)
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/DuplicateBean.html)
 
     </userGuide>
     <userGuideSeeAlso/>
   </group>
-</userGuide>
+</UserGuide>

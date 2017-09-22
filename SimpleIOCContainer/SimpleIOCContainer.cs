@@ -80,6 +80,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Mass Test
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO generate github docs
+    // TODO diagnostics combination functionality
     // N/A change HasWarnings to HasDiagnostics
     // DONE prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)
