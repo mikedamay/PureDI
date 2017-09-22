@@ -68,6 +68,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO assert that attribute parameters are non-null and of the correct type.
     // TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
+    // TODO test global:: and document that it won't work for root type passed as string
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
@@ -75,10 +76,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO add logging for inspection of assemblies and disposition of types
     // TODO add constructor name to map...CreatedSoFar...
-    // TODO test case-sensitivity
+    // DONE test case-sensitivity
     // TODO nuget
     // TODO Mass Test
-    // TODO test global:: and document that it won't work for root type passed as string
     // DONE generate github docs
     // TODO build project from a different path
     // N/A change HasWarnings to HasDiagnostics
