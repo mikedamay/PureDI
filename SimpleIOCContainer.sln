@@ -20,6 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code_snippets", "code_snipp
 		MainRunner.snippet = MainRunner.snippet
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentatiopn", "Documentatiopn", "{1C3A8AAC-C2A3-48C8-9B07-199AC3251DCB}"
+	ProjectSection(SolutionItems) = preProject
+		Test.html = Test.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
