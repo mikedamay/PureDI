@@ -76,6 +76,7 @@
     <Compile Remove="TestData\DuplicateBeans.cs" />
     <Compile Remove="TestData\DuplicateInterfaces.cs" />
     <Compile Remove="TestData\Generic.cs" />
+    <Compile Remove="TestData\IgnoredBean.cs" />
     <Compile Remove="TestData\IgnoreHelper.cs" />
     <Compile Remove="TestData\ImplementationClass.cs" />
     <Compile Remove="TestData\InterfaceClass.cs" />
@@ -142,6 +143,7 @@
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
+    <EmbeddedResource Include="TestData\IgnoredBean.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
     <EmbeddedResource Include="TestData\NonBeanDerivedFromBean.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />

@@ -83,6 +83,40 @@ namespace IOCCTest
             Assert.IsNotNull(cc?.ChildA?.Common);
             Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }
+
+        [TestMethod]
+        public void ShouldCreateTreeForInheritedBeanWithDifferentName()
+        {
+            WithNames.InheritedBean ib
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                    WithNames.InheritedBean>(out IOCCDiagnostics diags);
+            Assert.IsNotNull(ib.derived);
+            Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBean).Name));
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForInheritedBeanWithDifferentProfile()
+        {
+            WithNames.BeanUser bu
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                    WithNames.BeanUser>(out IOCCDiagnostics diags);
+            Assert.AreEqual("Inherited", bu.Used.Val);
+            Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
+            bu
+                = new SimpleIOCContainer(Profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
+                    WithNames.BeanUser>(out diags);
+            Assert.AreEqual("Derived", bu.Used.Val);
+            Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
+        }
+        [TestMethod]
+        public void ShouldCreateTreeForDerivedBeanIfInheritedIsIgnored()
+        {
+            WithNames.IgnoredBeanUser bu
+                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                    WithNames.IgnoredBeanUser>(out IOCCDiagnostics diags);
+            Assert.AreEqual("Inherited and ignored", bu.InheritedIgnorer.Val);
+            Assert.AreEqual("Derived from ignorer", bu.DerivedFromIgnorer.Val);
+            Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
+        }
     }
     [Bean]
     internal class TestRoot

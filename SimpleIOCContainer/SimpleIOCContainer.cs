@@ -48,8 +48,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO ninject
     // TODO spring
     // TODO ASP.NET
+    //
     // TODO documentation:
-    // TODO user guide
+    // TODO user guide - 3 days
     // TODO API reference
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // TODO and that generics have the for classname`1[TypeParam]
@@ -74,13 +75,13 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
-    // TODO add logging for inspection of assemblies and disposition of types
-    // TODO add constructor name to map...CreatedSoFar...
+    // TODO add logging for inspection of assemblies and disposition of types - .5 days
+    // TODO add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
-    // TODO nuget
-    // TODO Mass Test
+    // TODO nuget - i day
+    // TODO Mass Test - 2 days
     // DONE generate github docs
-    // TODO build project from a different path
+    // DONE build project from a different path
     // N/A change HasWarnings to HasDiagnostics
     // DONE prevent user from passing null or empty string to container constructor
     // DONE check that rootObject instantiated directly can be found in the tree (this vs. rootObject in assemblyNames)

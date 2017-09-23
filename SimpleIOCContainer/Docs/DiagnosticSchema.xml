@@ -64,8 +64,33 @@ then the bean instantiation will fail.
       class or interface, the "Bean" attribute should be applied 
       only to the concrete implementation, not to a parent 
       or interface</background>
-    <userGuideTitle/>
-    <userGuide/>
+    <userGuideTitle>Beans and non-Beans</userGuideTitle>
+    <userGuide>Any concrete class or struct over which you control the
+source can be marked as a bean by applying the `[Bean]` attribute
+to the class declaration.
+    
+Primitive types (such as int, string) etc. cannot be beans.
+An attempt to make them beans results in a compiler error.
+    
+Interfaces, abstract classes and static classes cannot be beans.
+A run-time warning will be recorded in the _Diagnostics_ object.
+    
+An inherited class cannot be a bean if any of its derived classes
+are beans (unless the inherited bean is given a different bean name
+to that of the derived bean or one of them has a matching profile
+and the other does not).  (Without
+a bean name to distinguish them there is no way for the container
+to determine whether a reference to the inherited class is intended
+to refer to the inherited class itself or a derived class.)  Alternatively
+if you mark the inherited bean as `[IOCCIgnored]` then both beans can be
+injected but only through their respective implementation class types.
+    
+### See also
+
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/DuplicateBean.html)
+
+  [Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
+    </userGuide>
     <userGuideSeeAlso/>
     <template>{AbstractOrStaticClass} is {ClassMode}</template>
     <artefacts>
@@ -404,6 +429,71 @@ then the bean instantiation will fail.
       <DeclaringType/>
       <MemberType/>
       <MemberName/>
+    </artefacts>
+  </group>
+  <group>
+    <topic>ProfilesInfo</topic>
+    <severity>Info</severity>
+    <intro>List of Profiles in use by the container</intro>
+    <background>The active profiles will determine which types are 
+      included in the type map and are available for injection</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
+    <template>Profiles (blank indicates an empty list):{Profiles}</template>
+    <artefacts>
+      <Profiles/>
+    </artefacts>
+  </group>
+  <group>
+    <topic>AssembliesInfo</topic>
+    <severity>Info</severity>
+    <intro>List of Assemblies in use by the container</intro>
+    <background>The active assemblies will determine which types are 
+      included in the type map and are available for injection</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
+    <template>Profiles (blank indicates an empty list):{Assemblies}</template>
+    <artefacts>
+      <Assemblies/>
+    </artefacts>
+  </group>
+  <group>
+    <topic>TypesInfo</topic>
+    <severity>Info</severity>
+    <intro>List of Types avaiable for injection together with their mapping</intro>
+    <background>The mapping shows what implementation* (concrete class) will be imjected for
+      a reference with the given Type (interface, base class, or concrete class).
+      Only types in this list are available for injection.
+    
+      * Note that in the case of references containing factories it is the
+        factory implementation rather than the actual derived class
+        that is reported.</background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
+    <template>{ReferenceType} (bean name:{BeanName}) maps to {ImplementationType}</template>
+    <artefacts>
+      <ReferenceType/>
+      <BeanName/>
+      <ImplementationType/>
+    </artefacts>
+  </group>
+  <group>
+    <topic>InjectionsInfo</topic>
+    <severity>Info</severity>
+    <intro>List of objects injected by the container</intro>
+    <background></background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
+    <template>{DeclaringType}  {MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
+    <artefacts>
+      <DeclaringType/>
+      <MemberType/>
+      <MemberName/>
+      <MemberImplementation/>
     </artefacts>
   </group>
 </DiagnosticSchema>

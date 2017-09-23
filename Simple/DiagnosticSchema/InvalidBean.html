@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-            <h3 class="col-sm-10" style="color: blue"></h3>
+            <h3 class="col-sm-10" style="color: blue">Beans and non-Beans</h3>
             <hr class="col-xs-12"/>
         </div>
         <div class="col-sm-1"></div>
@@ -23,7 +23,26 @@
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-            
+            <p>Any concrete class or struct over which you control the
+source can be marked as a bean by applying the <code>[Bean]</code> attribute
+to the class declaration.</p>
+<p>Primitive types (such as int, string) etc. cannot be beans.
+An attempt to make them beans results in a compiler error.</p>
+<p>Interfaces, abstract classes and static classes cannot be beans.
+A run-time warning will be recorded in the <em>Diagnostics</em> object.</p>
+<p>An inherited class cannot be a bean if any of its derived classes
+are beans (unless the inherited bean is given a different bean name
+to that of the derived bean or one of them has a matching profile
+and the other does not).  (Without
+a bean name to distinguish them there is no way for the container
+to determine whether a reference to the inherited class is intended
+to refer to the inherited class itself or a derived class.)  Alternatively
+if you mark the inherited bean as <code>[IOCCIgnored]</code> then both beans can be
+injected but only through their respective implementation class types.</p>
+<h3>See also</h3>
+<p><a href="/Simple/DiagnosticSchema/DuplicateBean.html">Bean Names (or one interface - two implementations)</a></p>
+<p><a href="/Simple/userGuide/Profiles.html">Profiles (or why bother with DI)</a></p>
+
         </div>
         <div class="col-sm-1"></div>
     </div>

@@ -27,19 +27,45 @@ A simple example (Introduction.cs) is as follows:
 ```
 
 </div>
-      
-Note:
+
+
+### Notes
 
 * Classes to be injected are annotated with the *Bean* attribute.
 * The site of the injection is annotated with the *BeanReference* attribute
 * The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean
 * Once *CreateAndInjectDependencies has been called all beans will have been instantiated and assigned to any matching bean references.
 
-See Also:
+### See Also
 
 [Assemblies (or An early gotcha)](/Simple/diagnosticSchema/MissingBean.html)
 
 [Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
+
+assemblies
+factories
+appropriate injection points
+design rationale
+IOCCIgnore
+cyclical depenenecies
+Limitations and Gotchas
+Injection by construcor and constructor names
+Base attributes
+
+API:
+Constructor
+CreateAndInject... x 5
+IOCCException
+BeanAttribute / BeanBaseAttribute
+BeanReferenceAttribute / BeanReferenceBaseAttribute
+ConstructorAttribute / ConstructorBaseAttribute
+IOCCIgnoreAttribute / IgnoreBaseAttribute
+Diagnostics
+Group
+Diagnostic
+AssemblyExclusion
+IFactory
+BeanFactoryArgs
     </userGuide>
     <userGuideSeeAlso/>
   </group>

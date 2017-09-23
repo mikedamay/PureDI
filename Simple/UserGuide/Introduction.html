@@ -59,17 +59,39 @@ public class Logger
 
 </code></pre>
 </div>
-      
-Note:
+<h3>Notes</h3>
 <ul>
 <li>Classes to be injected are annotated with the <em>Bean</em> attribute.</li>
 <li>The site of the injection is annotated with the <em>BeanReference</em> attribute</li>
 <li>The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean</li>
 <li>Once *CreateAndInjectDependencies has been called all beans will have been instantiated and assigned to any matching bean references.</li>
 </ul>
-<p>See Also:</p>
+<h3>See Also</h3>
 <p><a href="/Simple/diagnosticSchema/MissingBean.html">Assemblies (or An early gotcha)</a></p>
 <p><a href="/Simple/userGuide/Profiles.html">Profiles (or why bother with DI)</a></p>
+<p>assemblies
+factories
+appropriate injection points
+design rationale
+IOCCIgnore
+cyclical depenenecies
+Limitations and Gotchas
+Injection by construcor and constructor names
+Base attributes</p>
+<p>API:
+Constructor
+CreateAndInject... x 5
+IOCCException
+BeanAttribute / BeanBaseAttribute
+BeanReferenceAttribute / BeanReferenceBaseAttribute
+ConstructorAttribute / ConstructorBaseAttribute
+IOCCIgnoreAttribute / IgnoreBaseAttribute
+Diagnostics
+Group
+Diagnostic
+AssemblyExclusion
+IFactory
+BeanFactoryArgs</p>
 
         </div>
         <div class="col-sm-1"></div>
