@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using com.TheDisappointedProgrammer.IOCC;
-using Microsoft.Azure.KeyVault.Models;
 
 namespace SimpleIOCCDocumentor
 {

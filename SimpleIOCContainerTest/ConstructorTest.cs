@@ -68,10 +68,10 @@ namespace IOCCTest
         {
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                 CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructors");
-            Assert.IsNotNull(result?.GetResults().Level1a?.GetResults().Level2a);
-            Assert.IsNotNull(result?.GetResults().Level1b?.GetResults().Level2b);
-            Assert.IsNull(result?.GetResults().Level1a?.GetResults().Level2b);
-            Assert.IsNull(result?.GetResults().Level1b?.GetResults().Level2a);
+            Assert.IsNotNull(result?.GetResults().Level1a?.Level2a);
+            Assert.IsNotNull(result?.GetResults().Level1b?.Level2b);
+            Assert.IsNull(result?.GetResults().Level1a?.Level2b);
+            Assert.IsNull(result?.GetResults().Level1b?.Level2a);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));            
          }
         [TestMethod]
@@ -178,6 +178,22 @@ namespace IOCCTest
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual("stuff", result?.GetResults().Stuff);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+        }
+        // I thought we were going to find that beans created
+        // via constructors overwrote each other in the mapCreatedSoFar
+        // but we don't - I should have looked at the code first.
+        [TestMethod]
+        public void ShouldCreateTreeWithMultipleConstructorsComplex()
+        {
+            SimpleIOCContainer sic
+              = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
+            IResultGetter result = sic.CreateAndInjectDependencies(
+              "IOCCTest.ConstructorTestData.MultipleConstructorsComplex"
+                , out var diagnostics) as IResultGetter;
+            //Assert.IsNotNull(result.GetResults()?.First.FirstParam);
+            //Assert.IsNotNull(result.GetResults()?.Second.SecondParam);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+
         }
     }
 }

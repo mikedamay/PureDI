@@ -35,8 +35,8 @@ namespace SimpleIOCCDocumentor
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseFileServer();
+            app.UseStaticFiles();
+            //app.UseFileServer();
 
             app.Run(async (context) =>
             {

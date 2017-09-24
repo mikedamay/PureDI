@@ -52,6 +52,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO documentation:
     // TODO user guide - 3 days
     // TODO API reference
+    // TODO rudimentary developer guide
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // TODO and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore

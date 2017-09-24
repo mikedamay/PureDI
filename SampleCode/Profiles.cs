@@ -14,7 +14,7 @@ public class Profiles
 [Bean]
 public class MyService
 {
-    [BeanReference] private IMyRepository myRepository;
+    [BeanReference] private IMyRepository myRepository = null;
     public string DoStuff()
     {
         return myRepository.DoSomething();

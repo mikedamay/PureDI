@@ -3,8 +3,8 @@
 [Bean]
 public class DuplicateBean
 {
-    [BeanReference] private IRepository mainDB;
-    [BeanReference(Name = "mongo")] private IRepository mongoDB;
+    [BeanReference] private IRepository mainDB = null;
+    [BeanReference(Name = "mongo")] private IRepository mongoDB = null;
 
     public static void Main()
     {

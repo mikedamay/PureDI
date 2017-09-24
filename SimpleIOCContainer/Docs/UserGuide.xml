@@ -52,6 +52,8 @@ Limitations and Gotchas
 Injection by construcor and constructor names
 Base attributes
 
+Developer Guide
+
 API:
 Constructor
 CreateAndInject... x 5

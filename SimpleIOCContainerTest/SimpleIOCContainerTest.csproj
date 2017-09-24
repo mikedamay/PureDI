@@ -104,6 +104,7 @@
     <EmbeddedResource Include="CaseSensitivityTestData\LoserSimple.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\Simple.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\simple2.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\Bean.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\BeanReference.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
@@ -115,7 +116,6 @@
     <EmbeddedResource Include="ConstructorTestData\NamedRootConstructor.cs" />
     <EmbeddedResource Include="ConstructorTestData\Factory.cs" />
     <EmbeddedResource Include="ConstructorTestData\FactoryConstructor.cs" />
-    <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
     <EmbeddedResource Include="ConstructorTestData\MultipleParams.cs" />
     <EmbeddedResource Include="ConstructorTestData\ParameterNotInjectable.cs" />
     <EmbeddedResource Include="ConstructorTestData\PrivateConstructor.cs" />
