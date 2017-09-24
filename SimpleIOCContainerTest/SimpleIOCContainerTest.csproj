@@ -17,6 +17,7 @@
     <Compile Remove="ConstructorTestData\Factory.cs" />
     <Compile Remove="ConstructorTestData\FactoryConstructor.cs" />
     <Compile Remove="ConstructorTestData\MultipleConstructors.cs" />
+    <Compile Remove="ConstructorTestData\MultipleConstructorsComplex.cs" />
     <Compile Remove="ConstructorTestData\MultipleParams.cs" />
     <Compile Remove="ConstructorTestData\NamedRootConstructor.cs" />
     <Compile Remove="ConstructorTestData\ParameterNotInjectable.cs" />
@@ -105,6 +106,7 @@
     <EmbeddedResource Include="CaseSensitivityTestData\Simple.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\simple2.cs" />
     <EmbeddedResource Include="ConstructorTestData\MultipleConstructors.cs" />
+    <EmbeddedResource Include="ConstructorTestData\MultipleConstructorsComplex.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\Bean.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\BeanReference.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
