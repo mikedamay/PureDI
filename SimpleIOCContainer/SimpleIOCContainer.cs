@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -76,11 +77,11 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
-    // TODO add logging for inspection of assemblies and disposition of types - .5 days
+    // TODO Mass Test - 2 days
+    // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
-    // TODO nuget - i day
-    // TODO Mass Test - 2 days
+    // N/A nuget - i day
     // DONE generate github docs
     // DONE build project from a different path
     // N/A change HasWarnings to HasDiagnostics
@@ -399,8 +400,51 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(allAssemblies
                     , ref diagnostics, profileSet, os);
+                LogAssemblies(diagnostics, allAssemblies);
+                LogProfiles(diagnostics, profileSet);
+                LogTypeMap(diagnostics, typeMap);
             }
             return (typeMap, diagnostics, profileSet);
+        }
+
+        private void LogTypeMap(IOCCDiagnostics diagnostics
+          , IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> types)
+        {
+            IEnumerable<(Type, string, Type)> typesQuery;
+            if (types.Count == 0)
+            {
+                typesQuery = new(Type, string, Type)[] {(null, "none", null)};
+            }
+            else
+            {
+                typesQuery = types.Select(kv => (kv.Key.beanType, kv.Key.beanName, kv.Value));
+            }
+            IOCCDiagnostics.Group group = diagnostics.Groups["TypesInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            foreach (var ti in typesQuery)
+            {
+                diag.ReferenceType = ti.Item1?.Name ?? "none";
+                diag.ReferenceType = ti.Item2 ?? "none";
+                diag.ReferenceType = ti.Item3?.Name ?? "none";
+            }
+            diagnostics.Groups["TypesInfo"].Occurrences.Add(diag);
+        }
+
+        private void LogProfiles(IOCCDiagnostics diagnostics, ISet<string> profileSet)
+        {
+            IOCCDiagnostics.Group group = diagnostics.Groups["ProfilesInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.Profiles = string.Join(",", profileSet);
+            diagnostics.Groups["ProfilesInfo"].Occurrences.Add(diag);
+        }
+
+        private void LogAssemblies(IOCCDiagnostics diagnostics
+          , IImmutableList<Assembly> assemblies)
+        {
+            IOCCDiagnostics.Group group = diagnostics.Groups["AssembliesInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.Assemblies = string.Join(",", assemblies.Select(a => a.GetName().Name));
+            diagnostics.Groups["AssembliesInfo"].Occurrences.Add(diag);
         }
 
         /// <summary>

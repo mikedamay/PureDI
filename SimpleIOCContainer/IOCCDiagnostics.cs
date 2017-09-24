@@ -69,36 +69,50 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
+        string MakeSubstitutions(string diagnosticTemplate, Diagnostic diag)
+        {
+            string str = diagnosticTemplate;
+            foreach (var key in diag.Members.Keys)
+            {
+                str = str.Replace("{" + key + "}", diag.Members[key]?.ToString());
+            }
+            return str;
+        }
+        public string AllToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(GetStringForSeverity(Severity.Warning));
+            sb.Append(GetStringForSeverity(Severity.Info));
+            return sb.ToString();
+        }
         public override string ToString()
         {
-            string MakeSubstitutions(string diagnosticTemplate, Diagnostic diag)
-            {
-                string str = diagnosticTemplate;
-                foreach (var key in diag.Members.Keys)
-                {
-                    str = str.Replace("{" + key + "}", diag.Members[key].ToString());
-                }
-                return str;
-            }
+            string str = "Note that to see information as well as warnings you should call IOCCDiagnostics.AllToString()"
+                      + Environment.NewLine + Environment.NewLine;
+            return str + GetStringForSeverity(Severity.Warning);
+        }
+
+        private string GetStringForSeverity(Severity severity)
+        {
             StringBuilder sb = new StringBuilder();
-            foreach (Group group in Groups.Values)
+            foreach (Group group in Groups.Values.Where(v => v.Severity == severity))
             {
-                if (group.Occurrences.Count == 0)
+                if (@group.Occurrences.Count == 0)
                 {
                     continue;
                 }
-                sb.Append(group.topic);
+                sb.Append(@group.topic);
                 sb.Append(Environment.NewLine);
-                sb.Append(group.Severity);
+                sb.Append(@group.Severity);
                 sb.Append(Environment.NewLine);
-                sb.Append(group.Intro);
+                sb.Append(@group.Intro);
                 sb.Append(Environment.NewLine);
-                foreach (dynamic diag in group.Occurrences)
+                foreach (dynamic diag in @group.Occurrences)
                 {
-                    sb.Append(MakeSubstitutions(group.DiagnosticTemplate, diag));
+                    sb.Append(MakeSubstitutions(@group.DiagnosticTemplate, diag));
                     sb.Append(Environment.NewLine);
                 }
-                sb.Append(group.UserGuide);
+                sb.Append(@group.UserGuide);
             }
             return sb.ToString();
         }

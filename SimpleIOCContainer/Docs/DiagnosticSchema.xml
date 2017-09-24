@@ -481,19 +481,33 @@ injected but only through their respective implementation class types.
     </artefacts>
   </group>
   <group>
-    <topic>InjectionsInfo</topic>
+    <topic>MemberInjectionsInfo</topic>
     <severity>Info</severity>
-    <intro>List of objects injected by the container</intro>
+    <intro>List of objects injected by the container into member variables</intro>
     <background></background>
     <userGuideTitle/>
     <userGuide/>
     <userGuideSeeAlso/>
-    <template>{DeclaringType}  {MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
+    <template>{{MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
     <artefacts>
       <DeclaringType/>
       <MemberType/>
       <MemberName/>
       <MemberImplementation/>
+    </artefacts>
+  </group>
+  <group>
+    <topic>ConstructorInjectionsInfo</topic>
+    <severity>Info</severity>
+    <intro>List of objects injected by the container into the constructor</intro>
+    <background></background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
+    <template>{ParameterImplementation} has been injected into the constructor of {DeclaringType}</template>
+    <artefacts>
+      <DeclaringType/>
+      <ParameterImplementation/>
     </artefacts>
   </group>
 </DiagnosticSchema>

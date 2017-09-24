@@ -120,7 +120,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         // TODO explain why type to be constructed is complicated by generics
                         constructedBean = Construct(constructableTypeLocal
-                            , constructorParameterSpecs, beanId.constructorName);
+                            , constructorParameterSpecs, beanId.constructorName
+                            , diagnostics);
                         if (beanScope != BeanScope.Prototype)
                         {
                             creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
@@ -337,6 +338,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     }
                     s_nAssignments++;
                     memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+                    LogMemberInjection(diagnostics, declaringBean.GetType()
+                        , memberSpec.FieldOrPropertyInfo.GetDeclaredType()
+                        , memberSpec.FieldOrPropertyInfo.Name
+                        , memberBean.GetType());
                 }
             }
             foreach (var memberSpec in childrenArg)
@@ -379,7 +384,20 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     AssignBean(memberSpec, memberBean);
                 }
             }       // foreach memberSpec
-        }           // AssignMembers()
+        }  // AssignMembers()
+
+
+        private void LogMemberInjection(IOCCDiagnostics diagnostics, Type declarngType
+          , Type declaredType, string memberName, Type memberImplementation)
+        {
+            IOCCDiagnostics.Group group = diagnostics.Groups["MemberInjectionsInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.DeclaringType = declarngType;
+            diag.MemberType = declaredType;
+            diag.MemberName = memberName;
+            diag.MemberImplementation = memberImplementation;
+            group.Add(diag);
+        }
 
         /// <summary>
         /// errros if: 
@@ -546,7 +564,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <exception>InvalidArgumentException</exception>  
-        private object Construct(Type beanType, IList<ChildBeanSpec> constructorParameterSpecs, string constructorName)
+        private object Construct(Type beanType
+          , IList<ChildBeanSpec> constructorParameterSpecs
+          , string constructorName, IOCCDiagnostics diagnostics)
         {
             object[] args = new object[0];
             if (beanType.IsStruct())
@@ -576,11 +596,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                               spec.ParameterInfo.GetBeanReferenceAttribute()
                               .FactoryParameter));
                             parameters.Add(obj);
+                            LogConstructorInjection(diagnostics, beanType, obj.GetType());
                             // TODO it would be good to catch type mismatches during eventual construction
                         }
                         else
                         {
-                            parameters.Add(spec.MemberOrFactoryBean);   
+                            parameters.Add(spec.MemberOrFactoryBean);
+                            LogConstructorInjection(diagnostics, beanType, spec.MemberOrFactoryBean?.GetType());
                         }
                     }
                     args = parameters.ToArray();
@@ -599,6 +621,16 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
             }
 
+        }
+
+        private void LogConstructorInjection(IOCCDiagnostics diagnostics
+          , Type declaringType, Type parameterImplementation)
+        {
+            IOCCDiagnostics.Group group = diagnostics.Groups["ConstructorInjectionsInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.DeclaringType = declaringType;
+            diag.ParameterImplementation = parameterImplementation;
+            group.Add(diag);
         }
     }
 }

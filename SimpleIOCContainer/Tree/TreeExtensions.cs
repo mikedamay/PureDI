@@ -47,6 +47,20 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         , null);
             }
         }
+        public static Type GetDeclaredType(this MemberInfo memberInfo)
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo field:
+                    return field.FieldType;
+                case PropertyInfo property:
+                    return property.PropertyType;
+                default:
+                    throw new IOCCInternalException(
+                        $"GetDeclaredType extension method encountered a MemberInfo instances that was not a field or property: {memberInfo.GetType()}"
+                        , null);
+            }
+        }
 
         public static bool CanWriteToFieldOrProperty(this MemberInfo memberInfo)
         {

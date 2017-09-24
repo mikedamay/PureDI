@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using com.TheDisappointedProgrammer.IOCC;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static System.Console;
-//using static System.Diagnostics.Debug;
 
 namespace IOCCTest.LoadTest
 {
@@ -24,7 +21,6 @@ namespace IOCCTest.LoadTest
             Stopwatch sw = new Stopwatch();
             sw.Start();
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies : new []{assembly});
-            //sic.SetAssemblies(assembly.GetName().Name);
             object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
             sw.Stop();
             WriteLine(sw.Elapsed);
@@ -34,7 +30,6 @@ namespace IOCCTest.LoadTest
         private Assembly BuildAssembly()
         {
             var tree = MakeTree();
-            //WriteLine(tree);
             var refAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.IsDynamic)
                 .Where(a => !string.IsNullOrWhiteSpace(a?.Location)).Select(
