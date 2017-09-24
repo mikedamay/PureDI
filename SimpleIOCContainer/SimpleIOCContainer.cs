@@ -77,7 +77,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
     // TODO add logging for inspection of assemblies and disposition of types - .5 days
-    // TODO add constructor name to map...CreatedSoFar... - i day
+    // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
     // TODO nuget - i day
     // TODO Mass Test - 2 days
