@@ -68,10 +68,6 @@ assemblies
 Factories
 Injection by constructor and constructor names
 Appropriate injection points
-IOCCIgnore (Miscellaneous)
-Base attributes (Miscellaneous)
-Cyclical dependenecies (Miscellaneous)
-Glossary
 
 Developer Guide
 
@@ -87,6 +83,7 @@ Diagnostics
 Group
 Diagnostic
 AssemblyExclusion
+Scope
 IFactory
 BeanFactoryArgs
     </userGuide>
@@ -175,6 +172,7 @@ ignored except to list warnings with `ToString()`
 sites where they can be injected plus some ancillary "value" classes such as `BeanFactoryArgs`
 * 4 base classes for users to derive their own attributes 
 (not-so-simple but can be safely ignored)
+* 3 exception classes - all trivial
 * There is only one way to define the injectables and injection sites, i.e. by
 the use of attributes.  There is no XML alternative or privileged configuration
 by code.
@@ -348,6 +346,65 @@ This term is typically applied to services, repositories or other objects
 orchestrating the workflow of the application.  There tends to be only
 one of each type of object fulfilling a particular role.
 
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>OddsAndEnds</topic>
+    <userGuideTitle>Odds &amp; Ends</userGuideTitle>
+    <userGuide>
+### Object Cycles
+
+Problems may arise where objects directly or indirectly refer to themselves.
+  In the case of member variables this kind of cyclical reference is allowed.
+  In the case of constructor parameters an exception is thrown if
+an attempt is made to inject an object into the constructor of a declaring object
+of the same type.  This is for the obvious reason that infinite recursion would result.
+
+### `[IOCCIgnore]`
+
+The IOCCIgnore attribute can be annotated to any interface or class.  It addresses
+the case where some interface is implemented by multiple bean classes but is not used
+as a bean reference.  It will cause the container not to report the multiple implementations
+as duplicates.  It would be applied to sone user-inspired equivalent of IComparable or
+ISerializable.
+
+### Attribute Base Classes
+
+The `[Bean]`, `[BeanReference]`, `[Constructor]` and `[IOCCIgnore]` attributes
+are sealed classes.  In each case there is an equivalent base class #
+from which user defined classes can be derived.  This might be useful
+if there was a requirement for some complex factoory with a number of parameters
+that could be named.
+
+The following:
+
+```
+[BeanReference(Factory=typeof(EnvironmentVariableFetcher), FactoryParam="MyEnvVar")]
+private string _someEnvVar;
+```
+
+would look much more approachable as:
+
+```
+[EnvironmentVariable(VariableName: "MyEnvVar)]
+private string _someEnvVar;
+```
+
+This can be achieved with:
+
+```
+public class EnvironementVariableAttribute : BeanReferenceBaseAttribute
+{
+  public EnvironementVariableAttribute(string VariableName )
+  {
+    base.Factory = typeof(EnvironmentVariableFetcher);
+    base.FactoryParam = VariableName;
+  }
+}
+
+```
 
     </userGuide>
     <userGuideSeeAlso/>
