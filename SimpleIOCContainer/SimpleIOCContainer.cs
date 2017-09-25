@@ -81,6 +81,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO Mass Test - 2 days
     // TODO heading for diagnostic output e.g. Diagnostic Information:
+    // TODO how do we handle a bean created via a factory in one place but created
+    // TODO directly in another.
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity

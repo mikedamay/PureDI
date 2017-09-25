@@ -65,7 +65,6 @@ entry points
 [Glossary](/Simple/UserGuide/Glossary.html)
 
 assemblies
-Factories
 Injection by constructor and constructor names
 Appropriate injection points
 
@@ -190,6 +189,9 @@ intention is very clear to those who come after.
 The implementation of the library is simple and is described
 elsewhere.  This will hopefully allow coders to reason about
 the container when tackling edge cases.
+
+The code tries to promote type safety but this is not always
+possible - see bean factories, for example.
 
 #### Verifiability
 
@@ -405,6 +407,80 @@ public class EnvironementVariableAttribute : BeanReferenceBaseAttribute
 }
 
 ```
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>BeanFactory</topic>
+    <userGuideTitle>Bean Factories</userGuideTitle>
+    <userGuide>
+In some situations there is no straightforward way for the container
+to know how to create a required bean.  For instance a repository might need
+to be connected to its database before it can be injected.
+
+This problem is overcome with the use of bean factories.
+
+A factory is specified as a parameter to the BeanReference attribute.
+  So instead of creating some implementation of the member variable
+type, the container calls the execute method of the factory which
+creates and provides an object of the appropriate type.
+
+A factory parameter (`FactoryParameter`) specified on the bean reference
+can optionally be passed to the factory's execute method.
+
+The following code provides a simple example.
+
+<div class="pre-scrollable">
+
+```  
+{code-FactoryUser.cs}
+```
+
+</div>
+
+
+Note:
+
+* Classes over which the library user has no control can
+be injected using factories.  This can include strings, ints etc.
+* Factories must be marked with the `[Bean]` attribute
+* Factories must implement the `IFactory` interface
+* Many use cases not covered by other mechanisms can be
+addressed with the use of bean factories.
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>InjectionByConstructor</topic>
+    <userGuideTitle>Injection by Constructor</userGuideTitle>
+    <userGuide>
+It is not always convenient to inject beans directly into the
+member variables of an object.  Apart from accommodating existing
+code there are cases where processing is required on the injected
+beans before the declaring object is ready for use.  Finally,
+there are cases where different injections require different
+constructors to be called.
+
+In the case of multiple constructors the bean reference takes
+a `ConstructorName` parameter which is matched up to a name
+passed to the `[Constructor]` attribute.
+
+The following code illustrates a simpple implementation:
+
+<div class="pre-scrollable">
+
+```  
+{code-Constructor.cs}
+```
+
+</div>
+
+
+
+
+Notes:
+
 
     </userGuide>
     <userGuideSeeAlso/>
