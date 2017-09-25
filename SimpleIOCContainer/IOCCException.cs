@@ -5,10 +5,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     public class IOCCException : Exception
     {
         public IOCCDiagnostics Diagnostics { get; } = null;
-         public IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
-         {
-             this.Diagnostics = diagnostics;
-         }
+        public IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
+        {
+            this.Diagnostics = diagnostics;
+        }
 
         public IOCCException(string message, Exception innerException, IOCCDiagnostics diagnostics)
           : base(message, innerException)

@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
+    /// <summary>
+    /// Any class to be injected into another class and
+    /// any class injected into.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public abstract class BeanBaseAttribute : Attribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string  Name
         {
             get { return name; }

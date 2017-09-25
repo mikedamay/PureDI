@@ -281,7 +281,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
         /// <param name="diagnostics"></param>
         /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
-        ///     or "MyNameSpace.MyClass&lt;MyActualParam&gt" or
+        ///     or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
         ///     where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope">scope refers to the scope of the root bean i.e. the

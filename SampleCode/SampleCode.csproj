@@ -17,10 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleIOCContainer\SimpleIOCContainer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="SimpleIOCContainer">
-      <HintPath>..\..\bin\Debug\netstandard2.0\SimpleIOCContainer.dll</HintPath>
-    </Reference>
-  </ItemGroup>
     
 </Project>

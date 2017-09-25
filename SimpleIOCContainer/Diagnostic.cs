@@ -21,7 +21,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     public abstract class Diagnostic : DynamicObject
     {
         private readonly IOCCDiagnostics.Group group;
-        public IDictionary<string, object> Members { get; }
+        internal IDictionary<string, object> Members { get; }
 
         protected Diagnostic(IOCCDiagnostics.Group group)
         {
