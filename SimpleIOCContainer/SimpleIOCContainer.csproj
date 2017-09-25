@@ -43,7 +43,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <DocumentationFile>bin\Debug\netstandard2.0\SimpleIOCContainer.xml</DocumentationFile>
   </PropertyGroup>
 </Project>

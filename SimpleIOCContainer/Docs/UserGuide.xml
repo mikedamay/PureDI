@@ -6,11 +6,21 @@
     <userGuideTitle>Introduction to SimpleIOCContainer</userGuideTitle>
     <userGuide>
 The SimpleIOCContainer (Simple Inversion of Control Container) is a
-Dependency Injection (DI) framework promoting simplicity of use and
-rich diagnostics.
+C# library providing a Dependency Injection (DI) framework promoting 
+simplicity, transparancy and verifyability.
 
-Usage follows a simple pattern: the caller instantiates some key object
-with a call to *SimpleIOCContainer.CreateAndInjectDependnecies* and that
+It is available from nuget.org with the following command:
+
+```
+install-package TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+```
+
+Source code is available at [https://github.com/mikedamay/SimpleIOCContainer.git](https://github.com/mikedamay/SimpleIOCContainer.git)
+
+This documentation is located at [http://mikedamay.co.uk/Simple/index.html](http://mikedamay.co.uk/Simple/index.html)
+
+Usage follows a simple pattern: the caller instantiates some significant object
+with a call to ```SimpleIOCContainer.CreateAndInjectDependnecies``` and that
 object is instiated together with dependencies to which it refers
 and so forth recursively through the tree of dependencies.
 
@@ -31,26 +41,37 @@ A simple example (Introduction.cs) is as follows:
 
 ### Notes
 
-* Classes to be injected are annotated with the *Bean* attribute.
-* The site of the injection is annotated with the *BeanReference* attribute
-* The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean
-* Once *CreateAndInjectDependencies has been called all beans will have been instantiated and assigned to any matching bean references.
+* Classes to be injected are annotated with the `[Bean]` attribute.
+* Classes where a bean is to be injected must also be marked as beans
+* The site of the injection is annotated with the `[BeanReference]` attribute
+* The type of a member variable where a bean is to be injected 
+should an interface, a direct or indirect base class of the bean or the the class
+that implements the bean
+* Once ```CreateAndInjectDependencies``` has been called all beans will have 
+been instantiated and assigned to any matching bean references.  Typically, calls
+will only be made to the container, subsequently, if the program has other
+entry points
 
 ### See Also
 
 [Assemblies (or An early gotcha)](/Simple/diagnosticSchema/MissingBean.html)
 
-[Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
+[Profiles (or why else bother with DI)](/Simple/UserGuide/Profiles.html)
+
+[Limitations &amp; Gotchas(or why you will hate me)](/Simple/UserGuide/LimitationsAndGotchas.html)
+
+[Design Rationale (or why!!!)](/Simple/UserGuide/DesignRationale.html)
+
+[Glossary](/Simple/UserGuide/Glossary.html)
 
 assemblies
-factories
-appropriate injection points
-design rationale
-IOCCIgnore
-cyclical depenenecies
-Limitations and Gotchas
-Injection by construcor and constructor names
-Base attributes
+Factories
+Injection by constructor and constructor names
+Appropriate injection points
+IOCCIgnore (Miscellaneous)
+Base attributes (Miscellaneous)
+Cyclical dependenecies (Miscellaneous)
+Glossary
 
 Developer Guide
 
@@ -127,6 +148,206 @@ of which implementations are to be used.
 See Also:
 
 [Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/DuplicateBean.html)
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>DesignRationale</topic>
+    <userGuideTitle>Design Rationale</userGuideTitle>
+    <userGuide>
+Three aspirations underly the design of the container:
+
+* Simplicity
+* Transparency
+* Verifiability
+
+#### Simplicity
+
+In the interests of simplicity the libraries surface area is restricted to:
+
+* A single significant operational class class `SimpleIOCContainer` coupled with 3 enums
+* A single constructor for the container and a single 
+method `CreateAndInjectDependencies` albeit with 4 overloads
+* The Diagnostics class and its components which for most purposes can be 
+ignored except to list warnings with `ToString()`
+* 4 attributes `[Bean]`, `[BeanReference]` etc. for identifying injectables and the 
+sites where they can be injected plus some ancillary "value" classes such as `BeanFactoryArgs`
+* 4 base classes for users to derive their own attributes 
+(not-so-simple but can be safely ignored)
+* There is only one way to define the injectables and injection sites, i.e. by
+the use of attributes.  There is no XML alternative or privileged configuration
+by code.
+* The library is lightweigh with no non-Microsoft dependencies
+
+#### Transparency
+
+Transparency is in evidence through the lack of "magic" such as
+AOP (Aspect Oriented Programming) or code generation.  The only
+magic is the actual injection using basic reflection.  The
+requirement to consistently mark inectables and injection sites
+with attributes is seen as promoting transparency - the coder's
+intention is very clear to those who come after.
+
+The implementation of the library is simple and is described
+elsewhere.  This will hopefully allow coders to reason about
+the container when tackling edge cases.
+
+#### Verifiability
+
+The "onfiguration-over-convention" approach which provides transparancy
+also helps with the third aspiration of Verifiability.  By insisting
+that he user explicitly states their intention to inject functionality
+but the use of `[Bean]` and `[BeanRefererne]` attributes we can
+provide rich diagnostics so that when things don't work the coder
+can investigate in some depth.  The `IOCCDiagnostics` object provides
+full details of anomalies discovered when carrying out the injections.
+
+As part of this aspiration there is a more concrete aspiration (for a later version) to
+build code analyzers so that much of the validation can be done at
+compile time rather than run-time.
+
+### Trade-offs
+
+Fulfilling such aspirations comes at a cost.
+
+* Overhead requiring the attribute boilerplate
+* Absence of hooks for 3rd party frameworks which might otherwise use the container
+* Possibly some minor performance degradation caused by diagnostic collection
+* The object model is static - although new objects can be added at program entry points
+there is no facility to remove anything.  This will be addressed in the case of
+request and session scope objects for web applications in a future version.  In
+the mean time where this is necessary beans will have to be created with Prototype scope
+* There is an absence of convenience/shortcut injections such as allowing values
+to be substituted at the point of injection from a configuration file or the environment
+* A bean reference cannot have parameters which makes creating multiple objects with
+the same implementation class but different parameters difficult.
+* The library is dotnetstandard 2.0 using C# 7.1.
+
+### Motivation
+
+The author used [Java-Spring](http://spring.io) for 5 years.  I thought Spring was an
+excellent, well architected, well documented robust and reliable framework.  It was
+particularly suitable for enterprise computing where a consistency of approach in the
+team and and across teamms to core functionality, persistence, web MVC, SOAP, REST,
+security, batch processing etc. has a lot to be said for it.  However I found (
+albeit picking up the framework in conjection with a brown-field project which
+had been worked on by a variety of developers with a variety of skill levels)
+that Spring's ability to do a great deal for the coder behind the scenes was not
+my preferred approach.  In particular the AOP involved in enforcing database
+transactions was a piece of "magic" too far.  A lot of the design decisions here
+are a reaction against the that aspect of Spring.  However I acknowledge the Spring framework as a towering
+achievement.
+
+[Limitations &amp; Gotchas(or why you will hate me)](/Simple/userGuide/LimitationsAndGotchas.html)
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>LimitationsAndGotchas</topic>
+    <userGuideTitle>Limitations &amp; Gotchas</userGuideTitle>
+    <userGuide>
+#### Limitations
+
+1. The object model is static - although new objects can be added at program entry points
+there is no facility to remove anything.  This will be addressed in the case of
+request and session scope objects for web applications in a future version.  In
+the mean time where this is necessary beans will have to be created with Prototype scope
+2. `static` classes and members are not handled
+3. `readonly` properties cannot have their value set by injection.  A constructor
+or field must be involved.
+is called.
+4. Variadic constructors are not supported
+5. It is not possible to combine alternative implementations with parallel implementations.
+Suppose we have an IRepository interface and two concrete classes that implement it say
+ILocalRepository and IRemoteRepository.  We cannot fulfill a reqauirement where a) in 
+production some classes need the LocalRepository (say for configuration settings) and
+some classes the RemoteRepository (for general use) and b) on the developer machine
+both repositories should be LocalRepository.  In the first case we need the remote 
+repostory to have a bean **name**, say "remote" and in the second case a **profile**
+but no **name**.
+
+#### Gotchas
+
+1. If a member is incorrectly marked as [IOCCBeanReference] then
+it will be set to its default value even if it is an initialized member
+2. Factories must both have a `[bean]` attribute and implement `IFactory`.  If a factory
+has only one of these then this will be recorded in diagnostics (`IOCCDiagnostics`)
+3. A risk, particularly with multiple entry points, is that the coder will forget
+to include required assemblies when the container is created
+4. If a number of beans implement some widely used interface such as `IEnumerable of T` then
+each implementing class involved will require bean names so that the container can
+select the appropriate bean for a given injection whith the widely used type
+5. For factories the bean name (if present) refers to the selection of the factory.
+It does not relate in any way to the class which is instantiated by the factory
+6. `CreateAndInjectDependencies()` is not thread safe
+7. As you would expect beans have not been injected when the class's constructor
+
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>Glossary</topic>
+    <userGuideTitle>Glossary</userGuideTitle>
+    <userGuide>
+#### Bean
+
+The documentation uses the term, _Bean_, rather loosely.  It refers either to a class
+marked with the `[Bean]` attribute which is ready to be injected into
+some other class by the container.  The name may seem a little misleading
+as beans imply something small and uniform.  You might expect the name
+to apply to value objects such as DTOs but beans are more typically singletons
+such as services or repositories.  Blame [Spring](http://spring.io).
+
+Alternatively, the term bean is used to refer to an instantiated object of such a class.
+
+#### Injection
+
+_Injection_ is the process of assignment by the container of some object
+to the member variable or constructor parameter of some other object.  It sometimes
+loosely extended to include the creation of the ineected object.
+
+#### Dependency
+
+The documentation uses the term, _Dependency_, to refer to the relationship
+between two classes where one is an class to be injected and the other
+has a member which refers to the bean.
+
+#### Injectable
+
+More descriptive synonym for a bean.
+
+#### Injection Site
+
+Either a member variable or a constructor parmeter marked as a `[BeanReference]`
+
+#### (Object) Tree
+
+Also known as the object model.  This is a conceptual construct which sees
+the objects related by a set of injections with a root object (being the
+type passed to `CreateAndInjectDependnecies`.
+
+#### Container
+
+The container controls the creation of the object tree and retains meta
+data so that additions can be made to the tree at subsequent entry points
+to the program.
+
+#### Prototype
+
+This terminology is borrowed from Spring rather than javascript or
+the GOF design patern.  The object created to be assigned to a
+`[BeanReference(Scope=Scope.Prorotype]` marked as a prototype is 
+is not make part of the object tree but treated as a one-off.
+
+#### Singleton
+
+This term is typically applied to services, repositories or other objects
+orchestrating the workflow of the application.  There tends to be only
+one of each type of object fulfilling a particular role.
+
 
     </userGuide>
     <userGuideSeeAlso/>

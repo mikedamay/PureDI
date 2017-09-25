@@ -55,15 +55,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO API reference
     // TODO rudimentary developer guide
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
-    // TODO and that generics have the for classname`1[TypeParam]
+    // N/A and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
     // TODO are combined to support inheritance.  Execute must be virtual.
-    // TODO document that names apply to factories not the target reference bean.
-    // TODO document lack of thread safety
-    // TODO document the point that injected members are not available in the constructor
-    // TODO document the variable parameters issue or possibly implement a solution
-    // TODO handle situation / document where sometimes in same program you want
-    // TODO alternative implementations and sometimes you want parallel
+    // DONE document that names apply to factories not the target reference bean.
+    // DONE document lack of thread safety
+    // DONE document the point that injected members are not available in the constructor
+    // DONE document the variable parameters issue or possibly implement a solution
+    // DONE handle situation / document where sometimes in same program you want
+    // DONE alternative implementations and sometimes you want parallel
     // TODO implementations a la IPropertyMap
     // TODO document that it is not possible to have OS.Any along with OS.Specific
     // TODO document bean, bean definition and other technical terms
@@ -72,12 +72,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test global:: and document that it won't work for root type passed as string
+    // TODO spell check documentation
+    // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
     // TODO Mass Test - 2 days
+    // TODO heading for diagnostic output e.g. Diagnostic Information:
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
@@ -137,37 +140,24 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: handle extern alias situations
     // TODO Later: move documentation site to TheDisappointedProgrammer.com
     // TODO Later: diagnostics combination functionality
+    // TODO Later: Make constructors so that we can inject readonly properties - maybe - probably not
+    // TODO Later: handle whether external interfaces are included or excluded from typeMap
+    // TODO Later: add tables to markdown
     /// <summary>
     /// 
     /// </summary>
     /// <remarks>
     /// constraints:
-    ///     1) the object tree (i.e. the program's static model) is required to be static.
-    ///     if objects are added to the tree through code at run-time this will not be 
-    ///     reflected in the IOC container.
-    ///     2) The root class has to be visible to the caller of CreateAndInjectDependencies.
-    ///     2a) The root of the tree cannot be specified using reflection.  I'll probably regret that.
-    ///     3) static classes and members are not handled.
-    ///     4) If a member is incorrectly marked as [IOCCBeanReference] then
-    ///        it will be set to its default value even if it is an initialized member.
-    ///     5) There is no way for the root bean to be a prototype
     ///     6) Even if beans are referenced only by factories they still names to 
     ///        distinguish multiple implementations of the same interfacr.
     ///        Of course classes referenced by factories don't have to be beans.
-    ///     7) readonly properties cannot have their value set by injection.  A constructor
-    ///        or field must be involved.  - we could make our own constructor
-    ///     8) Note that beans are not available within constructors
     ///     7) bean names, constructor names and profiles are case insensitive
-    ///     8) IFactory is ignored in resolving a bean reference - gotcha
-    ///     9) Gotcha is having multiple entry points and forgetting to add assemblies.
-    ///        It may be good to test root types against the list of assemblies and issue
-    ///        warnings
     /// </remarks>
     [Bean]
     public partial class SimpleIOCContainer
     {
         public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
-        public static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
+        internal static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";

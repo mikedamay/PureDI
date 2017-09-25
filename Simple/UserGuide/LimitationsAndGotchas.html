@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />    <title>Some Title</title>
+    <link type="text/png" rel="icon" href="/glyphicons_free/glyphicons/png/glyphicons-30-notes-2.png" />
+    <link type="text/css" href="/Simple/Content/bootstrap.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <h3 class="col-sm-10" style="color: blue">Limitations &amp; Gotchas</h3>
+            <!--<hr class="col-xs-12"/>-->
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <h4>Limitations</h4>
+<ol>
+<li>The object model is static - although new objects can be added at program entry points
+there is no facility to remove anything.  This will be addressed in the case of
+request and session scope objects for web applications in a future version.  In
+the mean time where this is necessary beans will have to be created with Prototype scope</li>
+<li><code>static</code> classes and members are not handled</li>
+<li><code>readonly</code> properties cannot have their value set by injection.  A constructor
+or field must be involved.
+is called.</li>
+<li>Variadic constructors are not supported</li>
+<li>It is not possible to combine alternative implementations with parallel implementations.
+Suppose we have an IRepository interface and two concrete classes that implement it say
+ILocalRepository and IRemoteRepository.  We cannot fulfill a reqauirement where a) in
+production some classes need the LocalRepository (say for configuration settings) and
+some classes the RemoteRepository (for general use) and b) on the developer machine
+both repositories should be LocalRepository.  In the first case we need the remote
+repostory to have a bean <strong>name</strong>, say &quot;remote&quot; and in the second case a <strong>profile</strong>
+but no <strong>name</strong>.</li>
+</ol>
+<h4>Gotchas</h4>
+<ol>
+<li>If a member is incorrectly marked as [IOCCBeanReference] then
+it will be set to its default value even if it is an initialized member</li>
+<li>Factories must both have a <code>[bean]</code> attribute and implement <code>IFactory</code>.  If a factory
+has only one of these then this will be recorded in diagnostics (<code>IOCCDiagnostics</code>)</li>
+<li>A risk, particularly with multiple entry points, is that the coder will forget
+to include required assemblies when the container is created</li>
+<li>If a number of beans implement some widely used interface such as <code>IEnumerable of T</code> then
+each implementing class involved will require bean names so that the container can
+select the appropriate bean for a given injection whith the widely used type</li>
+<li>For factories the bean name (if present) refers to the selection of the factory.
+It does not relate in any way to the class which is instantiated by the factory</li>
+<li><code>CreateAndInjectDependencies()</code> is not thread safe</li>
+<li>As you would expect beans have not been injected when the class's constructor</li>
+</ol>
+
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+</body>
+</html>

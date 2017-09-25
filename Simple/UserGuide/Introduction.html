@@ -16,7 +16,7 @@
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
             <h3 class="col-sm-10" style="color: blue">Introduction to SimpleIOCContainer</h3>
-            <hr class="col-xs-12"/>
+            <!--<hr class="col-xs-12"/>-->
         </div>
         <div class="col-sm-1"></div>
     </div>
@@ -24,10 +24,15 @@
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
             <p>The SimpleIOCContainer (Simple Inversion of Control Container) is a
-Dependency Injection (DI) framework promoting simplicity of use and
-rich diagnostics.</p>
-<p>Usage follows a simple pattern: the caller instantiates some key object
-with a call to <em>SimpleIOCContainer.CreateAndInjectDependnecies</em> and that
+C# library providing a Dependency Injection (DI) framework promoting
+simplicity, transparancy and verifyability.</p>
+<p>It is available from nuget.org with the following command:</p>
+<pre><code>install-package TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+</code></pre>
+<p>Source code is available at <a href="https://github.com/mikedamay/SimpleIOCContainer.git">https://github.com/mikedamay/SimpleIOCContainer.git</a></p>
+<p>This documentation is located at <a href="http://mikedamay.co.uk/Simple/index.html">http://mikedamay.co.uk/Simple/index.html</a></p>
+<p>Usage follows a simple pattern: the caller instantiates some significant object
+with a call to <code>SimpleIOCContainer.CreateAndInjectDependnecies</code> and that
 object is instiated together with dependencies to which it refers
 and so forth recursively through the tree of dependencies.</p>
 <p>The call to <em>CreateAndInjectDependencies</em> is typically made at program
@@ -61,23 +66,31 @@ public class Logger
 </div>
 <h3>Notes</h3>
 <ul>
-<li>Classes to be injected are annotated with the <em>Bean</em> attribute.</li>
-<li>The site of the injection is annotated with the <em>BeanReference</em> attribute</li>
-<li>The member variable to be injected should an interface, a direct or indirect base class of the bean or the same class as the bean</li>
-<li>Once *CreateAndInjectDependencies has been called all beans will have been instantiated and assigned to any matching bean references.</li>
+<li>Classes to be injected are annotated with the <code>[Bean]</code> attribute.</li>
+<li>Classes where a bean is to be injected must also be marked as beans</li>
+<li>The site of the injection is annotated with the <code>[BeanReference]</code> attribute</li>
+<li>The type of a member variable where a bean is to be injected
+should an interface, a direct or indirect base class of the bean or the the class
+that implements the bean</li>
+<li>Once <code>CreateAndInjectDependencies</code> has been called all beans will have
+been instantiated and assigned to any matching bean references.  Typically, calls
+will only be made to the container, subsequently, if the program has other
+entry points</li>
 </ul>
 <h3>See Also</h3>
 <p><a href="/Simple/diagnosticSchema/MissingBean.html">Assemblies (or An early gotcha)</a></p>
-<p><a href="/Simple/userGuide/Profiles.html">Profiles (or why bother with DI)</a></p>
+<p><a href="/Simple/UserGuide/Profiles.html">Profiles (or why else bother with DI)</a></p>
+<p><a href="/Simple/UserGuide/LimitationsAndGotchas.html">Limitations &amp; Gotchas(or why you will hate me)</a></p>
+<p><a href="/Simple/UserGuide/DesignRationale.html">Design Rationale (or why!!!)</a></p>
+<p><a href="/Simple/UserGuide/Glossary.html">Glossary</a></p>
 <p>assemblies
-factories
-appropriate injection points
-design rationale
-IOCCIgnore
-cyclical depenenecies
-Limitations and Gotchas
-Injection by construcor and constructor names
-Base attributes</p>
+Factories
+Injection by constructor and constructor names
+Appropriate injection points
+IOCCIgnore (Miscellaneous)
+Base attributes (Miscellaneous)
+Cyclical dependenecies (Miscellaneous)
+Glossary</p>
 <p>Developer Guide</p>
 <p>API:
 Constructor

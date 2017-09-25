@@ -6,12 +6,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Common
     /// <summary>
     /// ImmutableDictionary was too slow to be of use.
     /// </summary>
-    public interface IWouldBeImmutableDictionary<K, V> : IDictionary<K, V>
+    internal interface IWouldBeImmutableDictionary<K, V> : IDictionary<K, V>
     {
         
     }
 
-    public class WouldBeImmutableDictionary
+    internal class WouldBeImmutableDictionary
     {
         public static WouldBeImmutableDictionary<K, V>.Builder CreateBuilder<K, V>()
         {
@@ -20,9 +20,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Common
 
     }
 
-    public class WouldBeImmutableDictionary<K, V> : Dictionary<K, V>, IWouldBeImmutableDictionary<K, V>
+    internal class WouldBeImmutableDictionary<K, V> : Dictionary<K, V>, IWouldBeImmutableDictionary<K, V>
     {
-        public class Builder : WouldBeImmutableDictionary<K, V>
+        internal class Builder : WouldBeImmutableDictionary<K, V>
         {
             public WouldBeImmutableDictionary<K, V> ToImmutable()
             {
