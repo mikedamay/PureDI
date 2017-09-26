@@ -37,7 +37,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="rootBeanName"></param>
         /// <param name="scope"></param>
         /// <param name="mapObjectsCreatedSoFar"></param>
-        /// <param name="mapObjectsCreatedSoFar1"></param>
         /// <returns>an ojbect of root type</returns>
         public object CreateAndInjectDependencies(Type rootType
             , IOCCDiagnostics diagnostics

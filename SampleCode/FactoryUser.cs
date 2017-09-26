@@ -5,7 +5,7 @@ using com.TheDisappointedProgrammer.IOCC;
 public class FactoryUser
 {
     [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
-      private IRepository2 repo;
+      private IRepository2 repo = null;
     public static void Main()
     {
         var factoryUser = new SimpleIOCContainer().CreateAndInjectDependencies<FactoryUser>();

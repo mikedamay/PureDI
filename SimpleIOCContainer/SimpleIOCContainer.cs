@@ -76,13 +76,18 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO factory beans are typically (but not necessarily) created as prototypes so
     // TODO if there is another non-factory based injecttion of the bean it will be
     // TODO a different instance
+    // TODO add version to documentation heading
+    // 
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
     // TODO Mass Test - 2 days
-    // TODO heading for diagnostic output e.g. Diagnostic Information:
+    // TODO test with multiple OSs
+    // TODO remove nocache headers from documentation
+    // TODO make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
+    // DONE heading for diagnostic output e.g. Diagnostic Information:
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
@@ -158,7 +163,31 @@ namespace com.TheDisappointedProgrammer.IOCC
     [Bean]
     public partial class SimpleIOCContainer
     {
-        public enum OS { Any, Linux, Windows, MacOS } OS os = new StdOSDetector().DetectOS();
+        /// <summary>
+        /// caches the operating system in which the container is executing.
+        /// Library users may have OS dependent injections
+        /// </summary>
+        public enum OS
+        {
+            /// <summary>
+            /// Beans typically have an OS of OS.Any
+            /// this will match any OS under which the container is executing
+            /// </summary>
+            Any,
+            /// <summary>
+            /// Any version of Linux supporting dotnetstandard 2.0
+            /// </summary>
+            Linux,
+            /// <summary>
+            /// Any version of Windows supporting dotnetstandard 2.0
+            /// </summary>
+            Windows,
+            /// <summary>
+            /// Any MAC verion supported by dotnetstandard 2.0
+            /// </summary>
+            MacOS
+        }
+        private readonly OS os = new StdOSDetector().DetectOS();
         internal static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";

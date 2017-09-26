@@ -9,10 +9,22 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <summary>
     /// <see cref="Diagnostic"/>
     /// </summary>
+    /// <usage>
+    /// call ToString() to view warnings or AllToString() to view info
+    /// </usage>
     public class IOCCDiagnostics
     {
+        /// <summary>
+        /// severity is applied to groups rather than individual
+        /// occurrences.
+        /// `Severity.Error` is not currently supported
+        /// </summary>
         public enum Severity { Info, Warning, Error }
 
+        /// <summary>
+        /// strong hint to library users is that there is no
+        /// need to instantiate the IOCCDiagnostics object
+        /// </summary>
         protected IOCCDiagnostics()
         {
             

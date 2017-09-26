@@ -8,7 +8,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         OS DetectOS();
     }
-
+    /// <inheritdoc/>/>
     public class UnsupportedPlatformException : Exception
     {
         

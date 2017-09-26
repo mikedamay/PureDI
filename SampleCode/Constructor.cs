@@ -6,7 +6,7 @@ using com.TheDisappointedProgrammer.IOCC;
 public class Constructor
 {
     [BeanReference]
-    private ISomeService someService;
+    private ISomeService someService = null;
 
     public static void Main()
     {

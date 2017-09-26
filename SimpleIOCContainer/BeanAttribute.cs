@@ -22,10 +22,24 @@ namespace com.TheDisappointedProgrammer.IOCC
             set { name = value.ToLower(); }
         }
         private string name = SimpleIOCContainer.DEFAULT_BEAN_NAME;
+        /// <summary>
+        /// beans which have a non-empty profile are only instantiated
+        /// when that profile is passed to CreateAndInjectDependencies
+        /// </summary>
+        /// <example>[Bean(Profile="testonly")]</example>
+        /// <see>/Simple/UserGuide/Profiles</see>
         public string Profile = SimpleIOCContainer.DEFAULT_PROFILE_ARG;
+        /// <summary>
+        /// A class to which this attribute is applied can specify
+        /// an OS for which it should be instantiated.  When running
+        /// on any other OS it will be ignored.
+        /// OS.Any means that it will always be instantiated unless
+        /// <example>`[Bean(OS=SimpleIOCContainer.OS.Linux)]`</example>
+        /// </summary>
         public SimpleIOCContainer.OS OS = SimpleIOCContainer.OS.Any;
     }
 
+    /// <inheritdoc/>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public sealed class BeanAttribute : BeanBaseAttribute
     {
