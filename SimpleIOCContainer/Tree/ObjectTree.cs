@@ -10,7 +10,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
     internal class ObjectTree
     {
-        public static int s_nAssignments;
         private readonly string profile;
 
         private const BindingFlags constructorFlags =
@@ -336,7 +335,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             );
                         }
                     }
-                    s_nAssignments++;
                     memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
                     LogMemberInjection(diagnostics, declaringBean.GetType()
                         , memberSpec.FieldOrPropertyInfo.GetDeclaredType()

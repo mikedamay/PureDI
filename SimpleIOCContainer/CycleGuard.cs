@@ -9,8 +9,8 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class CycleGuard
     {
-        private HashSet<Type> types = new HashSet<Type>();
-        private Stack<Type> typeStack = new Stack<Type>();
+        private readonly HashSet<Type> types = new HashSet<Type>();
+        private readonly Stack<Type> typeStack = new Stack<Type>();
         public void Push(Type type)
         {
             Assert(!types.Contains(type));

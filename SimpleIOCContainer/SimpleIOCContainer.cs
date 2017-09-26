@@ -168,11 +168,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         public enum AssemblyExclusion { ExcludedNone = 0
           , ExcludeSimpleIOCCContainer = 1
           , ExcludeRootTypeAssembly = 2}
-        private AssemblyExclusion excludedAssemblies;
+        private readonly AssemblyExclusion excludedAssemblies;
         private readonly ImmutableArray<Assembly> explicitAssemblies;
-        private IImmutableList<Assembly> allAssemblies;
-
         private readonly ISet<string> profileSet;
+
         // the key in the objects created so far map comprises 2 types.  The first is the
         // intended concrete type that will be instantiated.  This works well for
         // non-generic types but for generics the concrete type, which is taken from the typeMap,
@@ -304,12 +303,14 @@ namespace com.TheDisappointedProgrammer.IOCC
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
+                string allAssemblyNames
+                    = ((dynamic) diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences[0]).Assemblies;
                 IOCCDiagnostics.Group group = diagnostics.Groups["MissingRootBean"];
                 dynamic diag = group.CreateDiagnostic();
                 diag.BeanType = rootTypeName;
                 diag.BeanName = rootBeanName;
                 group.Add(diag);
-                throw new IOCCException($"Unable to find a type in assembly {allAssemblies.ListContents()} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
+                throw new IOCCException($"Unable to find a type in assembly {allAssemblyNames} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
             return CreateAndInjectDependenciesExCommon(rootType
                 ,diagnostics, profileSet, rootBeanName
@@ -386,7 +387,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                         (excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
                         .Union(new[] {this.GetType().Assembly}.Where( a =>
                         (excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)));
-            allAssemblies = builder.ToImmutable();
+            IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
             {
@@ -433,10 +434,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         private void LogAssemblies(IOCCDiagnostics diagnostics
           , IImmutableList<Assembly> assemblies)
         {
-            IOCCDiagnostics.Group group = diagnostics.Groups["AssembliesInfo"];
+            IOCCDiagnostics.Group group = diagnostics.Groups[Constants.ASSEMBLIES_INFO];
             dynamic diag = group.CreateDiagnostic();
             diag.Assemblies = string.Join(",", assemblies.Select(a => a.GetName().Name));
-            diagnostics.Groups["AssembliesInfo"].Occurrences.Add(diag);
+            diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences.Add(diag);
         }
 
         /// <summary>
