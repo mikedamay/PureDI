@@ -81,15 +81,28 @@ namespace com.TheDisappointedProgrammer.IOCC
         public string AllToString()
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append("Diagnostic Report");
+            sb.AppendLine();
+            sb.AppendLine();
             sb.Append(GetStringForSeverity(Severity.Warning));
             sb.Append(GetStringForSeverity(Severity.Info));
             return sb.ToString();
         }
         public override string ToString()
         {
-            string str = "Note that to see information as well as warnings you should call IOCCDiagnostics.AllToString()"
-                      + Environment.NewLine + Environment.NewLine;
-            return str + GetStringForSeverity(Severity.Warning);
+            string str = "Diagnostic Report" 
+              + Environment.NewLine + Environment.NewLine;
+            if (!this.HasWarnings)
+            {
+                str = "There are no diangostic warnings to report";
+            }
+            else
+            {
+                str = str + GetStringForSeverity(Severity.Warning);
+            }
+            str = str + Environment.NewLine + Environment.NewLine
+              + "Note that to see information as well as warnings you should call IOCCDiagnostics.AllToString()";
+            return str;
         }
 
         private string GetStringForSeverity(Severity severity)

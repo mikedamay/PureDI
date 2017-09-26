@@ -64,25 +64,6 @@ entry points
 
 [Glossary](/Simple/UserGuide/Glossary.html)
 
-Appropriate injection points
-
-Developer Guide
-
-API:
-Constructor
-CreateAndInject... x 5
-IOCCException
-BeanAttribute / BeanBaseAttribute
-BeanReferenceAttribute / BeanReferenceBaseAttribute
-ConstructorAttribute / ConstructorBaseAttribute
-IOCCIgnoreAttribute / IgnoreBaseAttribute
-Diagnostics
-Group
-Diagnostic
-AssemblyExclusion
-Scope
-IFactory
-BeanFactoryArgs
     </userGuide>
     <userGuideSeeAlso/>
   </group>

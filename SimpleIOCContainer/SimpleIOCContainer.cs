@@ -51,7 +51,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO ASP.NET
     //
     // TODO documentation:
-    // TODO user guide - 3 days
     // TODO API reference
     // TODO rudimentary developer guide
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
@@ -74,6 +73,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO spell check documentation
     // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
+    // TODO factory beans are typically (but not necessarily) created as prototypes so
+    // TODO if there is another non-factory based injecttion of the bean it will be
+    // TODO a different instance
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
     // N/A document use of profiles with factories
@@ -81,8 +83,6 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO Mass Test - 2 days
     // TODO heading for diagnostic output e.g. Diagnostic Information:
-    // TODO how do we handle a bean created via a factory in one place but created
-    // TODO directly in another.
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
     // DONE test case-sensitivity
