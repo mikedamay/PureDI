@@ -1,0 +1,742 @@
+<h:html xmlns:h="http://www.w3.org/1999/xhtml"><header><meta charset="utf-8">
+<meta http-equiv="cache-control" content="max-age=0">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<meta http-equiv="pragma" content="no-cache">
+<title>SimpleIOCContainer API</title>
+<link type="text/png" rel="icon" href="/glyphicons_free/glyphicons/png/glyphicons-30-notes-2.png">
+<link type="text/css" href="/projects/SimpleIOCContainer/Simple/Content/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet"></header><body>
+<div class="container">
+<div class="col-sm-1"></div>
+<div class="col-sm-10">
+<h1>SimpleIOCContainer</h1>
+<div class="row">
+<div class="col-sm-4">
+                Assembly:
+            </div>
+<div class="col-sm-8">SimpleIOCContainer</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Any class to be injected into another class and
+            any class injected into.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">P:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Name<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Profile<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            beans which have a non-empty profile are only instantiated
+            when that profile is passed to CreateAndInjectDependencies
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.OS<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            A class to which this attribute is applied can specify
+            an OS for which it should be instantiated.  When running
+            on any other OS it will be ignored.
+            OS.Any means that it will always be instantiated unless
+            `[Bean(OS=SimpleIOCContainer.OS.Linux)]`
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.BeanAttribute<br></div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            an instance of BeanFactoryArgs is passed by the container
+            to each factory's `Execute` method.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">P:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs.FactoryParmeter<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            as specified in Bean.FactoryParameter,
+             `[Bean(Factory=typeof(MyFactory), FactoryParameter=42)]`
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs.#ctor(System.Object)<br><div class="row">
+<div class="col-sm-4">FactoryParameter</div>
+<div class="col-sm-8">BeanFactoryArgs.FactoryParameter</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.IFactory<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Any bean implementing the IFactory interface will
+            be treated as a factory and have their `Execute` method
+            invoked when encountered in a bean reference.
+            Note: a derived class must also be marked as a bean.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.Common.IWouldBeImmutableDictionary`2<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            ImmutableDictionary was too slow to be of use.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.ConstructorBaseAttribute<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Contains all the functionality of [Constructor]
+            attribute.
+            
+            There is no use case for this base class.  It
+            is present for consistency.  I suppose if a
+            library user wanted to combine the [Constructor]
+            attribute with their own bean they could use the
+            base class.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.Diagnostic<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Typical usage:
+                Diagnostic diag = diagnostics.groups["InvalidBeanType"].CreateDiagnostic();
+                diag.bean = someType.GetIOCCName();
+                diag.dependentBean = someOtherType.GetIOCCName();
+                diagnostics.groups["InvalidBeanType"].Add(diag);
+            alternatively:
+                Diagnostic diag = diagnostics.groups["SomeOthertopic"].CreateDiagnostic();
+                diag.someField = someValue;
+                diag.someField2 = someValue2
+                diagnostics.Groups["SomeOthertopic"].Add(diag);
+            The cause codes and the members of diag must tie up with DiagnosticSchema.xml
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.DiagnosticBuilder.#ctor(System.IO.Stream)<br><div class="row">
+<div class="col-sm-4">diagnosticSchema</div>
+<div class="col-sm-8">
+                XML Text which populates the diagnostics object
+                e.g. typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
+                     $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml")
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics.Severity<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            severity is applied to groups rather than individual
+            occurrences.
+            `Severity.Error` is not currently supported
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics.#ctor<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            strong hint to library users is that there is no
+            need to instantiate the IOCCDiagnostics object
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            the main exception exposed to library users.  Typically
+            an exception is thrown if the "root" object cannot
+            be instantiated.  Where the root object is not involved
+            then for the most part no exception is thrown, any
+            problems that occur being recorded as diagnostis.
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">message</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,System.Exception,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)<br></div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.IOCCExtensions.GetIOCCName(System.Type)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            The library has a strong dependency on uniquely identifying the type of objects.
+            This routine supports that.
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">type</div>
+<div class="col-sm-8">Typeically a bean or a bean reference - but can be anything</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.IgnoreBaseAttribute<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Contains all the functionality of [IOCCIgnore]
+            attribute.
+            
+            There is no use case for this base class.  It
+            is present for consistency.  I suppose if a
+            library user wanted to combine the [IOCCIgnore]
+            attribute with their own bean they could use the
+            base class.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.IOCCIgnoreAttribute<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Typically this is applied to interface or possibly base class
+            which the library user does not want to be treated as a reference
+            for the purposes of injecting dependencies.
+            This does not prevent it being used as the root type in
+            calls to SimpleIOCContainer.CreateAndInjectDependencies().
+            The purpose is simply to prevent warnings for duplicate
+            beans which might otherwise occurs.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.UnsupportedPlatformException<br></div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            caches the operating system in which the container is executing.
+            Library users may have OS dependent injections
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Any<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Beans typically have an OS of OS.Any
+            this will match any OS under which the container is executing
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Linux<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Any version of Linux supporting dotnetstandard 2.0
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Windows<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Any version of Windows supporting dotnetstandard 2.0
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.MacOS<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            Any MAC verion supported by dotnetstandard 2.0
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.#ctor(System.String[],System.Reflection.Assembly[],com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AssemblyExclusion)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            this routine is called to specify the assemblies to be scanned
+            for beans.  Any bean to be injected must be defined in one
+            of these assemblies and must be marked with the [Bean] attribute.
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">excludeRootAssembly</div>
+<div class="col-sm-8">By default the assembly containing the type
+            passed to CreateAndInjectDependencies() is included automatically.
+            Pass true here to ensure it is not scanned for beans.
+            Note that if you include the root assembly in the list
+            of assemblies then the excludeRootAssembly flag is ignored.
+            Note that if a string containing the root type is passed
+            to CreateAndInjectDependencies() then the system behaves as if
+            the flag was set to true as there is no easy way for the container
+            to know the assembly from which it was called.</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies``1(com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics@,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)<br><div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootBeanName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootConstructorName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">scope</div>
+<div class="col-sm-8">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootType
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies``1(System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            1. mainly used to create the complete object tree at program startup
+            2. may be used to create object tree fragments when running tests
+            3. may be used to create an object or link to an existing object
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootConstructorName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">scope</div>
+<div class="col-sm-8">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootType
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics@,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)<br><div class="row">
+<div class="col-sm-4">rootTypeName</div>
+<div class="col-sm-8">provided by caller - </div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootBeanName</div>
+<div class="col-sm-8">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
+                or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
+                where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootConstructorName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">scope</div>
+<div class="col-sm-8">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootTypeName
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependenciesExCommon(System.Type,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,System.Collections.Generic.ISet{System.String},System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            
+            this overload does not print out the diagnostics
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootType</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8">This overload exposes the diagnostics object to the caller</div>
+</div>
+<div class="row">
+<div class="col-sm-4">profile</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootBeanName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootConstructorName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">scope</div>
+<div class="col-sm-8"></div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AssembleAssemblies(System.Collections.Generic.IList{System.String})<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            NOT USED: builds list of all the assemblies involved in the dependency tree
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">assemblyNames</div>
+<div class="col-sm-8">list of names provided by caller.
+                This should include the names of all assemblies containing dependencies (concrete classes)
+                involved in the object model of this app.  Optionally this can include the assembly
+                of the root class in the tree</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AreTypeNamesEqualish(System.String,System.String)<br><div class="row">
+<div class="col-sm-4">typeFullName</div>
+<div class="col-sm-8">classic Type.FullName</div>
+</div>
+<div class="row">
+<div class="col-sm-4">IOCCUserEnteredName</div>
+<div class="col-sm-8">Hopefully same as Type.FullName except for generics where
+                parameters have the same format as a program delcaration, e.g. MyClass&lt;MyOuterParam&lt;MyInnerParam&gt;&gt;</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            objects of this type are instantiated when the beans that will be used as
+            members and constructors are being created
+            and used when the object is assigned to the member or passed as an
+            argument to the constructor
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec.#ctor(com.TheDisappointedProgrammer.IOCC.Tree.Info,System.Object,System.Boolean)<br><div class="row">
+<div class="col-sm-4">fieldOrPropertyInfo</div>
+<div class="col-sm-8">describes the member variable or constructor parameter
+            to which this bean will be assigned.  The object wraps the member or 
+            parameter info and provides a common interface for many operations where members and parameters
+            are treated identically.</div>
+</div>
+<div class="row">
+<div class="col-sm-4">memberOrFactoryBean</div>
+<div class="col-sm-8">an instance of the bean to be assigned to the member
+            or parameter or the factory which will produce the bean.</div>
+</div>
+<div class="row">
+<div class="col-sm-4">isFactory</div>
+<div class="col-sm-8">true if the member variable or constructor parameter is to be
+            assigned as the result of a factory operation.</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.CreateAndInjectDependencies(System.Type,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope,System.Collections.Generic.IDictionary{System.ValueTuple{System.Type,System.String},System.Object})<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            1. mainly used to create the complete object tree at program startup
+            2. may be used to create object tree fragments when running tests
+            3. may be used to create an object or link to an existing object
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootType</div>
+<div class="col-sm-8">The top node in the tree</div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">rootBeanName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">scope</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">mapObjectsCreatedSoFar</div>
+<div class="col-sm-8"></div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.CreateObjectTree(System.ValueTuple{System.Type,System.String,System.String},com.TheDisappointedProgrammer.IOCC.Tree.CreationContext,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,com.TheDisappointedProgrammer.IOCC.Tree.BeanReferenceDetails,com.TheDisappointedProgrammer.IOCC.BeanScope)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            see documentation for CreateAndInjectDependencies
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanId</div>
+<div class="col-sm-8">the type + beanName for which a bean is to be created.
+                The bean will not necessarily have the type passed in as this
+                may be a base class or interface (constructed generic type)
+                from which the bean is derived</div>
+</div>
+<div class="row">
+<div class="col-sm-4">creationContext</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanReferenceDetails</div>
+<div class="col-sm-8">provides a context to the bean that
+                can be displayed in diagnostic messages - currently not used for
+                anything else</div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanScope</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">mapObjectsCreatedSoFar</div>
+<div class="col-sm-8">for all beans instantiated to this point
+                maps the name of the class or struct of
+                the object to the instance of the object.</div>
+</div>
+<div class="row">
+<div class="col-sm-4">fieldOrPropertyInfo1</div>
+<div class="col-sm-8">used to determine the scope of the bean to be created</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.ValidateConstructors(System.Type,System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,com.TheDisappointedProgrammer.IOCC.Tree.BeanReferenceDetails)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            errros if: 
+                a) multiple candidate constructors
+                b) missing parameters
+            warns if:
+                there are parameters marked as bean references
+                for constructors that aren't marked
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">declaringBeanType</div>
+<div class="col-sm-8">whose constructor are we talking about</div>
+</div>
+<div class="row">
+<div class="col-sm-4">constructorName</div>
+<div class="col-sm-8">which of a number of competing construcors are we talking about</div>
+</div>
+<div class="row">
+<div class="col-sm-4">diagnostics</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanReferenceDetails</div>
+<div class="col-sm-8">context about the member referring to this bean+constructor</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.MakeMemberBeanId(System.Type,System.String,System.String)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            well, this is tricky.
+            </div>
+</div>
+<div class="row">
+<div class="col-sm-4">memberDeclaredBeanType</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">memberDeclaredBeanName</div>
+<div class="col-sm-8"></div>
+</div>
+<div class="row">
+<div class="col-sm-4">declaringBeanId</div>
+<div class="col-sm-8"></div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.GetImplementationFromTypeMap(System.ValueTuple{System.Type,System.String,System.String})<br><div class="row">
+<div class="col-sm-4">beanid</div>
+<div class="col-sm-8">Typically this is the type ofa member 
+                marked as a bean reference with [IOCCBeanReference]
+                for generics bean type is a generic type definition</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.IsBeanPresntInTypeMap(System.ValueTuple{System.Type,System.String,System.String})<br><div class="row">
+<div class="col-sm-4">beanid</div>
+<div class="col-sm-8"></div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.Construct(System.Type,System.Collections.Generic.IList{com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec},System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">checks if the type to be instantiated has an empty constructor and if so constructs it</div>
+</div>
+<div class="row">
+<div class="col-sm-4">beanType</div>
+<div class="col-sm-8">a concrete clasws typically part of the object tree being instantiated</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.TypeMatcher<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            compares a type in the assembly with an ioc type spec
+            such as "MyClass&lt;string&gt;"
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">T:com.TheDisappointedProgrammer.IOCC.TypeNameTree<br><div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+            takes a string like "MyClass&lt;MyClass2&gt;" and builds a tree
+            TreeMap of "MyClass`1" -&gt; TreeMap of "MyClass2"
+            TODO make this more readable - not sure what happened.
+            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-1"></div>
+<div class="col-sm-11">M:com.TheDisappointedProgrammer.IOCC.TypeNameTree.#ctor(System.String)<br><div class="row">
+<div class="col-sm-4">typeSpec</div>
+<div class="col-sm-8">namespace.classname&lt;genericAgrument&gt;</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-1"></div>
+</div>
+</body>
+</h:html>

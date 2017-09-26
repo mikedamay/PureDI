@@ -1,0 +1,405 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SimpleIOCContainer</name>
+    </assembly>
+    <members>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute">
+            <summary>
+            Any class to be injected into another class and
+            any class injected into.
+            </summary>
+        </member>
+        <member name="P:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Profile">
+            <summary>
+            beans which have a non-empty profile are only instantiated
+            when that profile is passed to CreateAndInjectDependencies
+            </summary>
+            <example>[Bean(Profile="testonly")]</example>
+            <see>/Simple/UserGuide/Profiles</see>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.OS">
+            <summary>
+            A class to which this attribute is applied can specify
+            an OS for which it should be instantiated.  When running
+            on any other OS it will be ignored.
+            OS.Any means that it will always be instantiated unless
+            <example>`[Bean(OS=SimpleIOCContainer.OS.Linux)]`</example>
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.BeanAttribute">
+            <inheritdoc/>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs">
+            <summary>
+            an instance of BeanFactoryArgs is passed by the container
+            to each factory's `Execute` method.
+            </summary>
+        </member>
+        <member name="P:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs.FactoryParmeter">
+            <summary>
+            as specified in Bean.FactoryParameter,
+             `[Bean(Factory=typeof(MyFactory), FactoryParameter=42)]`
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs.#ctor(System.Object)">
+            <inheritdoc cref="T:com.TheDisappointedProgrammer.IOCC.BeanFactoryArgs"/>>
+            <param name="FactoryParameter"><see>BeanFactoryArgs.FactoryParameter</see></param>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IFactory">
+            <summary>
+            Any bean implementing the IFactory interface will
+            be treated as a factory and have their `Execute` method
+            invoked when encountered in a bean reference.
+            Note: a derived class must also be marked as a bean.
+            </summary>
+            <see>docs://Simple/UserGuide/Factory</see>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.Common.IWouldBeImmutableDictionary`2">
+            <summary>
+            ImmutableDictionary was too slow to be of use.
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.ConstructorBaseAttribute">
+            <summary>
+            Contains all the functionality of [Constructor]
+            attribute.
+            
+            There is no use case for this base class.  It
+            is present for consistency.  I suppose if a
+            library user wanted to combine the [Constructor]
+            attribute with their own bean they could use the
+            base class.
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.Diagnostic">
+            <summary>
+            Typical usage:
+                Diagnostic diag = diagnostics.groups["InvalidBeanType"].CreateDiagnostic();
+                diag.bean = someType.GetIOCCName();
+                diag.dependentBean = someOtherType.GetIOCCName();
+                diagnostics.groups["InvalidBeanType"].Add(diag);
+            alternatively:
+                Diagnostic diag = diagnostics.groups["SomeOthertopic"].CreateDiagnostic();
+                diag.someField = someValue;
+                diag.someField2 = someValue2
+                diagnostics.Groups["SomeOthertopic"].Add(diag);
+            The cause codes and the members of diag must tie up with DiagnosticSchema.xml
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.DiagnosticBuilder.#ctor(System.IO.Stream)">
+            <param name="diagnosticSchema">
+                XML Text which populates the diagnostics object
+                e.g. typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(
+                     $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml")
+            </param>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics">
+            <summary>
+            <see cref="T:com.TheDisappointedProgrammer.IOCC.Diagnostic"/>
+            </summary>
+            <usage>
+            call ToString() to view warnings or AllToString() to view info
+            </usage>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics.Severity">
+            <summary>
+            severity is applied to groups rather than individual
+            occurrences.
+            `Severity.Error` is not currently supported
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics.#ctor">
+            <summary>
+            strong hint to library users is that there is no
+            need to instantiate the IOCCDiagnostics object
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
+            <summary>
+            the main exception exposed to library users.  Typically
+            an exception is thrown if the "root" object cannot
+            be instantiated.  Where the root object is not involved
+            then for the most part no exception is thrown, any
+            problems that occur being recorded as diagnostis.
+            </summary>
+            <param name="message"></param>
+            <param name="diagnostics"></param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,System.Exception,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
+            <inheritdoc cref="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)"/>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCExtensions.GetIOCCName(System.Type)">
+            <summary>
+            The library has a strong dependency on uniquely identifying the type of objects.
+            This routine supports that.
+            </summary>
+            <param name="type">Typeically a bean or a bean reference - but can be anything</param>
+            <returns>combines type fullname generic parameters, type arguments</returns>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IgnoreBaseAttribute">
+            <summary>
+            Contains all the functionality of [IOCCIgnore]
+            attribute.
+            
+            There is no use case for this base class.  It
+            is present for consistency.  I suppose if a
+            library user wanted to combine the [IOCCIgnore]
+            attribute with their own bean they could use the
+            base class.
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IOCCIgnoreAttribute">
+            <summary>
+            Typically this is applied to interface or possibly base class
+            which the library user does not want to be treated as a reference
+            for the purposes of injecting dependencies.
+            This does not prevent it being used as the root type in
+            calls to SimpleIOCContainer.CreateAndInjectDependencies().
+            The purpose is simply to prevent warnings for duplicate
+            beans which might otherwise occurs.
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.UnsupportedPlatformException">
+            <inheritdoc/>/>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer">
+            <summary>
+            
+            </summary>
+            <remarks>
+            constraints:
+                6) Even if beans are referenced only by factories they still names to 
+                   distinguish multiple implementations of the same interfacr.
+                   Of course classes referenced by factories don't have to be beans.
+                7) bean names, constructor names and profiles are case insensitive
+            </remarks>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS">
+            <summary>
+            caches the operating system in which the container is executing.
+            Library users may have OS dependent injections
+            </summary>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Any">
+            <summary>
+            Beans typically have an OS of OS.Any
+            this will match any OS under which the container is executing
+            </summary>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Linux">
+            <summary>
+            Any version of Linux supporting dotnetstandard 2.0
+            </summary>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.Windows">
+            <summary>
+            Any version of Windows supporting dotnetstandard 2.0
+            </summary>
+        </member>
+        <member name="F:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.OS.MacOS">
+            <summary>
+            Any MAC verion supported by dotnetstandard 2.0
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.#ctor(System.String[],System.Reflection.Assembly[],com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AssemblyExclusion)">
+            <summary>
+            this routine is called to specify the assemblies to be scanned
+            for beans.  Any bean to be injected must be defined in one
+            of these assemblies and must be marked with the [Bean] attribute.
+            </summary>
+            <remarks>
+            The assembly containing SimpleIOCCBean class itself is always included
+            by default.  It does not need to be specified.  The purpose
+            of the inclusion is to allow callers to include the SimpleIOCContainer
+            bean itself in factories.  The assumbly is included to make this intuitive.
+            </remarks>
+            <example>SetAssemblies( true, "MyApp", "MyLib")</example>
+            <param name="excludeRootAssembly">By default the assembly containing the type
+            passed to CreateAndInjectDependencies() is included automatically.
+            Pass true here to ensure it is not scanned for beans.
+            Note that if you include the root assembly in the list
+            of assemblies then the excludeRootAssembly flag is ignored.
+            Note that if a string containing the root type is passed
+            to CreateAndInjectDependencies() then the system behaves as if
+            the flag was set to true as there is no easy way for the container
+            to know the assembly from which it was called.</param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies``1(com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics@,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)">
+            <param name="diagnostics"></param>
+            <param name="rootBeanName"></param>
+            <param name="rootConstructorName"></param>
+            <param name="scope">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootType
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies``1(System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)">
+            <summary>
+            1. mainly used to create the complete object tree at program startup
+            2. may be used to create object tree fragments when running tests
+            3. may be used to create an object or link to an existing object
+            </summary>
+            <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
+            <param name="beanName"></param>
+            <param name="rootConstructorName"></param>
+            <param name="scope">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootType
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</param>
+            <returns>an ojbect of root type</returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics@,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)">
+            <param name="rootTypeName">provided by caller - <see cref="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AreTypeNamesEqualish(System.String,System.String)"/></param>
+            <param name="diagnostics"></param>
+            <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
+                or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
+                where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
+            <param name="rootConstructorName"></param>
+            <param name="scope">scope refers to the scope of the root bean i.e. the
+                top of the tree - as instantiated by rootTypeName
+                It does not affect the rest of the tree.  The other nodes on the tree will
+                honour the Scope property of [IOCCBeanReference]</param>
+            <returns>the root of the object tree with all dependencies instantiated</returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependenciesExCommon(System.Type,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,System.Collections.Generic.ISet{System.String},System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)">
+            <summary>
+            <see cref="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.CreateAndInjectDependencies(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics@,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope)"/>
+            this overload does not print out the diagnostics
+            </summary>
+            <param name="rootType"></param>
+            <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
+            <param name="profile"></param>
+            <param name="rootBeanName"></param>
+            <param name="rootConstructorName"></param>
+            <param name="scope"></param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AssembleAssemblies(System.Collections.Generic.IList{System.String})">
+            <summary>
+            NOT USED: builds list of all the assemblies involved in the dependency tree
+            </summary>
+            <param name="assemblyNames">list of names provided by caller.
+                This should include the names of all assemblies containing dependencies (concrete classes)
+                involved in the object model of this app.  Optionally this can include the assembly
+                of the root class in the tree</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer.AreTypeNamesEqualish(System.String,System.String)">
+            <param name="typeFullName">classic Type.FullName</param>
+            <param name="IOCCUserEnteredName">Hopefully same as Type.FullName except for generics where
+                parameters have the same format as a program delcaration, e.g. MyClass&lt;MyOuterParam&lt;MyInnerParam&gt;&gt;</param>
+            <returns>true if the types match i.e.
+                if a type identified by IOCCUserEnteredName would output typeFullName as its FullName</returns>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec">
+            <summary>
+            objects of this type are instantiated when the beans that will be used as
+            members and constructors are being created
+            and used when the object is assigned to the member or passed as an
+            argument to the constructor
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec.#ctor(com.TheDisappointedProgrammer.IOCC.Tree.Info,System.Object,System.Boolean)">
+            <param name="fieldOrPropertyInfo">describes the member variable or constructor parameter
+            to which this bean will be assigned.  The object wraps the member or 
+            parameter info and provides a common interface for many operations where members and parameters
+            are treated identically.</param>
+            <param name="memberOrFactoryBean">an instance of the bean to be assigned to the member
+            or parameter or the factory which will produce the bean.</param>
+            <param name="isFactory">true if the member variable or constructor parameter is to be
+            assigned as the result of a factory operation.</param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.CreateAndInjectDependencies(System.Type,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,System.String,System.String,com.TheDisappointedProgrammer.IOCC.BeanScope,System.Collections.Generic.IDictionary{System.ValueTuple{System.Type,System.String},System.Object})">
+            <summary>
+            1. mainly used to create the complete object tree at program startup
+            2. may be used to create object tree fragments when running tests
+            3. may be used to create an object or link to an existing object
+            </summary>
+            <param name="rootType">The top node in the tree</param>
+            <param name="diagnostics"></param>
+            <param name="rootBeanName"></param>
+            <param name="scope"></param>
+            <param name="mapObjectsCreatedSoFar"></param>
+            <returns>an ojbect of root type</returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.CreateObjectTree(System.ValueTuple{System.Type,System.String,System.String},com.TheDisappointedProgrammer.IOCC.Tree.CreationContext,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,com.TheDisappointedProgrammer.IOCC.Tree.BeanReferenceDetails,com.TheDisappointedProgrammer.IOCC.BeanScope)">
+            <summary>
+            see documentation for CreateAndInjectDependencies
+            </summary>
+            <param name="beanId">the type + beanName for which a bean is to be created.
+                The bean will not necessarily have the type passed in as this
+                may be a base class or interface (constructed generic type)
+                from which the bean is derived</param>
+            <param name="creationContext"></param>
+            <param name="diagnostics"></param>
+            <param name="beanReferenceDetails">provides a context to the bean that
+                can be displayed in diagnostic messages - currently not used for
+                anything else</param>
+            <param name="beanScope"></param>
+            <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
+                maps the name of the class or struct of
+                the object to the instance of the object.</param>
+            <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.ValidateConstructors(System.Type,System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics,com.TheDisappointedProgrammer.IOCC.Tree.BeanReferenceDetails)">
+            <summary>
+            errros if: 
+                a) multiple candidate constructors
+                b) missing parameters
+            warns if:
+                there are parameters marked as bean references
+                for constructors that aren't marked
+            </summary>
+            <param name="declaringBeanType">whose constructor are we talking about</param>
+            <param name="constructorName">which of a number of competing construcors are we talking about</param>
+            <param name="diagnostics"></param>
+            <param name="beanReferenceDetails">context about the member referring to this bean+constructor</param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.MakeMemberBeanId(System.Type,System.String,System.String)">
+            <summary>
+            well, this is tricky.
+            </summary>
+            <param name="memberDeclaredBeanType"></param>
+            <param name="memberDeclaredBeanName"></param>
+            <param name="declaringBeanId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.GetImplementationFromTypeMap(System.ValueTuple{System.Type,System.String,System.String})">
+            <param name="beanid">Typically this is the type ofa member 
+                marked as a bean reference with [IOCCBeanReference]
+                for generics bean type is a generic type definition</param>
+            <returns>This will be a concrete class marked as a bean with [Bean] which
+                is derived from the beanId.beanType.  For generics this will be a
+                constructed generic type</returns>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.IsBeanPresntInTypeMap(System.ValueTuple{System.Type,System.String,System.String})">
+            <param name="beanid"><see cref="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.GetImplementationFromTypeMap(System.ValueTuple{System.Type,System.String,System.String})"/></param>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.Tree.ObjectTree.Construct(System.Type,System.Collections.Generic.IList{com.TheDisappointedProgrammer.IOCC.Tree.ChildBeanSpec},System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
+            <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
+            <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
+            <exception>InvalidArgumentException</exception>  
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.TypeMatcher">
+            <summary>
+            compares a type in the assembly with an ioc type spec
+            such as "MyClass&lt;string&gt;"
+            </summary>
+        </member>
+        <member name="T:com.TheDisappointedProgrammer.IOCC.TypeNameTree">
+            <summary>
+            takes a string like "MyClass&lt;MyClass2&gt;" and builds a tree
+            TreeMap of "MyClass`1" -> TreeMap of "MyClass2"
+            TODO make this more readable - not sure what happened.
+            </summary>
+        </member>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.TypeNameTree.#ctor(System.String)">
+            <param name="typeSpec">namespace.classname&lt;genericAgrument&gt;</param>
+        </member>
+    </members>
+</doc>
