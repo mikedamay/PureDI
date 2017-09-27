@@ -5,7 +5,7 @@ using IOCCTest.TestCode;
 namespace IOCCTest.ScopeTestData
 {
     [Bean]
-    public class PrototypesWithSingletons : IResultGetter
+    public class ProtoTypesWithSingletons : IResultGetter
     {
         [BeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberA;
         [BeanReference(Scope = BeanScope.Prototype)] private MemberClass MemberB;

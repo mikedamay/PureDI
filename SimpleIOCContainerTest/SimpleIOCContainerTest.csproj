@@ -171,8 +171,8 @@
     <EmbeddedResource Include="NamespaceData\ReferenceFromNamespacedClass.cs" />
     <EmbeddedResource Include="NamespaceData\ReferenceToNamespacedClass.cs" />
     <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
-    <EmbeddedResource Include="ScopeTestData\PrototypesWithSingletons.cs" />
-    <EmbeddedResource Include="ScopeTestData\RootPrototype.cs" />
+    <EmbeddedResource Include="ScopeTestData\ProtoTypesWithSingletons.cs" />
+    <EmbeddedResource Include="ScopeTestData\RootProtoType.cs" />
     <EmbeddedResource Include="ScopeTestData\SimpleScope.cs" />
     <EmbeddedResource Include="TestData\AbstractClass.cs" />
     <EmbeddedResource Include="TestData\BadGeneric.cs" />

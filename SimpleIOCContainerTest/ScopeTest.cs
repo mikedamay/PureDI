@@ -25,9 +25,9 @@ namespace IOCCTest
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
         [TestMethod]
-        public void shouldBuildTreeWithPrototypesWithSingleton()
+        public void shouldBuildTreeWithProtoTypesWithSingleton()
         {
-            (var result, var diagnostics) = CommonScopeTest("PrototypesWithSingletons");
+            (var result, var diagnostics) = CommonScopeTest("ProtoTypesWithSingletons");
             Assert.IsNotNull(result?.GetResults().MemberA);
             Assert.AreNotEqual(result?.GetResults().MemberA, result?.GetResults().MemberB);
             Assert.IsNotNull((result?.GetResults().MemberA as IResultGetter)?.GetResults().MemberA);
@@ -53,7 +53,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateRootAsPrototype()
         {
-            string className = "RootPrototype";
+            string className = "RootProtoType";
             var iocc = MakeIOCCForTestAssembly(className);
             object rootBean = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}"

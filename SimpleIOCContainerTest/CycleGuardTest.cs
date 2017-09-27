@@ -19,7 +19,7 @@ namespace IOCCTest
             SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependencies<SelfReferring>();
             Assert.IsNotNull(sr);
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldWorkWithCyclicalDependencies()
         {
             try
@@ -37,7 +37,7 @@ namespace IOCCTest
                 Assert.Fail("The stack overflowed indicating cyclical dependencies");
             }
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldWorkWithCyclicalInterfaces()
         {
             ParentWithInterface cd
@@ -46,7 +46,7 @@ namespace IOCCTest
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldCreateTreeForCyclicalBaseClasses()
         {
             BaseClass cd
@@ -55,7 +55,7 @@ namespace IOCCTest
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {
             TestCode.WithNames.ParentWithInterface cd
@@ -65,7 +65,7 @@ namespace IOCCTest
             Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
             Assert.AreEqual("name-B2", cd.GetResults().IChild?.GetResults().IParent2?.GetResults().Name);
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
         {
             TestCode.WithNames.BaseClass cd
