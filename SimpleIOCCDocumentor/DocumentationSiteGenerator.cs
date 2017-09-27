@@ -18,11 +18,11 @@ namespace SimpleIOCCDocumentor
         [IOCCDocumentParser(
             DocumentPath: "SimpleIOCContainer.Docs.UserGuide.xml"
             , XmlRoot: Constants.USER_GUIDE_ROOT)]
-        private IOCCDocumentParser userGuideDocumentParser = null;
+        private IDocumentParser userGuideDocumentParser = null;
         [IOCCDocumentParser(
             DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
             , XmlRoot: Constants.DIAGNOSTIC_SCHEMA_ROOT)]
-        private IOCCDocumentParser diagnosticSchemaDocumentParser = null;
+        private IDocumentParser diagnosticSchemaDocumentParser = null;
 
         private string path = null;
 
@@ -49,7 +49,7 @@ namespace SimpleIOCCDocumentor
             File.WriteAllText(IOPath.Combine(path, "index.html"), index);
         }
 
-        private void GenerateFilesFromDocument(string documentName, IOCCDocumentParser documentParser)
+        private void GenerateFilesFromDocument(string documentName, IDocumentParser documentParser)
         {
             var index = documentParser.GetDocumentIndex().Keys;
             foreach (var fragmentKey in index)

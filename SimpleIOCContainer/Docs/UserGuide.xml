@@ -122,7 +122,7 @@ of which implementations are to be used.
 
 See Also:
 
-[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/DuplicateBean.html)
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/BeanNames.html)
 
     </userGuide>
     <userGuideSeeAlso/>
@@ -343,7 +343,7 @@ Problems may arise where objects directly or indirectly refer to themselves.
 an attempt is made to inject an object into the constructor of a declaring object
 of the same type.  This is for the obvious reason that infinite recursion would result.
 
-### `[IOCCIgnore]`
+### Ignnore Interface (`[IOCCIgnore]`)
 
 The IOCCIgnore attribute can be annotated to any interface or class.  It addresses
 the case where some interface is implemented by multiple bean classes but is not used
@@ -464,4 +464,71 @@ Notes:
     </userGuide>
     <userGuideSeeAlso/>
   </group>
+  <group>
+    <topic>BeanNames</topic>
+    <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
+    <userGuide>
+Bean names address the case where there are multiple implementations of
+some interface and a bean reference needs to specify which implementation is required.
+This is achieved by passing a `Name` property to the `[BeanReference]` attribute.
+
+The following code (BeanNames.cs) illustrates this:
+<div class="pre-scrollable">
+
+  ```
+  {code-duplicateBean.cs}
+  ```
+
+</div>
+
+Note:
+
+* The bean reference can specify an interface (or a base class as long as it is
+not itself a bean) as an alternative to specifiying
+the implementation class.  It is left up to the
+container to associate the reference with a concrete class.
+* In the above example two repositories are instantiated; one for sql server
+and one for Mongo.  They both have share an interface but the container
+uses the name specified in the bean reference to select the appropriate
+implementation.
+* If no name is spacified then this is equivalent to an empty string.  Unlike the case with
+_Profiles_ if no bean is found with a name matching that of the bean reference
+then the bean instantiation will fail.
+* Bean names are case insensitive.
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>BeansAndNonBeans</topic>
+    <userGuideTitle>Beans and non-Beans</userGuideTitle>
+    <userGuide>
+Any concrete class or struct over which you control the
+source can be marked as a bean by applying the `[Bean]` attribute
+to the class declaration.
+
+Primitive types (such as int, string) etc. cannot be beans.
+An attempt to make them beans results in a compiler error.
+
+Interfaces, abstract classes and static classes cannot be beans.
+A run-time warning will be recorded in the _Diagnostics_ object.
+
+An inherited class cannot be a bean if any of its derived classes
+are beans (unless the inherited bean is given a different bean name
+to that of the derived bean or one of them has a matching profile
+and the other does not).  (Without
+a bean name to distinguish them there is no way for the container
+to determine whether a reference to the inherited class is intended
+to refer to the inherited class itself or a derived class.)  Alternatively
+if you mark the inherited bean as `[IOCCIgnored]` then both beans can be
+injected but only through their respective implementation class types.
+
+### See also
+
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/BeanNameshtml)
+
+[Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+
 </UserGuide>
