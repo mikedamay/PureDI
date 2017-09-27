@@ -22,7 +22,7 @@ namespace SimpleIOCCDocumentor
     [Bean]
     internal class CodeFetcher : ICodeFetcher
     {
-        private const string samplePath = @"..\..\..\..\SampleCode";
+        private const string samplePath = @"../../../../SampleCode";
         public string SubstituteCode(string doc)
         {
             string resultDoc = null;
