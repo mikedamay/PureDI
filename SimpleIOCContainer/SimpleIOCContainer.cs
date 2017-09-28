@@ -86,7 +86,14 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Mass Test - 2 days
     // TODO test with multiple OSs
     // TODO remove nocache headers from documentation
+    // TODO can we handle bean references in a base class?  Tests required
+    // TODO do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
     // TODO make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
+    // TODO we need to say or do something about processing in constructors
+    // TODO before the container builder has finished its business.
+    // TODO red team: deep hierarchies
+    // TODO red team: mix new and CreateAndInject...
+    // TODO red team: self registering classes - that are also beans
     // DONE heading for diagnostic output e.g. Diagnostic Information:
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day

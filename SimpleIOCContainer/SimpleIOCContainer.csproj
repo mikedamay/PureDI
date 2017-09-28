@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <!--<TargetFramework>net47</TargetFramework>-->  
+      <!-- <TargetFramework>net47</TargetFramework>   -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -45,6 +45,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netstandard2.0\SimpleIOCContainer.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\SimpleIOCContainer.xml</DocumentationFile>
   </PropertyGroup>
 </Project>

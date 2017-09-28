@@ -202,6 +202,9 @@ to be substituted at the point of injection from a configuration file or the env
 * A bean reference cannot have parameters which makes creating multiple objects with
 the same implementation class but different parameters difficult.
 * The library is dotnetstandard 2.0 using C# 7.1.
+* You cannot simply stick a bean refererence on some bean
+and expect injection to take place.  It must be in the graph produced by
+`CreateAndInjectDependencies`.
 
 ### Motivation
 
@@ -262,6 +265,11 @@ select the appropriate bean for a given injection whith the widely used type
 It does not relate in any way to the class which is instantiated by the factory
 6. `CreateAndInjectDependencies()` is not thread safe
 7. As you would expect beans have not been injected when the class's constructor
+8. Avoid processing in beans' constructors.  There is a risk of inadvertently
+accdssing beans that have not been subject to injection.
+9. There is no magic.  You cannot simply stick a bean refererence on some bean
+and expect injection to take place.  It must be in the graph produced by
+`CreateAndInjectDependencies`.
 
 
     </userGuide>
@@ -326,6 +334,21 @@ is not make part of the object tree but treated as a one-off.
 This term is typically applied to services, repositories or other objects
 orchestrating the workflow of the application.  There tends to be only
 one of each type of object fulfilling a particular role.
+
+#### RootType / RootObject
+
+`CreateAndInjectDependency` takes a type known as the _RootType_ as #
+a starting point for injection.  It examines each of that type's 
+`[BeanReference]` occurrences and in eah case creates an appropriate
+bean which it assigns to the member or the constructor parameter.
+Alternatively, if the bean has been created for some prior reference
+then it simply assigns the same instance.  This the container
+works its way through a conceptual tree (more accurately, a graph) and
+following the same procedure.
+
+`CreateAndInjectDependencies` returns an object of _Root Type_ and This
+is known as the _Root object_.  In many cases it will a call to 
+a method of this object that kicks of processing within the application.
 
 
     </userGuide>
