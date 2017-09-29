@@ -16,7 +16,7 @@ namespace IOCCTest
               = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
             //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
-              = iocc.CreateAndInjectDependenciesSimple<TestRoot>();
+              = iocc.CreateAndInjectDependencies<TestRoot>().rootObject;
             Assert.IsNotNull(twf.test);
         }
         [TestMethod]
@@ -24,7 +24,7 @@ namespace IOCCTest
         {
             void DoTest()
             {
-                new SimpleIOCContainer().CreateAndInjectDependenciesSimple<int>();
+                new SimpleIOCContainer().CreateAndInjectDependencies<int>();
             }
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
@@ -35,14 +35,14 @@ namespace IOCCTest
             void DoTest()
             {
                 
-                new SimpleIOCContainer().CreateAndInjectDependenciesSimple<Mike>();
+                new SimpleIOCContainer().CreateAndInjectDependencies<Mike>();
             }
             Assert.ThrowsException<IOCCException>((System.Action)DoTest);
         }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<global::IOCCTest.TestCode.DeepHierahy>();
+            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootObject;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -55,7 +55,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
-            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<WithNames.DeepHierahy>();
+            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.DeepHierahy>().rootObject;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -79,7 +79,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateASingleInstanceForMultipleReferences()
         {
-            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<CrossConnections>();
+            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependencies<CrossConnections>().rootObject;
             Assert.IsNotNull(cc?.ChildA?.Common);
             Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }

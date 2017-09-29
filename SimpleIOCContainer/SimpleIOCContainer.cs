@@ -312,7 +312,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an object of root type</returns>
-        public TRootType CreateAndInjectDependenciesSimple<TRootType>(string beanName = DEFAULT_BEAN_NAME
+#if false
+        public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME
           , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(beanName);
@@ -341,7 +342,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return rootObject;
         }
-
+#endif
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
         /// <param name="injectionState"></param>
         /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"

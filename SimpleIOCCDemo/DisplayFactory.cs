@@ -10,11 +10,11 @@ namespace SimpleIOCCDemo
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                return iocContainer.CreateAndInjectDependenciesSimple<VSOutputWindow>(beanName: "outputWindow");
+                return iocContainer.CreateAndInjectDependencies<VSOutputWindow>(rootBeanName: "outputWindow").rootObject;
             }
             else
             {
-                return iocContainer.CreateAndInjectDependenciesSimple<ConsoleDisplay>();
+                return iocContainer.CreateAndInjectDependencies<ConsoleDisplay>().rootObject;
             }
         }
     }

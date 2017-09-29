@@ -28,7 +28,7 @@ namespace IOCCTest
             {
                 SimpleIOCContainer sic = new SimpleIOCContainer();
                 ContainerAsBeanTest.TrivialBean tb 
-                  = sic.CreateAndInjectDependenciesSimple<ContainerAsBeanTest.TrivialBean>();
+                  = sic.CreateAndInjectDependencies<ContainerAsBeanTest.TrivialBean>().rootObject;
                 Assert.AreEqual(sic, tb.child);
             } finally { }
             /*

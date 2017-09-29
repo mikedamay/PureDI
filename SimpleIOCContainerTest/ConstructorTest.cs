@@ -34,7 +34,7 @@ namespace IOCCTest
         public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
         {
             ClassWithMultipleInterfaces cwmi
-                = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<ClassWithMultipleInterfaces>();
+                = new SimpleIOCContainer().CreateAndInjectDependencies<ClassWithMultipleInterfaces>().rootObject;
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
             Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }

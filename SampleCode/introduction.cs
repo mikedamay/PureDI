@@ -6,7 +6,7 @@ public class Program
     public static void Main()
     {
         SimpleIOCContainer sic = new SimpleIOCContainer();
-        Program prog = sic.CreateAndInjectDependenciesSimple<Program>();
+        Program prog = sic.CreateAndInjectDependencies<Program>().rootObject;
         prog.SaySomething();
     }
     private void SaySomething()

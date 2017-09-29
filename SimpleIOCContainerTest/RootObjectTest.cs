@@ -25,7 +25,7 @@ namespace IOCCTest
         {
             ConnectUp connectUp = new ConnectUp();
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            var existing = sic.CreateAndInjectDependenciesSimple<ExistingRoot>();
+            var existing = sic.CreateAndInjectDependencies<ExistingRoot>().rootObject;
             sic.CreateAndInjectDependenciesWithObject(connectUp);
             Assert.AreEqual(connectUp.connectedChild, existing.existingChild);
 
@@ -35,7 +35,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            Complex complex = sic.CreateAndInjectDependenciesSimple<Complex>();
+            Complex complex = sic.CreateAndInjectDependencies<Complex>().rootObject;
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
@@ -47,7 +47,7 @@ namespace IOCCTest
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()));
-            SomeUser someUser = sic.CreateAndInjectDependenciesSimple<SomeUser>();
+            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>().rootObject;
             Assert.IsNotNull(someUser.deep);
         }
 

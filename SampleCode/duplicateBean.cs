@@ -8,7 +8,7 @@ public class DuplicateBean
 
     public static void Main()
     {
-        var beans = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<DuplicateBean>();
+        var beans = new SimpleIOCContainer().CreateAndInjectDependencies<DuplicateBean>().rootObject;
         beans.ListDatabases();
     }
     private void ListDatabases()
