@@ -385,9 +385,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ));
         }
 
-        public void CreateAndInjectDependenciesWithObject(object rootObject, out IOCCDiagnostics diagnostics)
+        public (object rootObject, InjectionState injectionState) CreateAndInjectDependenciesWithObject(object rootObject, InjectionState injectionState = null)
         {
             ISet<string> profileSet;
+            IOCCDiagnostics diagnostics;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(rootObject.GetType());
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
@@ -403,6 +404,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             tree.CreateAndInjectDependencies(rootObject, diagnostics
                 , mapObjectsCreatedSoFar);
 
+            return (rootObject
+                , new InjectionState(
+                    diagnostics
+                    , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>()
+                    , new Dictionary<(Type, string), object>()
+                ));
         }
         /// <summary>
         /// <see cref="CreateAndInjectDependenciesWithString"/>

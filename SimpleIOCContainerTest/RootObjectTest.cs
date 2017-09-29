@@ -16,7 +16,7 @@ namespace IOCCTest
             Simple simple = new Simple();
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
             //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
-            sic.CreateAndInjectDependenciesWithObject(simple, out var diagnostics);
+            sic.CreateAndInjectDependenciesWithObject(simple);
             Assert.IsNotNull(simple.GetResults().Child);
         }
 
@@ -26,7 +26,7 @@ namespace IOCCTest
             ConnectUp connectUp = new ConnectUp();
             SimpleIOCContainer sic = new SimpleIOCContainer();
             var existing = sic.CreateAndInjectDependenciesSimple<ExistingRoot>();
-            sic.CreateAndInjectDependenciesWithObject(connectUp, out var diagnostics);
+            sic.CreateAndInjectDependenciesWithObject(connectUp);
             Assert.AreEqual(connectUp.connectedChild, existing.existingChild);
 
         }
@@ -46,7 +46,7 @@ namespace IOCCTest
             SimpleIOCContainer sic = new SimpleIOCContainer(
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
-            sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()), out var diangnostics);
+            sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()));
             SomeUser someUser = sic.CreateAndInjectDependenciesSimple<SomeUser>();
             Assert.IsNotNull(someUser.deep);
         }
@@ -55,7 +55,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject(), out var diagnostics);
+            sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
             InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>().rootObject;
             Assert.IsNotNull(infer.inserted);
         }
