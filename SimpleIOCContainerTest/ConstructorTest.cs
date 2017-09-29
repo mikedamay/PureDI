@@ -174,9 +174,10 @@ namespace IOCCTest
             SimpleIOCContainer sic =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
-            var result = sic.CreateAndInjectDependenciesWithString(
-              "IOCCTest.ConstructorTestData.NamedRootConstructor"
-              , out var diagnostics, rootConstructorName : "TestConstructor") as IResultGetter;
+            (object bean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+              "IOCCTest.ConstructorTestData.NamedRootConstructor", rootConstructorName: "TestConstructor");
+            IOCCDiagnostics diagnostics = injectionState.Diagnostics;
+            IResultGetter result = bean as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual("stuff", result?.GetResults().Stuff);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
@@ -189,9 +190,9 @@ namespace IOCCTest
         {
             SimpleIOCContainer sic
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
-            IResultGetter result = sic.CreateAndInjectDependenciesWithString(
-              "IOCCTest.ConstructorTestData.MultipleConstructorsComplex"
-                , out var diagnostics) as IResultGetter;
+            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString(
+              "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;
+
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);
             //Assert.IsNotNull(result.GetResults()?.Second.SecondParam);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));

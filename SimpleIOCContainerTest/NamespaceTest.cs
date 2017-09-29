@@ -14,8 +14,8 @@ namespace IOCCTest
         public void ShouldCreateTreeWithNoNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
-            object rootBean = iocc.CreateAndInjectDependenciesWithString("NoNamespace"
-              , out IOCCDiagnostics diagnostics);
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("NoNamespace");
+            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
@@ -25,8 +25,8 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceFromNoNamespaceToNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
-            object rootBean = iocc.CreateAndInjectDependenciesWithString("ReferenceToNamespacedClass"
-                , out IOCCDiagnostics diagnostics);
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("ReferenceToNamespacedClass");
+            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsNotNull(((IResultGetter)rootBean).GetResults().Referred);
@@ -37,8 +37,8 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceToNoNamespaceFromNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
-            object rootBean = iocc.CreateAndInjectDependenciesWithString("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass"
-                , out IOCCDiagnostics diagnostics);
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass");
+            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsNotNull(((IResultGetter)rootBean).GetResults().Referred);

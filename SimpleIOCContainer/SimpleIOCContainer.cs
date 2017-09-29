@@ -343,7 +343,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
-        /// <param name="diagnostics"></param>
+        /// <param name="injectionState"></param>
         /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
         ///     or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
         ///     where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
@@ -353,13 +353,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>the root of the object tree with all dependencies instantiated</returns>
-        public object CreateAndInjectDependenciesWithString(string rootTypeName, out IOCCDiagnostics diagnostics
-          , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
-          , BeanScope scope = BeanScope.Singleton)
+        public (object rootObject, InjectionState injectionState) CreateAndInjectDependenciesWithString(string rootTypeName, InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
+            IOCCDiagnostics diagnostics;
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(this.GetType());
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k 
@@ -375,9 +374,15 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
                 throw new IOCCException($"Unable to find a type in assembly {allAssemblyNames} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
             }
-            return CreateAndInjectDependenciesExCommon(rootType
+            object rootObject = CreateAndInjectDependenciesExCommon(rootType
                 ,diagnostics, profileSet, rootBeanName
                 ,rootConstructorName, scope);
+            return (rootObject
+                , new InjectionState(
+                    diagnostics
+                    , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>()
+                    , new Dictionary<(Type, string), object>()
+                ));
         }
 
         public void CreateAndInjectDependenciesWithObject(object rootObject, out IOCCDiagnostics diagnostics)

@@ -23,7 +23,7 @@ namespace IOCCTest
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new[] {"myprofile"}, Assemblies: new[] { assembly });
 
         //sic.SetAssemblies(assembly.GetName().Name);
-            sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate", out var diagnostics);
+            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsTrue(diagnostics.HasWarnings);
         }
@@ -33,7 +33,7 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Os.cs");
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate", out var diagnostics);
+            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsFalse(diagnostics.Groups["DuplicateBean"]
               .Occurrences.Any(diag => ((dynamic)diag).Interface.Contains( "MuchoInterface")));

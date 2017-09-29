@@ -18,9 +18,10 @@ namespace IOCCTest
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.SimpleProfile.cs");
                 SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"Simple"}, Assemblies: new[] { assembly });
                 //sic.SetAssemblies(assembly.GetName().Name);
-                 var result =
-                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.SimpleProfile", out diagnostics) as
-                        IResultGetter;
+                 (object rootBean, InjectionState injectionState) =
+                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.SimpleProfile");
+                var result = rootBean as IResultGetter;
+                diagnostics = injectionState.Diagnostics;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsNull(result?.GetResults().Child);
                 Assert.IsTrue(diagnostics.HasWarnings);
@@ -39,9 +40,10 @@ namespace IOCCTest
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.ComplexProfile.cs");
                 SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] { "P1", "P2", "P3" }, Assemblies: new[] { assembly });
                 //sic.SetAssemblies(assembly.GetName().Name);
-                var result =
-                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile", out diagnostics) as
-                        IResultGetter;
+                (object rootBean, InjectionState injectionState) =
+                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile");
+                var result = rootBean as IResultGetter;
+                diagnostics = injectionState.Diagnostics;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsNotNull(result?.GetResults().ChildP2);
                 Assert.IsNotNull(result?.GetResults().ChildP3);
@@ -65,11 +67,12 @@ namespace IOCCTest
                 //sic1.SetAssemblies(assembly.GetName().Name);
                 SimpleIOCContainer sic2 = new SimpleIOCContainer(Profiles: new string[] { "P1", "P4" }, Assemblies : new[] { assembly });
                 //sic2.SetAssemblies(assembly.GetName().Name);
-                var result1 =
-                    sic1.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile", out diagnostics) as
-                        IResultGetter;
+                (object rootBean1, InjectionState injectionState) =
+                    sic1.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile");
+                var result1 = rootBean1 as IResultGetter;
+                diagnostics = injectionState.Diagnostics;
                 var result2 =
-                    sic2.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile", out diagnostics) as
+                    sic2.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile").rootObject as
                         IResultGetter;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsNotNull(result1?.GetResults().ChildP2);
@@ -93,8 +96,10 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] { "dobest" }, Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            IResultGetter result = sic.CreateAndInjectDependenciesWithString(
-                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+                "IOCCTest.ProfileTestData.BestCandidate");
+            var result = rootBean as IResultGetter;
+            var diagnostics = injectionState.Diagnostics;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
             Assert.AreEqual(42, result?.GetResults().Val);
         }
@@ -105,8 +110,10 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles:new string[] { "thirdbest" }, Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            IResultGetter result = sic.CreateAndInjectDependenciesWithString(
-                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+                "IOCCTest.ProfileTestData.BestCandidate");
+            var result = rootBean as IResultGetter;
+            var diagnostics = injectionState.Diagnostics;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
             Assert.AreEqual(33, result?.GetResults().Val);
         }
@@ -116,8 +123,10 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            IResultGetter result = sic.CreateAndInjectDependenciesWithString(
-                "IOCCTest.ProfileTestData.BestCandidate", out var diagnostics) as IResultGetter;
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+                "IOCCTest.ProfileTestData.BestCandidate");
+            var result = rootBean as IResultGetter;
+            var diagnostics = injectionState.Diagnostics;
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
             Assert.AreEqual(24, result?.GetResults().Val);
         }

@@ -55,12 +55,12 @@ namespace IOCCTest
         {
             string className = "RootProtoType";
             var iocc = MakeIOCCForTestAssembly(className);
-            object rootBean = iocc.CreateAndInjectDependenciesWithString(
-                $"IOCCTest.ScopeTestData.{className}"
-                , out IOCCDiagnostics diagnostics1, scope: BeanScope.Prototype);
-            object rootBean2 = iocc.CreateAndInjectDependenciesWithString(
-                $"IOCCTest.ScopeTestData.{className}"
-                , out IOCCDiagnostics diagnostics2, scope: BeanScope.Prototype);
+            (object rootBean, InjectionState injectionState1) = iocc.CreateAndInjectDependenciesWithString(
+                $"IOCCTest.ScopeTestData.{className}", scope: BeanScope.Prototype);
+            IOCCDiagnostics diagnostics1 = injectionState1.Diagnostics;
+            (object rootBean2, InjectionState injectionState2) = iocc.CreateAndInjectDependenciesWithString(
+                $"IOCCTest.ScopeTestData.{className}", scope: BeanScope.Prototype);
+            IOCCDiagnostics diagnostics2 = injectionState2.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics1);
             System.Diagnostics.Debug.WriteLine(diagnostics2);
             Assert.AreNotEqual(rootBean, rootBean2);
