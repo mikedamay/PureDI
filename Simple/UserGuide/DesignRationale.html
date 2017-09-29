@@ -86,6 +86,9 @@ to be substituted at the point of injection from a configuration file or the env
 <li>A bean reference cannot have parameters which makes creating multiple objects with
 the same implementation class but different parameters difficult.</li>
 <li>The library is dotnetstandard 2.0 using C# 7.1.</li>
+<li>You cannot simply stick a bean refererence on some bean
+and expect injection to take place.  It must be in the graph produced by
+<code>CreateAndInjectDependencies</code>.</li>
 </ul>
 <h3>Motivation</h3>
 <p>The author used <a href="http://spring.io">Java-Spring</a> for 5 years.  I thought Spring was an

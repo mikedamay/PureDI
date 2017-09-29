@@ -59,6 +59,11 @@ select the appropriate bean for a given injection whith the widely used type</li
 It does not relate in any way to the class which is instantiated by the factory</li>
 <li><code>CreateAndInjectDependencies()</code> is not thread safe</li>
 <li>As you would expect beans have not been injected when the class's constructor</li>
+<li>Avoid processing in beans' constructors.  There is a risk of inadvertently
+accdssing beans that have not been subject to injection.</li>
+<li>There is no magic.  You cannot simply stick a bean refererence on some bean
+and expect injection to take place.  It must be in the graph produced by
+<code>CreateAndInjectDependencies</code>.</li>
 </ol>
 
         </div>

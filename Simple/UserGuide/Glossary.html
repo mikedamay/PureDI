@@ -61,6 +61,18 @@ is not make part of the object tree but treated as a one-off.</p>
 <p>This term is typically applied to services, repositories or other objects
 orchestrating the workflow of the application.  There tends to be only
 one of each type of object fulfilling a particular role.</p>
+<h4>RootType / RootObject</h4>
+<p><code>CreateAndInjectDependency</code> takes a type known as the <em>RootType</em> as #
+a starting point for injection.  It examines each of that type's
+<code>[BeanReference]</code> occurrences and in eah case creates an appropriate
+bean which it assigns to the member or the constructor parameter.
+Alternatively, if the bean has been created for some prior reference
+then it simply assigns the same instance.  This the container
+works its way through a conceptual tree (more accurately, a graph) and
+following the same procedure.</p>
+<p><code>CreateAndInjectDependencies</code> returns an object of <em>Root Type</em> and This
+is known as the <em>Root object</em>.  In many cases it will a call to
+a method of this object that kicks of processing within the application.</p>
 
         </div>
         <div class="col-sm-1"></div>
