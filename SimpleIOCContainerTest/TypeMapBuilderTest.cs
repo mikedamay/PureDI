@@ -18,12 +18,12 @@ namespace IOCCTest
     public class TypeMapBuilderTest
     {
 #if NETCOREAPP2_0
-        [Microsoft.VisualStudio.TestTools.UnitTesting.Ignore]
+        //[Microsoft.VisualStudio.TestTools.UnitTesting.Ignore]
         // this test uses CodeDom to build the assembly.
         // a) this fails on netstandard2.0 throwing a Unsupported Platform exception
         // b) we no longer use CodeDom preferring Roslyn Microsoft.CodeAnalysis
 #endif
-        [TestMethod]
+        //[TestMethod]
         public void TestAssembly()
         {
             Assembly assembly;

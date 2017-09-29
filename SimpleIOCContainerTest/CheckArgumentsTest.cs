@@ -7,8 +7,8 @@ namespace IOCCTest
     [TestClass]
     public class CheckArgumentsTest
     {
-        [Ignore]
-        [TestMethod]
+        //[Ignore]
+        //[TestMethod]
         public void SHouldThrowExceptionIfNullAssemblies()
         {
             Assert.ThrowsException<ArgumentNullException>(

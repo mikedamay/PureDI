@@ -12,14 +12,32 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public DiagnosticBuilder()
         {
+            Diagnostics = CreateDiagnostics();
+        }
+        internal DiagnosticBuilder(IOCCDiagnostics otherDiagnostics)
+        {
+            Diagnostics = CreateDiagnostics();
+            foreach (var otherGroup in otherDiagnostics.Groups)
+            {
+                IOCCDiagnostics.Group thisGroup = Diagnostics.Groups[otherGroup.Key];
+                foreach (var occurrence in otherGroup.Value.Occurrences)
+                {
+                    thisGroup.Occurrences.Add(occurrence);
+                }
+            }
+        }
+
+        private IOCCDiagnostics CreateDiagnostics()
+        {
             string schemaName
                 = $"{Common.Common.ResourcePrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
                 = typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(schemaName))
             {
-                Diagnostics = CreateDiagnosticsFromSchema(s);
+                return CreateDiagnosticsFromSchema(s);
             }
         }
+
         /// <param name="diagnosticSchema">
         ///     XML Text which populates the diagnostics object
         ///     e.g. typeof(SimpleIOCContainer).Assembly.GetManifestResourceStream(

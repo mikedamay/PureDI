@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using com.TheDisappointedProgrammer.IOCC.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
@@ -26,14 +27,24 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.typeMap = typeMap;
         }
 
-        internal void Deconstructor(out IOCCDiagnostics diagnostics
+        internal void Deconstruct(out IOCCDiagnostics diagnostics
             , out IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
-            , IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+            , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             diagnostics = this.diagnostics;
             mapObjectsCreatedSoFar = this.mapObjectsCreatedSoFar;
             typeMap = this.typeMap;
 
+        }
+
+        internal bool IsEmpty() => !diagnostics.HasWarnings && mapObjectsCreatedSoFar.Count == 0 && typeMap.Count == 0;
+        internal InjectionState Clone()
+        {
+            return new InjectionState(
+              new DiagnosticBuilder(this.Diagnostics).Diagnostics
+              , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>(this.typeMap)
+              , new Dictionary<(Type, string), object>(mapObjectsCreatedSoFar)
+              );
         }
         /// <summary>
         /// sophisticated library users may want to analyze diagnostics programmatically.

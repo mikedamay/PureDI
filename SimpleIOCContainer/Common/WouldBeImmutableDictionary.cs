@@ -30,5 +30,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Common
             }
         }
 
+        internal WouldBeImmutableDictionary()
+        {
+            
+        }
+        internal WouldBeImmutableDictionary(IWouldBeImmutableDictionary<K, V> other) : base(other)
+        {
+            
+        }
     }
 }

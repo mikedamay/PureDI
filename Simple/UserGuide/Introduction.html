@@ -49,7 +49,7 @@ public class Program
     public static void Main()
     {
         SimpleIOCContainer sic = new SimpleIOCContainer();
-        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootObject;
+        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
         prog.SaySomething();
     }
     private void SaySomething()

@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Remove="ResourceFactory.cs" />
     <Compile Remove="SimpleIOCContainerMinorMethods.cs" />
+    <Compile Remove="SimpleIOCContainerSave.cs" />
     <Compile Remove="TestIOCC.cs" />
   </ItemGroup>
 
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <None Include="SimpleIOCContainerMinorMethods.cs" />
+    <None Include="SimpleIOCContainerSave.cs" />
   </ItemGroup>
 
   <ItemGroup>
