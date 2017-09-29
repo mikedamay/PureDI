@@ -139,11 +139,16 @@
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
     <EmbeddedResource Include="DuplicateTestData\Duplicate.cs" />
     <EmbeddedResource Include="DuplicateTestData\Os.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithName.cs" />
+    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="NamespaceData\DuplicateAssemblies.cs" />
     <EmbeddedResource Include="ProfileTestData\BestCandidate.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
+    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
     <EmbeddedResource Include="TestData\IgnoredBean.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
@@ -160,17 +165,14 @@
     <EmbeddedResource Include="FactoryTestData\AccessByString.cs" />
     <EmbeddedResource Include="FactoryTestData\BadFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryDependencies.cs" />
-    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\Generic.cs" />
     <EmbeddedResource Include="FactoryTestData\GenericFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\MissingFactory.cs" />
     <EmbeddedResource Include="FactoryTestData\SimpleBean.cs" />
-    <EmbeddedResource Include="FactoryTestData\ThrowsException.cs" />
     <EmbeddedResource Include="FactoryTestData\TypeMismatch.cs" />
     <EmbeddedResource Include="NamespaceData\NoNamespace.cs" />
     <EmbeddedResource Include="NamespaceData\ReferenceFromNamespacedClass.cs" />
     <EmbeddedResource Include="NamespaceData\ReferenceToNamespacedClass.cs" />
-    <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <EmbeddedResource Include="ScopeTestData\ProtoTypesWithSingletons.cs" />
     <EmbeddedResource Include="ScopeTestData\RootProtoType.cs" />
     <EmbeddedResource Include="ScopeTestData\SimpleScope.cs" />

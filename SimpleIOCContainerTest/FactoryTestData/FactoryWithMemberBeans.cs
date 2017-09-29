@@ -7,9 +7,10 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     internal class MemberFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return new MemberBean();
+            return (new MemberBean(), injectionState);
         }
     }
     [Bean]

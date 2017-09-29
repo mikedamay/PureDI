@@ -7,23 +7,27 @@ namespace IOCCTest.FactoryTestData
     [IOCCIgnore]
     public abstract class ActualFactoryBase : IFactory
     {
-        public abstract object Execute(BeanFactoryArgs args);
+        public abstract (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args);
     }
     [Bean(Name="MyFactory")]
     public class ActualFactory : ActualFactoryBase
     {
-        public override object Execute(BeanFactoryArgs args) => 42;
+        public override (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args) => (42, injectionState);
     }
     [Bean]
     public class AlternateFactory : ActualFactoryBase
     {
-        public override object Execute(BeanFactoryArgs args) => 24;
+        public override (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args) => (24, injectionState);
     }
     [Bean]
     public class FactoryWithName : IResultGetter
     {
         [BeanReference(Name = "MyFactory", Factory = typeof(ActualFactory))] private int mysteryNumber;
 
+        FactoryWithName()
+        {
+            mysteryNumber = 0;
+        }
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();

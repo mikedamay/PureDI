@@ -16,13 +16,13 @@ namespace com.TheDisappointedProgrammer.IOCC
                 return sr.ReadToEnd();
             }
         }
-        public virtual object Execute(BeanFactoryArgs args)
+        public virtual (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             object[] @params = (object[])args.FactoryParmeter;
             Assert(@params.Length == 2);
             Assert(@params[0] is Type);
             Assert(@params[1] is String);
-            return GetResourceAsString(@params[0] as Type, @params[1] as String);
+            return (GetResourceAsString(@params[0] as Type, @params[1] as String), injectionState);
             
         }
     

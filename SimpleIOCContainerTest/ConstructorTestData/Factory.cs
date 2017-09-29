@@ -40,9 +40,10 @@ namespace IOCCTest.ConstructorTestData
     [Bean]
     public class Level2Factory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return new Level2H();
+            return (new Level2H(), injectionState);
         }
     }
     [Bean]

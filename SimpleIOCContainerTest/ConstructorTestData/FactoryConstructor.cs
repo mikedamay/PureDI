@@ -48,9 +48,10 @@ namespace IOCCTest.ConstructorTestData
         {
             this.level2 = level2;
         }
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return level2;
+            return (level2, injectionState);
         }
     }
     [Bean]

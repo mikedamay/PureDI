@@ -27,13 +27,13 @@ namespace SimpleIOCCDocumentor
             }
         }
 
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             object[] @params = (object[])args.FactoryParmeter;
             Assert(@params.Length == 2);
             Assert(@params[0] is Type);
             Assert(@params[1] is String);
-            return ConvertResourceToXPathNavigator(@params[0] as Type, @params[1] as String);
+            return (ConvertResourceToXPathNavigator(@params[0] as Type, @params[1] as String), injectionState);
         }
     }
 }

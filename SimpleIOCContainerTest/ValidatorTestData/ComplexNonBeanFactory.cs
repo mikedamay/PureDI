@@ -10,7 +10,8 @@ namespace IOCCTest.DifficultTypeTestData
     }
     public class ComplexNonBeanFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new System.NotImplementedException();
         }
@@ -18,7 +19,8 @@ namespace IOCCTest.DifficultTypeTestData
     [Bean]
     public class AWellFornedFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new System.NotImplementedException();
         }
@@ -28,7 +30,8 @@ namespace IOCCTest.DifficultTypeTestData
     [SomeNonFactory]
     public class ANonFatory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new NotImplementedException();
         }
@@ -37,7 +40,8 @@ namespace IOCCTest.DifficultTypeTestData
     [SomeNonFactory]
     public class ANonFatory2 : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new NotImplementedException();
         }

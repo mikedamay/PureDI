@@ -17,9 +17,9 @@ public class FactoryUser
 [Bean]
 public class EnvironmentVariableFactory : IFactory
 {
-    public object Execute(BeanFactoryArgs args)
+    public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
     {
-        return new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+        return (new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING")), injectionState);
     }
 }
 

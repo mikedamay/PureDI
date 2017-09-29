@@ -7,9 +7,9 @@ namespace IOCCTest.AlreadyInitialisedTestData
     [Bean]
     public class PrimitiveFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return 43;
+            return (43, injectionState);
         }
     }
     [Bean]

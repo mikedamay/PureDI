@@ -46,12 +46,12 @@ namespace SimpleIOCCDocumentor
     {
         [BeanReference] private IConfig config = null;
 
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             const int KEY_PARAM = 0;
             const int VALUE_PARAM = 1;
             object[] @params = (object[]) args.FactoryParmeter;
-            return config.GetValue((string)@params[KEY_PARAM], @params[VALUE_PARAM]);
+            return (config.GetValue((string)@params[KEY_PARAM], @params[VALUE_PARAM]), injectionState);
         }
     }
 

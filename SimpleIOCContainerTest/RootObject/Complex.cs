@@ -5,9 +5,9 @@ namespace IOCCTest.rootBean
     [Bean]
     public class ValueFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return new ValueObject((string) args.FactoryParmeter);
+            return (new ValueObject((string) args.FactoryParmeter), injectionState);
         }
     }
     [Bean]

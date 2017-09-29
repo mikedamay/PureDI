@@ -33,23 +33,21 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// 3. may be used to create an object or link to an existing object
         /// </summary>
         /// <param name="rootType">The top node in the tree</param>
-        /// <param name="diagnostics"></param>
+        /// <param name="injectionState"></param>
         /// <param name="rootBeanName"></param>
+        /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
         /// <param name="mapObjectsCreatedSoFar"></param>
         /// <returns>an ojbect of root type</returns>
-        public object CreateAndInjectDependencies(Type rootType
-            , IOCCDiagnostics diagnostics
-            , string rootBeanName, string rootConstructorName, BeanScope scope,
-            IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        public (object bean, InjectionState injectionState) CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName, string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             try
             {
                 Assert(rootType != null);
                 Assert(rootBeanName != null);
-                var rootObject = CreateObjectTree((rootType, rootBeanName, rootConstructorName)
-                    , new CreationContext(mapObjectsCreatedSoFar, new CycleGuard(), new HashSet<Type>())
-                    , diagnostics, new BeanReferenceDetails(), scope);
+                object rootObject;
+                (rootObject, injectionState) = CreateObjectTree((rootType, rootBeanName, rootConstructorName)
+                    , new CreationContext(mapObjectsCreatedSoFar, new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException(
@@ -57,25 +55,24 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 }
                 Assert(rootObject == null
                        || rootType.IsInstanceOfType(rootObject));
-                return rootObject;
+                return (rootObject, injectionState);
             }
             catch (IOCCNoArgConstructorException inace)
             {
-                dynamic diagnostic = diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
+                dynamic diagnostic = injectionState.Diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
                 diagnostic.Class = rootType.GetIOCCName();
-                diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
+                injectionState.Diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", inace,
-                    diagnostics);
+                    injectionState.Diagnostics);
             }
         }
-        public void CreateAndInjectDependencies(object rootObject
-            ,IOCCDiagnostics diagnostics
-            ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             CreationContext cc = new CreationContext(mapObjectsCreatedSoFar
               , new CycleGuard(), new HashSet<Type>());
-            CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, diagnostics);
-            AssignMembers(rootObject, memberSpecs, diagnostics, cc);
+            CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
+            return AssignMembers(rootObject, memberSpecs, injectionState, cc);
+
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     may be a base class or interface (constructed generic type)
         ///     from which the bean is derived</param>
         /// <param name="creationContext"></param>
-        /// <param name="diagnostics"></param>
+        /// <param name="injectionState"></param>
         /// <param name="beanReferenceDetails">provides a context to the bean that
         ///     can be displayed in diagnostic messages - currently not used for
         ///     anything else</param>
@@ -95,9 +92,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     maps the name of the class or struct of
         ///     the object to the instance of the object.</param>
         /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
-        private object CreateObjectTree((Type beanType, string beanName, string constructorName) beanId,
-          CreationContext creationContext, IOCCDiagnostics diagnostics, BeanReferenceDetails beanReferenceDetails,
-          BeanScope beanScope)
+        private (object bean, InjectionState injectionState) CreateObjectTree((Type beanType, string beanName, string constructorName) beanId, CreationContext creationContext, InjectionState injectionState, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
         {
              Type implementationType;
 
@@ -117,9 +112,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     else
                     {
                         // TODO explain why type to be constructed is complicated by generics
-                        constructedBean = Construct(constructableTypeLocal
-                            , constructorParameterSpecs, beanId.constructorName
-                            , diagnostics);
+                        (constructedBean, injectionState) = Construct(constructableTypeLocal
+                            , constructorParameterSpecs, beanId.constructorName, injectionState);
                         if (beanScope != BeanScope.Prototype)
                         {
                             creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
@@ -129,7 +123,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 }
                 catch (IOCCNoArgConstructorException inace)
                 {
-                    RecordDiagnostic(diagnostics, "MissingNoArgConstructor"
+                    RecordDiagnostic(injectionState.Diagnostics, "MissingNoArgConstructor"
                         , ("Class", inace.Class));
                     return (true, null);
                 }
@@ -146,7 +140,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 members = new List<ChildBeanSpec>();
                 string constructorName = beanId.Item3;
-                ValidateConstructors(declaringBeanType, constructorName, diagnostics, beanReferenceDetails);
+                ValidateConstructors(declaringBeanType, constructorName, injectionState.Diagnostics, beanReferenceDetails);
                 if (declaringBeanType.GetConstructors(
                   BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                   .Length > 0)
@@ -156,7 +150,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         foreach (var paramInfo in paramInfos)
                         {
-                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members, creationContext,diagnostics);
+                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members, creationContext, injectionState);
                         } // for each constructor parameter
                     }
 
@@ -167,10 +161,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
             bool complete;
             object bean;
-            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, diagnostics)) == null)
+            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, injectionState.Diagnostics)) == null)
             {
-                Assert(diagnostics.HasWarnings);    // diagnostics recorded by callee.
-                return null; // no implementation type found corresponding to this beanId
+                Assert(injectionState.Diagnostics.HasWarnings);    // diagnostics recorded by callee.
+                return (null, injectionState); // no implementation type found corresponding to this beanId
                              // we can still carry on and a) this might not be fatal b) other diagnostics may show up
                             
             }
@@ -182,7 +176,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 if (!cyclicalDependencyFound)
                 {
                     cycleGuard.Push(constructableType);
-                    CreateMemberTrees(constructableType, out var memberSpecs, creationContext, diagnostics);
+                    CreateMemberTrees(constructableType, out var memberSpecs, creationContext, injectionState);
                     CreateConstructorTrees(constructableType, out var parameterSpecs);
                     (complete, bean) = MakeBean(parameterSpecs);
                     Assert(!cyclicalDependencies.Contains(constructableType)
@@ -204,11 +198,11 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     ///     case of 3) it wrongly reports that the bean creation is complete)
                     if (complete && !cyclicalDependencies.Contains(constructableType))
                     {
-                        return bean; // either the bean and therefore its children had already been created
+                        return (bean, injectionState); // either the bean and therefore its children had already been created
                                      // or we were unable to create the bean (null)
                     }
                     cyclicalDependencies.Remove(constructableType);
-                    AssignMembers(bean, memberSpecs, diagnostics, creationContext);
+                    AssignMembers(bean, memberSpecs, injectionState, creationContext);
                 }
                 else // there is a cyclical dependency so we
                     // need to just create the bean itself and defer child creation
@@ -217,10 +211,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 {
                     if (constructableType.HasInjectedConstructorParameters(SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME))
                     {
-                        dynamic diag = diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
+                        dynamic diag = injectionState.Diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
                         diag.Bean = constructableType.FullName;
-                        diagnostics.Groups["CyclicalDependency"].Add(diag);
-                        throw new IOCCException("Cannot create this bean due to a cyclical dependency", diagnostics);
+                        injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
+                        throw new IOCCException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
                     (complete, bean) = MakeBean();
                     if (bean != null)
@@ -236,12 +230,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     cycleGuard.Pop();
                 }
             }
-            return bean;
+            return (bean, injectionState);
         }       // CreateObjectTree
 
-        void CreateMemberTrees(Type declaringBeanType
-            , out List<ChildBeanSpec> members, CreationContext creationContext,
-            IOCCDiagnostics diagnostics)
+        void CreateMemberTrees(Type declaringBeanType, out List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
         {
             members = new List<ChildBeanSpec>();
             var fieldOrPropertyInfos = declaringBeanType.GetMembers(
@@ -250,13 +242,11 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
                 CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType
-                    , members, creationContext, diagnostics);
+                    , members, creationContext, injectionState);
             } // for each property or field
         } // CreateMemberTrees()
 
-        private void CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members
-            , CreationContext creationContext,
-            IOCCDiagnostics diagnostics)
+        private InjectionState CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
         {
                  BeanReferenceBaseAttribute attr;
                 if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
@@ -267,7 +257,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     object memberBean;
                     if (!fieldOrPropertyInfo.IsWriteable)
                     {
-                        RecordDiagnostic(diagnostics, "ReadOnlyProperty"
+                        RecordDiagnostic(injectionState.Diagnostics, "ReadOnlyProperty"
                             , ("Class", declaringBeanType.GetIOCCName())
                             , ("Member", fieldOrPropertyInfo.Name));
                     }
@@ -276,14 +266,12 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         if (attr.Factory != null)
                         {
                             // create the factory
-                            object
-                                o = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName), creationContext
-                                    , diagnostics
-                                    , new BeanReferenceDetails(declaringBeanType
-                                        , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
+                            object o;
+                                (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName), creationContext, injectionState, new BeanReferenceDetails(declaringBeanType
+                                    , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
                             if (o == null)
                             {
-                                RecordDiagnostic(diagnostics, "MissingFactory"
+                                RecordDiagnostic(injectionState.Diagnostics, "MissingFactory"
                                     , ("DeclaringBean", declaringBeanType.FullName)
                                     , ("Member", fieldOrPropertyInfo.Name)
                                     , ("Factory", attr.Factory.FullName)
@@ -291,7 +279,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             }
                             else if (!(o is IFactory))
                             {
-                                RecordDiagnostic(diagnostics, "BadFactory"
+                                RecordDiagnostic(injectionState.Diagnostics, "BadFactory"
                                     , ("DeclaringBean", declaringBeanType.FullName)
                                     , ("Member", fieldOrPropertyInfo.Name)
                                     , ("Factory", attr.Factory.FullName)
@@ -305,18 +293,16 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         }
                         else // create the member without using a factory
                         {
-                            memberBean = CreateObjectTree(memberBeanId, creationContext
-                                , diagnostics
-                                , new BeanReferenceDetails(declaringBeanType
-                                    , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
+                            (memberBean, injectionState) = CreateObjectTree(memberBeanId, creationContext, injectionState, new BeanReferenceDetails(declaringBeanType
+                                , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
                             members.Add(new ChildBeanSpec(fieldOrPropertyInfo, memberBean, false));
                         } // not a factory
                     } // writeable member
                 } // this is a bean reference
+            return injectionState;
         }
         // declaringBean - the bean just returned by MakeBean()
-        void AssignMembers(object declaringBean
-            , List<ChildBeanSpec> childrenArg, IOCCDiagnostics diagnostics, CreationContext creationContext)
+        InjectionState AssignMembers(object declaringBean, List<ChildBeanSpec> childrenArg, InjectionState injectionState, CreationContext creationContext)
         {
             void AssignBean(ChildBeanSpec memberSpec, object memberBean)
             {
@@ -327,7 +313,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         object existingValue = memberSpec.FieldOrPropertyInfo.GetValue(declaringBean);
                         if (existingValue != null && existingValue.ToString() != "0")
                         {
-                            RecordDiagnostic(diagnostics, "AlreadyInitialised"
+                            RecordDiagnostic(injectionState.Diagnostics, "AlreadyInitialised"
                                 , ("DeclaringType", declaringBean.GetType().FullName)
                                 , ("Member", memberSpec.FieldOrPropertyInfo.Name)
                                 , ("ExistingValue", existingValue.ToString())
@@ -335,7 +321,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         }
                     }
                     memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
-                    LogMemberInjection(diagnostics, declaringBean.GetType()
+                    LogMemberInjection(injectionState.Diagnostics, declaringBean.GetType()
                         , memberSpec.FieldOrPropertyInfo.GetDeclaredType()
                         , memberSpec.FieldOrPropertyInfo.Name
                         , memberBean.GetType());
@@ -349,15 +335,15 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     try
                     {
                         IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
-                        memberBean = factory.Execute(new BeanFactoryArgs(
+                        (memberBean, injectionState) = factory.Execute(injectionState, new BeanFactoryArgs(
                             memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
-                        CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, diagnostics);
-                        AssignMembers(memberBean, memberBeanMembers, diagnostics, creationContext);
+                        CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
+                        AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
                         AssignBean(memberSpec, memberBean);
                     }
                     catch (ArgumentException ae)
                     {
-                        RecordDiagnostic(diagnostics, "TypeMismatch"
+                        RecordDiagnostic(injectionState.Diagnostics, "TypeMismatch"
                             , ("DeclaringBean", declaringBean.GetType().FullName)
                             , ("Member", memberSpec.FieldOrPropertyInfo.Name)
                             , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
@@ -367,7 +353,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     }
                     catch (Exception ex)
                     {
-                        RecordDiagnostic(diagnostics, "FactoryExecutionFailure"
+                        RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
                             , ("DeclaringBean", declaringBean.GetType().FullName)
                             , ("Member", memberSpec.FieldOrPropertyInfo.Name)
                             , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
@@ -381,6 +367,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     AssignBean(memberSpec, memberBean);
                 }
             }       // foreach memberSpec
+            return injectionState;
         }  // AssignMembers()
 
 
@@ -560,15 +547,16 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
+        /// <param name="constructorParameterSpecs"></param>
+        /// <param name="constructorName"></param>
+        /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
-        private object Construct(Type beanType
-          , IList<ChildBeanSpec> constructorParameterSpecs
-          , string constructorName, IOCCDiagnostics diagnostics)
+        private (object bean, InjectionState injectionState) Construct(Type beanType, IList<ChildBeanSpec> constructorParameterSpecs, string constructorName, InjectionState injectionState)
         {
             object[] args = new object[0];
             if (beanType.IsStruct())
             {
-                return Activator.CreateInstance(beanType);
+                return (Activator.CreateInstance(beanType), injectionState);
             }
             else
             {
@@ -587,19 +575,20 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         if (spec.IsFactory)
                         {
-                            
-                            object obj = (spec.MemberOrFactoryBean as IFactory)
-                              .Execute(new BeanFactoryArgs(
-                              spec.ParameterInfo.GetBeanReferenceAttribute()
-                              .FactoryParameter));
+
+                            object obj;
+                            (obj, injectionState) = (spec.MemberOrFactoryBean as IFactory)
+                              .Execute(injectionState, new BeanFactoryArgs(
+                                    spec.ParameterInfo.GetBeanReferenceAttribute()
+                                        .FactoryParameter));
                             parameters.Add(obj);
-                            LogConstructorInjection(diagnostics, beanType, obj.GetType());
+                            LogConstructorInjection(injectionState.Diagnostics, beanType, obj.GetType());
                             // TODO it would be good to catch type mismatches during eventual construction
                         }
                         else
                         {
                             parameters.Add(spec.MemberOrFactoryBean);
-                            LogConstructorInjection(diagnostics, beanType, spec.MemberOrFactoryBean?.GetType());
+                            LogConstructorInjection(injectionState.Diagnostics, beanType, spec.MemberOrFactoryBean?.GetType());
                         }
                     }
                     args = parameters.ToArray();
@@ -614,7 +603,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     throw new IOCCNoArgConstructorException(beanType.GetIOCCName());
                     // TODO some diagnostics required here
                 }
-                return constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null);
+                return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null), injectionState);
 
             }
 

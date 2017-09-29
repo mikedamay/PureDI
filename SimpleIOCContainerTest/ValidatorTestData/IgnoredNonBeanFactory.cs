@@ -5,12 +5,13 @@ namespace IOCCTest.DifficultTypeTestData
     [IOCCIgnore]
     public abstract class NonBeanFactoryBase : IFactory
     {
-        public abstract object Execute(BeanFactoryArgs args);
+        public abstract (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args);
     }
     [Bean]
     public class IgnoredNonBeanFactory : NonBeanFactoryBase
     {
-        public override object Execute(BeanFactoryArgs args)
+        public override (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new System.NotImplementedException();
         }

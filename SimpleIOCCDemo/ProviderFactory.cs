@@ -6,15 +6,15 @@ namespace SimpleIOCCDemo
 	public class ProviderFactory : IFactory
 	{
 		[BeanReference] private SimpleIOCContainer iocContainer = null;
-		public object Execute(BeanFactoryArgs args)
+		public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
 		{
 			if (System.Environment.GetCommandLineArgs().Length > 1)
 			{
-				return iocContainer.CreateAndInjectDependencies<FileListProvider>().rootBean;
+				return iocContainer.CreateAndInjectDependencies<FileListProvider>(injectionState);
 			}
 			else
 			{
-				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(rootBeanName: "usage").rootBean;
+				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(injectionState, rootBeanName: "usage");
 			}
 			
 		}

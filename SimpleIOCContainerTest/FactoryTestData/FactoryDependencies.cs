@@ -10,9 +10,10 @@ namespace IOCCTest.FactoryTestData
     {
         [BeanReference]
         private NumberProvider numberProvider;
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return numberProvider.number;
+            return (numberProvider.number, injectionState);
         }
     }
     [Bean]

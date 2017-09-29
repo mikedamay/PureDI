@@ -7,9 +7,9 @@ namespace SimpleIOCCDemo
     [Bean]
     public class CommandLineFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return Environment.GetCommandLineArgs().Skip(1).FirstOrDefault();
+            return (Environment.GetCommandLineArgs().Skip(1).FirstOrDefault(), injectionState);
         }
     }
 }

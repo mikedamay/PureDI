@@ -4,7 +4,8 @@ namespace IOCCTest.DifficultTypeTestData
 {
     public class NonBeanFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new System.NotImplementedException();
         }

@@ -30,7 +30,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     [IOCCIgnore]
     public interface IFactory
     {
-        object Execute(BeanFactoryArgs args);
+        (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args);
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property

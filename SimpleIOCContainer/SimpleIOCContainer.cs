@@ -412,7 +412,6 @@ namespace com.TheDisappointedProgrammer.IOCC
                 IOCCDiagnostics diagnostics;
                 (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(rootObject.GetType());
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
-
             }
             else
             {
@@ -428,15 +427,17 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree(profile, typeMap);
-            tree.CreateAndInjectDependencies(rootObject, newInjectionState.Diagnostics
-                , mapObjectsCreatedSoFar);
+            object bean;
+            newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState, mapObjectsCreatedSoFar);
 
-            return (rootObject
-                , new InjectionState(
+            return (rootObject, newInjectionState);
+#if false
+            , new InjectionState(
                     newInjectionState.Diagnostics
                     , typeMap
                     , mapObjectsCreatedSoFar
                 ));
+#endif
         }
         /// <summary>
         /// <see cref="CreateAndInjectDependenciesWithString"/>
@@ -469,20 +470,23 @@ namespace com.TheDisappointedProgrammer.IOCC
                     ));
             }
             ObjectTree tree = new ObjectTree(profileSetKey, typeMap);
-            var rootObject = tree.CreateAndInjectDependencies(
-              rootType, injectionState.Diagnostics, rootBeanName.ToLower(), rootConstructorName.ToLower()
-              , scope, mapObjectsCreatedSoFar);
+            object rootObject;
+            (rootObject, injectionState) = tree.CreateAndInjectDependencies(
+              rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
             if (rootObject == null && injectionState.Diagnostics.HasWarnings)
             {
                 throw new IOCCException("Failed to create object tree - see diagnostics for details", injectionState.Diagnostics);
             }
             Assert(rootType.IsAssignableFrom(rootObject.GetType()));
+            return (rootObject, injectionState);
+#if false
             return (rootObject
                 , new InjectionState(
                     injectionState.Diagnostics
                     , typeMap
                     , mapObjectsCreatedSoFar
                 ));
+#endif
         }
 
         private

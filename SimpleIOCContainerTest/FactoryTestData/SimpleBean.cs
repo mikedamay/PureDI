@@ -7,9 +7,10 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     public class SimpleFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return args.FactoryParmeter;
+            return (args.FactoryParmeter, injectionState);
         }
     }
     [Bean]

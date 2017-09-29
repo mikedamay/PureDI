@@ -8,7 +8,8 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     public class ThrowsExceptionFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             throw new Exception("test exception");
         }

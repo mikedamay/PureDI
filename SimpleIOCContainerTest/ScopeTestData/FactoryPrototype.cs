@@ -7,8 +7,15 @@ namespace IOCCTest.ScopeTestData
     [Bean]
     public class FactoryPrototype : IResultGetter
     {
-        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int firstNumber;
-        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int secondNumber;
+        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int firstNumber = 0;
+        [BeanReference(Factory = typeof(MyPrototyeFactory), Scope = BeanScope.Prototype)] private int secondNumber = 0;
+
+        FactoryPrototype()
+        {
+            firstNumber = 0;
+            secondNumber = 0;
+
+        }
         public dynamic GetResults()
         {
             dynamic eo = new ExpandoObject();
@@ -22,10 +29,11 @@ namespace IOCCTest.ScopeTestData
     {
         private int accumulator;
 
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             accumulator++;
-            return accumulator;
+            return (accumulator, injectionState);
 
         }
     }

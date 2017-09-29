@@ -8,9 +8,10 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     public class GenericFactoryFactory<T> : IFactory where T : new()
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return new T();
+            return (new T(), injectionState);
         }
     }
     // this is not really a factory

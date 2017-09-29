@@ -6,15 +6,15 @@ namespace SimpleIOCCDemo
     internal class DisplayFactory : IFactory
     {
         [BeanReference] private SimpleIOCContainer iocContainer = null;
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                return iocContainer.CreateAndInjectDependencies<VSOutputWindow>(rootBeanName: "outputWindow").rootBean;
+                return iocContainer.CreateAndInjectDependencies<VSOutputWindow>(injectionState, rootBeanName: "outputWindow");
             }
             else
             {
-                return iocContainer.CreateAndInjectDependencies<ConsoleDisplay>().rootBean;
+                return iocContainer.CreateAndInjectDependencies<ConsoleDisplay>(injectionState);
             }
         }
     }

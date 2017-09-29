@@ -7,9 +7,10 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     public class TypeMismatchFactory : IFactory
     {
-        public object Execute(BeanFactoryArgs args)
+        public (object bean, InjectionState injectionState)
+            Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return 42;
+            return (42, injectionState);
         }
     }
     [Bean]
