@@ -16,7 +16,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeWithSelfReferentialClass()
         {
-            SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependencies<SelfReferring>();
+            SelfReferring sr = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<SelfReferring>();
             Assert.IsNotNull(sr);
         }
         [TestMethod, Timeout(1000)]
@@ -25,7 +25,7 @@ namespace IOCCTest
             try
             {
                 // this should not run forever
-                CyclicalDependency cd = SimpleIOCContainer.Instance.CreateAndInjectDependencies<CyclicalDependency>();
+                CyclicalDependency cd = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<CyclicalDependency>();
                 Assert.IsNotNull(cd);
                 Assert.IsNotNull(cd?.GetResults().Child);
                 Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -41,7 +41,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfaces()
         {
             ParentWithInterface cd
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ParentWithInterface>();
+                = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<ParentWithInterface>();
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
@@ -50,7 +50,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClasses()
         {
             BaseClass cd
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<BaseClass>();
+                = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<BaseClass>();
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);

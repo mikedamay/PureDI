@@ -14,7 +14,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithNoNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
-            object rootBean = iocc.CreateAndInjectDependencies("NoNamespace"
+            object rootBean = iocc.CreateAndInjectDependenciesWithString("NoNamespace"
               , out IOCCDiagnostics diagnostics);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -25,7 +25,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceFromNoNamespaceToNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
-            object rootBean = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass"
+            object rootBean = iocc.CreateAndInjectDependenciesWithString("ReferenceToNamespacedClass"
                 , out IOCCDiagnostics diagnostics);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -37,7 +37,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceToNoNamespaceFromNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
-            object rootBean = iocc.CreateAndInjectDependencies("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass"
+            object rootBean = iocc.CreateAndInjectDependenciesWithString("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass"
                 , out IOCCDiagnostics diagnostics);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -60,7 +60,7 @@ namespace IOCCTest
                     Assembly assembly = new AssemblyMaker().MakeAssembly(
                         codeText, "RemoteAssembly", new[] { this.GetType().Assembly});
                     SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new [] {assembly, this.GetType().Assembly});
-                    object obj = sic.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>();
+                    object obj = sic.CreateAndInjectDependenciesSimple<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>();
                     Assert.IsNotNull(obj);
                     
                 }

@@ -21,7 +21,7 @@ namespace IOCCTest.LoadTest
             Stopwatch sw = new Stopwatch();
             sw.Start();
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies : new []{assembly});
-            object root = sic.CreateAndInjectDependencies("Level1", out var diagnostics);
+            object root = sic.CreateAndInjectDependenciesWithString("Level1", out var diagnostics);
             sw.Stop();
             WriteLine(sw.Elapsed);
             WriteLine(diagnostics);

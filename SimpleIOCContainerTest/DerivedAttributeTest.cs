@@ -15,7 +15,7 @@ namespace IOCCTest
             SimpleIOCContainer sic =
                 CreateIOCCinAssembly(DERIVED_ATTRIBUTE_TEST_NAMESPACE
                     , "DerivedConstructor");
-            var result = sic.CreateAndInjectDependencies(
+            var result = sic.CreateAndInjectDependenciesWithString(
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
                 , out var diagnostics, rootConstructorName: "TestConstructor") as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);

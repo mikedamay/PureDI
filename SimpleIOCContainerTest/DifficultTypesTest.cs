@@ -22,7 +22,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ReadOnlyFields>();
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<ReadOnlyFields>();
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<AlreadyInitialized>();
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<AlreadyInitialized>();
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyProps>();
+                props = SimpleIOCContainer.Instance.CreateAndInjectDependenciesSimple<MyProps>();
             }
             catch (Exception ex)
             {

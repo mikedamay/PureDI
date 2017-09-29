@@ -10,26 +10,26 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithGenerics()
         {
-            RefersToGeneric rtg = new SimpleIOCContainer().CreateAndInjectDependencies<RefersToGeneric>();
+            RefersToGeneric rtg = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<RefersToGeneric>();
             Assert.AreEqual("Generic<T>", rtg?.GenericInt?.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericRoot()
         {
-            Generic<int> gi = new SimpleIOCContainer().CreateAndInjectDependencies<Generic<int>>();
+            Generic<int> gi = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<Generic<int>>();
             Assert.IsNotNull(gi);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericParameter()
         {
-            GenericHolderParent ghp = new SimpleIOCContainer().CreateAndInjectDependencies<GenericHolderParent>();
+            GenericHolderParent ghp = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<GenericHolderParent>();
             Assert.AreEqual("GenericHeld", ghp?.GenericHolder?.GenericHeld.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWhenRootHasGenericParameter()
         {
             GenericHolder<GenericHeld> ghgh
-                = new SimpleIOCContainer().CreateAndInjectDependencies<GenericHolder<GenericHeld>>();
+                = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<GenericHolder<GenericHeld>>();
             Assert.AreEqual("GenericHeld", ghgh?.GenericHeld?.Name);
         }
 
@@ -37,14 +37,14 @@ namespace IOCCTest
         public void ShouldCreateTreeForGenericsWithMultipleParameters()
         {
             MultipleParamGenericUser mpgu
-                = new SimpleIOCContainer().CreateAndInjectDependencies<MultipleParamGenericUser>();
+                = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<MultipleParamGenericUser>();
             Assert.IsNotNull(mpgu?.Multiple);
         }
 
         [TestMethod]
         public void ShouldCreateTreeForNestedGeneric()
         {
-            WrapperUser wu = new SimpleIOCContainer().CreateAndInjectDependencies<WrapperUser>();
+            WrapperUser wu = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<WrapperUser>();
             Assert.IsNotNull(wu?.Nested);
         }
     }

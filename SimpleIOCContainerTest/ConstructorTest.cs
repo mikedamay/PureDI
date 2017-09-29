@@ -32,7 +32,7 @@ namespace IOCCTest
         public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
         {
             ClassWithMultipleInterfaces cwmi
-                = new SimpleIOCContainer().CreateAndInjectDependencies<ClassWithMultipleInterfaces>();
+                = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<ClassWithMultipleInterfaces>();
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
             Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }
@@ -172,7 +172,7 @@ namespace IOCCTest
             SimpleIOCContainer sic =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
-            var result = sic.CreateAndInjectDependencies(
+            var result = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.ConstructorTestData.NamedRootConstructor"
               , out var diagnostics, rootConstructorName : "TestConstructor") as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);
@@ -187,7 +187,7 @@ namespace IOCCTest
         {
             SimpleIOCContainer sic
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
-            IResultGetter result = sic.CreateAndInjectDependencies(
+            IResultGetter result = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex"
                 , out var diagnostics) as IResultGetter;
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);

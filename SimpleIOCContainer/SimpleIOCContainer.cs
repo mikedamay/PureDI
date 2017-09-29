@@ -284,8 +284,8 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     top of the tree - as instantiated by rootType
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
-        /// <returns>an ojbect of root type</returns>
-        public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME
+        /// <returns>an object of root type</returns>
+        public TRootType CreateAndInjectDependenciesSimple<TRootType>(string beanName = DEFAULT_BEAN_NAME
           , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(beanName);
@@ -326,7 +326,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>the root of the object tree with all dependencies instantiated</returns>
-        public object CreateAndInjectDependencies(string rootTypeName, out IOCCDiagnostics diagnostics
+        public object CreateAndInjectDependenciesWithString(string rootTypeName, out IOCCDiagnostics diagnostics
           , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
           , BeanScope scope = BeanScope.Singleton)
         {
@@ -353,7 +353,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ,rootConstructorName, scope);
         }
 
-        public void CreateAndInjectDependencies(object rootObject, out IOCCDiagnostics diagnostics)
+        public void CreateAndInjectDependenciesWithObject(object rootObject, out IOCCDiagnostics diagnostics)
         {
             ISet<string> profileSet;
             (typeMap, diagnostics, profileSet) = CreateTypeMap(rootObject.GetType());
@@ -373,7 +373,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         }
         /// <summary>
-        /// <see cref="CreateAndInjectDependencies"/>
+        /// <see cref="CreateAndInjectDependenciesWithString"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>

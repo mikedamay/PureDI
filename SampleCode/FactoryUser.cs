@@ -8,7 +8,7 @@ public class FactoryUser
       private IRepository2 repo = null;
     public static void Main()
     {
-        var factoryUser = new SimpleIOCContainer().CreateAndInjectDependencies<FactoryUser>();
+        var factoryUser = new SimpleIOCContainer().CreateAndInjectDependenciesSimple<FactoryUser>();
         Console.WriteLine(factoryUser.repo.GetData());
                 // will print null unless you happen to have an environment
                 // variable called CONNECTION_STRING

@@ -16,7 +16,7 @@ namespace IOCCTest
             Simple simple = new Simple();
             SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
             //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
-            sic.CreateAndInjectDependencies(simple, out var diagnostics);
+            sic.CreateAndInjectDependenciesWithObject(simple, out var diagnostics);
             Assert.IsNotNull(simple.GetResults().Child);
         }
 
@@ -25,8 +25,8 @@ namespace IOCCTest
         {
             ConnectUp connectUp = new ConnectUp();
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            var existing = sic.CreateAndInjectDependencies<ExistingRoot>();
-            sic.CreateAndInjectDependencies(connectUp, out var diagnostics);
+            var existing = sic.CreateAndInjectDependenciesSimple<ExistingRoot>();
+            sic.CreateAndInjectDependenciesWithObject(connectUp, out var diagnostics);
             Assert.AreEqual(connectUp.connectedChild, existing.existingChild);
 
         }
@@ -35,7 +35,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            Complex complex = sic.CreateAndInjectDependencies<Complex>();
+            Complex complex = sic.CreateAndInjectDependenciesSimple<Complex>();
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
@@ -46,8 +46,8 @@ namespace IOCCTest
             SimpleIOCContainer sic = new SimpleIOCContainer(
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
-            sic.CreateAndInjectDependencies((obj = new DeepHierarchy()), out var diangnostics);
-            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>();
+            sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()), out var diangnostics);
+            SomeUser someUser = sic.CreateAndInjectDependenciesSimple<SomeUser>();
             Assert.IsNotNull(someUser.deep);
         }
 
@@ -55,7 +55,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.CreateAndInjectDependencies(new InsertedAsObject(), out var diagnostics);
+            sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject(), out var diagnostics);
             InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(out var diagnostics2);
             Assert.IsNotNull(infer.inserted);
         }

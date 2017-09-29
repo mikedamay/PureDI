@@ -52,7 +52,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(beanName: null);
+                    sic.CreateAndInjectDependenciesSimple<CheckArgumentsTest>(beanName: null);
                 });
 
         }
@@ -64,7 +64,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(beanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    sic.CreateAndInjectDependenciesSimple<CheckArgumentsTest>(beanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -77,7 +77,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies(null, out var diags);
+                    sic.CreateAndInjectDependenciesWithString(null, out var diags);
                 });
 
         }
@@ -89,7 +89,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags, rootBeanName: null);
+                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", out var diags, rootBeanName: null);
                 });
 
         }
@@ -101,7 +101,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", out var diags, rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", out var diags, rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 

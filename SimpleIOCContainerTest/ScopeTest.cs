@@ -55,10 +55,10 @@ namespace IOCCTest
         {
             string className = "RootProtoType";
             var iocc = MakeIOCCForTestAssembly(className);
-            object rootBean = iocc.CreateAndInjectDependencies(
+            object rootBean = iocc.CreateAndInjectDependenciesWithString(
                 $"IOCCTest.ScopeTestData.{className}"
                 , out IOCCDiagnostics diagnostics1, scope: BeanScope.Prototype);
-            object rootBean2 = iocc.CreateAndInjectDependencies(
+            object rootBean2 = iocc.CreateAndInjectDependenciesWithString(
                 $"IOCCTest.ScopeTestData.{className}"
                 , out IOCCDiagnostics diagnostics2, scope: BeanScope.Prototype);
             System.Diagnostics.Debug.WriteLine(diagnostics1);
