@@ -16,9 +16,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfTypeMissing()
         {
-            MissingType mt 
-              = new SimpleIOCContainer().CreateAndInjectDependencies<MissingType>(
-              out IOCCDiagnostics diags);
+            (MissingType mt, InjectionState InjectionState) 
+              = new SimpleIOCContainer().CreateAndInjectDependencies<MissingType>();
+            IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
             dynamic diagnostic = diags.Groups["MissingBean"]?.Occurrences[0];
             Assert.IsNotNull(diagnostic);
@@ -32,12 +32,27 @@ namespace IOCCTest
         public void ShouldErrorIfMissingRootType()
         {
             IOCCDiagnostics diags = null;
-            Assert.ThrowsException<IOCCException>(() =>
-                new SimpleIOCContainer().CreateAndInjectDependencies<int>(out diags));
-            Assert.IsTrue(diags.HasWarnings);
-            dynamic diagnostic = diags.Groups["MissingRoot"]?.Occurrences[0];
-            Assert.AreEqual("System.Int32", diagnostic.BeanType);
-            Assert.AreEqual("", diagnostic.BeanName);
+            InjectionState injectionState = null;
+            int ii;
+            try
+            {
+                (ii, injectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<int>();
+                Assert.Fail();
+            }
+            catch (IOCCException iex)
+            {
+                diags = iex.Diagnostics;
+                Assert.IsTrue(diags.HasWarnings);
+                dynamic diagnostic = diags.Groups["MissingRoot"]?.Occurrences[0];
+                Assert.AreEqual("System.Int32", diagnostic.BeanType);
+                Assert.AreEqual("", diagnostic.BeanName);
+
+            }
+            catch (Exception ex)
+            {
+                var dx = ex;
+                Assert.Fail();
+            }
         }
     }
 }

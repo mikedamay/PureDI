@@ -15,16 +15,18 @@ namespace IOCCTest
         {
             Assert.ThrowsException<IOCCException>(() =>
             {
-                NoArgRoot st = new SimpleIOCContainer().CreateAndInjectDependencies<
-                    NoArgRoot>(out IOCCDiagnostics diags);
+                (NoArgRoot st, InjectionState InjectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<
+                    NoArgRoot>();
+                IOCCDiagnostics diags = InjectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
             });
         }
         [TestMethod]
         public void ShouldWarnForNoArgClassTree()
         {
-            NoArgClassTree nact = new SimpleIOCContainer().CreateAndInjectDependencies<
-                NoArgClassTree>(out IOCCDiagnostics diags);
+            (NoArgClassTree nact, InjectionState InjectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<
+                NoArgClassTree>();
+            IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
         }
 

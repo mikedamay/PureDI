@@ -11,7 +11,7 @@ public class Constructor
     public static void Main()
     {
         var constructor = new SimpleIOCContainer()
-          .CreateAndInjectDependencies<Constructor>(out var diagnostics);
+          .CreateAndInjectDependencies<Constructor>().rootObject;
         constructor.someService.DoMeAFavour();   // writes "SomeData"
     }
 }

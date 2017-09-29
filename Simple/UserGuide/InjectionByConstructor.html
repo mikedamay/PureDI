@@ -48,7 +48,7 @@ public class Constructor
     public static void Main()
     {
         var constructor = new SimpleIOCContainer()
-          .CreateAndInjectDependencies&lt;Constructor&gt;(out var diagnostics);
+          .CreateAndInjectDependencies&lt;Constructor&gt;().rootObject;
         constructor.someService.DoMeAFavour();   // writes &quot;SomeData&quot;
     }
 }

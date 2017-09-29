@@ -253,22 +253,49 @@ namespace com.TheDisappointedProgrammer.IOCC
               ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
 
-        /// <param name="diagnostics"></param>
+        /// <param name="injectionState"></param>
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope">scope refers to the scope of the root bean i.e. the
         ///     top of the tree - as instantiated by rootType
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
-        public TRootType CreateAndInjectDependencies<TRootType>(out IOCCDiagnostics diagnostics
-          , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
-          , BeanScope scope = BeanScope.Singleton)
+        public (TRootType rootObject, InjectionState injectionState) 
+          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
-            CheckArgument(rootBeanName);
-            CheckArgument(rootConstructorName);
-            ISet<string> profileSet;
-            (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType));
-            return (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profileSet, rootBeanName, rootConstructorName, scope);
+            try
+            {
+                IOCCDiagnostics diagnostics;
+                CheckArgument(rootBeanName);
+                CheckArgument(rootConstructorName);
+                ISet<string> profileSet;
+                (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType));
+                var rootObject = (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profileSet, rootBeanName, rootConstructorName, scope);
+                return (rootObject
+                    , new InjectionState(
+                        diagnostics
+                        , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>()
+                        , new Dictionary<(Type, string), object>()
+                    ));
+
+            }
+            catch (Exception ex)
+            {
+                switch (ex)
+                {
+                    case IOCCException iex:
+                        throw;
+                    case IOCCInternalException iiex:
+                        throw;
+                    case ArgumentNullException anx:
+                        throw;
+                    default:
+                        // TODO we need to do something or say something about diagnosticzs
+                        throw new IOCCException("Injection dependency failed.  Please the constructors of beans to ensure they are not accessing other beans prematurely"
+                          ,new DiagnosticBuilder().Diagnostics);
+
+                }
+            }        
         }
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window

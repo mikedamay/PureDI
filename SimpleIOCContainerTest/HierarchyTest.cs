@@ -69,7 +69,7 @@ namespace IOCCTest
         {
             WithNames.CyclicalDependency cd 
               = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.CyclicalDependency>(out IOCCDiagnostics diags, rootBeanName: "name-A");
+                    WithNames.CyclicalDependency>(rootBeanName: "name-A").rootObject;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -87,32 +87,35 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForInheritedBeanWithDifferentName()
         {
-            WithNames.InheritedBean ib
+            (WithNames.InheritedBean ib, InjectionState InjectionState)
                 = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.InheritedBean>(out IOCCDiagnostics diags);
+                    WithNames.InheritedBean>();
             Assert.IsNotNull(ib.derived);
-            Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBean).Name));
+            Assert.IsFalse(InjectionState.Diagnostics.ToString().Contains(typeof(WithNames.InheritedBean).Name));
         }
         [TestMethod]
         public void ShouldCreateTreeForInheritedBeanWithDifferentProfile()
         {
-            WithNames.BeanUser bu
+            (WithNames.BeanUser bu, InjectionState InjectionState)
                 = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.BeanUser>(out IOCCDiagnostics diags);
+                    WithNames.BeanUser>();
+            IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited", bu.Used.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
-            bu
+            (bu, InjectionState)
                 = new SimpleIOCContainer(Profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
-                    WithNames.BeanUser>(out diags);
+                    WithNames.BeanUser>();
+            diags = InjectionState.Diagnostics;
             Assert.AreEqual("Derived", bu.Used.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
         }
         [TestMethod]
         public void ShouldCreateTreeForDerivedBeanIfInheritedIsIgnored()
         {
-            WithNames.IgnoredBeanUser bu
+            (WithNames.IgnoredBeanUser bu, InjectionState InjectionState)
                 = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.IgnoredBeanUser>(out IOCCDiagnostics diags);
+                    WithNames.IgnoredBeanUser>();
+            IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited and ignored", bu.InheritedIgnorer.Val);
             Assert.AreEqual("Derived from ignorer", bu.DerivedFromIgnorer.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));

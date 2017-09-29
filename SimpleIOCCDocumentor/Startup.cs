@@ -12,7 +12,6 @@ namespace SimpleIOCCDocumentor
     public class Startup
     {
         private IOCCDiagnostics diagnostics;
-        private IOCCDiagnostics diagnostics2;
         private IOCCDiagnostics diagnostics3;
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -20,11 +19,13 @@ namespace SimpleIOCCDocumentor
         {
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"authoring"});
             sic.CreateAndInjectDependenciesWithObject(new GenericConfig(("relativePath", "../../../../Simple")), out diagnostics3);
+            (IDocumentProcessor dp, InjectionState @is) = sic.CreateAndInjectDependencies<
+                IDocumentProcessor>();
+            diagnostics = @is.Diagnostics;
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
-              , sic.CreateAndInjectDependencies<
-              IDocumentProcessor>(out diagnostics)));
+              , dp));
             services.Add(new ServiceDescriptor(typeof(IDocumentationSiteGenerator)
-                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>(out diagnostics2)));
+                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>().rootObject));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

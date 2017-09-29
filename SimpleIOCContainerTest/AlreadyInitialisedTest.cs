@@ -13,9 +13,10 @@ namespace IOCCTest
         {
             // can't build using CodeAnalysis.CSharpCompilation.Emit - bad IL format
             IResultGetter result;
-            IOCCDiagnostics diagnostics;
+            InjectionState injectionState;
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            result = sic.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.AlreadyInitialised>(out diagnostics);
+            (result, injectionState) = sic.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.AlreadyInitialised>();
+            var diagnostics = injectionState.Diagnostics;
             Assert.IsTrue(diagnostics.HasWarnings);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual(1, diagnostics.Groups["AlreadyInitialised"].Occurrences.Count);
@@ -26,9 +27,10 @@ namespace IOCCTest
         {
             // can't build using CodeAnalysis.CSharpCompilation.Emit - bad IL format
             IResultGetter result;
-            IOCCDiagnostics diagnostics;
+            InjectionState injectionState;
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            result = sic.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.Primitive>(out diagnostics);
+            (result, injectionState) = sic.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.Primitive>();
+            var diagnostics = injectionState.Diagnostics;
             Assert.IsTrue(diagnostics.HasWarnings);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual(1, diagnostics.Groups["AlreadyInitialised"].Occurrences.Count);

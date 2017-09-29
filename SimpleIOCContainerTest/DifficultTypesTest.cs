@@ -70,7 +70,9 @@ namespace IOCCTest
             MyAutoProp props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyAutoProp>(out IOCCDiagnostics diags);
+                InjectionState injectionState;
+                (props, injectionState) = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyAutoProp>();
+                IOCCDiagnostics diags = injectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
                 IOCCDiagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
                 Assert.AreEqual(1, grp.Occurrences.Count);
@@ -162,8 +164,7 @@ namespace IOCCTest
         {
             // couldn't create assembly for this
             var result = new SimpleIOCContainer()
-              .CreateAndInjectDependencies<AttributeAsBean>(
-              out var diagnostics) as IResultGetter;
+              .CreateAndInjectDependencies<AttributeAsBean>().rootObject as IResultGetter;
             Assert.IsNull( result.GetResults().SomeOtherValue);
         }
         [TestMethod]

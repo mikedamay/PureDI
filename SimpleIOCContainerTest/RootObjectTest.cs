@@ -56,7 +56,7 @@ namespace IOCCTest
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
             sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject(), out var diagnostics);
-            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(out var diagnostics2);
+            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>().rootObject;
             Assert.IsNotNull(infer.inserted);
         }
     }
