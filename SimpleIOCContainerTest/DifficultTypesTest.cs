@@ -22,7 +22,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ReadOnlyFields>().rootObject;
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<AlreadyInitialized>().rootObject;
+                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyProps>().rootObject;
+                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyProps>().rootBean;
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace IOCCTest
         {
             // couldn't create assembly for this
             var result = new SimpleIOCContainer()
-              .CreateAndInjectDependencies<AttributeAsBean>().rootObject as IResultGetter;
+              .CreateAndInjectDependencies<AttributeAsBean>().rootBean as IResultGetter;
             Assert.IsNull( result.GetResults().SomeOtherValue);
         }
         [TestMethod]

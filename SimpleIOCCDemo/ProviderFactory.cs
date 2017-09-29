@@ -10,11 +10,11 @@ namespace SimpleIOCCDemo
 		{
 			if (System.Environment.GetCommandLineArgs().Length > 1)
 			{
-				return iocContainer.CreateAndInjectDependencies<FileListProvider>().rootObject;
+				return iocContainer.CreateAndInjectDependencies<FileListProvider>().rootBean;
 			}
 			else
 			{
-				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(rootBeanName: "usage").rootObject;
+				return iocContainer.CreateAndInjectDependencies<UsageListProvider>(rootBeanName: "usage").rootBean;
 			}
 			
 		}

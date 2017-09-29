@@ -27,7 +27,7 @@ namespace SimpleIOCCDocumentor
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
               , dp));
             services.Add(new ServiceDescriptor(typeof(IDocumentationSiteGenerator)
-                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>().rootObject));
+                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>().rootBean));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

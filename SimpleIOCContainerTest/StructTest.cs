@@ -10,21 +10,21 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInstantiateStruct()
         {
-            StructRoot root = new SimpleIOCContainer().CreateAndInjectDependencies<StructRoot>().rootObject;
+            StructRoot root = new SimpleIOCContainer().CreateAndInjectDependencies<StructRoot>().rootBean;
             Assert.IsNotNull(root.child);
         }
 
         [TestMethod]
         public void ShouldCreateATreeWithStructs()
         {
-            StructTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<StructTree>().rootObject;
+            StructTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<StructTree>().rootBean;
             Assert.IsNotNull(tree.structChild);
         }
 
         [TestMethod]
         public void ShouldCreateTreeWithMixOfClassesAndStructs()
         {
-            ClassTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<ClassTree>().rootObject;
+            ClassTree tree = new SimpleIOCContainer().CreateAndInjectDependencies<ClassTree>().rootBean;
             Assert.IsNotNull(tree);
             Assert.AreEqual(1, tree?.GetStructChild2().GetClassChild()?.someValue);
         }

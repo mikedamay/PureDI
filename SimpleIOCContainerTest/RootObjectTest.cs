@@ -1,5 +1,5 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
-using IOCCTest.RootObject;
+using IOCCTest.rootBean;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;
@@ -25,7 +25,7 @@ namespace IOCCTest
         {
             ConnectUp connectUp = new ConnectUp();
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            var existing = sic.CreateAndInjectDependencies<ExistingRoot>().rootObject;
+            var existing = sic.CreateAndInjectDependencies<ExistingRoot>().rootBean;
             sic.CreateAndInjectDependenciesWithObject(connectUp);
             Assert.AreEqual(connectUp.connectedChild, existing.existingChild);
 
@@ -35,7 +35,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            Complex complex = sic.CreateAndInjectDependencies<Complex>().rootObject;
+            Complex complex = sic.CreateAndInjectDependencies<Complex>().rootBean;
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
@@ -47,7 +47,7 @@ namespace IOCCTest
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()));
-            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>().rootObject;
+            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>().rootBean;
             Assert.IsNotNull(someUser.deep);
         }
 
@@ -56,7 +56,7 @@ namespace IOCCTest
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
             sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
-            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>().rootObject;
+            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>().rootBean;
             Assert.IsNotNull(infer.inserted);
         }
     }

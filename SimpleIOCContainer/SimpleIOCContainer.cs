@@ -260,7 +260,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     top of the tree - as instantiated by rootType
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
-        public (TRootType rootObject, InjectionState injectionState) 
+        public (TRootType rootBean, InjectionState injectionState) 
           CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             try
@@ -290,7 +290,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     case ArgumentNullException anx:
                         throw;
                     default:
-                        // TODO we need to do something or say something about diagnosticzs
+                        // TODO we need to do something or say something about diagnostics
                         throw new IOCCException("Injection dependency failed.  Please the constructors of beans to ensure they are not accessing other beans prematurely"
                           ,new DiagnosticBuilder().Diagnostics);
 
@@ -354,7 +354,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>the root of the object tree with all dependencies instantiated</returns>
-        public (object rootObject, InjectionState injectionState) CreateAndInjectDependenciesWithString(string rootTypeName, InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithString(string rootTypeName, InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
             CheckArgument(rootBeanName);
@@ -386,7 +386,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ));
         }
 
-        public (object rootObject, InjectionState injectionState) CreateAndInjectDependenciesWithObject(object rootObject, InjectionState injectionState = null)
+        public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithObject(object rootObject, InjectionState injectionState = null)
         {
             ISet<string> profileSet;
             IOCCDiagnostics diagnostics;

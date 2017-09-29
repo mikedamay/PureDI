@@ -1,6 +1,6 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
 
-namespace IOCCTest.RootObject
+namespace IOCCTest.rootBean
 {
     [Bean]
     public class DeepHierarchy

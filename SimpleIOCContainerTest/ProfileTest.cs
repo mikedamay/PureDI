@@ -72,7 +72,7 @@ namespace IOCCTest
                 var result1 = rootBean1 as IResultGetter;
                 diagnostics = injectionState.Diagnostics;
                 var result2 =
-                    sic2.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile").rootObject as
+                    sic2.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile").rootBean as
                         IResultGetter;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsNotNull(result1?.GetResults().ChildP2);

@@ -11,7 +11,7 @@ public class Constructor
     public static void Main()
     {
         var constructor = new SimpleIOCContainer()
-          .CreateAndInjectDependencies<Constructor>().rootObject;
+          .CreateAndInjectDependencies<Constructor>().rootBean;
         constructor.someService.DoMeAFavour();   // writes "SomeData"
     }
 }

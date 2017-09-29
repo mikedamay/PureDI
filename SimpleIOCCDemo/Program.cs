@@ -9,7 +9,7 @@ namespace SimpleIOCCDemo
         static void Main(string[] args)
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            TodoProcessor tdp = sic.CreateAndInjectDependencies<TodoProcessor>().rootObject;
+            TodoProcessor tdp = sic.CreateAndInjectDependencies<TodoProcessor>().rootBean;
             tdp.Process();
             Thread.Sleep(5000);
             Console.Read();

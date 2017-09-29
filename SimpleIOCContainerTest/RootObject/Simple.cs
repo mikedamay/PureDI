@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using com.TheDisappointedProgrammer.IOCC;
 
-namespace IOCCTest.RootObject
+namespace IOCCTest.rootBean
 {  
     public class Simple : IOCCTest.TestCode.IResultGetter
     {

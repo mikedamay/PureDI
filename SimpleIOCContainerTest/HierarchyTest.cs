@@ -16,7 +16,7 @@ namespace IOCCTest
               = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
             //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
-              = iocc.CreateAndInjectDependencies<TestRoot>().rootObject;
+              = iocc.CreateAndInjectDependencies<TestRoot>().rootBean;
             Assert.IsNotNull(twf.test);
         }
         [TestMethod]
@@ -42,7 +42,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootObject;
+            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -55,7 +55,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
-            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.DeepHierahy>().rootObject;
+            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -69,7 +69,7 @@ namespace IOCCTest
         {
             WithNames.CyclicalDependency cd 
               = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
-                    WithNames.CyclicalDependency>(rootBeanName: "name-A").rootObject;
+                    WithNames.CyclicalDependency>(rootBeanName: "name-A").rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -79,7 +79,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateASingleInstanceForMultipleReferences()
         {
-            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependencies<CrossConnections>().rootObject;
+            CrossConnections cc = new SimpleIOCContainer().CreateAndInjectDependencies<CrossConnections>().rootBean;
             Assert.IsNotNull(cc?.ChildA?.Common);
             Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }

@@ -60,7 +60,7 @@ namespace IOCCTest
                     Assembly assembly = new AssemblyMaker().MakeAssembly(
                         codeText, "RemoteAssembly", new[] { this.GetType().Assembly});
                     SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new [] {assembly, this.GetType().Assembly});
-                    object obj = sic.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>().rootObject;
+                    object obj = sic.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>().rootBean;
                     Assert.IsNotNull(obj);
                     
                 }
