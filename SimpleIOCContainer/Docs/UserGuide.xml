@@ -7,7 +7,7 @@
     <userGuide>
 The SimpleIOCContainer (Simple Inversion of Control Container) is a
 C# library providing a Dependency Injection (DI) framework promoting 
-simplicity, transparancy and verifyability.
+simplicity, transparency and verifiability.
 
 It is available from nuget.org with the following command:
 

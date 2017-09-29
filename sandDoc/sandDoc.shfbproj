@@ -13,7 +13,7 @@
     <RootNamespace>sandDoc</RootNamespace>
     <Name>sandDoc</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 4.7</FrameworkVersion>
     <OutputPath>GeneratedHelp\</OutputPath>
     <HtmlHelpName>sandDoc</HtmlHelpName>
     <Language>en-US</Language>
@@ -33,7 +33,7 @@
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <HelpFileFormat>Website</HelpFileFormat>
-    <IndentHtml>False</IndentHtml>
+    <IndentHtml>True</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
@@ -65,6 +65,17 @@
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Assemblies.aml" />
+    <None Include="Content\BeanFactory.aml" />
+    <None Include="Content\BeanNames.aml" />
+    <None Include="Content\BeansAndNonBeans.aml" />
+    <None Include="Content\DesignRationaale.aml" />
+    <None Include="Content\Glossary.aml" />
+    <None Include="Content\InjectionByConstructor.aml" />
+    <None Include="Content\Introduction.aml" />
+    <None Include="Content\LimitationsAndGotchas.aml" />
+    <None Include="Content\OddsAndEnds.aml" />
+    <None Include="Content\Profiles.aml" />
     <None Include="Content\VersionHistory\v1.0.0.0.aml" />
     <None Include="Content\VersionHistory\VersionHistory.aml" />
     <None Include="Content\Welcome.aml" />

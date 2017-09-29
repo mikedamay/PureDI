@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code_snippets", "code_snipp
 	ProjectSection(SolutionItems) = preProject
 		code_snippets\GetResults.snippet = code_snippets\GetResults.snippet
 		MainRunner.snippet = MainRunner.snippet
+		oldpara.snippet = oldpara.snippet
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{1C3A8AAC-C2A3-48C8-9B07-199AC3251DCB}"
