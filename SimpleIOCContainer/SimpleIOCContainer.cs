@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using com.TheDisappointedProgrammer.IOCC.Common;
 using com.TheDisappointedProgrammer.IOCC.Tree;
 using static com.TheDisappointedProgrammer.IOCC.Common.Common;
@@ -95,6 +97,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO red team: mix new and CreateAndInject...
     // TODO red team: self registering classes - that are also beans
     // TODO we need an overload that takes a type
+    // TODO add exception handling to other entry points.
     // DONE heading for diagnostic output e.g. Diagnostic Information:
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day
@@ -200,6 +203,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
+        private static int furtherCallGuard;
 
         [Flags]
         public enum AssemblyExclusion
@@ -211,18 +215,6 @@ namespace com.TheDisappointedProgrammer.IOCC
         private readonly AssemblyExclusion excludedAssemblies;
         private readonly ImmutableArray<Assembly> explicitAssemblies;
         private readonly ISet<string> profileSet;
-
-        // the key in the objects created so far map comprises 2 types.  The first is the
-        // intended concrete type that will be instantiated.  This works well for
-        // non-generic types but for generics the concrete type, which is taken from the typeMap,
-        // is a generic type definition.  The builder needs to lay its hands on the type argument
-        // to substitute for the generic parameter.  The second type (beanReferenceType) which
-        // has been taken from the member information of the declaring task provides the generic argument
-
-        //private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
-        //    new Dictionary<(Type, string), object>();
-
-        //private IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -268,11 +260,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         public (TRootType rootBean, InjectionState injectionState)
           CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
+            CheckArgument(rootBeanName);
+            CheckArgument(rootConstructorName);
+            CheckInjectionStateArgument(injectionState);
             try
             {
                 IOCCDiagnostics diagnostics;
-                CheckArgument(rootBeanName);
-                CheckArgument(rootConstructorName);
                 InjectionState newInjectionState = CloneInjectionState(injectionState);
                 object rootObject;
 
@@ -312,6 +305,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
             }
         }
+
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window
         /// <summary>
@@ -375,6 +369,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             CheckArgument(rootTypeName);
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
+            CheckInjectionStateArgument(injectionState);
             InjectionState newInjectionState;
             IOCCDiagnostics diagnostics;
             ISet<string> profileSetLocal;
@@ -413,6 +408,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithObject(object rootObject, InjectionState injectionState = null)
         {
+            CheckInjectionStateArgument(injectionState);
             ISet<string> profileSetLocal;
             InjectionState newInjectionState;
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
@@ -441,7 +437,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree(profile, typeMap);
             object bean;
-            newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState, mapObjectsCreatedSoFar);
+            newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
 
             return (rootObject, newInjectionState);
 #if false
@@ -621,6 +617,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                 throw new ArgumentNullException();
             }
         }
+        private void CheckInjectionStateArgument(InjectionState injectionState)
+        {
+            if (injectionState == null)
+            {
+                int previousValue = Interlocked.CompareExchange(ref furtherCallGuard, 1, 0);
+                if (previousValue != 0)
+                {
+                    throw new ArgumentException(
+                      "Operation failed: you are attempting to call CreateAndInjectDependencies for a second time"
+                      + Environment.NewLine + "You must pass in the instance of injectionState returned by a previous call to CreateAndInjectDependencies");
+                }
+            }
+        }
+
 
     }   // SimpleIOCContainer
 

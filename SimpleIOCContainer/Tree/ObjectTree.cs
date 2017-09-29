@@ -47,7 +47,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 Assert(rootBeanName != null);
                 object rootObject;
                 (rootObject, injectionState) = CreateObjectTree((rootType, rootBeanName, rootConstructorName)
-                    , new CreationContext(mapObjectsCreatedSoFar, new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
+                    , new CreationContext(new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new IOCCInternalException(
@@ -66,10 +66,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     injectionState.Diagnostics);
             }
         }
-        public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState)
         {
-            CreationContext cc = new CreationContext(mapObjectsCreatedSoFar
-              , new CycleGuard(), new HashSet<Type>());
+            CreationContext cc = new CreationContext(new CycleGuard(), new HashSet<Type>());
             CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
             return AssignMembers(rootObject, memberSpecs, injectionState, cc);
 
@@ -103,10 +102,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 {
                     Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                     if (beanScope != BeanScope.Prototype
-                        && creationContext.MapObjectsCreatedSoFar.ContainsKey((constructableTypeLocal, beanId.constructorName)))
+                        && injectionState.MapObjectsCreatedSoFar.ContainsKey((constructableTypeLocal, beanId.constructorName)))
                     {
                         // there maybe a cyclical dependency
-                        constructedBean = creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)];
+                        constructedBean = injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)];
                         return (true, constructedBean);
                     }
                     else
@@ -116,7 +115,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             , constructorParameterSpecs, beanId.constructorName, injectionState);
                         if (beanScope != BeanScope.Prototype)
                         {
-                            creationContext.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
+                            injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
                             // TODO replace first param with ConstructableType
                         }
                     }

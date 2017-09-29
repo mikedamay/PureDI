@@ -51,6 +51,15 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// Access to the diagnostics supports this endeavor.
         /// </summary>
         public IOCCDiagnostics Diagnostics => diagnostics;
+
+        // the key in the objects created so far map comprises 2 types.  The first is the
+        // intended concrete type that will be instantiated.  This works well for
+        // non-generic types but for generics the concrete type, which is taken from the typeMap,
+        // is a generic type definition.  The builder needs to lay its hands on the type argument
+        // to substitute for the generic parameter.  The second type (beanReferenceType) which
+        // has been taken from the member information of the declaring task provides the generic argument
+        internal IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
+        internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         /// <summary>
         /// shortcut to diagnostics.AllToString()
         /// <see cref="IOCCDiagnostics.AllToString"/>
