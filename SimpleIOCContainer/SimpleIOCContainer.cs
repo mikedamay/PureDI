@@ -218,10 +218,11 @@ namespace com.TheDisappointedProgrammer.IOCC
         // is a generic type definition.  The builder needs to lay its hands on the type argument
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
-        private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
-            new Dictionary<(Type, string), object>();
 
-        private IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+        //private IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
+        //    new Dictionary<(Type, string), object>();
+
+        //private IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
 
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -274,9 +275,13 @@ namespace com.TheDisappointedProgrammer.IOCC
                 CheckArgument(rootConstructorName);
                 InjectionState newInjectionState = CloneInjectionState(injectionState);
                 object rootObject;
+
                 ISet<string> profileSetLocal;
                 if (injectionState == null || injectionState.IsEmpty())
                 {
+                    IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+                    IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
+                      new Dictionary<(Type, string), object>();
                     (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(typeof(TRootType));
                     newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
                         
@@ -374,8 +379,11 @@ namespace com.TheDisappointedProgrammer.IOCC
             IOCCDiagnostics diagnostics;
             ISet<string> profileSetLocal;
 
+            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
             if (injectionState == null || injectionState.IsEmpty())
             {
+                mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
                 (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(this.GetType());
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
 
@@ -383,7 +391,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             else
             {
                 newInjectionState = CloneInjectionState(injectionState);
-                diagnostics = newInjectionState.Diagnostics;
+                (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
             }
             (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
@@ -407,15 +415,20 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             ISet<string> profileSetLocal;
             InjectionState newInjectionState;
+            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+            IOCCDiagnostics diagnostics;
+
             if (injectionState == null || injectionState.IsEmpty())
             {
-                IOCCDiagnostics diagnostics;
+                mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
                 (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(rootObject.GetType());
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
             }
             else
             {
                 newInjectionState = CloneInjectionState(injectionState);
+                (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
             }
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
@@ -453,6 +466,10 @@ namespace com.TheDisappointedProgrammer.IOCC
           , InjectionState injectionState, string rootBeanName
           , string rootConstructorName, BeanScope scope)
         {
+            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+            IOCCDiagnostics diagnostics;
+            (diagnostics, typeMap, mapObjectsCreatedSoFar) = injectionState;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
@@ -500,6 +517,7 @@ namespace com.TheDisappointedProgrammer.IOCC
           CreateTypeMap(Type rootType)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
+            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap = null;
 
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories

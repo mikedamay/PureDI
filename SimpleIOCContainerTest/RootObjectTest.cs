@@ -25,9 +25,9 @@ namespace IOCCTest
         {
             ConnectUp connectUp = new ConnectUp();
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            var existing = sic.CreateAndInjectDependencies<ExistingRoot>().rootBean;
-            sic.CreateAndInjectDependenciesWithObject(connectUp);
-            Assert.AreEqual(connectUp.connectedChild, existing.existingChild);
+            var existing = sic.CreateAndInjectDependencies<ExistingRoot>();
+            sic.CreateAndInjectDependenciesWithObject( connectUp, existing.injectionState);
+            Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
 
