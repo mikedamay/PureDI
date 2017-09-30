@@ -81,6 +81,7 @@
     <Compile Remove="TestData\BeanBase.cs" />
     <Compile Remove="TestData\BlankAssembly.cs" />
     <Compile Remove="TestData\CheckProfileAndOs.cs" />
+    <Compile Remove="TestData\CrossPlatform.cs" />
     <Compile Remove="TestData\DependencyHierarchy.cs" />
     <Compile Remove="TestData\DuplicateBeans.cs" />
     <Compile Remove="TestData\DuplicateInterfaces.cs" />
@@ -89,7 +90,6 @@
     <Compile Remove="TestData\IgnoreHelper.cs" />
     <Compile Remove="TestData\ImplementationClass.cs" />
     <Compile Remove="TestData\InterfaceClass.cs" />
-    <Compile Remove="TestData\Linux.cs" />
     <Compile Remove="TestData\NamedBeanBase.cs" />
     <Compile Remove="TestData\NamedDependencies.cs" />
     <Compile Remove="TestData\NestedClasses.cs" />
@@ -166,8 +166,8 @@
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
+    <EmbeddedResource Include="TestData\CrossPlatform.cs" />
     <EmbeddedResource Include="TestData\IgnoredBean.cs" />
-    <EmbeddedResource Include="TestData\Linux.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
     <EmbeddedResource Include="TestData\NonBeanDerivedFromBean.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />

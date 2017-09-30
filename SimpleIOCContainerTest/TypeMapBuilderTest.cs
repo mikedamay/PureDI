@@ -226,19 +226,7 @@ namespace IOCCTest
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.StructDependency.cs", mapExpected);
         }
-#if WINDOWSTEST || MACOSTEST
-        [Ignore]
-#endif
-       [TestMethod]
-        public void ShouldCreateLinuxTypesOnLinux()
-        {
-            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
-            {
-                {("IOCCTest.TestData.Linux", ""),"IOCCTest.TestData.Linux"}
-            };
-            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.Linux.cs", mapExpected);
-             
-        }
+
 #if !USE_THIS_ASSEMBLY
         [TestMethod]
         public void ShouldRecognizeConnectionsAcrossAssemblies()
