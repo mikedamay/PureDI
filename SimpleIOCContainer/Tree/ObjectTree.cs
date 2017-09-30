@@ -10,20 +10,11 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 {
     internal class ObjectTree
     {
-        private readonly string profile;
-
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-        //private readonly IWouldBeImmutableDictionary<(Type type, string beanName), Type> typeMap;
-        // from the point of view of generics the key.type may contain a generic type definition
-        // and the value may be a constructed generic type
-
-        public ObjectTree(string profile
-            , IWouldBeImmutableDictionary<(Type type, string name), Type> typeMap)
+        public ObjectTree()
         {
-            this.profile = profile;
-            //this.typeMap = typeMap;
         }
 
         // TODO complete the documentation item 3 below if and when factory types are implemented
@@ -39,7 +30,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="scope"></param>
         /// <param name="mapObjectsCreatedSoFar"></param>
         /// <returns>an ojbect of root type</returns>
-        public (object bean, InjectionState injectionState) CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName, string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        public (object bean, InjectionState injectionState) 
+          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName, string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             try
             {
@@ -50,8 +42,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     , new CreationContext(new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
-                    throw new IOCCInternalException(
-                        $"object created by IOC container is not {rootType.Name} as expected");
+                    throw new IOCCException(
+                        $"object created by IOC container is not {rootType.Name} as expected", injectionState.Diagnostics);
                 }
                 Assert(rootObject == null
                        || rootType.IsInstanceOfType(rootObject));
@@ -91,11 +83,16 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     maps the name of the class or struct of
         ///     the object to the instance of the object.</param>
         /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
-        private (object bean, InjectionState injectionState) CreateObjectTree((Type beanType, string beanName, string constructorName) beanId, CreationContext creationContext, InjectionState injectionState, BeanReferenceDetails beanReferenceDetails, BeanScope beanScope)
+        private (object bean, InjectionState injectionState) 
+          CreateObjectTree((Type beanType, string beanName
+          , string constructorName) beanId, CreationContext creationContext
+          , InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
+          , BeanScope beanScope)
         {
-             Type implementationType;
+            Type implementationType;
 
-            (bool constructionComplete, object beanId) MakeBean(IList<ChildBeanSpec> constructorParameterSpecs = null)
+            (bool constructionComplete, object beanId) 
+              MakeBean(IList<ChildBeanSpec> constructorParameterSpecs = null)
             {            
                 object constructedBean;
                 try
@@ -139,7 +136,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 members = new List<ChildBeanSpec>();
                 string constructorName = beanId.Item3;
-                ValidateConstructors(declaringBeanType, constructorName, injectionState.Diagnostics, beanReferenceDetails);
+                ValidateConstructors(declaringBeanType, constructorName
+                  , injectionState.Diagnostics, beanReferenceDetails);
                 if (declaringBeanType.GetConstructors(
                   BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                   .Length > 0)
@@ -149,7 +147,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     {
                         foreach (var paramInfo in paramInfos)
                         {
-                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members, creationContext, injectionState);
+                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members
+                              , creationContext, injectionState);
                         } // for each constructor parameter
                     }
 

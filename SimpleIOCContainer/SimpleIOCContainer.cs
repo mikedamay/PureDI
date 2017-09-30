@@ -358,7 +358,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
             }
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            ObjectTree tree = new ObjectTree(profile, newInjectionState.TypeMap);
+            ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
 
             return (rootObject, newInjectionState);
@@ -397,7 +397,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                         , mapObjectsCreatedSoFar
                     ));
             }
-            ObjectTree tree = new ObjectTree(profileSetKey, typeMap);
+            ObjectTree tree = new ObjectTree();
             object rootObject;
             (rootObject, injectionState) = tree.CreateAndInjectDependencies(
               rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
