@@ -59,7 +59,7 @@ namespace IOCCTest
                 $"IOCCTest.ScopeTestData.{className}", scope: BeanScope.Prototype);
             IOCCDiagnostics diagnostics1 = injectionState1.Diagnostics;
             (object rootBean2, InjectionState injectionState2) = iocc.CreateAndInjectDependenciesWithString(
-                $"IOCCTest.ScopeTestData.{className}", scope: BeanScope.Prototype);
+                $"IOCCTest.ScopeTestData.{className}", injectionState1, scope: BeanScope.Prototype);
             IOCCDiagnostics diagnostics2 = injectionState2.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics1);
             System.Diagnostics.Debug.WriteLine(diagnostics2);

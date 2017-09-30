@@ -203,7 +203,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
-        private static int furtherCallGuard;
+        private int furtherCallGuard;
 
         [Flags]
         public enum AssemblyExclusion
@@ -546,17 +546,17 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             else
             {
-                typesQuery = types.Select(kv => (kv.Key.beanType, kv.Key.beanName, kv.Value));
+                typesQuery = types.Select(kv => (kv.Key.beanType, kv.Key.beanName, kv.Value)).OrderBy(kv => kv.beanType.FullName);
             }
             IOCCDiagnostics.Group group = diagnostics.Groups["TypesInfo"];
-            dynamic diag = group.CreateDiagnostic();
             foreach (var ti in typesQuery)
             {
-                diag.ReferenceType = ti.Item1?.Name ?? "none";
-                diag.ReferenceType = ti.Item2 ?? "none";
-                diag.ReferenceType = ti.Item3?.Name ?? "none";
+                dynamic diag = group.CreateDiagnostic();
+                diag.ReferenceType = ti.Item1?.FullName ?? "none";
+                diag.BeanName = ti.Item2 ?? "none";
+                diag.ImplementationType = ti.Item3?.FullName ?? "none";
+                diagnostics.Groups["TypesInfo"].Occurrences.Add(diag);
             }
-            diagnostics.Groups["TypesInfo"].Occurrences.Add(diag);
         }
 
         private void LogProfiles(IOCCDiagnostics diagnostics, ISet<string> profileSet)

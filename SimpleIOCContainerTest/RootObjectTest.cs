@@ -46,8 +46,9 @@ namespace IOCCTest
             SimpleIOCContainer sic = new SimpleIOCContainer(
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
-            sic.CreateAndInjectDependenciesWithObject((obj = new DeepHierarchy()));
-            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>().rootBean;
+            InjectionState injectionState;
+            (obj, injectionState) = sic.CreateAndInjectDependenciesWithObject(new DeepHierarchy());
+            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>(injectionState).rootBean;
             Assert.IsNotNull(someUser.deep);
         }
 
@@ -55,8 +56,9 @@ namespace IOCCTest
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
             SimpleIOCContainer sic = new SimpleIOCContainer();
-            sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
-            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>().rootBean;
+            (object inserted, InjectionState InjectionState) 
+              = sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
+            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
             Assert.IsNotNull(infer.inserted);
         }
     }

@@ -22,7 +22,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
+                rof = new SimpleIOCContainer().CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = SimpleIOCContainer.Instance.CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
+                rof = new SimpleIOCContainer().CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyProps>().rootBean;
+                props = new SimpleIOCContainer().CreateAndInjectDependencies<MyProps>().rootBean;
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace IOCCTest
             try
             {
                 InjectionState injectionState;
-                (props, injectionState) = SimpleIOCContainer.Instance.CreateAndInjectDependencies<MyAutoProp>();
+                (props, injectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<MyAutoProp>();
                 IOCCDiagnostics diags = injectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
                 IOCCDiagnostics.Group grp = diags.Groups["ReadOnlyProperty"];

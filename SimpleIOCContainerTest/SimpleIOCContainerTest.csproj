@@ -57,7 +57,6 @@
     <Compile Remove="FactoryTestData\ThrowsException.cs" />
     <Compile Remove="FactoryTestData\TypeMismatch.cs" />
     <Compile Remove="MinorMethodsTest.cs" />
-    <Compile Remove="MultipleCallsTestData\Fails.cs" />
     <Compile Remove="MultipleCallsTestData\Simple.cs" />
     <Compile Remove="NamespaceData\DuplicateAssemblies.cs" />
     <Compile Remove="NamespaceData\NoNamespace.cs" />
@@ -146,7 +145,6 @@
     <EmbeddedResource Include="FactoryTestData\ThrowsException.cs">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultipleCallsTestData\Fails.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\Simple.cs" />
     <EmbeddedResource Include="NamespaceData\DuplicateAssemblies.cs" />
     <EmbeddedResource Include="ProfileTestData\BestCandidate.cs" />

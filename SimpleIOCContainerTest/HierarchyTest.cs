@@ -42,7 +42,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootBean;
+            DeepHierahy root = new SimpleIOCContainer().CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -55,7 +55,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
-            WithNames.DeepHierahy root = SimpleIOCContainer.Instance.CreateAndInjectDependencies<WithNames.DeepHierahy>().rootBean;
+            WithNames.DeepHierahy root = new SimpleIOCContainer().CreateAndInjectDependencies<WithNames.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -64,11 +64,11 @@ namespace IOCCTest
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3a);
             Assert.IsNotNull(root?.GetResults().Level2b?.GetResults().Level2b3b);
         }
-        [TestMethod, Timeout(100)]
+        [TestMethod, Timeout(1000)]
         public void ShouldCreateTreeForBeansWithNames()
         {
             WithNames.CyclicalDependency cd 
-              = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+              = new SimpleIOCContainer().CreateAndInjectDependencies<
                     WithNames.CyclicalDependency>(rootBeanName: "name-A").rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
@@ -88,7 +88,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInheritedBeanWithDifferentName()
         {
             (WithNames.InheritedBean ib, InjectionState InjectionState)
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                = new SimpleIOCContainer().CreateAndInjectDependencies<
                     WithNames.InheritedBean>();
             Assert.IsNotNull(ib.derived);
             Assert.IsFalse(InjectionState.Diagnostics.ToString().Contains(typeof(WithNames.InheritedBean).Name));
@@ -97,7 +97,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInheritedBeanWithDifferentProfile()
         {
             (WithNames.BeanUser bu, InjectionState InjectionState)
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                = new SimpleIOCContainer().CreateAndInjectDependencies<
                     WithNames.BeanUser>();
             IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited", bu.Used.Val);
@@ -113,7 +113,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForDerivedBeanIfInheritedIsIgnored()
         {
             (WithNames.IgnoredBeanUser bu, InjectionState InjectionState)
-                = SimpleIOCContainer.Instance.CreateAndInjectDependencies<
+                = new SimpleIOCContainer().CreateAndInjectDependencies<
                     WithNames.IgnoredBeanUser>();
             IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited and ignored", bu.InheritedIgnorer.Val);
