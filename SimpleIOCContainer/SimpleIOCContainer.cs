@@ -258,32 +258,21 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         public (TRootType rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+          CreateAndInjectDependencies<TRootType>(
+          InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
+          , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
             CheckInjectionStateArgument(injectionState);
             try
             {
-                IOCCDiagnostics diagnostics;
-                InjectionState newInjectionState = CloneInjectionState(injectionState);
                 object rootObject;
 
-                ISet<string> profileSetLocal;
-                if (injectionState == null || injectionState.IsEmpty())
-                {
-                    IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
-                    IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
-                      new Dictionary<(Type, string), object>();
-                    (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(typeof(TRootType));
-                    newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
-                        
-                }
-                else
-                {
-                    newInjectionState = CloneInjectionState(injectionState);
-                }
-                (rootObject, newInjectionState) = CreateAndInjectDependenciesExCommon(typeof(TRootType), newInjectionState, rootBeanName, rootConstructorName, scope);
+                InjectionState newInjectionState = GetOrCreateInjectionState(typeof(TRootType), injectionState);
+                (rootObject, newInjectionState) 
+                  = CreateAndInjectDependenciesExCommon(
+                  typeof(TRootType), newInjectionState, rootBeanName, rootConstructorName, scope);
                 return ((TRootType)rootObject, newInjectionState);
 
             }
@@ -305,6 +294,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 }
             }
         }
+
 
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window
@@ -370,55 +360,54 @@ namespace com.TheDisappointedProgrammer.IOCC
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
             CheckInjectionStateArgument(injectionState);
-            InjectionState newInjectionState;
-            IOCCDiagnostics diagnostics;
-            ISet<string> profileSetLocal;
 
-            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
-            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            if (injectionState == null || injectionState.IsEmpty())
-            {
-                mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
-                (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(this.GetType());
-                newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
+            InjectionState newInjectionState = GetOrCreateInjectionState(this.GetType(),injectionState);
+            //IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            //IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+            //if (injectionState == null || injectionState.IsEmpty())
+            //{
+            //    mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
+            //    (typeMap, diagnostics) = CreateTypeMap(this.GetType());
+            //    newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
 
-            }
-            else
-            {
-                newInjectionState = CloneInjectionState(injectionState);
-                (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
-            }
-            (Type rootType, string beanName) = typeMap.Keys.FirstOrDefault(k
+            //}
+            //else
+            //{
+            //    newInjectionState = CloneInjectionState(injectionState);
+            //    (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
+            //}
+            (Type rootType, string beanName) = newInjectionState.TypeMap.Keys.FirstOrDefault(k
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
             {
                 string allAssemblyNames
-                    = ((dynamic)diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences[0]).Assemblies;
-                IOCCDiagnostics.Group group = diagnostics.Groups["MissingRootBean"];
+                    = ((dynamic)newInjectionState.Diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences[0]).Assemblies;
+                IOCCDiagnostics.Group group = newInjectionState.Diagnostics.Groups["MissingRootBean"];
                 dynamic diag = group.CreateDiagnostic();
                 diag.BeanType = rootTypeName;
                 diag.BeanName = rootBeanName;
                 group.Add(diag);
-                throw new IOCCException($"Unable to find a type in assembly {allAssemblyNames} for {rootTypeName}{Environment.NewLine}Remember to include the namespace", diagnostics);
+                throw new IOCCException(
+                  $"Unable to find a type in assembly {allAssemblyNames} for {rootTypeName}{Environment.NewLine}Remember to include the namespace"
+                  , newInjectionState.Diagnostics);
             }
             return CreateAndInjectDependenciesExCommon(rootType
                 , newInjectionState, rootBeanName
                 , rootConstructorName, scope);
         }
 
-        public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithObject(object rootObject, InjectionState injectionState = null)
+        public (object rootBean, InjectionState injectionState) 
+          CreateAndInjectDependenciesWithObject(object rootObject
+          , InjectionState injectionState = null)
         {
             CheckInjectionStateArgument(injectionState);
-            ISet<string> profileSetLocal;
-            InjectionState newInjectionState;
-            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
-            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            IOCCDiagnostics diagnostics;
 
+            InjectionState newInjectionState = GetOrCreateInjectionState(rootObject.GetType(), injectionState);
+#if false
             if (injectionState == null || injectionState.IsEmpty())
             {
                 mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
-                (typeMap, diagnostics, profileSetLocal) = CreateTypeMap(rootObject.GetType());
+                (typeMap, diagnostics) = CreateTypeMap(rootObject.GetType());
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
             }
             else
@@ -426,17 +415,18 @@ namespace com.TheDisappointedProgrammer.IOCC
                 newInjectionState = CloneInjectionState(injectionState);
                 (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
             }
+
+#endif
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
-                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             }
             if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
             {
-                mapObjectsCreatedSoFar[(rootObject.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
+                newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
             }
             string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            ObjectTree tree = new ObjectTree(profile, typeMap);
-            object bean;
+            ObjectTree tree = new ObjectTree(profile, newInjectionState.TypeMap);
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
 
             return (rootObject, newInjectionState);
@@ -501,6 +491,24 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ));
 #endif
         }
+        private InjectionState GetOrCreateInjectionState(Type rootType, InjectionState injectionState)
+        {
+            InjectionState newInjectionState;
+            if (injectionState == null || injectionState.IsEmpty())
+            {
+                IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+                IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
+                    new Dictionary<(Type, string), object>();
+                IOCCDiagnostics diagnostics;
+                (typeMap, diagnostics) = CreateTypeMap(rootType);
+                newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
+            }
+            else
+            {
+                newInjectionState = CloneInjectionState(injectionState);
+            }
+            return newInjectionState;
+        }
 
         private
             InjectionState CloneInjectionState(InjectionState injectionState)
@@ -509,7 +517,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
         private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
-          , Type>, IOCCDiagnostics diagnostics, ISet<string> profileSet)
+          , Type>, IOCCDiagnostics diagnostics)
           CreateTypeMap(Type rootType)
         {
             IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
@@ -533,7 +541,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 LogProfiles(diagnostics, profileSet);
                 LogTypeMap(diagnostics, typeMap);
             }
-            return (typeMap, diagnostics, profileSet);
+            return (typeMap, diagnostics);
         }
 
         private void LogTypeMap(IOCCDiagnostics diagnostics
