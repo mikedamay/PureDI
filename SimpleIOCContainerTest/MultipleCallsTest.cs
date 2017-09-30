@@ -39,5 +39,42 @@ namespace IOCCTest
                 }
             );
         }
+
+        [TestMethod]
+        public void ShouldCreateTreesWithMultipleCallsWithEmptyState()
+        {
+            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
+            (object empty1, InjectionState injectionState) 
+              = sic.CreateAndInjectDependenciesWithString(
+              "IOCCTest.MultipleCallsTestData.Empty");
+            (object empty2, InjectionState @is2) = sic.CreateAndInjectDependenciesWithString(
+                "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty);
+            Assert.AreNotEqual(empty1, empty2);
+        }
+        [TestMethod]
+        public void ShouldCreateTreesWithRecursingFactories()
+        {
+            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
+            (object factory1, InjectionState injectionState) 
+              = sic.CreateAndInjectDependenciesWithString(
+              "IOCCTest.MultipleCallsTestData.SimpleFactory");
+            Assert.IsNotNull( ((IResultGetter)factory1)?.GetResults().SimpleChild);
+        }
+
+        [TestMethod]
+        public void ShouldCreateTreeWithAComplexArrangementOfFactories()
+        {
+            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
+            (object factory1, InjectionState injectionState)
+                = sic.CreateAndInjectDependenciesWithString(
+                    "IOCCTest.MultipleCallsTestData.ComplexFactory");
+            IResultGetter result = factory1 as IResultGetter;
+            ;
+            Assert.IsNotNull(result.GetResults()?.ChildOne);
+            Assert.IsNotNull(result.GetResults()?.ChildTwo);
+            Assert.IsNotNull(((IResultGetter)result.GetResults()?.ChildOne)?.GetResults().ChildTwo);
+            Assert.AreEqual(result?.GetResults().ChildTwo
+              , ((IResultGetter)result.GetResults()?.ChildOne)?.GetResults().ChildTwo);
+        }
     }
 }

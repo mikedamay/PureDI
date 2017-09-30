@@ -402,7 +402,7 @@
     <userGuideTitle/>
     <userGuide/>
     <userGuideSeeAlso/>
-    <template>Profiles (blank indicates an empty list):{Assemblies}</template>
+    <template>Assemblies (blank indicates an empty list):{Assemblies}</template>
     <artefacts>
       <Assemblies/>
     </artefacts>
@@ -410,8 +410,8 @@
   <group>
     <topic>TypesInfo</topic>
     <severity>Info</severity>
-    <intro>List of Types avaiable for injection together with their mapping</intro>
-    <background>The mapping shows what implementation* (concrete class) will be imjected for
+    <intro>List of Types available for injection together with their mapping</intro>
+    <background>The mapping shows what implementation* (concrete class) will be injected for
       a reference with the given Type (interface, base class, or concrete class).
       Only types in this list are available for injection.
     
