@@ -15,7 +15,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-        private readonly IWouldBeImmutableDictionary<(Type type, string beanName), Type> typeMap;
+        //private readonly IWouldBeImmutableDictionary<(Type type, string beanName), Type> typeMap;
         // from the point of view of generics the key.type may contain a generic type definition
         // and the value may be a constructed generic type
 
@@ -23,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             , IWouldBeImmutableDictionary<(Type type, string name), Type> typeMap)
         {
             this.profile = profile;
-            this.typeMap = typeMap;
+            //this.typeMap = typeMap;
         }
 
         // TODO complete the documentation item 3 below if and when factory types are implemented
@@ -160,7 +160,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
             bool complete;
             object bean;
-            if ((implementationType = GetImplementationType(beanId, beanReferenceDetails, injectionState.Diagnostics)) == null)
+            if (((implementationType, injectionState) 
+              = GetImplementationType(beanId, beanReferenceDetails, injectionState)).implementationType == null)
             {
                 Assert(injectionState.Diagnostics.HasWarnings);    // diagnostics recorded by callee.
                 return (null, injectionState); // no implementation type found corresponding to this beanId
@@ -456,34 +457,39 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
           * which allows the container to choose between multiple matching concrete classes
           * Alternatively the member reference may be the implementationType itself.
           */
-        Type GetImplementationType((Type, string, string) beanId, BeanReferenceDetails beanReferenceDetails
-          ,IOCCDiagnostics diagnostics)
+        (Type implementationType, InjectionState injectionState) 
+          GetImplementationType((Type, string, string) beanId
+          , BeanReferenceDetails beanReferenceDetails, InjectionState injectionState)
         {
-            if (IsBeanPresntInTypeMap(beanId))
+            (bool found, InjectionState injectionState) result;
+            if ((result = IsBeanPresntInTypeMap(beanId, injectionState)).found)
             {
-                Type implementationType = GetImplementationFromTypeMap(beanId);
-                return implementationType;
+                injectionState = result.injectionState;
+                Type implementationType;
+                (implementationType, injectionState) = GetImplementationFromTypeMap(beanId, injectionState);
+                return (implementationType, injectionState);
             }
             else
             {
+                injectionState = result.injectionState;
                 if (beanReferenceDetails.IsRoot)
                 {
-                    RecordDiagnostic(diagnostics, "MissingRoot"
+                    RecordDiagnostic(injectionState.Diagnostics, "MissingRoot"
                         , ("BeanType", beanId.Item1.GetIOCCName())
                         , ("BeanName", beanId.Item2)
                     );
                     throw new IOCCException("failed to create object tree - see diagnostics for detail",
-                        diagnostics);
+                        injectionState.Diagnostics);
                 }
                 else
                 {
-                    RecordDiagnostic(diagnostics, "MissingBean"
+                    RecordDiagnostic(injectionState.Diagnostics, "MissingBean"
                         , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
                         , ("MemberType", beanId.Item1.GetIOCCName())
                         , ("MemberName", beanReferenceDetails.MemberName)
                         , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
                     );
-                    return null;
+                    return (null, injectionState);
                 }
             }
         }
@@ -516,32 +522,42 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             diagnostics.Groups[groupName].Add(diag);
         }
 
+        /// <param name="beanId"></param>
+        /// <param name="injectionState"></param>
         /// <param name="beanid">Typically this is the type ofa member 
         ///     marked as a bean reference with [IOCCBeanReference]
         ///     for generics bean type is a generic type definition</param>
         /// <returns>This will be a concrete class marked as a bean with [Bean] which
         ///     is derived from the beanId.beanType.  For generics this will be a
         ///     constructed generic type</returns>
-        private Type GetImplementationFromTypeMap((Type beanType, string beanName, string constructorName) beanId)
+        private (Type implementationType, InjectionState injectionState) 
+          GetImplementationFromTypeMap((Type beanType, string beanName
+          , string constructorName) beanId, InjectionState injectionState)
         {
 
             char[] a = beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
-            Type referenceType = typeMap.Keys.FirstOrDefault(
-                k => k.type.FullName == beanTypeName && k.beanName == beanId.beanName).type;
-            return typeMap[(referenceType, beanId.beanName)];
+            Type referenceType = injectionState.TypeMap.Keys.FirstOrDefault(
+                k => k.beanType.FullName == beanTypeName && k.beanName == beanId.beanName).beanType;
+            return (injectionState.TypeMap[(referenceType, beanId.beanName)], injectionState);
 
         }
+
+        /// <param name="beanId"></param>
+        /// <param name="injectionState"></param>
         /// <param name="beanid"><see cref="GetImplementationFromTypeMap"/></param>
-        private bool IsBeanPresntInTypeMap((Type beanType, string beanName, string constructorName) beanId)
+        private (bool typeFound, InjectionState injectionState) 
+          IsBeanPresntInTypeMap((Type beanType, string beanName
+          , string constructorName) beanId, InjectionState injectionState)
         {
             char[] a = beanId.beanType.IsArray 
               ? beanId.beanType.FullName.ToArray() 
               : beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
-            return typeMap.Keys.Any(k => k.type.FullName == beanTypeName && k.beanName == beanId.beanName);
+            return (injectionState.TypeMap.Keys.Any(k => k.beanType.FullName 
+              == beanTypeName && k.beanName == beanId.beanName), injectionState);
         }
 
         /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>

@@ -107,6 +107,17 @@ namespace IOCCTest
 
         }
         [TestMethod]
+        public void ShouldThrowExceptionForMissingType()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var sic = new SimpleIOCContainer();
+                    sic.CreateAndInjectDependencies(null);
+                });
+
+        }
+        [TestMethod]
         public void ShouldThrowExceptionForEmptyProfile()
         {
             Assert.ThrowsException<ArgumentNullException>(

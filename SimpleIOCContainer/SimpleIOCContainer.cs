@@ -87,7 +87,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO Mass Test - 2 days
     // TODO test with multiple OSs
-    // TODO remove nocache headers from documentation
+    // N/A remove nocache headers from documentation
     // TODO can we handle bean references in a base class?  Tests required
     // TODO do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
     // TODO make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
@@ -194,16 +194,16 @@ namespace com.TheDisappointedProgrammer.IOCC
             /// </summary>
             Windows,
             /// <summary>
-            /// Any MAC verion supported by dotnetstandard 2.0
+            /// Any MAC version supported by dotnetstandard 2.0
             /// </summary>
             MacOS
         }
         private readonly OS os = new StdOSDetector().DetectOS();
-        internal static SimpleIOCContainer Instance { get; } = new SimpleIOCContainer();
         internal const string DEFAULT_PROFILE_ARG = "";
         internal const string DEFAULT_BEAN_NAME = "";
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
-        private int furtherCallGuard;
+
+        private int multipleCallGuard;
 
         [Flags]
         public enum AssemblyExclusion
@@ -258,43 +258,33 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         public (TRootType rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies<TRootType>(
-          InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
-          , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+            CreateAndInjectDependencies<TRootType>(
+                InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
+                , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+        {
+            (object rootObject, InjectionState newInjectionState)
+                = CreateAndInjectDependencies(typeof(TRootType), injectionState
+                , rootBeanName, rootConstructorName, scope);
+            return ((TRootType) rootObject, newInjectionState);
+        }
+
+        public (object rootBean, InjectionState injectionState)
+          CreateAndInjectDependencies(Type rootType
+            ,InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
+            , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
+            CheckArgument(rootType);
             CheckInjectionStateArgument(injectionState);
-            try
-            {
-                object rootObject;
 
-                InjectionState newInjectionState = GetOrCreateInjectionState(typeof(TRootType), injectionState);
-                (rootObject, newInjectionState) 
-                  = CreateAndInjectDependenciesExCommon(
-                  typeof(TRootType), newInjectionState, rootBeanName, rootConstructorName, scope);
-                return ((TRootType)rootObject, newInjectionState);
-
-            }
-            catch (Exception ex)
-            {
-                switch (ex)
-                {
-                    case IOCCException iex:
-                        throw;
-                    case IOCCInternalException iiex:
-                        throw;
-                    case ArgumentNullException anx:
-                        throw;
-                    default:
-                        // TODO we need to do something or say something about diagnostics
-                        throw new IOCCException("Injection dependency failed.  Please the constructors of beans to ensure they are not accessing other beans prematurely"
-                          , new DiagnosticBuilder().Diagnostics);
-
-                }
-            }
+            object rootObject;
+            InjectionState newInjectionState = CloneOrCreateInjectionState(rootType, injectionState);
+            (rootObject, newInjectionState) 
+                = CreateAndInjectDependenciesExCommon(
+                rootType, newInjectionState, rootBeanName, rootConstructorName, scope);
+            return (rootObject, newInjectionState);
         }
-
 
         // TODO complete the documentation item 3 below if and when factory types are implemented
         // TODO handle situation where there is no console window
@@ -311,37 +301,6 @@ namespace com.TheDisappointedProgrammer.IOCC
         ///     It does not affect the rest of the tree.  The other nodes on the tree will
         ///     honour the Scope property of [IOCCBeanReference]</param>
         /// <returns>an object of root type</returns>
-#if false
-        public TRootType CreateAndInjectDependencies<TRootType>(string beanName = DEFAULT_BEAN_NAME
-          , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
-        {
-            CheckArgument(beanName);
-            CheckArgument(rootConstructorName);
-            ISet<string> profileSet;
-            IOCCDiagnostics diagnostics = null;
-            TRootType rootObject = default;
-            try
-            {
-                (typeMap, diagnostics, profileSet) = CreateTypeMap(typeof(TRootType));
-                rootObject = (TRootType)CreateAndInjectDependenciesExCommon(typeof(TRootType), diagnostics, profileSet, beanName, rootConstructorName, scope);
-            }
-            finally
-            {
-                if (diagnostics != null)
-                {                  
-                    if (System.Diagnostics.Debugger.IsAttached)
-                    {
-                        System.Diagnostics.Debug.WriteLine(diagnostics);
-                    }
-                    else
-                    {
-                        Console.WriteLine(diagnostics);    
-                    }                 
-                }
-            }
-            return rootObject;
-        }
-#endif
         /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
         /// <param name="injectionState"></param>
         /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
@@ -361,21 +320,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             CheckArgument(rootConstructorName);
             CheckInjectionStateArgument(injectionState);
 
-            InjectionState newInjectionState = GetOrCreateInjectionState(this.GetType(),injectionState);
-            //IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
-            //IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            //if (injectionState == null || injectionState.IsEmpty())
-            //{
-            //    mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
-            //    (typeMap, diagnostics) = CreateTypeMap(this.GetType());
-            //    newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
-
-            //}
-            //else
-            //{
-            //    newInjectionState = CloneInjectionState(injectionState);
-            //    (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
-            //}
+            InjectionState newInjectionState = CloneOrCreateInjectionState(this.GetType(),injectionState);
             (Type rootType, string beanName) = newInjectionState.TypeMap.Keys.FirstOrDefault(k
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
@@ -400,23 +345,10 @@ namespace com.TheDisappointedProgrammer.IOCC
           CreateAndInjectDependenciesWithObject(object rootObject
           , InjectionState injectionState = null)
         {
+            CheckArgument(rootObject);
             CheckInjectionStateArgument(injectionState);
 
-            InjectionState newInjectionState = GetOrCreateInjectionState(rootObject.GetType(), injectionState);
-#if false
-            if (injectionState == null || injectionState.IsEmpty())
-            {
-                mapObjectsCreatedSoFar = new Dictionary<(Type, string), object>();
-                (typeMap, diagnostics) = CreateTypeMap(rootObject.GetType());
-                newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
-            }
-            else
-            {
-                newInjectionState = CloneInjectionState(injectionState);
-                (diagnostics, typeMap, mapObjectsCreatedSoFar) = newInjectionState;
-            }
-
-#endif
+            InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState);
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
                 newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
@@ -430,13 +362,6 @@ namespace com.TheDisappointedProgrammer.IOCC
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
 
             return (rootObject, newInjectionState);
-#if false
-            , new InjectionState(
-                    newInjectionState.Diagnostics
-                    , typeMap
-                    , mapObjectsCreatedSoFar
-                ));
-#endif
         }
         /// <summary>
         /// <see cref="CreateAndInjectDependenciesWithString"/>
@@ -459,7 +384,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
-                mapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                injectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
                 // factories and possibly other beans may need access to the SimpleIOCContainer itself
                 // so we include it as a bean by default
             }
@@ -491,7 +416,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 ));
 #endif
         }
-        private InjectionState GetOrCreateInjectionState(Type rootType, InjectionState injectionState)
+        private InjectionState CloneOrCreateInjectionState(Type rootType, InjectionState injectionState)
         {
             InjectionState newInjectionState;
             if (injectionState == null || injectionState.IsEmpty())
@@ -629,7 +554,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             if (injectionState == null)
             {
-                int previousValue = Interlocked.CompareExchange(ref furtherCallGuard, 1, 0);
+                int previousValue = Interlocked.CompareExchange(ref multipleCallGuard, 1, 0);
                 if (previousValue != 0)
                 {
                     throw new ArgumentException(
