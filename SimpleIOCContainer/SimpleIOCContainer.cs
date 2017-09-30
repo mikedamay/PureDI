@@ -75,10 +75,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO spell check documentation
     // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
-    // TODO factory beans are typically (but not necessarily) created as prototypes so
-    // TODO if there is another non-factory based injecttion of the bean it will be
-    // TODO a different instance
-    // TODO add version to documentation heading
+    // N/A factory beans are typically (but not necessarily) created as prototypes so
+    // N/A if there is another non-factory based injecttion of the bean it will be
+    // N/A a different instance
+    // N/A add version to documentation heading
     // 
     // DONE handle DocumentParser scenario where two beans are required with varying parameters.
     // N/A constructor name needs to be included in the cached tree
@@ -90,14 +90,14 @@ namespace com.TheDisappointedProgrammer.IOCC
     // N/A remove nocache headers from documentation
     // TODO can we handle bean references in a base class?  Tests required
     // TODO do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
-    // TODO make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
+    // DONE make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
     // TODO we need to say or do something about processing in constructors
     // TODO before the container builder has finished its business.
     // TODO red team: deep hierarchies
     // TODO red team: mix new and CreateAndInject...
     // TODO red team: self registering classes - that are also beans
-    // TODO we need an overload that takes a type
-    // TODO add exception handling to other entry points.
+    // DONE we need an overload that takes a type
+    // DONE add exception handling to other entry points.
     // DONE heading for diagnostic output e.g. Diagnostic Information:
     // DONE add logging for inspection of assemblies and disposition of types - .5 days
     // N/A add constructor name to map...CreatedSoFar... - i day

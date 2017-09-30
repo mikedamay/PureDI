@@ -2,6 +2,7 @@
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleIOCContainerTest.TestCode;
 using WithNames = IOCCTest.TestCode.WithNames;
 
 namespace IOCCTest
@@ -93,6 +94,15 @@ namespace IOCCTest
             Assert.IsNotNull(ib.derived);
             Assert.IsFalse(InjectionState.Diagnostics.ToString().Contains(typeof(WithNames.InheritedBean).Name));
         }
+
+        [TestMethod]
+        public void ShouldCreateTreeWithReferencesInBaseClasses()
+        {
+            (BaseBean bb, InjectionState injectionState)
+                = new SimpleIOCContainer().CreateAndInjectDependencies<
+                    BaseBean>();
+            Assert.IsNotNull(bb.someRef);
+        }
         [TestMethod]
         public void ShouldCreateTreeForInheritedBeanWithDifferentProfile()
         {
@@ -121,6 +131,7 @@ namespace IOCCTest
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
         }
     }
+
     [Bean]
     internal class TestRoot
     {
