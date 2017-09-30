@@ -6,6 +6,9 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Compile Remove="BadClientTestData\BadConstructor.cs" />
+    <Compile Remove="BadClientTestData\BadFactory.cs" />
+    <Compile Remove="BadClientTestData\BadFactoryForParam.cs" />
     <Compile Remove="CaseSensitivityTestData\Hierarchy.cs" />
     <Compile Remove="CaseSensitivityTestData\Interface.cs" />
     <Compile Remove="CaseSensitivityTestData\Simple.cs" />
@@ -104,6 +107,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <EmbeddedResource Include="BadClientTestData\BadConstructor.cs" />
+    <EmbeddedResource Include="BadClientTestData\BadFactory.cs" />
+    <EmbeddedResource Include="BadClientTestData\BadFactoryForParam.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\Hierarchy.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\Interface.cs" />
     <EmbeddedResource Include="CaseSensitivityTestData\LoserSimple.cs" />

@@ -52,7 +52,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldHandleDuplicateAssemblies()
         {
-            Assert.ThrowsException<IOCCInternalException>(() =>
+            Assert.ThrowsException<IOCCException>(() =>
                 {
                     string codeText = GetResource(
                         "SimpleIOCContainerTest.NamespaceData.DuplicateAssemblies.cs");

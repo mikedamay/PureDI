@@ -64,9 +64,15 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfFactoryExeccuteThrowsExcption()
         {
-            (var result, var diagnostics) = CommonFactoryTest("ThrowsException");
-            Assert.AreEqual(1, diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
-
+            try
+            {
+                (var result, var diagnostics) = CommonFactoryTest("ThrowsException");
+                Assert.Fail();
+            }
+            catch (IOCCException ex)
+            {
+                Assert.AreEqual(1, ex.Diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
+            }
         }
 
         [TestMethod]

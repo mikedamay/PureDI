@@ -334,8 +334,15 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     try
                     {
                         IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
-                        (memberBean, injectionState) = factory.Execute(injectionState, new BeanFactoryArgs(
-                            memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
+                        try
+                        {
+                            (memberBean, injectionState) = factory.Execute(injectionState, new BeanFactoryArgs(
+                                                memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IOCCException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
+                        }
                         CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
                         AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
                         AssignBean(memberSpec, memberBean);
@@ -358,6 +365,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
                                 .FullName)
                             , ("Exception", ex));
+                        throw;
                     }
                 }
                 else    // non-factory
@@ -559,13 +567,14 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
               == beanTypeName && k.beanName == beanId.beanName), injectionState);
         }
 
-        /// <summary>checks if the type to be instantiated has an empty constructor and if so constructs it</summary>
+        /// <summary>checks if the type to be instantiated has a valid constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <param name="constructorParameterSpecs"></param>
         /// <param name="constructorName"></param>
         /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
-        private (object bean, InjectionState injectionState) Construct(Type beanType, IList<ChildBeanSpec> constructorParameterSpecs, string constructorName, InjectionState injectionState)
+        private (object bean, InjectionState injectionState) Construct(Type beanType
+            , IList<ChildBeanSpec> constructorParameterSpecs, string constructorName, InjectionState injectionState)
         {
             object[] args = new object[0];
             if (beanType.IsStruct())
@@ -591,11 +600,18 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         {
 
                             object obj;
-                            (obj, injectionState) = (spec.MemberOrFactoryBean as IFactory)
-                              .Execute(injectionState, new BeanFactoryArgs(
-                                    spec.ParameterInfo.GetBeanReferenceAttribute()
-                                        .FactoryParameter));
-                            parameters.Add(obj);
+                            try
+                            {
+                                (obj, injectionState) = (spec.MemberOrFactoryBean as IFactory)
+                                 .Execute(injectionState, new BeanFactoryArgs(
+                                  spec.ParameterInfo.GetBeanReferenceAttribute()
+                                    .FactoryParameter));                           
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new IOCCException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
+                                  ,ex, injectionState.Diagnostics);
+                            }                            parameters.Add(obj);
                             LogConstructorInjection(injectionState.Diagnostics, beanType, obj.GetType());
                             // TODO it would be good to catch type mismatches during eventual construction
                         }
@@ -617,7 +633,15 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     throw new IOCCNoArgConstructorException(beanType.GetIOCCName());
                     // TODO some diagnostics required here
                 }
-                return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null), injectionState);
+                try
+                {
+                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null), injectionState);
+                }
+                catch (Exception ex2)
+                {
+
+                    throw new IOCCException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
+                }
 
             }
 
