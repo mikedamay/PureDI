@@ -217,6 +217,7 @@ namespace IOCCTest
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NamedBeanBase.cs", mapExpected);
 
         }
+        [TestMethod]
         public void ShouldCreateTypeMapForStruct()
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
@@ -224,7 +225,19 @@ namespace IOCCTest
                 {("IOCCTest.TestData.StructDependency", ""),"IOCCTest.TestData.StructDependency"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.StructDependency.cs", mapExpected);
-
+        }
+#if WINDOWSTEST || MACOSTEST
+        [Ignore]
+#endif
+       [TestMethod]
+        public void ShouldCreateLinuxTypesOnLinux()
+        {
+            IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
+            {
+                {("IOCCTest.TestData.Linux", ""),"IOCCTest.TestData.Linux"}
+            };
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.Linux.cs", mapExpected);
+             
         }
 #if !USE_THIS_ASSEMBLY
         [TestMethod]

@@ -4,6 +4,7 @@
       <!-- <TargetFramework>net47</TargetFramework>   -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release;Interesting</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,5 +49,10 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile />
   </PropertyGroup>
 </Project>

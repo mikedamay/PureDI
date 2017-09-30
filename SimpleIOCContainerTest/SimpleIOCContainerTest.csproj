@@ -3,6 +3,7 @@
       <!--<TargetFramework>net47</TargetFramework>-->  
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest</Configurations>
   </PropertyGroup>
   
   <ItemGroup>
@@ -88,6 +89,7 @@
     <Compile Remove="TestData\IgnoreHelper.cs" />
     <Compile Remove="TestData\ImplementationClass.cs" />
     <Compile Remove="TestData\InterfaceClass.cs" />
+    <Compile Remove="TestData\Linux.cs" />
     <Compile Remove="TestData\NamedBeanBase.cs" />
     <Compile Remove="TestData\NamedDependencies.cs" />
     <Compile Remove="TestData\NestedClasses.cs" />
@@ -165,6 +167,7 @@
     <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
     <EmbeddedResource Include="TestData\IgnoredBean.cs" />
+    <EmbeddedResource Include="TestData\Linux.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
     <EmbeddedResource Include="TestData\NonBeanDerivedFromBean.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />
@@ -227,6 +230,11 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NET47;NETCOREAPP2_0;WINDOWSTEST</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NET47</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />

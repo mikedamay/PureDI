@@ -88,8 +88,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Mass Test - 2 days
     // TODO test with multiple OSs
     // N/A remove nocache headers from documentation
-    // TODO can we handle bean references in a base class?  Tests required
-    // TODO do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
+    // DONE can we handle bean references in a base class?  Tests required
+    // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
     // DONE make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
     // TODO we need to say or do something about processing in constructors
     // TODO before the container builder has finished its business.
