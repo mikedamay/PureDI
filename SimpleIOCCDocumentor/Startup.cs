@@ -18,16 +18,19 @@ namespace SimpleIOCCDocumentor
         public void ConfigureServices(IServiceCollection services)
         {
             SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"authoring"});
-            diagnostics3 =
+            InjectionState injectionState;
+            object gc;
+            (gc, injectionState) =
                 sic.CreateAndInjectDependenciesWithObject(new GenericConfig(("relativePath", "../../../../Simple")))
-                    .injectionState.Diagnostics;
+                ;
+            diagnostics3 = injectionState.Diagnostics;
             (IDocumentProcessor dp, InjectionState @is) = sic.CreateAndInjectDependencies<
-                IDocumentProcessor>();
+                IDocumentProcessor>(injectionState);
             diagnostics = @is.Diagnostics;
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
               , dp));
             services.Add(new ServiceDescriptor(typeof(IDocumentationSiteGenerator)
-                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>().rootBean));
+                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>(@is).rootBean));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
