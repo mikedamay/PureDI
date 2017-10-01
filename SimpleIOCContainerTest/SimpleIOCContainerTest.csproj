@@ -229,14 +229,18 @@
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET47;NETCOREAPP2_0;WINDOWSTEST</DefineConstants>
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NET47;NETCOREAPP2_0</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET47</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>WINDOWSTEST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='LinuxTest'">
+    <DefineConstants>LINUXTEST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='MacOsTest'">
+    <DefineConstants>MACOSTEST</DefineConstants>
   </PropertyGroup>
 </Project>
