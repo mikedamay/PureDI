@@ -29,7 +29,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             
         }
-
+        /// <summary>
+        /// diagnostics are separated into groups by cause.
+        /// duplicate bean errors go into one group. missing beans are reported in
+        /// another.
+        /// </summary>
+        /// <remarks>The groups can be inspected in the library resource, DiagnosticSchema.xml</remarks>
         public class Group
         {
             public Group(string topic

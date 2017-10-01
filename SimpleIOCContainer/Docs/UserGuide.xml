@@ -141,7 +141,7 @@ Three aspirations underly the design of the container:
 
 In the interests of simplicity the libraries surface area is restricted to:
 
-* A single significant operational class class `SimpleIOCContainer` coupled with 3 enums
+* A single significant operational class `SimpleIOCContainer` coupled with 3 enums
 * A single constructor for the container and a single 
 method `CreateAndInjectDependencies` albeit with 4 overloads
 * The Diagnostics class and its components which for most purposes can be 
@@ -154,16 +154,20 @@ sites where they can be injected plus some ancillary "value" classes such as `Be
 * There is only one way to define the injectables and injection sites, i.e. by
 the use of attributes.  There is no XML alternative or privileged configuration
 by code.
-* The library is lightweigh with no non-Microsoft dependencies
+* The library is lightweight with no non-Microsoft dependencies
 
 #### Transparency
 
 Transparency is in evidence through the lack of "magic" such as
 AOP (Aspect Oriented Programming) or code generation.  The only
 magic is the actual injection using basic reflection.  The
-requirement to consistently mark inectables and injection sites
-with attributes is seen as promoting transparency - the coder's
+requirement to consistently mark injectables and injection sites
+with attributes ([Bean] and [BeanReference] respectively)
+is seen as promoting transparency - the coder's
 intention is very clear to those who come after.
+
+The requirement for the library user to specify which assemblies
+should be subject to injection also supports this aspiration.
 
 The implementation of the library is simple and is described
 elsewhere.  This will hopefully allow coders to reason about
@@ -174,7 +178,7 @@ possible - see bean factories, for example.
 
 #### Verifiability
 
-The "onfiguration-over-convention" approach which provides transparancy
+The "configuration-over-convention" approach which provides transparency
 also helps with the third aspiration of Verifiability.  By insisting
 that he user explicitly states their intention to inject functionality
 but the use of `[Bean]` and `[BeanRefererne]` attributes we can
@@ -202,7 +206,7 @@ to be substituted at the point of injection from a configuration file or the env
 * A bean reference cannot have parameters which makes creating multiple objects with
 the same implementation class but different parameters difficult.
 * The library is dotnetstandard 2.0 using C# 7.1.
-* You cannot simply stick a bean refererence on some bean
+* You cannot simply stick a bean reference on some bean
 and expect injection to take place.  It must be in the graph produced by
 `CreateAndInjectDependencies`.
 
@@ -211,9 +215,9 @@ and expect injection to take place.  It must be in the graph produced by
 The author used [Java-Spring](http://spring.io) for 5 years.  I thought Spring was an
 excellent, well architected, well documented robust and reliable framework.  It was
 particularly suitable for enterprise computing where a consistency of approach in the
-team and and across teamms to core functionality, persistence, web MVC, SOAP, REST,
+team and across teams to core functionality, persistence, web MVC, SOAP, REST,
 security, batch processing etc. has a lot to be said for it.  However I found (
-albeit picking up the framework in conjection with a brown-field project which
+albeit picking up the framework in conjunction with a brown-field project which
 had been worked on by a variety of developers with a variety of skill levels)
 that Spring's ability to do a great deal for the coder behind the scenes was not
 my preferred approach.  In particular the AOP involved in enforcing database
@@ -270,7 +274,9 @@ accdssing beans that have not been subject to injection.
 9. There is no magic.  You cannot simply stick a bean refererence on some bean
 and expect injection to take place.  It must be in the graph produced by
 `CreateAndInjectDependencies`.
-
+10. If you specify the root bean of the object tree with an interface, make sure
+that either that interface is declared in the main assembly subject to injection
+or that the assembly is passed as a parameter to the mechanism's constructor.
 
     </userGuide>
     <userGuideSeeAlso/>

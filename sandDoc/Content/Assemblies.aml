@@ -4,51 +4,79 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Required introduction</para>
+      <para>Dependency Injection is crucially dependent on a knowledge of available assemblies.  
+      This section discusses the relationship and what it means for the library user.</para>
     </introduction>
 
-    <!-- Add one or more top-level section elements.  These are collapsible.
-         If using <autoOutline />, add an address attribute to identify it
-         and specify a title so that it can be jumped to with a hyperlink. -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section address="Explanation">
+      <title>Explanation</title>
       <content>
-        <!-- Uncomment this to create a sub-section outline
-        <autoOutline /> -->
-        <para>Add one or more sections with content</para>
+        <para>
+          The injection mechanism works by examining the metadata of assemblies
+          to discover candidate types for injection and then using reflection
+          to instantiate beans (objects) and assign them to (inject them into) the member variables of
+          containing beans and constructor parameters.
+        </para>
+        <para>
+          In order to accomplish this the library user must provide the injection
+          mechanism with the identities of the assemblies that are subject to
+          injection.  These can be passed to the constructor as follows: 
+          <codeInline>var sic = new SimpleIOCContainer(Assemblies: new[] {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
+          Note that the constructor takes an array of references to assemblies
+          rather than the names.  Not only is this is safer but it's actually more
+          convenient for the caller.
+        </para>
+        <para>
+          You will rarely see assemblies being passed to the constructor in the
+          sample code in this user guide.  This is because the assembly of the
+          root bean is automatically scanned for injection by default.  If the root
+          type's assembly is the only one for which injection is required then the
+          constructor can be called without the <codeInline>Assemblies</codeInline> parameter.
+          <codeInline>var sic = new SimpleIOCContainer();</codeInline>.
+        </para>
+        <para>
+          One other assembly, besides the root type's, is included by default.  It
+          is that of the SimpleIOCContainer itself.  This is to allow
+          beans such as factories to get access to the container (by including a 
+          <codeInline>[BeanReferene]</codeInline> to the SimpleIOCContainer in
+          the factory itself.
+        </para>
+        <para>
+          All assemblies are must be loaded before <codeInline>SimpleIOCContainer</codeInline>
+          is instantiated.  The mechanism does not currently handle assemblies loaded
+          at some later point, say some service provider loaded at a subsequent entry point.
+        </para>
+        <para>Note:</para>
+        <list class="bullet">
+          <listItem>
+            <para>
+            There is no point in including an assembly for scanning that does not contain beans.
+            </para>         
+          </listItem>
+          <listItem>
+            <para>
+            There may be edge cases where the library user needs to exclude the default assemblies
+            from scanning.  This can be achieved by passing one or two AssemblyExclusionFlags
+            to the constructor: <codeInline>AssemblyExclusion.ExcludeSimpleIOCContainer</codeInline> to
+            prevent the SimpleIOCContainer library itself from being scanned and <codeInline>
+              AssemblyExclusion.ExcludeRootTypeAssembly
+            </codeInline> to exclude the root type's assembly. e.g. <lineBreak/><codeInline>
+              var sic =
+              new SimpleIOCContainer(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
+              ExcludeAssemblies: AssemblyExclusion.ExcludeSimpleIOCContainer |
+              AssemblyExclusion.ExcludeRootTypeAssembly);
+            </codeInline><lineBreak/> will scan only the ClassDerivedFromRootType's assembly. Bear in mind
+            that the root type passed to <codeInline>CreateAndInjectDependencies</codeInline> can
+            be an interface or base class of ClassDerivedFromRootType.
+            </para>
+          </listItem>
+        </list>
       </content>
-      <!-- If a section contains a sections element, its content creates
-           sub-sections.  These are not collapsible.
-      <sections>
-          <section address="SubSection1">
-              <title>Sub-section 1</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-          <section address="SubSection2">
-              <title>Sub-section 2</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-      </sections> -->
     </section>
 
     <relatedTopics>
+      <link xlink:href="IOCC-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
       <!-- One or more of the following:
            - A local link
            - An external link

@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
     /// <summary>
     /// Any class to be injected into another class and
-    /// any class injected into.
+    /// any class injected into should be annotated with an
+    /// attribute derived from this base class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public abstract class BeanBaseAttribute : Attribute
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <remarks>The name is case insensitive</remarks>
+        /// <see cref="BeanReferenceAttribute.Name"</see>
         public string  Name
         {
             get { return name; }
@@ -39,7 +35,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         public SimpleIOCContainer.OS OS = SimpleIOCContainer.OS.Any;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// annotate objects with this class so that they are
+    /// candidates for scanning by the injection mechanism.
+    /// The injection mechanism will instantiate them if 
+    /// a reference <code>[BeanReference]</code> to them is found.
+    /// </summary>
+    /// <example>[Bean] private SomeOtherBean other;</example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public sealed class BeanAttribute : BeanBaseAttribute
     {

@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <None Include="SimpleIOCContainerMinorMethods.cs" />
-    <None Include="SimpleIOCContainerSave.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,8 +41,8 @@
         <para>
           This documentation is located at 
           <externalLink> 
-            <linkText>"http://mikedamay.co.uk/Simple/index.html"</linkText>
-            <linkUri>"http://mikedamay.co.uk/Simple/index.html"</linkUri>
+            <linkText>http://mikedamay.co.uk/Simple/index.html</linkText>
+            <linkUri>http://mikedamay.co.uk/Simple/index.html</linkUri>
           </externalLink>
         </para>
         <para>
@@ -65,7 +65,7 @@ public class Program
     public static void Main()
     {
         SimpleIOCContainer sic = new SimpleIOCContainer();
-        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;();
+        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
         prog.SaySomething();
     }
     private void SaySomething()
@@ -77,7 +77,7 @@ public class Program
 public class Logger
 {
     public void Log(string message) => System.Console.WriteLine(message);
-}          
+}
         </code>
         <para>Notes</para>
         <list class="bullet">

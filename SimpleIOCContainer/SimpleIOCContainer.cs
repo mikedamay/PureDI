@@ -75,6 +75,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO spell check documentation
     // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
+    // TODO we need to say or do something about processing in constructors
+    // TODO before the container builder has finished its business.
     // N/A factory beans are typically (but not necessarily) created as prototypes so
     // N/A if there is another non-factory based injecttion of the bean it will be
     // N/A a different instance
@@ -87,12 +89,12 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Implementation:
     // TODO Mass Test - 2 days
     // TODO test with multiple OSs
+    // TODO can we handle an object or type from some assembly as root which is not
+    // TODO a scanned assembly
     // N/A remove nocache headers from documentation
     // DONE can we handle bean references in a base class?  Tests required
     // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
     // DONE make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
-    // TODO we need to say or do something about processing in constructors
-    // TODO before the container builder has finished its business.
     // TODO red team: deep hierarchies
     // TODO red team: mix new and CreateAndInject...
     // TODO red team: self registering classes - that are also beans
@@ -579,7 +581,16 @@ namespace com.TheDisappointedProgrammer.IOCC
             return obj.ToLower().GetHashCode();
         }
     }
-
+    /// <summary>
+    /// The <code>BeanScope</code> enum is in
+    /// conjunction with bean references to determine
+    /// how multple references to a particular bean will be
+    /// dealt with.  Where the scope is Singleton (which is
+    /// the default then all references with that
+    /// scope will point to the same object.  Any
+    /// reference with a scope of Prototype will point
+    /// to separate object.
+    /// </summary>
     public enum BeanScope { Singleton, Prototype }
 
     internal static class IOCCLocalExtensions
