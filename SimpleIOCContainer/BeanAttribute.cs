@@ -23,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// when that profile is passed to CreateAndInjectDependencies
         /// </summary>
         /// <example>[Bean(Profile="testonly")]</example>
-        /// <see>/Simple/UserGuide/Profiles</see>
+        /// <conceptualLink target="IOCC-Profiles">Profiles</conceptualLink>
         public string Profile = SimpleIOCContainer.DEFAULT_PROFILE_ARG;
         /// <summary>
         /// A class to which this attribute is applied can specify
