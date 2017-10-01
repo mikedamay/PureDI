@@ -10,6 +10,15 @@ namespace IOCCTest
     [TestClass]
     public class CrossPlatformTest
     {
+        /// <summary>
+        /// usage:
+        /// windows:
+        ///     dotnet run
+        /// linux
+        ///     dotnet run -c LinuxTest
+        /// Mac
+        ///     dotnet run -c MacosTest
+        /// </summary>
         [TestMethod]
         public void ShouldCreateLinuxTypesOnLinux()
         {
