@@ -30,7 +30,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// problems that occur being recorded as diagnostis.
         /// </summary>
         /// <param name="message">some text helpful to the library user</param>
-        /// <param name="diagnostics"><accumulated diagnostics to this point in the injection process/param>
+        /// <param name="diagnostics">accumulated diagnostics to this point in the injection process</param>
         internal IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
         {
             this.Diagnostics = diagnostics;

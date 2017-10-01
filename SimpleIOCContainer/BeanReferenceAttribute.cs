@@ -28,7 +28,19 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <see>docs://Simple/UserGuide/Factory</see>
     [IOCCIgnore]
     public interface IFactory
-    {
+        {/// <summary>
+        /// The library user should implement this method instantiating some object and then
+        /// returning it together with the injection state
+        /// </summary>
+        /// <param name="injectionState">this should be passed to any call to
+        /// SimpleIOCContainer.CreateAndInjectDependencies if there is one.</param>
+        /// <param name="args">contains FactoryParams as declared on the BeanReference for the factory</param>
+        /// <returns>
+        /// if a call is made to CreateAndInjectDependencies then
+        ///     return the injection state returned from that call
+        /// else
+        ///     return the injection state passed in to Execute
+        /// </returns>
         (object bean, InjectionState injectionState) Execute(
           InjectionState injectionState, BeanFactoryArgs args);
     }
@@ -50,7 +62,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// the name given in the bean reference to that on a candidate
         /// implementation.
         /// </summary>
-        /// <see cref="BeanAttribute.Name"/>
+        /// <see cref="BeanAttribute"/>
         public string Name
         {
             get => name;
@@ -62,7 +74,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// is used to make the selection by matching it to the
         /// Name on the ConstructorAttribute.
         /// </summary>
-        /// <see cref="ConstructorAttribute.Name"/>
+        /// <see cref="ConstructorAttribute"/>
         public string ConstructorName
         {
             get => constructorName;
@@ -74,7 +86,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// factory which provides considerable flexibility for the
         /// mechanism.
         /// </summary>
-        /// <see cref="IOCC-Factory"/>
+        /// <conceptualLink target="IOCC-BeanFactory">See Factory</conceptualLink>
         public Type Factory = null;
         /// <summary>
         /// When a bean is injected by a factory the factory parameter

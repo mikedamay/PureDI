@@ -79,10 +79,6 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         ///     can be displayed in diagnostic messages - currently not used for
         ///     anything else</param>
         /// <param name="beanScope"></param>
-        /// <param name="mapObjectsCreatedSoFar">for all beans instantiated to this point
-        ///     maps the name of the class or struct of
-        ///     the object to the instance of the object.</param>
-        /// <param name="fieldOrPropertyInfo1">used to determine the scope of the bean to be created</param>
         private (object bean, InjectionState injectionState) 
           CreateObjectTree((Type beanType, string beanName
           , string constructorName) beanId, CreationContext creationContext
@@ -188,13 +184,13 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             // if a cyclical dependency was found lower
                             // in the stack then a bean must have been
                             // created for it at that time. So wtf!
-                    /// There are 3 cases where complete == true (i.e. attempted bean instantiation is complete)
-                    /// 1) bean instantiation failed; in which case we will return null - caller can deal
-                    /// 2) bean already existed (all of its members will have already been created and assigned).
-                    /// 3) bean already existed but because it was a cyclical dependency its
-                    ///    members had not been created and assigned and that needs to be done now.
-                    ///    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
-                    ///     case of 3) it wrongly reports that the bean creation is complete)
+                    // There are 3 cases where complete == true (i.e. attempted bean instantiation is complete)
+                    // 1) bean instantiation failed; in which case we will return null - caller can deal
+                    // 2) bean already existed (all of its members will have already been created and assigned).
+                    // 3) bean already existed but because it was a cyclical dependency its
+                    //    members had not been created and assigned and that needs to be done now.
+                    //    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
+                    //     case of 3) it wrongly reports that the bean creation is complete)
                     if (complete && !cyclicalDependencies.Contains(constructableType))
                     {
                         return (bean, injectionState); // either the bean and therefore its children had already been created
@@ -506,9 +502,9 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// </summary>
         /// <param name="memberDeclaredBeanType"></param>
         /// <param name="memberDeclaredBeanName"></param>
-        /// <param name="declaringBeanId"></param>
+        /// <param name="constructorName"></param>
         /// <returns></returns>
-        (Type type, string beanName, string constructorName)
+        private (Type type, string beanName, string constructorName)
             MakeMemberBeanId(Type memberDeclaredBeanType
                 , string memberDeclaredBeanName, string constructorName
                 )
@@ -529,9 +525,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             diagnostics.Groups[groupName].Add(diag);
         }
 
-        /// <param name="beanId"></param>
         /// <param name="injectionState"></param>
-        /// <param name="beanid">Typically this is the type ofa member 
+        /// <param name="beanId">Typically this is the type of a member 
         ///     marked as a bean reference with [IOCCBeanReference]
         ///     for generics bean type is a generic type definition</param>
         /// <returns>This will be a concrete class marked as a bean with [Bean] which
@@ -551,9 +546,8 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
 
         }
 
-        /// <param name="beanId"></param>
         /// <param name="injectionState"></param>
-        /// <param name="beanid"><see cref="GetImplementationFromTypeMap"/></param>
+        /// <param name="beanId"><see cref="GetImplementationFromTypeMap"/></param>
         private (bool typeFound, InjectionState injectionState) 
           IsBeanPresntInTypeMap((Type beanType, string beanName
           , string constructorName) beanId, InjectionState injectionState)

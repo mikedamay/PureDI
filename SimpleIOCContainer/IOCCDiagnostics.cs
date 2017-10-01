@@ -19,7 +19,22 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// occurrences.
         /// `Severity.Error` is not currently supported
         /// </summary>
-        public enum Severity { Info, Warning, Error }
+        public enum Severity
+        {
+            /// <summary>
+            /// diagnostic groups which have a severity of Info
+            /// record
+            /// </summary>
+            Info,
+            /// <summary>
+            /// 
+            /// </summary>
+             Warning,
+             /// <summary>
+             /// 
+             /// </summary>
+            Error
+        }
 
         /// <summary>
         /// strong hint to library users is that there is no
@@ -37,7 +52,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <remarks>The groups can be inspected in the library resource, DiagnosticSchema.xml</remarks>
         public class Group
         {
-            public Group(string topic
+            internal Group(string topic
               , Severity severity
               , string intro, string userGuide
               , string diagnosticTemplate

@@ -11,7 +11,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     public abstract class BeanBaseAttribute : Attribute
     {
         /// <remarks>The name is case insensitive</remarks>
-        /// <see cref="BeanReferenceAttribute.Name"</see>
+        /// <see cref="BeanReferenceAttribute"></see>
         public string  Name
         {
             get { return name; }

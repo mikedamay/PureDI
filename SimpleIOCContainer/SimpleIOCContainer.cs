@@ -77,6 +77,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
     // TODO we need to say or do something about processing in constructors
     // TODO before the container builder has finished its business.
+    // TODO bean names, constructor names and profiles are case insensitive
+    // TODO Even if beans are referenced only by factories they still need names to 
+    // TODO distinguish multiple implementations of the same interface.
+    // TODO Of course classes referenced by factories don't have to be beans.
     // N/A factory beans are typically (but not necessarily) created as prototypes so
     // N/A if there is another non-factory based injecttion of the bean it will be
     // N/A a different instance
@@ -167,15 +171,9 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: add tables to markdown
     // TODO Later: add references to help to diagnostics
     /// <summary>
-    /// 
+    /// The key class in the library.  This carries out the dependency injection
     /// </summary>
-    /// <remarks>
-    /// constraints:
-    ///     6) Even if beans are referenced only by factories they still names to 
-    ///        distinguish multiple implementations of the same interfacr.
-    ///        Of course classes referenced by factories don't have to be beans.
-    ///     7) bean names, constructor names and profiles are case insensitive
-    /// </remarks>
+    /// <conceptualLink target="IOCC-Introduction">see Introduction</conceptualLink>
     [Bean]
     public partial class SimpleIOCContainer
     {
@@ -209,13 +207,29 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal const string DEFAULT_CONSTRUCTOR_NAME = "";
 
         private int multipleCallGuard;
-
+        /// <summary>
+        /// A parameter of this type can be passed to the constructor
+        /// to indicate whether the default scanning of libraries is performed.
+        /// </summary>
+        /// <conceptualLink target="IOCC-Assemblies">See the Notes section of Assemblies</conceptualLink>
         [Flags]
         public enum AssemblyExclusion
         {
-            ExcludedNone = 0
-          , ExcludeSimpleIOCCContainer = 1
-          , ExcludeRootTypeAssembly = 2
+            /// <summary>
+            /// default - the assembly containing the root type will
+            /// be scanned for beans as will the SimpleIOCContainer library
+            /// itself
+            /// </summary>
+            ExcludedNone = 0,
+            /// <summary>
+            /// The library itself should not be scanned for dependencies
+            /// </summary>
+            ExcludeSimpleIOCCContainer = 1,
+            /// <summary>
+            /// The assembly containing the type passed to CreateAndInjectDependencies
+            /// will not be scanned for beans
+            /// </summary>
+            ExcludeRootTypeAssembly = 2
         }
         private readonly AssemblyExclusion excludedAssemblies;
         private readonly ImmutableArray<Assembly> explicitAssemblies;
@@ -233,15 +247,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// bean itself in factories.  The assumbly is included to make this intuitive.
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
-        /// <param name="excludeRootAssembly">By default the assembly containing the type
-        /// passed to CreateAndInjectDependencies() is included automatically.
-        /// Pass true here to ensure it is not scanned for beans.
-        /// Note that if you include the root assembly in the list
-        /// of assemblies then the excludeRootAssembly flag is ignored.
-        /// Note that if a string containing the root type is passed
-        /// to CreateAndInjectDependencies() then the system behaves as if
-        /// the flag was set to true as there is no easy way for the container
-        /// to know the assembly from which it was called.</param>
+        /// <param name="Profiles">See detailed description of profiles (See Also, below)</param>
+        /// <param name="Assemblies"></param>
+        /// <param name="ExcludeAssemblies"></param>
+        /// <onceptualLink target="IOCC-Profiles">See description of profiles</onceptualLink>
         public SimpleIOCContainer(string[] Profiles = null
           , Assembly[] Assemblies = null
           , AssemblyExclusion ExcludeAssemblies = AssemblyExclusion.ExcludedNone)
@@ -255,13 +264,20 @@ namespace com.TheDisappointedProgrammer.IOCC
               ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
 
-        /// <param name="injectionState"></param>
-        /// <param name="rootBeanName"></param>
-        /// <param name="rootConstructorName"></param>
-        /// <param name="scope">scope refers to the scope of the root bean i.e. the
-        ///     top of the tree - as instantiated by rootType
-        ///     It does not affect the rest of the tree.  The other nodes on the tree will
-        ///     honour the Scope property of [IOCCBeanReference]</param>
+        /// <summary>
+        /// Causes classes to be instantiated and injected, starting with the rootType.
+        /// </summary>
+        /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
+        /// <param name="injectionState">This is null the first time the method is called.
+        /// Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
+        /// or base class is passed as the root type but hs multiple implementations</param>
+        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
+        /// a class is being passed as the root type with multiple constructors</param>
+        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
+        /// root bean only.  It has no effect on the rest of the tree.</param>
+        /// <returns>an object of rootType</returns>
+        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
         public (TRootType rootBean, InjectionState injectionState)
             CreateAndInjectDependencies<TRootType>(
                 InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
@@ -272,7 +288,20 @@ namespace com.TheDisappointedProgrammer.IOCC
                 , rootBeanName, rootConstructorName, scope);
             return ((TRootType) rootObject, newInjectionState);
         }
-
+        /// <summary>
+        /// Causes classes to be instantiated and injected, starting with the rootType.
+        /// </summary>
+        /// <param name="rootType">Typically, the root node of a tree of objects </param>
+        /// <param name="injectionState">This is null the first time the method is called.
+        /// Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
+        /// or base class is passed as the root type but hs multiple implementations</param>
+        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
+        /// a class is being passed as the root type with multiple constructors</param>
+        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
+        /// root bean only.  It has no effect on the rest of the tree.</param>
+        /// <returns>an object of rootType</returns>
+        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType
             ,InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
@@ -290,35 +319,24 @@ namespace com.TheDisappointedProgrammer.IOCC
                 rootType, newInjectionState, rootBeanName, rootConstructorName, scope);
             return (rootObject, newInjectionState);
         }
-
-        // TODO complete the documentation item 3 below if and when factory types are implemented
-        // TODO handle situation where there is no console window
         /// <summary>
-        /// 1. mainly used to create the complete object tree at program startup
-        /// 2. may be used to create object tree fragments when running tests
-        /// 3. may be used to create an object or link to an existing object
+        /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
-        /// <typeparam name="TRootType">The concrete class (not an interface) of the top object in the tree</typeparam>
-        /// <param name="beanName"></param>
-        /// <param name="rootConstructorName"></param>
-        /// <param name="scope">scope refers to the scope of the root bean i.e. the
-        ///     top of the tree - as instantiated by rootType
-        ///     It does not affect the rest of the tree.  The other nodes on the tree will
-        ///     honour the Scope property of [IOCCBeanReference]</param>
-        /// <returns>an object of root type</returns>
-        /// <param name="rootTypeName">provided by caller - <see cref="AreTypeNamesEqualish"/></param>
-        /// <param name="injectionState"></param>
-        /// <param name="rootBeanName">an SimpleIOCContainer type spec in the form "MyNameSpace.MyClass"
-        ///     or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
-        ///     where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
-        /// <param name="rootConstructorName"></param>
-        /// <param name="scope">scope refers to the scope of the root bean i.e. the
-        ///     top of the tree - as instantiated by rootTypeName
-        ///     It does not affect the rest of the tree.  The other nodes on the tree will
-        ///     honour the Scope property of [IOCCBeanReference]</param>
-        /// <returns>the root of the object tree with all dependencies instantiated</returns>
+        /// <param name="rootTypeName">Typically, the root node of a tree of objects </param>
+        /// <param name="injectionState">This is null the first time the method is called.
+        /// Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
+        /// or base class is passed as the root type but hs multiple implementations</param>
+        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
+        /// a class is being passed as the root type with multiple constructors</param>
+        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
+        /// root bean only.  It has no effect on the rest of the tree.</param>
+        /// <returns>an object of rootType</returns>
+        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithString(
-          string rootTypeName, InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+          string rootTypeName, InjectionState injectionState = null
+            , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
+            , BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
             CheckArgument(rootBeanName);
@@ -345,7 +363,14 @@ namespace com.TheDisappointedProgrammer.IOCC
                 , newInjectionState, rootBeanName
                 , rootConstructorName, scope);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootObject">some instantiated object which the library user needs
+        /// to attach to the object tree</param>
+        /// <param name="injectionState">This is null the first time the method is called.
+        /// Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <returns>an object which is the root of a tree of dependencies</returns>
         public (object rootBean, InjectionState injectionState) 
           CreateAndInjectDependenciesWithObject(object rootObject
           , InjectionState injectionState = null)
@@ -373,8 +398,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>
-        /// <param name="diagnostics">This overload exposes the diagnostics object to the caller</param>
-        /// <param name="profile"></param>
+        /// <param name="injectionState"></param>
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
@@ -584,17 +608,30 @@ namespace com.TheDisappointedProgrammer.IOCC
             return obj.ToLower().GetHashCode();
         }
     }
+
     /// <summary>
     /// The <code>BeanScope</code> enum is in
     /// conjunction with bean references to determine
-    /// how multple references to a particular bean will be
+    /// how multiple references to a particular bean will be
     /// dealt with.  Where the scope is Singleton (which is
     /// the default then all references with that
     /// scope will point to the same object.  Any
     /// reference with a scope of Prototype will point
     /// to separate object.
     /// </summary>
-    public enum BeanScope { Singleton, Prototype }
+    public enum BeanScope
+    {
+        /// <summary>
+        /// bean references with this scope (which is the default)
+        /// will share an instance of the bean
+        /// </summary>
+        Singleton,
+        /// <summary>
+        /// bean references with this scope will be assigned 
+        /// an unique instance of the bean class
+        /// </summary>
+        Prototype
+    }
 
     internal static class IOCCLocalExtensions
     {

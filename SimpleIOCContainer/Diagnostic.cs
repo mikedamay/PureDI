@@ -23,7 +23,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         private readonly IOCCDiagnostics.Group group;
         internal IDictionary<string, object> Members { get; }
 
-        protected Diagnostic(IOCCDiagnostics.Group group)
+        internal Diagnostic(IOCCDiagnostics.Group group)
         {
             this.group = group;
             Members = CreateArtefactMap(group.ArtefactSchema);
@@ -35,7 +35,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             return groupArtefactSchema.ToDictionary<
               string, string, object>(a => a, a => null);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             if (!Members.ContainsKey(binder.Name))
@@ -46,7 +51,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             result = Members[binder.Name];
             return true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             if (!Members.ContainsKey(binder.Name))

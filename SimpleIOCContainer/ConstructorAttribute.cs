@@ -21,7 +21,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// Where there is a choice of constructors for injection
         /// the name acts as a tie breaker.
         /// </summary>
-        /// <see cref="BeanReferenceAttribute.ConstructorName"/>
+        /// <see cref="BeanReferenceAttribute"/>
         public string Name = SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME;
     }
     /// <summary>
