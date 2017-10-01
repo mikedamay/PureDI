@@ -1,17 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <!-- <TargetFramework>net47</TargetFramework>   -->
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>latest</LangVersion>
-    <Configurations>Debug;Release;Interesting</Configurations>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\SimpleIOCContainer.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ResourceFactory.cs" />
     <Compile Remove="SimpleIOCContainerMinorMethods.cs" />
-    <Compile Remove="SimpleIOCContainerSave.cs" />
-    <Compile Remove="TestIOCC.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,36 +25,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
+    <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd" />
     <EmbeddedResource Include="Docs\UserGuide.xml" />
-    <EmbeddedResource Include="Docs\UserGuide.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
     <None Include="SimpleIOCContainerMinorMethods.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
-  </ItemGroup>
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
- </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile />
-  </PropertyGroup>
 </Project>
