@@ -64,6 +64,9 @@ accdssing beans that have not been subject to injection.</li>
 <li>There is no magic.  You cannot simply stick a bean refererence on some bean
 and expect injection to take place.  It must be in the graph produced by
 <code>CreateAndInjectDependencies</code>.</li>
+<li>If you specify the root bean of the object tree with an interface, make sure
+that either that interface is declared in the main assembly subject to injection
+or that the assembly is passed as a parameter to the mechanism's constructor.</li>
 </ol>
 
         </div>

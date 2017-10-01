@@ -33,7 +33,7 @@
 <h4>Simplicity</h4>
 <p>In the interests of simplicity the libraries surface area is restricted to:</p>
 <ul>
-<li>A single significant operational class class <code>SimpleIOCContainer</code> coupled with 3 enums</li>
+<li>A single significant operational class <code>SimpleIOCContainer</code> coupled with 3 enums</li>
 <li>A single constructor for the container and a single
 method <code>CreateAndInjectDependencies</code> albeit with 4 overloads</li>
 <li>The Diagnostics class and its components which for most purposes can be
@@ -46,22 +46,25 @@ sites where they can be injected plus some ancillary &quot;value&quot; classes s
 <li>There is only one way to define the injectables and injection sites, i.e. by
 the use of attributes.  There is no XML alternative or privileged configuration
 by code.</li>
-<li>The library is lightweigh with no non-Microsoft dependencies</li>
+<li>The library is lightweight with no non-Microsoft dependencies</li>
 </ul>
 <h4>Transparency</h4>
 <p>Transparency is in evidence through the lack of &quot;magic&quot; such as
 AOP (Aspect Oriented Programming) or code generation.  The only
 magic is the actual injection using basic reflection.  The
-requirement to consistently mark inectables and injection sites
-with attributes is seen as promoting transparency - the coder's
+requirement to consistently mark injectables and injection sites
+with attributes ([Bean] and [BeanReference] respectively)
+is seen as promoting transparency - the coder's
 intention is very clear to those who come after.</p>
+<p>The requirement for the library user to specify which assemblies
+should be subject to injection also supports this aspiration.</p>
 <p>The implementation of the library is simple and is described
 elsewhere.  This will hopefully allow coders to reason about
 the container when tackling edge cases.</p>
 <p>The code tries to promote type safety but this is not always
 possible - see bean factories, for example.</p>
 <h4>Verifiability</h4>
-<p>The &quot;onfiguration-over-convention&quot; approach which provides transparancy
+<p>The &quot;configuration-over-convention&quot; approach which provides transparency
 also helps with the third aspiration of Verifiability.  By insisting
 that he user explicitly states their intention to inject functionality
 but the use of <code>[Bean]</code> and <code>[BeanRefererne]</code> attributes we can
@@ -86,7 +89,7 @@ to be substituted at the point of injection from a configuration file or the env
 <li>A bean reference cannot have parameters which makes creating multiple objects with
 the same implementation class but different parameters difficult.</li>
 <li>The library is dotnetstandard 2.0 using C# 7.1.</li>
-<li>You cannot simply stick a bean refererence on some bean
+<li>You cannot simply stick a bean reference on some bean
 and expect injection to take place.  It must be in the graph produced by
 <code>CreateAndInjectDependencies</code>.</li>
 </ul>
@@ -94,9 +97,9 @@ and expect injection to take place.  It must be in the graph produced by
 <p>The author used <a href="http://spring.io">Java-Spring</a> for 5 years.  I thought Spring was an
 excellent, well architected, well documented robust and reliable framework.  It was
 particularly suitable for enterprise computing where a consistency of approach in the
-team and and across teamms to core functionality, persistence, web MVC, SOAP, REST,
+team and across teams to core functionality, persistence, web MVC, SOAP, REST,
 security, batch processing etc. has a lot to be said for it.  However I found (
-albeit picking up the framework in conjection with a brown-field project which
+albeit picking up the framework in conjunction with a brown-field project which
 had been worked on by a variety of developers with a variety of skill levels)
 that Spring's ability to do a great deal for the coder behind the scenes was not
 my preferred approach.  In particular the AOP involved in enforcing database

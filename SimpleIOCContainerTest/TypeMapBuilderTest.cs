@@ -353,7 +353,6 @@ namespace IOCCTest
             Assert.AreEqual(
               Utils.LessThanIsGoodEnough(mapExpected.Keys.Count, map.Keys.Count()), map.Keys.Count());
             Assert.IsFalse(Utils.Falsify(diagnostics.HasWarnings));
-            Assert.IsFalse(Utils.Falsify(diagnostics.HasErrors));
             CompareMaps(map, mapExpected);
         }
 

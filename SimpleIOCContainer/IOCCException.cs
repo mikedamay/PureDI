@@ -2,8 +2,25 @@
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
+    /// <summary>
+    /// The standard exception thrown by the library
+    /// if a fatal error occurs during dependency injection.
+    /// 
+    /// Callers should also call Diagnostics.HasWarnings to
+    /// check on the health of injections.  A return value of true
+    /// may (but not necessarily) indicate a future fatal problem
+    /// for the call application.
+    /// </summary>
     public class IOCCException : Exception
     {
+        /// <summary>
+        /// An accumulation of all diangostics up to the point the
+        /// exception was thrown.
+        /// 
+        /// Call Diagnostics.ToString() or Diagnostics.AllToString()
+        /// to provide some support in investigating the cause
+        /// of the exception.
+        /// </summary>
         public IOCCDiagnostics Diagnostics { get; } = null;
         /// <summary>
         /// the main exception exposed to library users.  Typically
@@ -12,27 +29,35 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// then for the most part no exception is thrown, any
         /// problems that occur being recorded as diagnostis.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="diagnostics"></param>
-        public IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
+        /// <param name="message">some text helpful to the library user</param>
+        /// <param name="diagnostics"><accumulated diagnostics to this point in the injection process/param>
+        internal IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
         {
             this.Diagnostics = diagnostics;
         }
-        /// <inheritdoc cref="IOCCException(string, IOCCDiagnostics)"/>
-        public IOCCException(string message, Exception innerException, IOCCDiagnostics diagnostics)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message">some text helpful to the library user</param>
+        /// <param name="innerException">root cause</param>
+        /// <param name="diagnostics">accumulated diagnostics to this point in the injection process</param>
+        internal IOCCException(string message, Exception innerException, IOCCDiagnostics diagnostics)
           : base(message, innerException)
         {
             this.Diagnostics = diagnostics;
         }
    }
-
+    /// <summary>
+    /// Error indicating some problem with the implementation of the library.
+    /// Some code contract has been violated
+    /// </summary>
     public class IOCCInternalException : Exception
     {
-        public IOCCInternalException(string message) : base(message)
+        internal IOCCInternalException(string message) : base(message)
         {
         }
 
-        public IOCCInternalException(string message, Exception innerException)
+        internal IOCCInternalException(string message, Exception innerException)
           : base(message, innerException)
         {
         }

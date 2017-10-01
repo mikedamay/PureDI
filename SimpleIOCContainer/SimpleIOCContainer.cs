@@ -91,6 +91,8 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly
+    // TODO tidy up DiagnosticSchema to remove references to user guide.
+    // TODO change names from SimpleIOCContainer to SimpleDependencyInjector
     // N/A remove nocache headers from documentation
     // DONE can we handle bean references in a base class?  Tests required
     // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
@@ -163,6 +165,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO Later: Make constructors so that we can inject readonly properties - maybe - probably not
     // TODO Later: handle whether external interfaces are included or excluded from typeMap
     // TODO Later: add tables to markdown
+    // TODO Later: add references to help to diagnostics
     /// <summary>
     /// 
     /// </summary>
