@@ -17,73 +17,110 @@
            zero (0) to limit it to top-level sections only.  -->
       <!-- <autoOutline /> -->
 
-      <para>Required introduction</para>
+      <para>Bean Factories are an essential mechanism for extending the power of injection
+      and work round the limitations of the library</para>
     </introduction>
 
     <!-- Add one or more top-level section elements.  These are collapsible.
          If using <autoOutline />, add an address attribute to identify it
          and specify a title so that it can be jumped to with a hyperlink. -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section address="BeanFactory">
+      <title>Remarks</title>
       <content>
-        <!-- Uncomment this to create a sub-section outline
-        <autoOutline /> -->
-        <para>Add one or more sections with content</para>
+        <para>
+          In some situations there is no straightforward way for the container
+          to know how to create a required bean.  For instance a repository might need
+          to be connected to its database before it can be injected.
+        </para>
+
+        <para>This problem is overcome with the use of bean factories.</para>
+
+        <para>
+          A factory is specified as a parameter to the BeanReference attribute.
+          So instead of creating some implementation of the member variable
+          type, the container calls the execute method of the factory which
+          creates and provides an object of the appropriate type.
+        </para>
+
+        <para>
+          A factory parameter (`FactoryParameter`) specified on the bean reference
+          can optionally be passed to the factory's execute method.
+        </para>
+
+        <para>The following code provides a simple example.</para>
+
+        <code>
+          using System;
+          using com.TheDisappointedProgrammer.IOCC;
+
+          [Bean]
+          public class FactoryUser
+          {
+          [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
+          private IRepository2 repo = null;
+          public static void Main()
+          {
+          var factoryUser = new SimpleIOCContainer().CreateAndInjectDependencies&lt;FactoryUser>().rootBean;
+        Console.WriteLine(factoryUser.repo.GetData());
+                // will print null unless you happen to have an environment
+                // variable called CONNECTION_STRING
+    }
+}
+[Bean]
+public class EnvironmentVariableFactory : IFactory
+{
+    public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
+    {
+        return (new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING")), injectionState);
+    }
+}
+
+public class Repository : IRepository2
+{
+    private readonly string _connectionString;
+    public Repository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
+    public string GetData()
+    {
+        return _connectionString;
+    }
+}
+
+public interface IRepository2
+{
+    string GetData();
+}
+        </code>
+
+        <para>Note:</para>
+        <list>
+          <listItem>
+            <para>
+              Classes over which the library user has no control can
+              be injected using factories.  This can include strings, ints etc.
+            </para>
+          </listItem>
+          <listItem>
+            <para>Factories must be marked with the `[Bean]` attribute</para>
+          </listItem>
+          <listItem>
+            <para>Factories must implement the `IFactory` interface</para>
+          </listItem>
+          <listItem>
+            <para>
+              Many use cases not covered by other mechanisms can be
+              addressed with the use of bean factories.
+            </para>
+          </listItem>
+        </list>
       </content>
-      <!-- If a section contains a sections element, its content creates
-           sub-sections.  These are not collapsible.
-      <sections>
-          <section address="SubSection1">
-              <title>Sub-section 1</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-          <section address="SubSection2">
-              <title>Sub-section 2</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-      </sections> -->
     </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID"/>
-      <link xlink:href="Other Topic's ID">Link inner text</link>
-
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <codeEntityReference>F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Profile</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>
