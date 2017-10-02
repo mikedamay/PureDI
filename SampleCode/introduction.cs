@@ -5,7 +5,7 @@ public class Program
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        SimpleIOCContainer sic = new SimpleIOCContainer();
+        PDependencyInjector sic = new PDependencyInjector();
         Program prog = sic.CreateAndInjectDependencies<Program>().rootBean;
         prog.SaySomething();
     }

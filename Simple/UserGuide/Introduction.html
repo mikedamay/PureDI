@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-            <h3 class="col-sm-10" style="color: blue">Introduction to SimpleIOCContainer</h3>
+            <h3 class="col-sm-10" style="color: blue">Introduction to PDependencyInjector</h3>
             <!--<hr class="col-xs-12"/>-->
         </div>
         <div class="col-sm-1"></div>
@@ -24,16 +24,16 @@
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-            <p>The SimpleIOCContainer (Simple Inversion of Control Container) is a
+            <p>The PDependencyInjector (Simple Inversion of Control Container) is a
 C# library providing a Dependency Injection (DI) framework promoting
 simplicity, transparency and verifiability.</p>
 <p>It is available from nuget.org with the following command:</p>
-<pre><code>install-package TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+<pre><code>install-package TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
 </code></pre>
-<p>Source code is available at <a href="https://github.com/mikedamay/SimpleIOCContainer.git">https://github.com/mikedamay/SimpleIOCContainer.git</a></p>
+<p>Source code is available at <a href="https://github.com/mikedamay/PDependencyInjector.git">https://github.com/mikedamay/PDependencyInjector.git</a></p>
 <p>This documentation is located at <a href="http://mikedamay.co.uk/Simple/index.html">http://mikedamay.co.uk/Simple/index.html</a></p>
 <p>Usage follows a simple pattern: the caller instantiates some significant object
-with a call to <code>SimpleIOCContainer.CreateAndInjectDependnecies</code> and that
+with a call to <code>PDependencyInjector.CreateAndInjectDependnecies</code> and that
 object is instiated together with dependencies to which it refers
 and so forth recursively through the tree of dependencies.</p>
 <p>The call to <em>CreateAndInjectDependencies</em> is typically made at program
@@ -48,7 +48,7 @@ public class Program
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        SimpleIOCContainer sic = new SimpleIOCContainer();
+        PDependencyInjector sic = new PDependencyInjector();
         Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
         prog.SaySomething();
     }

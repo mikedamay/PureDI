@@ -35,9 +35,9 @@ namespace SimpleIOCCDocumentor
 
         // inhibit IOCC diagnostic for no arg constructor
         public IOCCDocumentParser() { }
-        /// <param name="resourcePath">either "SimpleIOCContainer.Docs.DiagnosticSchema.xml"}
-        ///   or "SimpleIOCContainer.Docs.UserGuide.xml"} if it's anyhing else
-        ///   then the resource needs to be in the SimpleIOCContainer assembly </param>
+        /// <param name="resourcePath">either "PDependencyInjector.Docs.DiagnosticSchema.xml"}
+        ///   or "PDependencyInjector.Docs.UserGuide.xml"} if it's anyhing else
+        ///   then the resource needs to be in the PDependencyInjector assembly </param>
         /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
         ///   then the document must be a superset of UserGuide.xml </param>
         public IOCCDocumentParser(string resourcePath, string xmlRoot, XPathNavigatorResourceFactory factory)

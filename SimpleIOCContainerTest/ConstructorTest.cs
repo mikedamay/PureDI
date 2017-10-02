@@ -15,7 +15,7 @@ namespace IOCCTest
         {
             Assert.ThrowsException<IOCCException>(() =>
             {
-                (NoArgRoot st, InjectionState InjectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<
+                (NoArgRoot st, InjectionState InjectionState) = new PDependencyInjector().CreateAndInjectDependencies<
                     NoArgRoot>();
                 IOCCDiagnostics diags = InjectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
@@ -24,7 +24,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnForNoArgClassTree()
         {
-            (NoArgClassTree nact, InjectionState InjectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<
+            (NoArgClassTree nact, InjectionState InjectionState) = new PDependencyInjector().CreateAndInjectDependencies<
                 NoArgClassTree>();
             IOCCDiagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
@@ -34,7 +34,7 @@ namespace IOCCTest
         public void ShouldInstantiateSingleObjectFromMultipleInterfaces()
         {
             ClassWithMultipleInterfaces cwmi
-                = new SimpleIOCContainer().CreateAndInjectDependencies<ClassWithMultipleInterfaces>().rootBean;
+                = new PDependencyInjector().CreateAndInjectDependencies<ClassWithMultipleInterfaces>().rootBean;
             Assert.IsNotNull(cwmi?.GetResults().Interface1);
             Assert.IsTrue(cwmi?.GetResults().Interface1 == cwmi?.GetResults().Interface2);
         }
@@ -171,7 +171,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithNamedRootConstructor()
         {
-            SimpleIOCContainer sic =
+            PDependencyInjector sic =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
             (object bean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
@@ -188,7 +188,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithMultipleConstructorsComplex()
         {
-            SimpleIOCContainer sic
+            PDependencyInjector sic
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
             IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;

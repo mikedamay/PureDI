@@ -22,7 +22,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = new SimpleIOCContainer().CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
+                rof = new PDependencyInjector().CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = new SimpleIOCContainer().CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
+                rof = new PDependencyInjector().CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = new SimpleIOCContainer().CreateAndInjectDependencies<MyProps>().rootBean;
+                props = new PDependencyInjector().CreateAndInjectDependencies<MyProps>().rootBean;
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace IOCCTest
             try
             {
                 InjectionState injectionState;
-                (props, injectionState) = new SimpleIOCContainer().CreateAndInjectDependencies<MyAutoProp>();
+                (props, injectionState) = new PDependencyInjector().CreateAndInjectDependencies<MyAutoProp>();
                 IOCCDiagnostics diags = injectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
                 IOCCDiagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
@@ -163,7 +163,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForAttributeBean()
         {
             // couldn't create assembly for this
-            var result = new SimpleIOCContainer()
+            var result = new PDependencyInjector()
               .CreateAndInjectDependencies<AttributeAsBean>().rootBean as IResultGetter;
             Assert.IsNull( result.GetResults().SomeOtherValue);
         }

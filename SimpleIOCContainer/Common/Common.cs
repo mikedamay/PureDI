@@ -26,7 +26,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Common
         // as above.  Presumably, the original
         // csproj overrode some default setting.
         public static readonly string ResourcePrefix 
-          = typeof(SimpleIOCContainer).Namespace;
+          = typeof(PDependencyInjector).Namespace;
 #endif
     }
 }

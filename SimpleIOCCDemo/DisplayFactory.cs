@@ -5,7 +5,7 @@ namespace SimpleIOCCDemo
     [Bean]
     internal class DisplayFactory : IFactory
     {
-        [BeanReference] private SimpleIOCContainer iocContainer = null;
+        [BeanReference] private PDependencyInjector iocContainer = null;
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             if (System.Diagnostics.Debugger.IsAttached)

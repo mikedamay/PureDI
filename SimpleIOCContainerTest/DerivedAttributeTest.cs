@@ -12,7 +12,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithDerivedConstructor()
         {
-            SimpleIOCContainer sic =
+            PDependencyInjector sic =
                 CreateIOCCinAssembly(DERIVED_ATTRIBUTE_TEST_NAMESPACE
                     , "DerivedConstructor");
             (object obj, InjectionState InjectionState) 

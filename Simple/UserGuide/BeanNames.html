@@ -39,7 +39,7 @@ public class DuplicateBean
 
   public static void Main()
   {
-      var beans = new SimpleIOCContainer().CreateAndInjectDependencies&lt;DuplicateBean&gt;().rootBean;
+      var beans = new PDependencyInjector().CreateAndInjectDependencies&lt;DuplicateBean&gt;().rootBean;
       beans.ListDatabases();
   }
   private void ListDatabases()

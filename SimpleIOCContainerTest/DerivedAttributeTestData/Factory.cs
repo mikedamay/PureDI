@@ -49,7 +49,7 @@ namespace IOCCTest.DerivedAttributeTestData
     [Bean]
     public class Factory : IResultGetter
     {
-        [Resource(typeof(SimpleIOCContainer)
+        [Resource(typeof(PDependencyInjector)
           , "SimpleIOCContainer.Docs.DiagnosticSchema.xml")]
         public string resource;
 

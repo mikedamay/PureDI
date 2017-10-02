@@ -38,7 +38,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE improve names of queries assigned from complex linq structures
     // N/A use immutable collections - I don't think they do anything for us at any level
     // DONE license
-    // DONE An optional name should be passed to SimpleIOCContainer.GetOrCreateDependencyTree
+    // DONE An optional name should be passed to PDependencyInjector.GetOrCreateDependencyTree
     // DONE address static fields and beans.  Beans are invalid
     // DONE readonly fields
     // DONE document / investigate other classes derived from ValueType - nothing much to say
@@ -96,7 +96,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly
     // TODO tidy up DiagnosticSchema to remove references to user guide.
-    // TODO change names from SimpleIOCContainer to SimpleDependencyInjector
+    // TODO change names from PDependencyInjector to SimpleDependencyInjector
     // N/A remove nocache headers from documentation
     // DONE can we handle bean references in a base class?  Tests required
     // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
@@ -127,23 +127,23 @@ namespace com.TheDisappointedProgrammer.IOCC
     // DONE the explanation is expanded to include that.
     // N/A make our own constructor to handle readonly properties - not a good idea
     // N/A change Docs folder to resources folder
-    // N/A Apply the SimpleIOCContainer to the Calculation Server and Maven docs - not very useful
+    // N/A Apply the PDependencyInjector to the Calculation Server and Maven docs - not very useful
     // DONE Release Build
     // DONE remove 2-way enumerator
     // N/A improve performance of IOCCObjectTree.CreateObjectTree with respect to dictionary handling - no prob with perf
     // DONE Perf
     // DONE Test with nullables
-    // DONE make SimpleIOCContainer instance a bean by default.
+    // DONE make PDependencyInjector instance a bean by default.
     // DONE generics for factories
     // DONE decide if scope on factory reference refers to factory or reference to be created
     // DONE it makes no sense for the created object as the scope is under the control of the factory
     // DONE does it make any sense in the case of the factory - it does, a little
     // DONE allow root type a prototype
     // DONE test with no namespace
-    // DONE change name to SimpleIOCContainer from SimpleIOCContainer
+    // DONE change name to PDependencyInjector from PDependencyInjector
     // N/A optimised build - there doesn't seem to be any optimisation tuning
     // DONE guard against static constructors
-    // DONE automatically add SimpleIOCContainer to the list of assemblies
+    // DONE automatically add PDependencyInjector to the list of assemblies
     // DONE write out the diagnostic schema from resource before validation test
     // DONE document that IFactory is ignored as an interface.  Workaround to create intermediate
     // DONE this is the first gotcha
@@ -175,7 +175,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </summary>
     /// <conceptualLink target="IOCC-Introduction">see Introduction</conceptualLink>
     [Bean]
-    public partial class SimpleIOCContainer
+    public partial class PDependencyInjector
     {
         /// <summary>
         /// caches the operating system in which the container is executing.
@@ -217,7 +217,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             /// <summary>
             /// default - the assembly containing the root type will
-            /// be scanned for beans as will the SimpleIOCContainer library
+            /// be scanned for beans as will the PDependencyInjector library
             /// itself
             /// </summary>
             ExcludedNone = 0,
@@ -243,7 +243,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <remarks>
         /// The assembly containing SimpleIOCCBean class itself is always included
         /// by default.  It does not need to be specified.  The purpose
-        /// of the inclusion is to allow callers to include the SimpleIOCContainer
+        /// of the inclusion is to allow callers to include the PDependencyInjector
         /// bean itself in factories.  The assumbly is included to make this intuitive.
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
@@ -251,7 +251,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="Assemblies"></param>
         /// <param name="ExcludeAssemblies"></param>
         /// <onceptualLink target="IOCC-Profiles">See description of profiles</onceptualLink>
-        public SimpleIOCContainer(string[] Profiles = null
+        public PDependencyInjector(string[] Profiles = null
           , Assembly[] Assemblies = null
           , AssemblyExclusion ExcludeAssemblies = AssemblyExclusion.ExcludedNone)
         {
@@ -414,7 +414,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
             {
                 injectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
-                // factories and possibly other beans may need access to the SimpleIOCContainer itself
+                // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
             }
             if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
@@ -594,7 +594,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
 
-    }   // SimpleIOCContainer
+    }   // PDependencyInjector
 
     internal class CaseInsensitiveEqualityComparer : IEqualityComparer<string>
     {

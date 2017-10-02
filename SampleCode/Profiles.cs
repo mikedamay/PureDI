@@ -6,7 +6,7 @@ public class Profiles
 {
     public static void Main()
     {
-        SimpleIOCContainer sic = new SimpleIOCContainer();
+        PDependencyInjector sic = new PDependencyInjector();
         MyService ms = sic.CreateAndInjectDependencies<MyService>().rootBean;
         Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
     }
@@ -46,7 +46,7 @@ public class SomeTest
     [TestMethod]
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
-            , new SimpleIOCContainer(Profiles: new[] { "test" }).CreateAndInjectDependencies<MyService>().rootBean.DoStuff()
+            , new PDependencyInjector(Profiles: new[] { "test" }).CreateAndInjectDependencies<MyService>().rootBean.DoStuff()
         );
 }
 

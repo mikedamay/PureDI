@@ -10,7 +10,7 @@ public class Constructor
 
     public static void Main()
     {
-        var constructor = new SimpleIOCContainer()
+        var constructor = new PDependencyInjector()
           .CreateAndInjectDependencies<Constructor>().rootBean;
         constructor.someService.DoMeAFavour();   // writes "SomeData"
     }

@@ -14,7 +14,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     //sic.SetAssemblies(null);
                 });
 
@@ -26,7 +26,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
                 });
 
@@ -38,8 +38,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var sic = new PDependencyInjector();
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -51,7 +51,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
                 });
 
@@ -63,8 +63,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var sic = new PDependencyInjector();
+                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -76,7 +76,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     sic.CreateAndInjectDependenciesWithString(null);
                 });
 
@@ -88,7 +88,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", rootBeanName: null);
                 });
 
@@ -100,8 +100,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
-                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", rootBeanName: SimpleIOCContainer.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var sic = new PDependencyInjector();
+                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -112,7 +112,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer();
+                    var sic = new PDependencyInjector();
                     sic.CreateAndInjectDependencies(null);
                 });
 
@@ -123,7 +123,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer(Profiles: new[] { (string)null });
+                    var sic = new PDependencyInjector(Profiles: new[] { (string)null });
                 });
 
         }
@@ -133,7 +133,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer(Profiles: new[] { "" });
+                    var sic = new PDependencyInjector(Profiles: new[] { "" });
                 });
 
         }
@@ -143,7 +143,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer(Profiles: new[] { " " });
+                    var sic = new PDependencyInjector(Profiles: new[] { " " });
                 });
 
         }
@@ -153,7 +153,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new SimpleIOCContainer(Profiles: new[] { "goodstuff", null });
+                    var sic = new PDependencyInjector(Profiles: new[] { "goodstuff", null });
                 });
 
         }

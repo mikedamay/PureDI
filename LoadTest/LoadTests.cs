@@ -20,7 +20,7 @@ namespace IOCCTest.LoadTest
             var assembly = BuildAssembly();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies : new []{assembly});
+            PDependencyInjector sic = new PDependencyInjector(Assemblies : new []{assembly});
             (object root, InjectionState InjectionState) = sic.CreateAndInjectDependenciesWithString("Level1");
             IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             sw.Stop();

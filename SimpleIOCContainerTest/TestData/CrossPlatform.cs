@@ -4,7 +4,7 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.TestData
 {
-    [Bean(OS=SimpleIOCContainer.OS.Any)]
+    [Bean(OS=PDependencyInjector.OS.Any)]
     public class CrossPlatform : IResultGetter
     {
         [BeanReference] private Windows windows = null;
@@ -20,15 +20,15 @@ namespace IOCCTest.TestData
         }
 
     }
-    [Bean(OS=SimpleIOCContainer.OS.MacOS)]
+    [Bean(OS= PDependencyInjector.OS.MacOS)]
     internal class Macos
     {
     }
-    [Bean(OS=SimpleIOCContainer.OS.Linux)]
+    [Bean(OS= PDependencyInjector.OS.Linux)]
     internal class Linux
     {
     }
-    [Bean(OS=SimpleIOCContainer.OS.Windows)]
+    [Bean(OS= PDependencyInjector.OS.Windows)]
     internal class Windows
     {
     }

@@ -34,7 +34,7 @@ namespace IOCCTest
         /// <param name="getAssemblyName"></param>
         /// <param name="targetAssemblyName"></param>
         /// <param name="ExtraAssemblies"></param>
-        /// <returns>An assembly suitable for use in SimpleIOCContainer testing</returns>
+        /// <returns>An assembly suitable for use in PDependencyInjector testing</returns>
         public Assembly MakeAssembly_obolsete(string CodeText
             , string TargetAssemblyName = null, string[] ExtraAssemblies = null, bool InMemory = true)
         {
@@ -43,7 +43,7 @@ namespace IOCCTest
             var parms = new CompilerParameters(
               CombineReferencedAssemblies(new string[]
               {"mscorlib.dll", "System.Core.dll", "System.dll", "Microsoft.CSharp.dll"
-              ,"SimpleIOCContainer.dll", "SimpleIOCContainerTest.dll"}
+              ,"PDependencyInjector.dll", "SimpleIOCContainerTest.dll"}
               , ExtraAssemblies)
               , SelectAssemblyName(TargetAssemblyName));
             parms.GenerateExecutable = false;

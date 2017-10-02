@@ -23,7 +23,7 @@ namespace SimpleIOCCDocumentor
         {
             if (factory != null && resourcePath != null)
             {
-                navigator = factory.ConvertResourceToXPathNavigator(typeof(SimpleIOCContainer), resourcePath);
+                navigator = factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), resourcePath);
             }
         }
     }
@@ -39,7 +39,7 @@ namespace SimpleIOCCDocumentor
 
         private XPathNavigator MakeNavigator()
         {
-            return factory.ConvertResourceToXPathNavigator(typeof(SimpleIOCContainer), resourcePath);
+            return factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), resourcePath);
         }
     }
 }

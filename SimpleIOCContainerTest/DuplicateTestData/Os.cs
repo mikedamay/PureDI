@@ -17,17 +17,17 @@ namespace IOCCTest.DuplicateTestData
 
     }
 
-    [Bean(OS = SimpleIOCContainer.OS.MacOS)]
+    [Bean(OS = PDependencyInjector.OS.MacOS)]
     public class OsImplMac : MuchoInterface
     {
 
     }
-    [Bean(OS = SimpleIOCContainer.OS.Windows)]
+    [Bean(OS = PDependencyInjector.OS.Windows)]
     public class OsImplWindows : MuchoInterface
     {
 
     }
-    [Bean(OS = SimpleIOCContainer.OS.Linux)]
+    [Bean(OS = PDependencyInjector.OS.Linux)]
     public class OsImplLinux : MuchoInterface
     {
 

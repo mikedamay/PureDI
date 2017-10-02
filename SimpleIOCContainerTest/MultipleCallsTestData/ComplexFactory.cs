@@ -22,16 +22,16 @@ namespace IOCCTest.MultipleCallsTestData
     [Bean]
     public class ChildFactory : IFactory
     {
-        [BeanReference] private SimpleIOCContainer simpleIocContainer = null;
+        [BeanReference] private PDependencyInjector pDependencyInjector = null;
 
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             switch ((int) args.FactoryParmeter)
             {
                 case 1:
-                    return simpleIocContainer.CreateAndInjectDependencies<ChildOne>(injectionState);
+                    return pDependencyInjector.CreateAndInjectDependencies<ChildOne>(injectionState);
                 case 2:
-                    return simpleIocContainer.CreateAndInjectDependencies<ChildTwo>(injectionState);
+                    return pDependencyInjector.CreateAndInjectDependencies<ChildTwo>(injectionState);
                 default:
                     throw new Exception("Execute failed");
 

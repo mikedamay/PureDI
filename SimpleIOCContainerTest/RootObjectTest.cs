@@ -14,7 +14,7 @@ namespace IOCCTest
         public void SHouldCreateTreeForInstantiatedObject()
         {
             Simple simple = new Simple();
-            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly });
+            PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
             //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
             sic.CreateAndInjectDependenciesWithObject(simple);
             Assert.IsNotNull(simple.GetResults().Child);
@@ -24,7 +24,7 @@ namespace IOCCTest
         public void ShouldConnectInstantiatedObjectToExistingTree()
         {
             ConnectUp connectUp = new ConnectUp();
-            SimpleIOCContainer sic = new SimpleIOCContainer();
+            PDependencyInjector sic = new PDependencyInjector();
             var existing = sic.CreateAndInjectDependencies<ExistingRoot>();
             sic.CreateAndInjectDependenciesWithObject( connectUp, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
@@ -34,7 +34,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer();
+            PDependencyInjector sic = new PDependencyInjector();
             Complex complex = sic.CreateAndInjectDependencies<Complex>().rootBean;
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
@@ -43,8 +43,8 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer(
-              Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: SimpleIOCContainer.AssemblyExclusion.ExcludeRootTypeAssembly);
+            PDependencyInjector sic = new PDependencyInjector(
+              Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             InjectionState injectionState;
             (obj, injectionState) = sic.CreateAndInjectDependenciesWithObject(new DeepHierarchy());
@@ -55,7 +55,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer();
+            PDependencyInjector sic = new PDependencyInjector();
             (object inserted, InjectionState InjectionState) 
               = sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
             InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;

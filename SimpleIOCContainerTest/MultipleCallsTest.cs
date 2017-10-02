@@ -11,7 +11,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldExtendTreeWhenMoreCallsAreMode()
         {
-            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
+            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
             (object simpleBean, InjectionState injectionState) 
               = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.MultipleCallsTestData.Simple");
@@ -24,8 +24,8 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldRejectAttemptToCreateTreeForASecondTimeWithoutState()
         {
-            //SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
-            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { this.GetType().Assembly});
+            //PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
+            PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly});
                     // remote assembly refuses to work (Bad IL Format) in this test despite
                     // being identical to the one above
             Assert.ThrowsException<ArgumentException>(() =>
@@ -43,7 +43,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithMultipleCallsWithEmptyState()
         {
-            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
+            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
             (object empty1, InjectionState injectionState) 
               = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.MultipleCallsTestData.Empty");
@@ -54,7 +54,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithRecursingFactories()
         {
-            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
+            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
             (object factory1, InjectionState injectionState) 
               = sic.CreateAndInjectDependenciesWithString(
               "IOCCTest.MultipleCallsTestData.SimpleFactory");
@@ -64,7 +64,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithAComplexArrangementOfFactories()
         {
-            SimpleIOCContainer sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
+            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
             (object factory1, InjectionState injectionState)
                 = sic.CreateAndInjectDependenciesWithString(
                     "IOCCTest.MultipleCallsTestData.ComplexFactory");

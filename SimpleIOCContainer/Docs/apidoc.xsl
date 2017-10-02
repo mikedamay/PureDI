@@ -11,16 +11,16 @@
                 <meta http-equiv="expires" content="0"/>
                 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT"/>
                 <meta http-equiv="pragma" content="no-cache"/>
-                <title>SimpleIOCContainer API</title>
+                <title>PDependencyInjector API</title>
                 <link type="text/png" rel="icon" href="/glyphicons_free/glyphicons/png/glyphicons-30-notes-2.png"/>
               <!--<link type="text/css" href="/Volumes/[C] Windows 10/projects/SimpleIOCContainer/Simple/Content/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet"/>-->
-              <link type="text/css" href="/projects/SimpleIOCContainer/Simple/Content/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet"/>
+              <link type="text/css" href="/projects/PDependencyInjector/Simple/Content/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet"/>
             </header>
             <body>
                 <div class="container">
                     <div class="col-sm-1"/>
                     <div class="col-sm-10">
-                        <h1>SimpleIOCContainer</h1>
+                        <h1>PDependencyInjector</h1>
                         <xsl:apply-templates/>
                     </div>
                     <div class="col-sm-1"/>

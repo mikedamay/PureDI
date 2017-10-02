@@ -3,24 +3,24 @@
             xsi:schemaLocation="file://. UserGuide.xsd">
   <group>
     <topic>Introduction</topic>
-    <userGuideTitle>Introduction to SimpleIOCContainer</userGuideTitle>
+    <userGuideTitle>Introduction to PDependencyInjector</userGuideTitle>
     <userGuide>
-The SimpleIOCContainer (Simple Inversion of Control Container) is a
+The PDependencyInjector (Simple Inversion of Control Container) is a
 C# library providing a Dependency Injection (DI) framework promoting 
 simplicity, transparency and verifiability.
 
 It is available from nuget.org with the following command:
 
 ```
-install-package TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+install-package TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
 ```
 
-Source code is available at [https://github.com/mikedamay/SimpleIOCContainer.git](https://github.com/mikedamay/SimpleIOCContainer.git)
+Source code is available at [https://github.com/mikedamay/PDependencyInjector.git](https://github.com/mikedamay/PDependencyInjector.git)
 
 This documentation is located at [http://mikedamay.co.uk/Simple/index.html](http://mikedamay.co.uk/Simple/index.html)
 
 Usage follows a simple pattern: the caller instantiates some significant object
-with a call to ```SimpleIOCContainer.CreateAndInjectDependnecies``` and that
+with a call to ```PDependencyInjector.CreateAndInjectDependnecies``` and that
 object is instiated together with dependencies to which it refers
 and so forth recursively through the tree of dependencies.
 
@@ -77,7 +77,7 @@ allow classes to be used by some class in the program
 to be swapped out without need to recode the calling
 class in any way.
 
-With the SimpleIOCContainer we accomplish that by
+With the PDependencyInjector we accomplish that by
 allowing a profile string to be associated with any
 bean (class to be instantiated) by including
 the string as a parameter to the *[Bean]* attribute.
@@ -86,7 +86,7 @@ be set up with a matching profile to ensure a
 matching set of beans are instantiated.
 
 The archetypal case is for testing which
-is particularly pertinent for the SimpleIOCContainer
+is particularly pertinent for the PDependencyInjector
 with its emphasis on injection into private
 member variables.
 
@@ -110,14 +110,14 @@ are not themselves marked as beans.
 * There are two implementations of the interface: 
 MyRepository which is the "production" implementation and *MyTestRepository*
 available for testing purposes.
-* The main program does not pass a profile when it creates the *SimpleIOCContainer*.
+* The main program does not pass a profile when it creates the *PDependencyInjector*.
   Therefore the production version of IMyRepository is instantiated.
 Howver the unit test passes a profile of "test" which matches the profile
 for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
 * *CreateAndInjectDependencies* will select a bean with a matching profile or, in the
 absence of a matching bean, a bean with no profile.
 * It is possible (and, in fact, usual) to specify multiple profiles to the 
-*SimpleIOCContainer* constructor.  This enables fine grained control at run-time
+*PDependencyInjector* constructor.  This enables fine grained control at run-time
 of which implementations are to be used.
 
 See Also:
@@ -141,7 +141,7 @@ Three aspirations underly the design of the container:
 
 In the interests of simplicity the libraries surface area is restricted to:
 
-* A single significant operational class `SimpleIOCContainer` coupled with 3 enums
+* A single significant operational class `PDependencyInjector` coupled with 3 enums
 * A single constructor for the container and a single 
 method `CreateAndInjectDependencies` albeit with 4 overloads
 * The Diagnostics class and its components which for most purposes can be 

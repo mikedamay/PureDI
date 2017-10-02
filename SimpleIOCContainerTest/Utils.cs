@@ -29,11 +29,11 @@ namespace IOCCTest
         /// <param name="testDataFolderName">e.g. "ScopeTestData" - no prefix requireed</param>
         /// <param name="className">e.g. "FactoryPrototype" - no ".cs" required</param>
         /// <returns>instantiated container with an assembly based on className but no tree</returns>
-        public static SimpleIOCContainer CreateIOCCinAssembly(string testDataFolderName
+        public static PDependencyInjector CreateIOCCinAssembly(string testDataFolderName
             , string className)
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
-            SimpleIOCContainer iocc = new SimpleIOCContainer(Assemblies: new[] { assembly });
+            PDependencyInjector iocc = new PDependencyInjector(Assemblies: new[] { assembly });
             //iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
         }

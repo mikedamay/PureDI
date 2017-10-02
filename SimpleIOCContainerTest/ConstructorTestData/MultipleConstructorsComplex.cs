@@ -7,7 +7,7 @@ namespace IOCCTest.ConstructorTestData
     [Bean]
     public class MultipleConstructorsComplex : IResultGetter
     {
-        [BeanReference] private SimpleIOCContainer container = null;
+        [BeanReference] private PDependencyInjector container = null;
         [BeanReference(ConstructorName = "first")] private Constructed first = null;
         [BeanReference(ConstructorName = "second")] private Constructed second = null;
         [BeanReference(ConstructorName = "first")] private Constructed third = null;
@@ -27,7 +27,7 @@ namespace IOCCTest.ConstructorTestData
         {
             fun(container, first, second,third);
         }
-        private void fun(SimpleIOCContainer sic, Constructed ca, Constructed cb, Constructed cc)
+        private void fun(PDependencyInjector sic, Constructed ca, Constructed cb, Constructed cc)
         {
             
         }

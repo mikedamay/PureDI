@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest</Configurations>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Remove="BadClientTestData\BadConstructor.cs" />
     <Compile Remove="BadClientTestData\BadFactory.cs" />
@@ -211,6 +211,7 @@
     <EmbeddedResource Include="TestData\TreeWithFields.cs" />
     <EmbeddedResource Include="ValidatorTestData\UnreachableStruct.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="MinorMethodsTest.cs" />
   </ItemGroup>

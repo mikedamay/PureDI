@@ -113,7 +113,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
             {
                 return attr.ConstructorName;
             }
-            return SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME;
+            return PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
         }
 
         public static ConstructorInfo GetConstructorNamed(this Type type, string name)

@@ -4,7 +4,7 @@ using com.TheDisappointedProgrammer.IOCC;
 namespace SimpleIOCCDocumentor
 {
     /// <summary>
-    /// e.g. [IOCCDocumentPaarser(DocumentPath : "SimpleIOCContainer.Docs.UserGuide.xml", XmlRoot : "userGuide")]
+    /// e.g. [IOCCDocumentPaarser(DocumentPath : "PDependencyInjector.Docs.UserGuide.xml", XmlRoot : "userGuide")]
     /// </summary>
     public class IOCCDocumentParserAttribute : BeanReferenceBaseAttribute
     {

@@ -23,7 +23,7 @@ namespace SimpleIOCCDocumentor
         private IDictionary<string, string> fragments = null;
 
         [BeanReference(Factory = typeof(ResourceFactory)
-            , FactoryParameter = new object[] {typeof(SimpleIOCContainer), "SimpleIOCContainer.Docs.apidoc.xsl"})]
+            , FactoryParameter = new object[] {typeof(PDependencyInjector), "SimpleIOCContainer.Docs.apidoc.xsl"})]
         private string apiDocStyleSheet = null;
         public ApiDocParser()
         {

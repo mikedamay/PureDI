@@ -12,7 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public IWouldBeImmutableDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
-          , ref IOCCDiagnostics diagnostics, ISet<string> profileSet, SimpleIOCContainer.OS os)
+          , ref IOCCDiagnostics diagnostics, ISet<string> profileSet, PDependencyInjector.OS os)
         {
             WouldBeImmutableDictionary<(Type, string), Type>.Builder map 
               = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
@@ -126,7 +126,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsABean(this Type type, ISet<string> profileSet, SimpleIOCContainer.OS os)
+        public static bool TypeIsABean(this Type type, ISet<string> profileSet, PDependencyInjector.OS os)
         {
             BeanBaseAttribute ida 
               = (BeanBaseAttribute)type.GetCustomAttributes()
@@ -134,9 +134,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             return 
               ida != null 
               && (
-              ida.Profile == SimpleIOCContainer.DEFAULT_PROFILE_ARG
+              ida.Profile == PDependencyInjector.DEFAULT_PROFILE_ARG
               || profileSet.Contains(ida.Profile))
-              && (ida.OS == SimpleIOCContainer.OS.Any 
+              && (ida.OS == PDependencyInjector.OS.Any 
               || ida.OS == os);
         }
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)

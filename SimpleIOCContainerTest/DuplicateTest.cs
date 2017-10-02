@@ -20,7 +20,7 @@ namespace IOCCTest
         public void ShouldDetectDuplicatesForProfile()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Duplicate.cs");
-            SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new[] {"myprofile"}, Assemblies: new[] { assembly });
+            PDependencyInjector sic = new PDependencyInjector(Profiles: new[] {"myprofile"}, Assemblies: new[] { assembly });
 
         //sic.SetAssemblies(assembly.GetName().Name);
             IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
@@ -31,7 +31,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForSpecificOs()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Os.cs");
-            SimpleIOCContainer sic = new SimpleIOCContainer(Assemblies: new[] { assembly });
+            PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
             IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);

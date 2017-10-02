@@ -33,7 +33,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// returning it together with the injection state
         /// </summary>
         /// <param name="injectionState">this should be passed to any call to
-        /// SimpleIOCContainer.CreateAndInjectDependencies if there is one.</param>
+        /// PDependencyInjector.CreateAndInjectDependencies if there is one.</param>
         /// <param name="args">contains FactoryParams as declared on the BeanReference for the factory</param>
         /// <returns>
         /// if a call is made to CreateAndInjectDependencies then
@@ -80,7 +80,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             get => constructorName;
             set => constructorName = value.ToLower();
         }
-        private string name = SimpleIOCContainer.DEFAULT_BEAN_NAME;
+        private string name = PDependencyInjector.DEFAULT_BEAN_NAME;
         /// <summary>
         /// optionally a bean reference can delegate injection to a
         /// factory which provides considerable flexibility for the
@@ -106,7 +106,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         /// <see cref="BeanScope"/>
         public BeanScope Scope = BeanScope.Singleton;
-        private string constructorName = SimpleIOCContainer.DEFAULT_CONSTRUCTOR_NAME;
+        private string constructorName = PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
     }
     /// <summary>
     /// Any member variable or constructor parameter annotated with this attribute

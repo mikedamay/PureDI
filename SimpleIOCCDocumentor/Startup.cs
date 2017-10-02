@@ -17,7 +17,7 @@ namespace SimpleIOCCDocumentor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer(Profiles: new string[] {"authoring"});
+            PDependencyInjector sic = new PDependencyInjector(Profiles: new string[] {"authoring"});
             InjectionState injectionState;
             object gc;
             (gc, injectionState) =

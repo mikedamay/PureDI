@@ -24,7 +24,7 @@ namespace IOCCTest.MultipleCallsTestData
     [Bean]
     public class ActualFactory : IFactory
     {
-        [BeanReference] private SimpleIOCContainer simpleIocContainer = null;
+        [BeanReference] private PDependencyInjector simpleIocContainer = null;
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             return simpleIocContainer.CreateAndInjectDependencies<SimpleChild>(injectionState);

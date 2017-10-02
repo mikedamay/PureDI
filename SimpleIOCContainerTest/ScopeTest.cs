@@ -74,7 +74,7 @@ namespace IOCCTest
             return Utils.CreateAndRunAssembly($"ScopeTestData", className);
         }
 
-        private static SimpleIOCContainer MakeIOCCForTestAssembly(string className)
+        private static PDependencyInjector MakeIOCCForTestAssembly(string className)
         {
             return Utils.CreateIOCCinAssembly($"ScopeTestData", className);
         }

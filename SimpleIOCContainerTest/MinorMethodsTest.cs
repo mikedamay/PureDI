@@ -10,16 +10,16 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldIdentifyAvailableBean()
         {
-            SimpleIOCContainer sic = new SimpleIOCContainer();
-            Assert.IsFalse(sic.HasBeenDefinition(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
+            PDependencyInjector sic = new PDependencyInjector();
+            Assert.IsFalse(sic.HasBeenDefinition(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
                     // the assembly was not included - a bit of a gotcha
-            Assert.IsNull(sic.GetBean(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
-            Assert.IsFalse(sic.IsBeanInstantiated(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
+            Assert.IsNull(sic.GetBean(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
+            Assert.IsFalse(sic.IsBeanInstantiated(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
             sic.CreateAndInjectDependencies<Beaner>();
-            Assert.IsTrue(sic.HasBeenDefinition(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
-            Assert.IsNotNull(sic.GetBean(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
-            Assert.IsTrue(sic.IsBeanInstantiated(typeof(Beaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
-            Assert.IsFalse(sic.HasBeenDefinition(typeof(NonBeaner), SimpleIOCContainer.DEFAULT_BEAN_NAME));
+            Assert.IsTrue(sic.HasBeenDefinition(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
+            Assert.IsNotNull(sic.GetBean(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
+            Assert.IsTrue(sic.IsBeanInstantiated(typeof(Beaner), PDependencyInjector.DEFAULT_BEAN_NAME));
+            Assert.IsFalse(sic.HasBeenDefinition(typeof(NonBeaner), PDependencyInjector.DEFAULT_BEAN_NAME));
         }
 
     }
