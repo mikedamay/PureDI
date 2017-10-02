@@ -1,4 +1,4 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using PureDI;
 [Bean]
 public class Program
 {

@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI;
+using PureDI.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest
 {
-    [com.TheDisappointedProgrammer.IOCC.Ignore]
+    [PureDI.Ignore]
     public interface MyIgnoredReference
     {
         

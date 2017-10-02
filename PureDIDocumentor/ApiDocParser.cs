@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.AspNetCore.Hosting.Builder;
 
 namespace SimpleIOCCDocumentor

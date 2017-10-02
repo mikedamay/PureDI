@@ -1,5 +1,5 @@
 ﻿using System;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 [Bean]
 public class FactoryUser

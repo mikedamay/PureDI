@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// Contains all the functionality of [Constructor]

@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.TestCode;
 
 

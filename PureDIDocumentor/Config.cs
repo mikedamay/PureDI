@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.Extensions.Configuration;
 
 namespace SimpleIOCCDocumentor

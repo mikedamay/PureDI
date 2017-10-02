@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// The standard exception thrown by the library

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// compares a type in the assembly with an ioc type spec

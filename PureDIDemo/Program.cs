@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace SimpleIOCCDemo
 {

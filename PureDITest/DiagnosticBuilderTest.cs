@@ -4,8 +4,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using com.TheDisappointedProgrammer.IOCC;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI;
+using PureDI.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest

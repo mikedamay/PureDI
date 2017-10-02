@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// Any class to be injected into another class and

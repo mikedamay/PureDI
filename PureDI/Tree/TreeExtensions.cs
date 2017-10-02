@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace com.TheDisappointedProgrammer.IOCC.Tree
+namespace PureDI.Tree
 {
     internal static class TreeExtensions
     {

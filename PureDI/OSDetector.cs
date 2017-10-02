@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using static com.TheDisappointedProgrammer.IOCC.PDependencyInjector;
+using static PureDI.PDependencyInjector;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal interface OSDetector
     {
-        OS DetectOS();
+        PDependencyInjector.OS DetectOS();
     }
     /// <inheritdoc/>/>
     public class UnsupportedPlatformException : Exception
@@ -18,15 +18,15 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         // TODO use System.Runtime.InteropServices.RuntimeInformation.Platform when the position
         // is clear
-        public OS DetectOS()
+        public PDependencyInjector.OS DetectOS()
         {
             // https://stackoverflow.com/questions/38790802/determine-operating-system-in-net-core
             // thanks to: https://stackoverflow.com/users/3325704/jariq with amendments by me
-            OS os;
+            PDependencyInjector.OS os;
             string windir = Environment.GetEnvironmentVariable("windir");
             if (!string.IsNullOrEmpty(windir) && windir.Contains(@"\") && Directory.Exists(windir))
             {
-                os = OS.Windows;
+                os = PDependencyInjector.OS.Windows;
             }
             else if (File.Exists(@"/proc/sys/kernel/ostype"))
             {
@@ -34,7 +34,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 if (osType.StartsWith("Linux", StringComparison.OrdinalIgnoreCase))
                 {
                     // Note: Android gets here too
-                    os = OS.Linux;
+                    os = PDependencyInjector.OS.Linux;
                 }
                 else
                 {
@@ -44,7 +44,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             else if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
             {
                 // Note: iOS gets here too
-                os = OS.MacOS;
+                os = PDependencyInjector.OS.MacOS;
             }
             else
             {

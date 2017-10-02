@@ -5,11 +5,11 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using System.CodeDom.Compiler;
 using System.Collections.Immutable;
 using System.Linq;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI.Common;
 using Microsoft.CSharp;
 
 namespace IOCCTest

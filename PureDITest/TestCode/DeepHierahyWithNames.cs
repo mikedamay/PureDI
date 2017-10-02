@@ -1,5 +1,5 @@
 ﻿using System.Dynamic;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace IOCCTest.TestCode.WithNames
 {

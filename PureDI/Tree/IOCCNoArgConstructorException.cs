@@ -1,6 +1,6 @@
 using System;
 
-namespace com.TheDisappointedProgrammer.IOCC.Tree
+namespace PureDI.Tree
 {
     internal class IOCCNoArgConstructorException : Exception
     {

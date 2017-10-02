@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using static PureDI.Common.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     [Ignore]
     public abstract class ResourceFactoryBase : IFactory

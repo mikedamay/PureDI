@@ -43,15 +43,15 @@ member variables.</p>
 can be injected:</p>
 <div class="pre-scrollable">
 <pre><code>using System;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public class Profiles
 {
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        MyService ms = sic.CreateAndInjectDependencies&lt;MyService&gt;().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        MyService ms = pdi.CreateAndInjectDependencies&lt;MyService&gt;().rootBean;
         Console.WriteLine(ms.DoStuff());   // prints &quot;doing the real thing&quot;
     }
 }

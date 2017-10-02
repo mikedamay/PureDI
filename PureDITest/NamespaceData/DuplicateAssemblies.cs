@@ -1,5 +1,5 @@
 ﻿
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DuplicateAssemblies

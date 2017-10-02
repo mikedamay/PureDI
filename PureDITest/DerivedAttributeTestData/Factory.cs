@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.IO;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData

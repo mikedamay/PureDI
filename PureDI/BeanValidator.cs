@@ -2,9 +2,9 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC.Tree;
+using PureDI.Tree;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal class BeanValidator
     {

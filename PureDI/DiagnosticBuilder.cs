@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal class DiagnosticBuilder
     {

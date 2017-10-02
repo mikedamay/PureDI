@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// <see cref="Diagnostic"/>

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using static PureDI.Common.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal class CycleGuard
     {

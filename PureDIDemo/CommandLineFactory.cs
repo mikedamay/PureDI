@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace SimpleIOCCDemo
 {

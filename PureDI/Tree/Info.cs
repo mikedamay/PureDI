@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace com.TheDisappointedProgrammer.IOCC.Tree
+namespace PureDI.Tree
 {
     internal class Info
     {

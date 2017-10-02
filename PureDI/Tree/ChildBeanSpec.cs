@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace com.TheDisappointedProgrammer.IOCC.Tree
+namespace PureDI.Tree
 {
     /// <summary>
     /// objects of this type are instantiated when the beans that will be used as

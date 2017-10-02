@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal class StringToTypeTreeConverter
     {

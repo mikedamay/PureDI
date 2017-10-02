@@ -41,15 +41,15 @@ startup.  The framework is principally concerned with singletons that
 have the same life span as the program.</p>
 <p>A simple example (Introduction.cs) is as follows:</p>
 <div class="pre-scrollable">
-<pre><code>using com.TheDisappointedProgrammer.IOCC;
+<pre><code>using PureDI;
 [Bean]
 public class Program
 {
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        Program prog = pdi.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
         prog.SaySomething();
     }
     private void SaySomething()

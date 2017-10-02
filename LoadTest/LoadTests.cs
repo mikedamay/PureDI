@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -50,12 +50,11 @@ namespace IOCCTest.LoadTest
             CompilationUnitSyntax cus = CompilationUnit()
                     .WithUsings(
                         SingletonList<UsingDirectiveSyntax>(
-                            UsingDirective(
-                                QualifiedName(
-                                    QualifiedName(
-                                        IdentifierName("com"),
-                                        IdentifierName("TheDisappointedProgrammer")),
-                                    IdentifierName("IOCC")))))
+                            UsingDirective(IdentifierName("PureDI"))))
+                                
+                                    
+                                        
+                                   
                     .WithMembers(MakeVanillaWithBeanClass()
                         //List<MemberDeclarationSyntax>(new MemberDeclarationSyntax[]
                         //    {
@@ -76,11 +75,8 @@ namespace IOCCTest.LoadTest
                     .WithUsings(
                         SingletonList<UsingDirectiveSyntax>(
                             UsingDirective(
-                                QualifiedName(
-                                    QualifiedName(
-                                        IdentifierName("com"),
-                                        IdentifierName("TheDisappointedProgrammer")),
-                                    IdentifierName("IOCC")))))
+                               
+                                    IdentifierName("PureDI"))))
                     .WithMembers(
                         List<MemberDeclarationSyntax>(MakeClassList().ToArray()
 

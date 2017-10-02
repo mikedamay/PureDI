@@ -1,4 +1,4 @@
-﻿namespace com.TheDisappointedProgrammer.IOCC.Common
+﻿namespace PureDI.Common
 {
     internal static class Constants
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     public partial class PDependencyInjector
     {

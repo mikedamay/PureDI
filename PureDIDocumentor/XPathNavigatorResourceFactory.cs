@@ -2,8 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Xml.XPath;
-using com.TheDisappointedProgrammer.IOCC;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using PureDI;
+using static PureDI.Common.Common;
 
 namespace SimpleIOCCDocumentor
 {

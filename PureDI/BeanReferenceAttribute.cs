@@ -1,6 +1,6 @@
 using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// an instance of BeanFactoryArgs is passed by the container

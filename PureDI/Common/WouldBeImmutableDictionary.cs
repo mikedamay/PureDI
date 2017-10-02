@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace com.TheDisappointedProgrammer.IOCC.Common
+namespace PureDI.Common
 {
 
     /// <summary>

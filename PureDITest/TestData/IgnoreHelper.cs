@@ -1,4 +1,4 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using PureDI;
 using MyIgnoredReference = IOCCTest.MyIgnoredReference;
 
 namespace IOCCTest.TestData

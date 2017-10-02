@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal static class DIExtensions
     {

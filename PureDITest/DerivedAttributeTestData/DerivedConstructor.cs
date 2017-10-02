@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Dynamic;
 using System.Reflection.Emit;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData

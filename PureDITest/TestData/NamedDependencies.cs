@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 // this module is not compiled as part of the project.  It is embedded as a resource.
 namespace IOCCTest.TestData

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// This class contains the history of dependencies injected in
@@ -62,13 +62,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         /// <summary>
         /// shortcut to diagnostics.AllToString()
-        /// <see cref="IOCC.Diagnostics.AllToString"/>
+        /// <see cref="PureDI.Diagnostics.AllToString"/>
         /// </summary>
         /// <returns></returns>
         public string AllDiagnosticsToString() => diagnostics.AllToString();
         /// <summary>
         /// shortcut to diagnostics.ToString()
-        /// <see cref="IOCC.Diagnostics.ToString"/>
+        /// <see cref="PureDI.Diagnostics.ToString"/>
         /// </summary>
         /// <returns></returns>
         public string WarningsToString() => diagnostics.ToString();

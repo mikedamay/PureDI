@@ -1,6 +1,6 @@
 ﻿using System.Dynamic;
 using System.Linq.Expressions;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData

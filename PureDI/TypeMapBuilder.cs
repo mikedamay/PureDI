@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC.Common;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using PureDI.Common;
+using static PureDI.Common.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     internal class TypeMapBuilder
     {

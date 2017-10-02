@@ -1,5 +1,5 @@
 ﻿using System.Security.AccessControl;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace IOCCTest.TestCode
 {

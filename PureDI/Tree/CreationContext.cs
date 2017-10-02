@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.TheDisappointedProgrammer.IOCC.Tree
+namespace PureDI.Tree
 {
         internal class CreationContext
         {

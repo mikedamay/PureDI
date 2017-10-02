@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using static PureDI.Common.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     /// <summary>
     /// takes a string like "MyClass&lt;MyClass2&gt;" and builds a tree

@@ -1,5 +1,5 @@
 ﻿using System.Xml.XPath;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace SimpleIOCCDocumentor
 {

@@ -1,7 +1,7 @@
 ﻿using System.Reflection.Metadata;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using System.IO;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI.Common;
 using IOPath = System.IO.Path; 
 
 namespace SimpleIOCCDocumentor

@@ -2,8 +2,8 @@
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
-using com.TheDisappointedProgrammer.IOCC.Tree;
+using PureDI;
+using PureDI.Tree;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DifficultTypeTestData

@@ -7,11 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using com.TheDisappointedProgrammer.IOCC.Common;
-using com.TheDisappointedProgrammer.IOCC.Tree;
-using static com.TheDisappointedProgrammer.IOCC.Common.Common;
+using PureDI.Common;
+using PureDI.Tree;
+using static PureDI.Common.Common;
 
-namespace com.TheDisappointedProgrammer.IOCC
+namespace PureDI
 {
     // DONE constructor paramter injection
     // DONE prototypes
@@ -394,7 +394,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             return (rootObject, newInjectionState);
         }
         /// <summary>
-        /// <see cref="CreateAndInjectDependencies(string,com.TheDisappointedProgrammer.IOCC.InjectionState,string,string,com.TheDisappointedProgrammer.IOCC.BeanScope)"/>
+        /// <see cref="CreateAndInjectDependencies(string,InjectionState,string,string,BeanScope)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>

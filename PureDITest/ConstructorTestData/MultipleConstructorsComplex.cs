@@ -1,6 +1,6 @@
 ﻿using System.Dynamic;
 using IOCCTest.TestCode;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace IOCCTest.ConstructorTestData
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IOCCTest.TestCode;
 

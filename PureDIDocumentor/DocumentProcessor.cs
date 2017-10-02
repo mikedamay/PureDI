@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using com.TheDisappointedProgrammer.IOCC;
-using com.TheDisappointedProgrammer.IOCC.Common;
+using PureDI;
+using PureDI.Common;
 
 namespace SimpleIOCCDocumentor
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using BeanNamesRunner;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 [Bean]
 public class Constructor

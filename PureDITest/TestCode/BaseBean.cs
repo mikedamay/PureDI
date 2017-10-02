@@ -1,4 +1,4 @@
-﻿using com.TheDisappointedProgrammer.IOCC;
+﻿using PureDI;
 using WithNames = IOCCTest.TestCode.WithNames;
 
 namespace PureDITest.TestCode

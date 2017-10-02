@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 namespace SimpleIOCCDocumentor
 {

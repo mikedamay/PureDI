@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices.WindowsRuntime;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 namespace SimpleIOCCDemo
 {
     [Bean]

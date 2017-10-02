@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using IOCCTest.DifficultTypeTestData;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
