@@ -77,7 +77,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependenciesWithString(null);
+                    sic.CreateAndInjectDependencies((string)null);
                 });
 
         }
@@ -89,7 +89,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", rootBeanName: null);
+                    sic.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: null);
                 });
 
         }
@@ -101,7 +101,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependenciesWithString("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    sic.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -113,7 +113,7 @@ namespace IOCCTest
                 () =>
                 {
                     var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies(null);
+                    sic.CreateAndInjectDependencies((Type)null);
                 });
 
         }

@@ -12,7 +12,7 @@ namespace IOCCTest
             try
             {
                 PDependencyInjector sic = Utils.CreateIOCCinAssembly("BadClientTestData", "BadConstructor");
-                sic.CreateAndInjectDependenciesWithString("IOCCTest.BadClientTestData.BadConstructor");
+                sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadConstructor");
                 Assert.Fail();
             }
             catch (IOCCException iex)
@@ -32,7 +32,7 @@ namespace IOCCTest
             try
             {
                 PDependencyInjector sic = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactory");
-                (var rootBean, var InjectionState) = sic.CreateAndInjectDependenciesWithString("IOCCTest.BadClientTestData.BadFactory");
+                (var rootBean, var InjectionState) = sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactory");
                 Assert.Fail();
             }
             catch (IOCCException iex)
@@ -52,7 +52,7 @@ namespace IOCCTest
             try
             {
                 PDependencyInjector sic = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactoryForParam");
-                (var rootBean, var InjectionState) = sic.CreateAndInjectDependenciesWithString("IOCCTest.BadClientTestData.BadFactoryForParam");
+                (var rootBean, var InjectionState) = sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactoryForParam");
                 Assert.Fail();
             }
             catch (IOCCException iex)

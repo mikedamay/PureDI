@@ -16,7 +16,7 @@ namespace IOCCTest
                 CreateIOCCinAssembly(DERIVED_ATTRIBUTE_TEST_NAMESPACE
                     , "DerivedConstructor");
             (object obj, InjectionState InjectionState) 
-                = sic.CreateAndInjectDependenciesWithString(
+                = sic.CreateAndInjectDependencies(
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
                 , rootConstructorName: "TestConstructor");
             IResultGetter result = obj as IResultGetter;

@@ -16,7 +16,7 @@ namespace IOCCTest
             Simple simple = new Simple();
             PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
             //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
-            sic.CreateAndInjectDependenciesWithObject(simple);
+            sic.CreateAndInjectDependencies(simple);
             Assert.IsNotNull(simple.GetResults().Child);
         }
 
@@ -26,7 +26,7 @@ namespace IOCCTest
             ConnectUp connectUp = new ConnectUp();
             PDependencyInjector sic = new PDependencyInjector();
             var existing = sic.CreateAndInjectDependencies<ExistingRoot>();
-            sic.CreateAndInjectDependenciesWithObject( connectUp, existing.injectionState);
+            sic.CreateAndInjectDependencies( connectUp, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
@@ -47,7 +47,7 @@ namespace IOCCTest
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             InjectionState injectionState;
-            (obj, injectionState) = sic.CreateAndInjectDependenciesWithObject(new DeepHierarchy());
+            (obj, injectionState) = sic.CreateAndInjectDependencies(new DeepHierarchy());
             SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>(injectionState).rootBean;
             Assert.IsNotNull(someUser.deep);
         }
@@ -57,7 +57,7 @@ namespace IOCCTest
         {
             PDependencyInjector sic = new PDependencyInjector();
             (object inserted, InjectionState InjectionState) 
-              = sic.CreateAndInjectDependenciesWithObject(new InsertedAsObject());
+              = sic.CreateAndInjectDependencies(new InsertedAsObject());
             InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
             Assert.IsNotNull(infer.inserted);
         }

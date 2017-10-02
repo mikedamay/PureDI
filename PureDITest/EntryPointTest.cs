@@ -22,7 +22,7 @@ namespace IOCCTest
             try
             {
                 var sic = CreateIOCCinAssembly("EntryPointTestData", "RootInterface");
-                sic.CreateAndInjectDependenciesWithString("xxx");
+                sic.CreateAndInjectDependencies("xxx");
                 Assert.Fail();
             }
             catch (IOCCException iex)

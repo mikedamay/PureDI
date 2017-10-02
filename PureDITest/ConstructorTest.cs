@@ -174,7 +174,7 @@ namespace IOCCTest
             PDependencyInjector sic =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
-            (object bean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+            (object bean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.NamedRootConstructor", rootConstructorName: "TestConstructor");
             IOCCDiagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
@@ -190,7 +190,7 @@ namespace IOCCTest
         {
             PDependencyInjector sic
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
-            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependenciesWithString(
+            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;
 
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);

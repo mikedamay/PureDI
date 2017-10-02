@@ -19,7 +19,7 @@ namespace IOCCTest
                 PDependencyInjector sic = new PDependencyInjector(Profiles: new string[] {"Simple"}, Assemblies: new[] { assembly });
                 //sic.SetAssemblies(assembly.GetName().Name);
                  (object rootBean, InjectionState injectionState) =
-                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.SimpleProfile");
+                    sic.CreateAndInjectDependencies("IOCCTest.ProfileTestData.SimpleProfile");
                 var result = rootBean as IResultGetter;
                 diagnostics = injectionState.Diagnostics;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
@@ -41,7 +41,7 @@ namespace IOCCTest
                 PDependencyInjector sic = new PDependencyInjector(Profiles: new string[] { "P1", "P2", "P3" }, Assemblies: new[] { assembly });
                 //sic.SetAssemblies(assembly.GetName().Name);
                 (object rootBean, InjectionState injectionState) =
-                    sic.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile");
+                    sic.CreateAndInjectDependencies("IOCCTest.ProfileTestData.ComplexProfile");
                 var result = rootBean as IResultGetter;
                 diagnostics = injectionState.Diagnostics;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
@@ -68,11 +68,11 @@ namespace IOCCTest
                 PDependencyInjector sic2 = new PDependencyInjector(Profiles: new string[] { "P1", "P4" }, Assemblies : new[] { assembly });
                 //sic2.SetAssemblies(assembly.GetName().Name);
                 (object rootBean1, InjectionState injectionState) =
-                    sic1.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile");
+                    sic1.CreateAndInjectDependencies("IOCCTest.ProfileTestData.ComplexProfile");
                 var result1 = rootBean1 as IResultGetter;
                 diagnostics = injectionState.Diagnostics;
                 var result2 =
-                    sic2.CreateAndInjectDependenciesWithString("IOCCTest.ProfileTestData.ComplexProfile").rootBean as
+                    sic2.CreateAndInjectDependencies("IOCCTest.ProfileTestData.ComplexProfile").rootBean as
                         IResultGetter;
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsNotNull(result1?.GetResults().ChildP2);
@@ -96,7 +96,7 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             PDependencyInjector sic = new PDependencyInjector(Profiles: new string[] { "dobest" }, Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate");
             var result = rootBean as IResultGetter;
             var diagnostics = injectionState.Diagnostics;
@@ -110,7 +110,7 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             PDependencyInjector sic = new PDependencyInjector(Profiles:new string[] { "thirdbest" }, Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate");
             var result = rootBean as IResultGetter;
             var diagnostics = injectionState.Diagnostics;
@@ -123,7 +123,7 @@ namespace IOCCTest
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.BestCandidate.cs");
             PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { assembly });
             //sic.SetAssemblies(assembly.GetName().Name);
-            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependenciesWithString(
+            (object rootBean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
                 "IOCCTest.ProfileTestData.BestCandidate");
             var result = rootBean as IResultGetter;
             var diagnostics = injectionState.Diagnostics;

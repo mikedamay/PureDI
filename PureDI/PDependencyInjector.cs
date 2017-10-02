@@ -333,7 +333,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// root bean only.  It has no effect on the rest of the tree.</param>
         /// <returns>an object of rootType</returns>
         /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
-        public (object rootBean, InjectionState injectionState) CreateAndInjectDependenciesWithString(
+        public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(
           string rootTypeName, InjectionState injectionState = null
             , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
             , BeanScope scope = BeanScope.Singleton)
@@ -372,7 +372,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// Subsequent calls will typically take some saved instance of injection state.</param>
         /// <returns>an object which is the root of a tree of dependencies</returns>
         public (object rootBean, InjectionState injectionState) 
-          CreateAndInjectDependenciesWithObject(object rootObject
+          CreateAndInjectDependencies(object rootObject
           , InjectionState injectionState = null)
         {
             CheckArgument(rootObject);
@@ -394,7 +394,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             return (rootObject, newInjectionState);
         }
         /// <summary>
-        /// <see cref="CreateAndInjectDependenciesWithString"/>
+        /// <see cref="CreateAndInjectDependencies(string,com.TheDisappointedProgrammer.IOCC.InjectionState,string,string,com.TheDisappointedProgrammer.IOCC.BeanScope)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>

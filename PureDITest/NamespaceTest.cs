@@ -14,7 +14,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithNoNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("NoNamespace");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("NoNamespace");
             IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -25,7 +25,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceFromNoNamespaceToNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("ReferenceToNamespacedClass");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass");
             IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -37,7 +37,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferenceToNoNamespaceFromNamespace()
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependenciesWithString("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass");
             IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);

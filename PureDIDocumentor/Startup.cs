@@ -21,7 +21,7 @@ namespace SimpleIOCCDocumentor
             InjectionState injectionState;
             object gc;
             (gc, injectionState) =
-                sic.CreateAndInjectDependenciesWithObject(new GenericConfig(("relativePath", "../../../../Simple")))
+                sic.CreateAndInjectDependencies(new GenericConfig(("relativePath", "../../../../Simple")))
                 ;
             diagnostics3 = injectionState.Diagnostics;
             (IDocumentProcessor dp, InjectionState @is) = sic.CreateAndInjectDependencies<
