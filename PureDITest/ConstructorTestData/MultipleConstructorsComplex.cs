@@ -27,7 +27,7 @@ namespace IOCCTest.ConstructorTestData
         {
             fun(container, first, second,third);
         }
-        private void fun(PDependencyInjector sic, Constructed ca, Constructed cb, Constructed cc)
+        private void fun(PDependencyInjector pdi, Constructed ca, Constructed cb, Constructed cc)
         {
             
         }

@@ -12,11 +12,11 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithDerivedConstructor()
         {
-            PDependencyInjector sic =
+            PDependencyInjector pdi =
                 CreateIOCCinAssembly(DERIVED_ATTRIBUTE_TEST_NAMESPACE
                     , "DerivedConstructor");
             (object obj, InjectionState InjectionState) 
-                = sic.CreateAndInjectDependencies(
+                = pdi.CreateAndInjectDependencies(
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
                 , rootConstructorName: "TestConstructor");
             IResultGetter result = obj as IResultGetter;

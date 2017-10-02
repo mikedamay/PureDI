@@ -8,8 +8,8 @@ namespace SimpleIOCCDemo
     {
         static void Main(string[] args)
         {
-            PDependencyInjector sic = new PDependencyInjector();
-            TodoProcessor tdp = sic.CreateAndInjectDependencies<TodoProcessor>().rootBean;
+            PDependencyInjector pdi = new PDependencyInjector();
+            TodoProcessor tdp = pdi.CreateAndInjectDependencies<TodoProcessor>().rootBean;
             tdp.Process();
             Thread.Sleep(5000);
             Console.Read();

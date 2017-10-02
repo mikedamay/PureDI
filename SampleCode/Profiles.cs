@@ -6,8 +6,8 @@ public class Profiles
 {
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        MyService ms = sic.CreateAndInjectDependencies<MyService>().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        MyService ms = pdi.CreateAndInjectDependencies<MyService>().rootBean;
         Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
     }
 }

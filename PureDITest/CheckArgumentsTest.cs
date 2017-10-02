@@ -14,8 +14,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    //sic.SetAssemblies(null);
+                    var pdi = new PDependencyInjector();
+                    //pdi.SetAssemblies(null);
                 });
 
         }
@@ -26,8 +26,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
                 });
 
         }
@@ -38,8 +38,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -51,8 +51,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
                 });
 
         }
@@ -63,8 +63,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -76,8 +76,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies((string)null);
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies((string)null);
                 });
 
         }
@@ -88,8 +88,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: null);
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: null);
                 });
 
         }
@@ -100,8 +100,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
                     );
                 });
 
@@ -112,8 +112,8 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector();
-                    sic.CreateAndInjectDependencies((Type)null);
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies((Type)null);
                 });
 
         }
@@ -123,7 +123,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector(Profiles: new[] { (string)null });
+                    var pdi = new PDependencyInjector(Profiles: new[] { (string)null });
                 });
 
         }
@@ -133,7 +133,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector(Profiles: new[] { "" });
+                    var pdi = new PDependencyInjector(Profiles: new[] { "" });
                 });
 
         }
@@ -143,7 +143,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector(Profiles: new[] { " " });
+                    var pdi = new PDependencyInjector(Profiles: new[] { " " });
                 });
 
         }
@@ -153,7 +153,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var sic = new PDependencyInjector(Profiles: new[] { "goodstuff", null });
+                    var pdi = new PDependencyInjector(Profiles: new[] { "goodstuff", null });
                 });
 
         }

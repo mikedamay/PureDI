@@ -11,12 +11,12 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldExtendTreeWhenMoreCallsAreMode()
         {
-            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
+            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
             (object simpleBean, InjectionState injectionState) 
-              = sic.CreateAndInjectDependencies(
+              = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Simple");
             (object furtherBean, InjectionState injectionState2) 
-              = sic.CreateAndInjectDependencies(
+              = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Further", injectionState);
             Assert.AreEqual(simpleBean, ((IResultGetter)furtherBean)?.GetResults().Simple );
         }
@@ -24,17 +24,17 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldRejectAttemptToCreateTreeForASecondTimeWithoutState()
         {
-            //PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
-            PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly});
+            //PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
+            PDependencyInjector pdi = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly});
                     // remote assembly refuses to work (Bad IL Format) in this test despite
                     // being identical to the one above
             Assert.ThrowsException<ArgumentException>(() =>
                 {
                     (object simpleBean, InjectionState injectionState) 
-                        = sic.CreateAndInjectDependencies(
+                        = pdi.CreateAndInjectDependencies(
                         "IOCCTest.MultipleCallsTestData.Fails");
                     (object furtherBean, InjectionState injectionState2) 
-                        = sic.CreateAndInjectDependencies(
+                        = pdi.CreateAndInjectDependencies(
                         "IOCCTest.MultipleCallsTestData.FurtherFails");
                 }
             );
@@ -43,20 +43,20 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithMultipleCallsWithEmptyState()
         {
-            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
+            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
             (object empty1, InjectionState injectionState) 
-              = sic.CreateAndInjectDependencies(
+              = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Empty");
-            (object empty2, InjectionState @is2) = sic.CreateAndInjectDependencies(
+            (object empty2, InjectionState @is2) = pdi.CreateAndInjectDependencies(
                 "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty);
             Assert.AreNotEqual(empty1, empty2);
         }
         [TestMethod]
         public void ShouldCreateTreesWithRecursingFactories()
         {
-            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
+            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
             (object factory1, InjectionState injectionState) 
-              = sic.CreateAndInjectDependencies(
+              = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.SimpleFactory");
             Assert.IsNotNull( ((IResultGetter)factory1)?.GetResults().SimpleChild);
         }
@@ -64,9 +64,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithAComplexArrangementOfFactories()
         {
-            PDependencyInjector sic = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
+            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
             (object factory1, InjectionState injectionState)
-                = sic.CreateAndInjectDependencies(
+                = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.ComplexFactory");
             IResultGetter result = factory1 as IResultGetter;
             ;

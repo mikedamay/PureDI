@@ -171,10 +171,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithNamedRootConstructor()
         {
-            PDependencyInjector sic =
+            PDependencyInjector pdi =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
-            (object bean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
+            (object bean, InjectionState injectionState) = pdi.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.NamedRootConstructor", rootConstructorName: "TestConstructor");
             Diagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
@@ -188,9 +188,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithMultipleConstructorsComplex()
         {
-            PDependencyInjector sic
+            PDependencyInjector pdi
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
-            Diagnostics diagnostics = sic.CreateAndInjectDependencies(
+            Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;
 
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);

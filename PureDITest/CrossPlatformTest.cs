@@ -22,9 +22,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateLinuxTypesOnLinux()
         {
-            PDependencyInjector sic = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
+            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
             (object rootBean, InjectionState injectionState)
-                = sic.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform");
+                = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform");
             IResultGetter result = rootBean as IResultGetter;
 #if WINDOWSTEST
             Assert.IsNotNull(result.GetResults().Windows);

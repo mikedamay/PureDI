@@ -14,9 +14,9 @@ namespace IOCCTest
         public void SHouldCreateTreeForInstantiatedObject()
         {
             Simple simple = new Simple();
-            PDependencyInjector sic = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
-            //sic.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
-            sic.CreateAndInjectDependencies(simple);
+            PDependencyInjector pdi = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
+            //pdi.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
+            pdi.CreateAndInjectDependencies(simple);
             Assert.IsNotNull(simple.GetResults().Child);
         }
 
@@ -24,9 +24,9 @@ namespace IOCCTest
         public void ShouldConnectInstantiatedObjectToExistingTree()
         {
             ConnectUp connectUp = new ConnectUp();
-            PDependencyInjector sic = new PDependencyInjector();
-            var existing = sic.CreateAndInjectDependencies<ExistingRoot>();
-            sic.CreateAndInjectDependencies( connectUp, existing.injectionState);
+            PDependencyInjector pdi = new PDependencyInjector();
+            var existing = pdi.CreateAndInjectDependencies<ExistingRoot>();
+            pdi.CreateAndInjectDependencies( connectUp, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
@@ -34,8 +34,8 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
-            PDependencyInjector sic = new PDependencyInjector();
-            Complex complex = sic.CreateAndInjectDependencies<Complex>().rootBean;
+            PDependencyInjector pdi = new PDependencyInjector();
+            Complex complex = pdi.CreateAndInjectDependencies<Complex>().rootBean;
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
@@ -43,22 +43,22 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
-            PDependencyInjector sic = new PDependencyInjector(
+            PDependencyInjector pdi = new PDependencyInjector(
               Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             InjectionState injectionState;
-            (obj, injectionState) = sic.CreateAndInjectDependencies(new DeepHierarchy());
-            SomeUser someUser = sic.CreateAndInjectDependencies<SomeUser>(injectionState).rootBean;
+            (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());
+            SomeUser someUser = pdi.CreateAndInjectDependencies<SomeUser>(injectionState).rootBean;
             Assert.IsNotNull(someUser.deep);
         }
 
         [TestMethod]
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
-            PDependencyInjector sic = new PDependencyInjector();
+            PDependencyInjector pdi = new PDependencyInjector();
             (object inserted, InjectionState InjectionState) 
-              = sic.CreateAndInjectDependencies(new InsertedAsObject());
-            InferAssembly infer = sic.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
+              = pdi.CreateAndInjectDependencies(new InsertedAsObject());
+            InferAssembly infer = pdi.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
             Assert.IsNotNull(infer.inserted);
         }
     }

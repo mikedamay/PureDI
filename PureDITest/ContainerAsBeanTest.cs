@@ -26,10 +26,10 @@ namespace IOCCTest
         {
             try
             {
-                PDependencyInjector sic = new PDependencyInjector();
+                PDependencyInjector pdi = new PDependencyInjector();
                 ContainerAsBeanTest.TrivialBean tb 
-                  = sic.CreateAndInjectDependencies<ContainerAsBeanTest.TrivialBean>().rootBean;
-                Assert.AreEqual(sic, tb.child);
+                  = pdi.CreateAndInjectDependencies<ContainerAsBeanTest.TrivialBean>().rootBean;
+                Assert.AreEqual(pdi, tb.child);
             } finally { }
             /*
             catch (DIException e)

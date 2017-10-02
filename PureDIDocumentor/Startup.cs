@@ -17,20 +17,20 @@ namespace SimpleIOCCDocumentor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            PDependencyInjector sic = new PDependencyInjector(Profiles: new string[] {"authoring"});
+            PDependencyInjector pdi = new PDependencyInjector(Profiles: new string[] {"authoring"});
             InjectionState injectionState;
             object gc;
             (gc, injectionState) =
-                sic.CreateAndInjectDependencies(new GenericConfig(("relativePath", "../../../../Simple")))
+                pdi.CreateAndInjectDependencies(new GenericConfig(("relativePath", "../../../../Simple")))
                 ;
             diagnostics3 = injectionState.Diagnostics;
-            (IDocumentProcessor dp, InjectionState @is) = sic.CreateAndInjectDependencies<
+            (IDocumentProcessor dp, InjectionState @is) = pdi.CreateAndInjectDependencies<
                 IDocumentProcessor>(injectionState);
             diagnostics = @is.Diagnostics;
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
               , dp));
             services.Add(new ServiceDescriptor(typeof(IDocumentationSiteGenerator)
-                , sic.CreateAndInjectDependencies<IDocumentationSiteGenerator>(@is).rootBean));
+                , pdi.CreateAndInjectDependencies<IDocumentationSiteGenerator>(@is).rootBean));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

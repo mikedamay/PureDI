@@ -49,8 +49,8 @@ public class Program
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        SimpleIOCContainer sic = new SimpleIOCContainer();
-        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;();
+        SimpleIOCContainer pdi = new SimpleIOCContainer();
+        Program prog = pdi.CreateAndInjectDependencies&lt;Program&gt;();
         prog.SaySomething();
     }
     private void SaySomething()

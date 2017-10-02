@@ -5,8 +5,8 @@ public class Program
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        Program prog = sic.CreateAndInjectDependencies<Program>().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        Program prog = pdi.CreateAndInjectDependencies<Program>().rootBean;
         prog.SaySomething();
     }
     private void SaySomething()
