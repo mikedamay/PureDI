@@ -154,7 +154,7 @@
             base class.
             </summary>
         </member>
-        <member name="T:com.TheDisappointedProgrammer.IOCC.IOCCIgnoreAttribute">
+        <member name="T:com.TheDisappointedProgrammer.IOCC.IgnoreAttribute">
             <summary>
             Typically this is applied to interface or possibly base class
             which the library user does not want to be treated as a reference

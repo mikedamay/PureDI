@@ -7,7 +7,7 @@ using com.TheDisappointedProgrammer.IOCC;
 
 namespace SimpleIOCCDocumentor
 {
-    [IOCCIgnore]
+    [Ignore]
     internal interface IDocumentParser
     {
         string GetFragment(string fragmentType, string fragmentName);

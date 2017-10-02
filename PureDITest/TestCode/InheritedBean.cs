@@ -38,7 +38,7 @@ namespace IOCCTest.TestCode.WithNames
         [BeanReference] public InheritedIgnorer InheritedIgnorer;
         [BeanReference] public DerivedFromIgnorer DerivedFromIgnorer;
     }
-    [IOCCIgnore]
+    [Ignore]
     [Bean]
     public class InheritedIgnorer
     {

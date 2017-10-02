@@ -2,7 +2,7 @@
 
 namespace IOCCTest.DifficultTypeTestData
 {
-    [IOCCIgnore]
+    [Ignore]
     public abstract class NonBeanFactoryBase : IFactory
     {
         public abstract (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args);

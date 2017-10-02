@@ -5,7 +5,7 @@ using static com.TheDisappointedProgrammer.IOCC.Common.Common;
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    [IOCCIgnore]
+    [Ignore]
     public abstract class ResourceFactoryBase : IFactory
     {
         public string GetResourceAsString(Type assemblyFinder, string resourcePath)

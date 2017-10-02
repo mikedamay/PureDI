@@ -30,7 +30,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class
         , Inherited = false, AllowMultiple = false)]
-    public sealed class IOCCIgnoreAttribute : IgnoreBaseAttribute
+    public sealed class IgnoreAttribute : IgnoreBaseAttribute
     {
 
     }

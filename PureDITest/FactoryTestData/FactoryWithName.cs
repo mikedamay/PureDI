@@ -4,7 +4,7 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
 {
-    [IOCCIgnore]
+    [Ignore]
     public abstract class ActualFactoryBase : IFactory
     {
         public abstract (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args);

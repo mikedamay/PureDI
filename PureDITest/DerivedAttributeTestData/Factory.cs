@@ -7,7 +7,7 @@ using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData
 {
-    [IOCCIgnore]
+    [Ignore]
     public abstract class ResourceFactoryBase : IFactory
     {
         public string GetResourceAsString(Type assemblyFinder, string resourcePath)

@@ -26,7 +26,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// Note: a derived class (i.e. any factory) must also be marked as a bean.
     /// </summary>
     /// <see>docs://Simple/UserGuide/Factory</see>
-    [IOCCIgnore]
+    [Ignore]
     public interface IFactory
         {/// <summary>
         /// The library user should implement this method instantiating some object and then

@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest
 {
-    [IOCCIgnore]
+    [com.TheDisappointedProgrammer.IOCC.Ignore]
     public interface MyIgnoredReference
     {
         

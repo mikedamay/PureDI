@@ -14,7 +14,7 @@ namespace IOCCTest.TestData
             return eo;
         }
     }
-    [IOCCIgnore]
+    [Ignore]
     [Bean]
     public class ActualIgnoredBean
     {
