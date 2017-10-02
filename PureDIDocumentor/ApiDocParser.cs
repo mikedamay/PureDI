@@ -32,7 +32,7 @@ namespace SimpleIOCCDocumentor
             string apiDocPath = Path.Combine(
               Path.GetDirectoryName(
               this.GetType().Assembly.Location)
-              , "../../../../PureDI/bin/Debug/SimpleIOCContainer.xml");
+              , "../../../../PureDI/bin/Debug/PDependencyInjector.xml");
 
         }
         public string GetFragment(string fragmentName)

@@ -120,7 +120,7 @@
             need to instantiate the IOCCDiagnostics object
             </summary>
         </member>
-        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
+        <member name="M:com.TheDisappointedProgrammer.IOCC.DIException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
             <summary>
             the main exception exposed to library users.  Typically
             an exception is thrown if the "root" object cannot
@@ -131,8 +131,8 @@
             <param name="message"></param>
             <param name="diagnostics"></param>
         </member>
-        <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,System.Exception,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
-            <inheritdoc cref="M:com.TheDisappointedProgrammer.IOCC.IOCCException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)"/>
+        <member name="M:com.TheDisappointedProgrammer.IOCC.DIException.#ctor(System.String,System.Exception,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)">
+            <inheritdoc cref="M:com.TheDisappointedProgrammer.IOCC.DIException.#ctor(System.String,com.TheDisappointedProgrammer.IOCC.IOCCDiagnostics)"/>
         </member>
         <member name="M:com.TheDisappointedProgrammer.IOCC.IOCCExtensions.GetIOCCName(System.Type)">
             <summary>

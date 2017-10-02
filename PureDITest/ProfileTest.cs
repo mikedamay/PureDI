@@ -12,7 +12,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForSimpleProfile()
         {
-            IOCCDiagnostics diagnostics = null;
+            Diagnostics diagnostics = null;
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.SimpleProfile.cs");
@@ -26,7 +26,7 @@ namespace IOCCTest
                 Assert.IsNull(result?.GetResults().Child);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException)
+            catch (DIException)
             {
                 Assert.Fail();
             }
@@ -34,7 +34,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForComplexProfile()
         {
-            IOCCDiagnostics diagnostics = null;
+            Diagnostics diagnostics = null;
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.ComplexProfile.cs");
@@ -50,7 +50,7 @@ namespace IOCCTest
                 Assert.IsNull(result?.GetResults().ChildP4);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException)
+            catch (DIException)
             {
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.Fail();
@@ -59,7 +59,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForMultipleProfiles()
         {
-            IOCCDiagnostics diagnostics = null;
+            Diagnostics diagnostics = null;
             try
             {
                 Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ProfileTestData.ComplexProfile.cs");
@@ -83,7 +83,7 @@ namespace IOCCTest
                 Assert.IsNotNull(result2?.GetResults().ChildP4);
                 Assert.IsTrue(diagnostics.HasWarnings);
             }
-            catch (IOCCException)
+            catch (DIException)
             {
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.Fail();

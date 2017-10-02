@@ -14,12 +14,12 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             Diagnostics = CreateDiagnostics();
         }
-        internal DiagnosticBuilder(IOCCDiagnostics otherDiagnostics)
+        internal DiagnosticBuilder(Diagnostics otherDiagnostics)
         {
             Diagnostics = CreateDiagnostics();
             foreach (var otherGroup in otherDiagnostics.Groups)
             {
-                IOCCDiagnostics.Group thisGroup = Diagnostics.Groups[otherGroup.Key];
+                Diagnostics.Group thisGroup = Diagnostics.Groups[otherGroup.Key];
                 foreach (var occurrence in otherGroup.Value.Occurrences)
                 {
                     thisGroup.Occurrences.Add(occurrence);
@@ -27,7 +27,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-        private IOCCDiagnostics CreateDiagnostics()
+        private Diagnostics CreateDiagnostics()
         {
             string schemaName
                 = $"{Common.Common.ResourcePrefix}.Docs.DiagnosticSchema.xml";
@@ -48,9 +48,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             Diagnostics = CreateDiagnosticsFromSchema(diagnosticSchema);
         }
 
-        private IOCCDiagnostics CreateDiagnosticsFromSchema(Stream diagnosticSchema)
+        private Diagnostics CreateDiagnosticsFromSchema(Stream diagnosticSchema)
         {
-            IOCCDiagnostics diagnostics = new DiagnosticsImpl();
+            Diagnostics diagnostics = new DiagnosticsImpl();
             XElement groupx = new XElement("no-group-detail-avaialable");
             try
             {
@@ -61,10 +61,10 @@ namespace com.TheDisappointedProgrammer.IOCC
                 {
                     groupx = group;
                     string topic;
-                    var dg = new IOCCDiagnostics.Group(
+                    var dg = new Diagnostics.Group(
                       topic = group.Element("topic").Value
-                      , (IOCCDiagnostics.Severity) Enum.Parse(
-                      typeof(IOCCDiagnostics.Severity), group.Element("severity").Value)
+                      , (Diagnostics.Severity) Enum.Parse(
+                      typeof(Diagnostics.Severity), group.Element("severity").Value)
                       , group.Element("intro").Value
                       , group.Element("background").Value
                       , group.Element("template").Value
@@ -92,9 +92,9 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
             return diagnostics;
         }
-        public IOCCDiagnostics Diagnostics { get; }
+        public Diagnostics Diagnostics { get; }
 
-        private class DiagnosticsImpl : IOCCDiagnostics
+        private class DiagnosticsImpl : Diagnostics
         {
             
         }

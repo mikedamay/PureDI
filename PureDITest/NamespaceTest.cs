@@ -15,7 +15,7 @@ namespace IOCCTest
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("NoNamespace");
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
@@ -26,7 +26,7 @@ namespace IOCCTest
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass");
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsNotNull(((IResultGetter)rootBean).GetResults().Referred);
@@ -38,7 +38,7 @@ namespace IOCCTest
         {
             var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass");
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
             Assert.IsNotNull(((IResultGetter)rootBean).GetResults().Referred);
@@ -52,7 +52,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldHandleDuplicateAssemblies()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<DIException>(() =>
                 {
                     string codeText = GetResource(
                         "PureDITest.NamespaceData.DuplicateAssemblies.cs");

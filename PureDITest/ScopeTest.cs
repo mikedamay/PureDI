@@ -57,10 +57,10 @@ namespace IOCCTest
             var iocc = MakeIOCCForTestAssembly(className);
             (object rootBean, InjectionState injectionState1) = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}", scope: BeanScope.Prototype);
-            IOCCDiagnostics diagnostics1 = injectionState1.Diagnostics;
+            Diagnostics diagnostics1 = injectionState1.Diagnostics;
             (object rootBean2, InjectionState injectionState2) = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}", injectionState1, scope: BeanScope.Prototype);
-            IOCCDiagnostics diagnostics2 = injectionState2.Diagnostics;
+            Diagnostics diagnostics2 = injectionState2.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics1);
             System.Diagnostics.Debug.WriteLine(diagnostics2);
             Assert.AreNotEqual(rootBean, rootBean2);
@@ -68,7 +68,7 @@ namespace IOCCTest
 
         }
         private static
-            (dynamic result, IOCCDiagnostics diagnostics)
+            (dynamic result, Diagnostics diagnostics)
             CommonScopeTest(string className)
         {
             return Utils.CreateAndRunAssembly($"ScopeTestData", className);

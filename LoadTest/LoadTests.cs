@@ -22,7 +22,7 @@ namespace IOCCTest.LoadTest
             sw.Start();
             PDependencyInjector sic = new PDependencyInjector(Assemblies : new []{assembly});
             (object root, InjectionState InjectionState) = sic.CreateAndInjectDependencies("Level1");
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             sw.Stop();
             WriteLine(sw.Elapsed);
             WriteLine(diagnostics);

@@ -15,10 +15,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </summary>
     public class InjectionState
     {
-        private readonly IOCCDiagnostics diagnostics;
+        private readonly Diagnostics diagnostics;
         private readonly IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
         private readonly IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-        internal InjectionState(IOCCDiagnostics diagnostics
+        internal InjectionState(Diagnostics diagnostics
           ,IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
           ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
@@ -27,7 +27,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             this.typeMap = typeMap;
         }
 
-        internal void Deconstruct(out IOCCDiagnostics diagnostics
+        internal void Deconstruct(out Diagnostics diagnostics
             , out IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
             , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
@@ -50,7 +50,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// sophisticated library users may want to analyze diagnostics programmatically.
         /// Access to the diagnostics supports this endeavor.
         /// </summary>
-        public IOCCDiagnostics Diagnostics => diagnostics;
+        public Diagnostics Diagnostics => diagnostics;
 
         // the key in the objects created so far map comprises 2 types.  The first is the
         // intended concrete type that will be instantiated.  This works well for
@@ -62,13 +62,13 @@ namespace com.TheDisappointedProgrammer.IOCC
         internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         /// <summary>
         /// shortcut to diagnostics.AllToString()
-        /// <see cref="IOCCDiagnostics.AllToString"/>
+        /// <see cref="IOCC.Diagnostics.AllToString"/>
         /// </summary>
         /// <returns></returns>
         public string AllDiagnosticsToString() => diagnostics.AllToString();
         /// <summary>
         /// shortcut to diagnostics.ToString()
-        /// <see cref="IOCCDiagnostics.ToString"/>
+        /// <see cref="IOCC.Diagnostics.ToString"/>
         /// </summary>
         /// <returns></returns>
         public string WarningsToString() => diagnostics.ToString();

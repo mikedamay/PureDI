@@ -20,10 +20,10 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// </summary>
     public abstract class Diagnostic : DynamicObject
     {
-        private readonly IOCCDiagnostics.Group group;
+        private readonly Diagnostics.Group group;
         internal IDictionary<string, object> Members { get; }
 
-        internal Diagnostic(IOCCDiagnostics.Group group)
+        internal Diagnostic(Diagnostics.Group group)
         {
             this.group = group;
             Members = CreateArtefactMap(group.ArtefactSchema);

@@ -32,7 +32,7 @@ namespace IOCCTest
                 Assert.AreEqual(sic, tb.child);
             } finally { }
             /*
-            catch (IOCCException e)
+            catch (DIException e)
             {
                 Console.WriteLine(e);
                 System.Diagnostics.Debug.WriteLine(e.Diagnostics);

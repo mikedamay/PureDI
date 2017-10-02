@@ -60,7 +60,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldSetUpInvalidBeanWarning()
         {
-            IOCCDiagnostics diags;
+            Diagnostics diags;
             string schemaName
                 = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
@@ -79,7 +79,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldReturnSubstitutionsInString()
         {
-            IOCCDiagnostics diags;
+            Diagnostics diags;
             string schemaName
                 = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s

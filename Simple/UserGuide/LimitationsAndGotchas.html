@@ -49,7 +49,7 @@ but no <strong>name</strong>.</li>
 <li>If a member is incorrectly marked as [IOCCBeanReference] then
 it will be set to its default value even if it is an initialized member</li>
 <li>Factories must both have a <code>[bean]</code> attribute and implement <code>IFactory</code>.  If a factory
-has only one of these then this will be recorded in diagnostics (<code>IOCCDiagnostics</code>)</li>
+has only one of these then this will be recorded in diagnostics (<code>Diagnostics</code>)</li>
 <li>A risk, particularly with multiple entry points, is that the coder will forget
 to include required assemblies when the container is created</li>
 <li>If a number of beans implement some widely used interface such as <code>IEnumerable of T</code> then

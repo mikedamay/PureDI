@@ -18,14 +18,14 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldProvideDiagnosticIfBadTypeString()
         {
-            IOCCDiagnostics diagnostics = null;
+            Diagnostics diagnostics = null;
             try
             {
                 var sic = CreateIOCCinAssembly("EntryPointTestData", "RootInterface");
                 sic.CreateAndInjectDependencies("xxx");
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.IsTrue(iex.Diagnostics.HasWarnings);

@@ -350,12 +350,12 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 string allAssemblyNames
                     = ((dynamic)newInjectionState.Diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences[0]).Assemblies;
-                IOCCDiagnostics.Group group = newInjectionState.Diagnostics.Groups["MissingRootBean"];
+                Diagnostics.Group group = newInjectionState.Diagnostics.Groups["MissingRootBean"];
                 dynamic diag = group.CreateDiagnostic();
                 diag.BeanType = rootTypeName;
                 diag.BeanName = rootBeanName;
                 group.Add(diag);
-                throw new IOCCException(
+                throw new DIException(
                   $"Unable to find a type in assembly {allAssemblyNames} for {rootTypeName}{Environment.NewLine}Remember to include the namespace"
                   , newInjectionState.Diagnostics);
             }
@@ -408,7 +408,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         {
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            IOCCDiagnostics diagnostics;
+            Diagnostics diagnostics;
             (diagnostics, typeMap, mapObjectsCreatedSoFar) = injectionState;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
@@ -432,7 +432,7 @@ namespace com.TheDisappointedProgrammer.IOCC
               rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
             if (rootObject == null && injectionState.Diagnostics.HasWarnings)
             {
-                throw new IOCCException("Failed to create object tree - see diagnostics for details", injectionState.Diagnostics);
+                throw new DIException("Failed to create object tree - see diagnostics for details", injectionState.Diagnostics);
             }
             Assert(rootType.IsAssignableFrom(rootObject.GetType()));
             return (rootObject, injectionState);
@@ -453,7 +453,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
                 IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
                     new Dictionary<(Type, string), object>();
-                IOCCDiagnostics diagnostics;
+                Diagnostics diagnostics;
                 (typeMap, diagnostics) = CreateTypeMap(rootType);
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
             }
@@ -471,10 +471,10 @@ namespace com.TheDisappointedProgrammer.IOCC
         }
 
         private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
-          , Type>, IOCCDiagnostics diagnostics)
+          , Type>, Diagnostics diagnostics)
           CreateTypeMap(Type rootType)
         {
-            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
+            Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap = null;
 
             // make sure that the IOC Container itself is available as a bean
@@ -498,7 +498,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             return (typeMap, diagnostics);
         }
 
-        private void LogTypeMap(IOCCDiagnostics diagnostics
+        private void LogTypeMap(Diagnostics diagnostics
           , IDictionary<(Type beanType, string beanName), Type> types)
         {
             IEnumerable<(Type, string, Type)> typesQuery;
@@ -510,7 +510,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             {
                 typesQuery = types.Select(kv => (kv.Key.beanType, kv.Key.beanName, kv.Value)).OrderBy(kv => kv.beanType.FullName);
             }
-            IOCCDiagnostics.Group group = diagnostics.Groups["TypesInfo"];
+            Diagnostics.Group group = diagnostics.Groups["TypesInfo"];
             foreach (var ti in typesQuery)
             {
                 dynamic diag = group.CreateDiagnostic();
@@ -521,18 +521,18 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-        private void LogProfiles(IOCCDiagnostics diagnostics, ISet<string> profileSet)
+        private void LogProfiles(Diagnostics diagnostics, ISet<string> profileSet)
         {
-            IOCCDiagnostics.Group group = diagnostics.Groups["ProfilesInfo"];
+            Diagnostics.Group group = diagnostics.Groups["ProfilesInfo"];
             dynamic diag = group.CreateDiagnostic();
             diag.Profiles = string.Join(",", profileSet);
             diagnostics.Groups["ProfilesInfo"].Occurrences.Add(diag);
         }
 
-        private void LogAssemblies(IOCCDiagnostics diagnostics
+        private void LogAssemblies(Diagnostics diagnostics
           , IImmutableList<Assembly> assemblies)
         {
-            IOCCDiagnostics.Group group = diagnostics.Groups[Constants.ASSEMBLIES_INFO];
+            Diagnostics.Group group = diagnostics.Groups[Constants.ASSEMBLIES_INFO];
             dynamic diag = group.CreateDiagnostic();
             diag.Assemblies = string.Join(",", assemblies.Select(a => a.GetName().Name));
             diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences.Add(diag);

@@ -12,7 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     {
         public IWouldBeImmutableDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
-          , ref IOCCDiagnostics diagnostics, ISet<string> profileSet, PDependencyInjector.OS os)
+          , ref Diagnostics diagnostics, ISet<string> profileSet, PDependencyInjector.OS os)
         {
             WouldBeImmutableDictionary<(Type, string), Type>.Builder map 
               = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
@@ -42,7 +42,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     }
                     if (beanImplementation.IsAbstract && beanImplementation.IsSealed)
                     {
-                        IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
+                        Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
                         diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
                         diag.ClassMode = "static";
@@ -50,7 +50,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     }
                     else if (beanImplementation.IsAbstract)
                     {
-                        IOCCDiagnostics.Group group = diagnostics.Groups["InvalidBean"];
+                        Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
                         diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
                         diag.ClassMode = "abstract";
@@ -63,7 +63,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                             BestFit bestFit = QueryRemoveDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
                             if (bestFit == BestFit.Duplicate)
                             {
-                                IOCCDiagnostics.Group group = diagnostics.Groups["DuplicateBean"];
+                                Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
                                 dynamic diag = group.CreateDiagnostic();
                                 diag.Interface1 = beanInterface.GetIOCCName();
                                 diag.BeanName = name;

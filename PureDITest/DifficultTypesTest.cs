@@ -72,9 +72,9 @@ namespace IOCCTest
             {
                 InjectionState injectionState;
                 (props, injectionState) = new PDependencyInjector().CreateAndInjectDependencies<MyAutoProp>();
-                IOCCDiagnostics diags = injectionState.Diagnostics;
+                Diagnostics diags = injectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
-                IOCCDiagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
+                Diagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
                 Assert.AreEqual(1, grp.Occurrences.Count);
             }
             catch (Exception ex)
@@ -123,7 +123,7 @@ namespace IOCCTest
                 System.Diagnostics.Debug.WriteLine(diagnostics);
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 System.Diagnostics.Debug.WriteLine(iex.Diagnostics);
                 Assert.IsTrue(iex.Diagnostics.HasWarnings);

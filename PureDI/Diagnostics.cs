@@ -12,7 +12,7 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// <usage>
     /// call ToString() to view warnings or AllToString() to view info
     /// </usage>
-    public class IOCCDiagnostics
+    public class Diagnostics
     {
         /// <summary>
         /// severity is applied to groups rather than individual
@@ -38,9 +38,9 @@ namespace com.TheDisappointedProgrammer.IOCC
 
         /// <summary>
         /// strong hint to library users is that there is no
-        /// need to instantiate the IOCCDiagnostics object
+        /// need to instantiate the Diagnostics object
         /// </summary>
-        protected IOCCDiagnostics()
+        protected Diagnostics()
         {
             
         }
@@ -188,7 +188,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 str = str + GetStringForSeverity(Severity.Warning);
             }
             str = str + Environment.NewLine + Environment.NewLine
-              + "Note that to see information as well as warnings you should call IOCCDiagnostics.AllToString()";
+              + "Note that to see information as well as warnings you should call Diagnostics.AllToString()";
             return str;
         }
 

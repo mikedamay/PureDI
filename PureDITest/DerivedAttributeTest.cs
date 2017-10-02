@@ -20,7 +20,7 @@ namespace IOCCTest
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
                 , rootConstructorName: "TestConstructor");
             IResultGetter result = obj as IResultGetter;
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual("somestuff", result?.GetResults().Stuff);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));

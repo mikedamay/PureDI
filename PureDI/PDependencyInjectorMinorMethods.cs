@@ -2,7 +2,7 @@
 
 namespace com.TheDisappointedProgrammer.IOCC
 {
-    public partial class SimpleIOCContainer
+    public partial class PDependencyInjector
     {
         public object GetBean(Type classOrInterface, string beanName)
         {

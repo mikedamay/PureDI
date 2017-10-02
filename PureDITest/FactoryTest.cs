@@ -69,7 +69,7 @@ namespace IOCCTest
                 (var result, var diagnostics) = CommonFactoryTest("ThrowsException");
                 Assert.Fail();
             }
-            catch (IOCCException ex)
+            catch (DIException ex)
             {
                 Assert.AreEqual(1, ex.Diagnostics.Groups["FactoryExecutionFailure"].Occurrences.Count);
             }
@@ -107,7 +107,7 @@ namespace IOCCTest
             Assert.IsFalse(diagnostics.HasWarnings);
         }
         private static
-            (dynamic result, IOCCDiagnostics diagnostics)
+            (dynamic result, Diagnostics diagnostics)
             CommonFactoryTest(string className)
         {
             return Utils.CreateAndRunAssembly("FactoryTestData", className);

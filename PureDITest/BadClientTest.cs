@@ -15,7 +15,7 @@ namespace IOCCTest
                 sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadConstructor");
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 var ix = iex;
                 Assert.IsTrue(true);
@@ -35,7 +35,7 @@ namespace IOCCTest
                 (var rootBean, var InjectionState) = sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactory");
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 var ix = iex;
                 Assert.IsTrue(true);
@@ -55,7 +55,7 @@ namespace IOCCTest
                 (var rootBean, var InjectionState) = sic.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactoryForParam");
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 var ix = iex;
                 Assert.IsTrue(true);

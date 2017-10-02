@@ -27,7 +27,7 @@ namespace IOCCTest
             {
                 new PDependencyInjector().CreateAndInjectDependencies<int>();
             }
-            Assert.ThrowsException<IOCCException>((System.Action)DoTest);
+            Assert.ThrowsException<DIException>((System.Action)DoTest);
         }
         enum Mike { Mike1}
         [TestMethod]
@@ -38,7 +38,7 @@ namespace IOCCTest
                 
                 new PDependencyInjector().CreateAndInjectDependencies<Mike>();
             }
-            Assert.ThrowsException<IOCCException>((System.Action)DoTest);
+            Assert.ThrowsException<DIException>((System.Action)DoTest);
         }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
@@ -109,7 +109,7 @@ namespace IOCCTest
             (WithNames.BeanUser bu, InjectionState InjectionState)
                 = new PDependencyInjector().CreateAndInjectDependencies<
                     WithNames.BeanUser>();
-            IOCCDiagnostics diags = InjectionState.Diagnostics;
+            Diagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited", bu.Used.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
             (bu, InjectionState)
@@ -125,7 +125,7 @@ namespace IOCCTest
             (WithNames.IgnoredBeanUser bu, InjectionState InjectionState)
                 = new PDependencyInjector().CreateAndInjectDependencies<
                     WithNames.IgnoredBeanUser>();
-            IOCCDiagnostics diags = InjectionState.Diagnostics;
+            Diagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited and ignored", bu.InheritedIgnorer.Val);
             Assert.AreEqual("Derived from ignorer", bu.DerivedFromIgnorer.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));

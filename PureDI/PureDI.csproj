@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SimpleIOCContainerMinorMethods.cs" />
+    <Compile Remove="PDependencyInjectorMinorMethods.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +29,7 @@
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
     <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd" />
     <EmbeddedResource Include="Docs\UserGuide.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="SimpleIOCContainerMinorMethods.cs" />
+    <EmbeddedResource Include="PDependencyInjectorMinorMethods.cs" />
   </ItemGroup>
 
 </Project>

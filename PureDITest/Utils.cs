@@ -12,13 +12,13 @@ namespace IOCCTest
     {
         public const string TestResourcePrefix = "PureDITest";
         public static
-            (dynamic result, IOCCDiagnostics diagnostics)
+            (dynamic result, Diagnostics diagnostics)
             CreateAndRunAssembly(string nameSpace, string className)
         {
             var iocc = CreateIOCCinAssembly(nameSpace, className);
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.{nameSpace}.{className}");
-            IOCCDiagnostics diagnostics = InjectionState.Diagnostics;
+            Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             dynamic result = (IResultGetter)rootBean;
             return (result, diagnostics);

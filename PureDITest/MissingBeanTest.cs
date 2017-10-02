@@ -18,7 +18,7 @@ namespace IOCCTest
         {
             (MissingType mt, InjectionState InjectionState) 
               = new PDependencyInjector().CreateAndInjectDependencies<MissingType>();
-            IOCCDiagnostics diags = InjectionState.Diagnostics;
+            Diagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
             dynamic diagnostic = diags.Groups["MissingBean"]?.Occurrences[0];
             Assert.IsNotNull(diagnostic);
@@ -31,7 +31,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldErrorIfMissingRootType()
         {
-            IOCCDiagnostics diags = null;
+            Diagnostics diags = null;
             InjectionState injectionState = null;
             int ii;
             try
@@ -39,7 +39,7 @@ namespace IOCCTest
                 (ii, injectionState) = new PDependencyInjector().CreateAndInjectDependencies<int>();
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 diags = iex.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);

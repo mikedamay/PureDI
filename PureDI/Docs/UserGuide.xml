@@ -183,7 +183,7 @@ also helps with the third aspiration of Verifiability.  By insisting
 that he user explicitly states their intention to inject functionality
 but the use of `[Bean]` and `[BeanRefererne]` attributes we can
 provide rich diagnostics so that when things don't work the coder
-can investigate in some depth.  The `IOCCDiagnostics` object provides
+can investigate in some depth.  The `Diagnostics` object provides
 full details of anomalies discovered when carrying out the injections.
 
 As part of this aspiration there is a more concrete aspiration (for a later version) to
@@ -259,7 +259,7 @@ but no **name**.
 1. If a member is incorrectly marked as [IOCCBeanReference] then
 it will be set to its default value even if it is an initialized member
 2. Factories must both have a `[bean]` attribute and implement `IFactory`.  If a factory
-has only one of these then this will be recorded in diagnostics (`IOCCDiagnostics`)
+has only one of these then this will be recorded in diagnostics (`Diagnostics`)
 3. A risk, particularly with multiple entry points, is that the coder will forget
 to include required assemblies when the container is created
 4. If a number of beans implement some widely used interface such as `IEnumerable of T` then

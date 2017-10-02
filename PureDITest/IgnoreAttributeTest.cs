@@ -38,7 +38,7 @@ namespace IOCCTest
             TypeMapBuilderTest.CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.IgnoredBean.cs", mapExpected);
             //Assembly assembly = Utils.CreateAssembly(
             //    $"{Utils.TestResourcePrefix}.TestData.IgnoredBean.cs");
-            //IOCCDiagnostics diagnostics;
+            //Diagnostics diagnostics;
             //using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
             //    $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             //{

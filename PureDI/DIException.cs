@@ -11,17 +11,17 @@ namespace com.TheDisappointedProgrammer.IOCC
     /// may (but not necessarily) indicate a future fatal problem
     /// for the call application.
     /// </summary>
-    public class IOCCException : Exception
+    public class DIException : Exception
     {
         /// <summary>
-        /// An accumulation of all diangostics up to the point the
+        /// An accumulation of all diagnostics up to the point the
         /// exception was thrown.
         /// 
         /// Call Diagnostics.ToString() or Diagnostics.AllToString()
         /// to provide some support in investigating the cause
         /// of the exception.
         /// </summary>
-        public IOCCDiagnostics Diagnostics { get; } = null;
+        public Diagnostics Diagnostics { get; } = null;
         /// <summary>
         /// the main exception exposed to library users.  Typically
         /// an exception is thrown if the "root" object cannot
@@ -31,7 +31,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// </summary>
         /// <param name="message">some text helpful to the library user</param>
         /// <param name="diagnostics">accumulated diagnostics to this point in the injection process</param>
-        internal IOCCException(string message, IOCCDiagnostics diagnostics) : base(message)
+        internal DIException(string message, Diagnostics diagnostics) : base(message)
         {
             this.Diagnostics = diagnostics;
         }
@@ -41,7 +41,7 @@ namespace com.TheDisappointedProgrammer.IOCC
         /// <param name="message">some text helpful to the library user</param>
         /// <param name="innerException">root cause</param>
         /// <param name="diagnostics">accumulated diagnostics to this point in the injection process</param>
-        internal IOCCException(string message, Exception innerException, IOCCDiagnostics diagnostics)
+        internal DIException(string message, Exception innerException, Diagnostics diagnostics)
           : base(message, innerException)
         {
             this.Diagnostics = diagnostics;

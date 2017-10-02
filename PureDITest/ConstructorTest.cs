@@ -13,11 +13,11 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldThrowExceptionForNoArgConstructor()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<DIException>(() =>
             {
                 (NoArgRoot st, InjectionState InjectionState) = new PDependencyInjector().CreateAndInjectDependencies<
                     NoArgRoot>();
-                IOCCDiagnostics diags = InjectionState.Diagnostics;
+                Diagnostics diags = InjectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
             });
         }
@@ -26,7 +26,7 @@ namespace IOCCTest
         {
             (NoArgClassTree nact, InjectionState InjectionState) = new PDependencyInjector().CreateAndInjectDependencies<
                 NoArgClassTree>();
-            IOCCDiagnostics diags = InjectionState.Diagnostics;
+            Diagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
         }
 
@@ -104,7 +104,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfDuplicateConstructors()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<DIException>(() =>
             {
                 (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                     CONSTRUCTOR_TEST_NAMESPACE, "DuplicateConstructors");
@@ -113,7 +113,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfSomeParametersAreNotMarkedForInjetion()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<DIException>(() =>
             {
                 (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                     CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedParameter");
@@ -128,7 +128,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfSomeUnmarkedMatchingConstructorsContainMarkedParameters()
         {
-            Assert.ThrowsException<IOCCException>(() =>
+            Assert.ThrowsException<DIException>(() =>
             {
                 (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
                     CONSTRUCTOR_TEST_NAMESPACE, "UnmarkedMatchingConstructor");
@@ -155,7 +155,7 @@ namespace IOCCTest
                     CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependency");
                 Assert.Fail();
             }
-            catch (IOCCException iex)
+            catch (DIException iex)
             {
                 System.Diagnostics.Debug.WriteLine(iex.Diagnostics);
                 Assert.IsTrue(true);
@@ -176,7 +176,7 @@ namespace IOCCTest
                 , "NamedRootConstructor");
             (object bean, InjectionState injectionState) = sic.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.NamedRootConstructor", rootConstructorName: "TestConstructor");
-            IOCCDiagnostics diagnostics = injectionState.Diagnostics;
+            Diagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual("stuff", result?.GetResults().Stuff);
@@ -190,7 +190,7 @@ namespace IOCCTest
         {
             PDependencyInjector sic
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
-            IOCCDiagnostics diagnostics = sic.CreateAndInjectDependencies(
+            Diagnostics diagnostics = sic.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;
 
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);

@@ -119,7 +119,7 @@ namespace IOCCTest
         {
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.AbstractClass.cs");
-            IOCCDiagnostics diagnostics;
+            Diagnostics diagnostics;
             using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
@@ -171,7 +171,7 @@ namespace IOCCTest
         {
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.DuplicateBeans.cs");
-            IOCCDiagnostics diagnostics;
+            Diagnostics diagnostics;
             using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
@@ -189,7 +189,7 @@ namespace IOCCTest
         {
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.BeanBase.cs");
-            IOCCDiagnostics diagnostics;
+            Diagnostics diagnostics;
             using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
@@ -237,7 +237,7 @@ namespace IOCCTest
             Assembly assemblyImplementation = new AssemblyMaker().MakeAssembly(GetResource(
                     $"{Utils.TestResourcePrefix}.TestData.ImplementationClass.cs")
                 , ExtraAssemblies: new [] {assemblyInterface}, InMemory: false);
-            IOCCDiagnostics diagnostics;
+            Diagnostics diagnostics;
             using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
@@ -291,7 +291,7 @@ namespace IOCCTest
             void BuildAndOutputTypeMap(string resourceName, string profile, PDependencyInjector.OS os)
             {
                 Assembly assembly = Utils.CreateAssembly(resourceName);
-                IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
+                Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
                 var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                     new List<Assembly>() {assembly}, ref diagnostics, new HashSet<string>(), os);
                 string str = map.OutputToString();
@@ -347,7 +347,7 @@ namespace IOCCTest
           , PDependencyInjector.OS os = PDependencyInjector.OS.Any)
         {
             Assembly assembly = Utils.CreateAssembly(resourceName);
-            IOCCDiagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
+            Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, profile, os);
             Assert.AreEqual(

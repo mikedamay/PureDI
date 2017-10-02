@@ -8,7 +8,7 @@ namespace com.TheDisappointedProgrammer.IOCC
 {
     internal class BeanValidator
     {
-        public void ValidateAssemblies( IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void ValidateAssemblies( IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
         {
             DetectUnreachableMembers(assemblies, diagnostics);
             DetectUnreachableConstructors(assemblies, diagnostics);
@@ -16,7 +16,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             DetectUnreachableStructs(assemblies, diagnostics);
         }
 
-        public void DetectUnreachableMembers(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void DetectUnreachableMembers(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var typesAndMembers = assemblies.SelectMany(a =>
               a.GetTypes().SelectMany(
@@ -26,7 +26,7 @@ namespace com.TheDisappointedProgrammer.IOCC
               typesAndMembers.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanBaseAttribute>().Any());
             var nonBeanTypesWithBeanReferences =
                 nonBeanAndMembers.Where(tm => tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any());
-            IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableReference"];
+            Diagnostics.Group group = diagnostics.Groups["UnreachableReference"];
             foreach (var typeAndMember in nonBeanTypesWithBeanReferences)
             {
                 dynamic diag = group.CreateDiagnostic();
@@ -37,7 +37,7 @@ namespace com.TheDisappointedProgrammer.IOCC
             }
         }
 
-        public void DetectUnreachableConstructors(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        public void DetectUnreachableConstructors(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var typesAndConstructors = assemblies.SelectMany(a =>
                 a.GetTypes().SelectMany(
@@ -47,7 +47,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 typesAndConstructors.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanBaseAttribute>().Any());
             var nonBeanTypesWithBeanConstructors =
                 nonBeanAndConstructors.Where(tm => tm.constructor.GetCustomAttributes<ConstructorBaseAttribute>().Any());
-            IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableConstructor"];
+            Diagnostics.Group group = diagnostics.Groups["UnreachableConstructor"];
             foreach (var typeAndMember in nonBeanTypesWithBeanConstructors)
             {
                 dynamic diag = group.CreateDiagnostic();
@@ -55,7 +55,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
-        private void DetectNonBeanWithFactoryInterface(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        private void DetectNonBeanWithFactoryInterface(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var classesWithFactoryInterface
                 = assemblies.SelectMany(a => a.GetTypes())
@@ -65,7 +65,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 = classesWithFactoryInterface.Where(c => 
                 !c.GetCustomAttributes<BeanBaseAttribute>().Any()
                 && !c.GetCustomAttributes<IgnoreBaseAttribute>().Any());
-            IOCCDiagnostics.Group group = diagnostics.Groups["NonBeanFactory"];
+            Diagnostics.Group group = diagnostics.Groups["NonBeanFactory"];
             foreach (var type in nonBeanFactories)
             {
                 dynamic diag = group.CreateDiagnostic();
@@ -73,7 +73,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                 group.Add(diag);
             }
         }
-        private void DetectUnreachableStructs(IImmutableList<Assembly> assemblies, IOCCDiagnostics diagnostics)
+        private void DetectUnreachableStructs(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var nonBeanStructMembers
                 = assemblies.SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers().Select(m => new {type = t, member = m}))
@@ -82,7 +82,7 @@ namespace com.TheDisappointedProgrammer.IOCC
                     .Where(tm => !tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any())
                     .Select(tm => new {declaration = tm, structType = tm.member.GetPropertyOrFieldType()})
                     .Where(ds => ds.structType.GetCustomAttributes<BeanBaseAttribute>().Any());
-            IOCCDiagnostics.Group group = diagnostics.Groups["UnreachableStruct"];
+            Diagnostics.Group group = diagnostics.Groups["UnreachableStruct"];
             foreach (var ds in nonBeanStructMembers)
             {
                 dynamic diag = group.CreateDiagnostic();

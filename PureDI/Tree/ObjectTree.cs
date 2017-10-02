@@ -42,7 +42,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     , new CreationContext(new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
-                    throw new IOCCException(
+                    throw new DIException(
                         $"object created by IOC container is not {rootType.Name} as expected", injectionState.Diagnostics);
                 }
                 Assert(rootObject == null
@@ -54,7 +54,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 dynamic diagnostic = injectionState.Diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
                 diagnostic.Class = rootType.GetIOCCName();
                 injectionState.Diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
-                throw new IOCCException("Failed to create object tree - see diagnostics for details", inace,
+                throw new DIException("Failed to create object tree - see diagnostics for details", inace,
                     injectionState.Diagnostics);
             }
         }
@@ -209,7 +209,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         dynamic diag = injectionState.Diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
                         diag.Bean = constructableType.FullName;
                         injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
-                        throw new IOCCException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
+                        throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
                     (complete, bean) = MakeBean();
                     if (bean != null)
@@ -337,7 +337,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         }
                         catch (Exception ex)
                         {
-                            throw new IOCCException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
+                            throw new DIException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
                         }
                         CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
                         AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
@@ -374,10 +374,10 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         }  // AssignMembers()
 
 
-        private void LogMemberInjection(IOCCDiagnostics diagnostics, Type declarngType
+        private void LogMemberInjection(Diagnostics diagnostics, Type declarngType
           , Type declaredType, string memberName, Type memberImplementation)
         {
-            IOCCDiagnostics.Group group = diagnostics.Groups["MemberInjectionsInfo"];
+            Diagnostics.Group group = diagnostics.Groups["MemberInjectionsInfo"];
             dynamic diag = group.CreateDiagnostic();
             diag.DeclaringType = declarngType;
             diag.MemberType = declaredType;
@@ -399,7 +399,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         /// <param name="diagnostics"></param>
         /// <param name="beanReferenceDetails">context about the member referring to this bean+constructor</param>
         private void ValidateConstructors(Type declaringBeanType
-          ,string constructorName, IOCCDiagnostics diagnostics
+          ,string constructorName, Diagnostics diagnostics
           ,BeanReferenceDetails beanReferenceDetails)
         {
             ConstructorInfo[] constructors
@@ -424,7 +424,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 dynamic diag = diagnostics.Groups["DuplicateConstructors"].CreateDiagnostic();
                 diag.Bean = declaringBeanType;
                 diagnostics.Groups["DuplicateConstructors"].Add(diag);
-                throw new IOCCException($"{declaringBeanType} has duplicate constructors - please see diagnostics for further details",diagnostics);
+                throw new DIException($"{declaringBeanType} has duplicate constructors - please see diagnostics for further details",diagnostics);
             }
             if (constructors.Length > 0)
             {
@@ -435,7 +435,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                     dynamic diag = diagnostics.Groups["MissingConstructorParameterAttribute"].CreateDiagnostic();
                     diag.Bean = declaringBeanType;
                     diagnostics.Groups["MissingConstructorParameterAttribute"].Add(diag);
-                    throw new IOCCException($"{declaringBeanType}'s constructor has parameters not marked as [IOCCBeanReference] - please see diagnostics for further details", diagnostics);
+                    throw new DIException($"{declaringBeanType}'s constructor has parameters not marked as [IOCCBeanReference] - please see diagnostics for further details", diagnostics);
                 }
             }
         }
@@ -481,7 +481,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                         , ("BeanType", beanId.Item1.GetIOCCName())
                         , ("BeanName", beanId.Item2)
                     );
-                    throw new IOCCException("failed to create object tree - see diagnostics for detail",
+                    throw new DIException("failed to create object tree - see diagnostics for detail",
                         injectionState.Diagnostics);
                 }
                 else
@@ -514,7 +514,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
         }
 
 
-        private static void RecordDiagnostic(IOCCDiagnostics diagnostics, string groupName
+        private static void RecordDiagnostic(Diagnostics diagnostics, string groupName
             , params (string member, object value)[] occurrences)
         {
             dynamic diag = diagnostics.Groups[groupName].CreateDiagnostic();
@@ -603,7 +603,7 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                             }
                             catch (Exception ex)
                             {
-                                throw new IOCCException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
+                                throw new DIException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
                                   ,ex, injectionState.Diagnostics);
                             }                            parameters.Add(obj);
                             LogConstructorInjection(injectionState.Diagnostics, beanType, obj.GetType());
@@ -634,17 +634,17 @@ namespace com.TheDisappointedProgrammer.IOCC.Tree
                 catch (Exception ex2)
                 {
 
-                    throw new IOCCException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
+                    throw new DIException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
                 }
 
             }
 
         }
 
-        private void LogConstructorInjection(IOCCDiagnostics diagnostics
+        private void LogConstructorInjection(Diagnostics diagnostics
           , Type declaringType, Type parameterImplementation)
         {
-            IOCCDiagnostics.Group group = diagnostics.Groups["ConstructorInjectionsInfo"];
+            Diagnostics.Group group = diagnostics.Groups["ConstructorInjectionsInfo"];
             dynamic diag = group.CreateDiagnostic();
             diag.DeclaringType = declaringType;
             diag.ParameterImplementation = parameterImplementation;
