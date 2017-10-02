@@ -16,7 +16,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleIOCContainer\SimpleIOCContainer.csproj" />
+    <ProjectReference Include="..\PureDI\PureDI.csproj" />
   </ItemGroup>
     
 </Project>

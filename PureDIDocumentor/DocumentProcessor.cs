@@ -14,12 +14,12 @@ namespace SimpleIOCCDocumentor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor = null;
         [IOCCDocumentParser(
-            DocumentPath: "SimpleIOCContainer.Docs.UserGuide.xml"
+            DocumentPath: "PureDI.Docs.UserGuide.xml"
             , XmlRoot: Constants.USER_GUIDE_ROOT)]
         private IDocumentParser userGuideDocumentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)
-                    , "SimpleIOCCDocumentor.wwwroot.docwrapper.html"})
+                    , "PureDIDocumentor.wwwroot.docwrapper.html"})
         ]
         private string htmlWrapper = null;
 

@@ -16,11 +16,11 @@ namespace SimpleIOCCDocumentor
         // very wasteful to instantiate the parsers 2x.
         // we really need constructor paraemters
         [IOCCDocumentParser(
-            DocumentPath: "SimpleIOCContainer.Docs.UserGuide.xml"
+            DocumentPath: "PureDI.Docs.UserGuide.xml"
             , XmlRoot: Constants.USER_GUIDE_ROOT)]
         private IDocumentParser userGuideDocumentParser = null;
         [IOCCDocumentParser(
-            DocumentPath: "SimpleIOCContainer.Docs.DiagnosticSchema.xml"
+            DocumentPath: "PureDI.Docs.DiagnosticSchema.xml"
             , XmlRoot: Constants.DIAGNOSTIC_SCHEMA_ROOT)]
         private IDocumentParser diagnosticSchemaDocumentParser = null;
 

@@ -23,7 +23,7 @@ namespace SimpleIOCCDocumentor
         private IDictionary<string, string> fragments = null;
 
         [BeanReference(Factory = typeof(ResourceFactory)
-            , FactoryParameter = new object[] {typeof(PDependencyInjector), "SimpleIOCContainer.Docs.apidoc.xsl"})]
+            , FactoryParameter = new object[] {typeof(PDependencyInjector), "PureDI.Docs.apidoc.xsl"})]
         private string apiDocStyleSheet = null;
         public ApiDocParser()
         {
@@ -32,7 +32,7 @@ namespace SimpleIOCCDocumentor
             string apiDocPath = Path.Combine(
               Path.GetDirectoryName(
               this.GetType().Assembly.Location)
-              , "../../../../SimpleIOCContainer/bin/Debug/SimpleIOCContainer.xml");
+              , "../../../../PureDI/bin/Debug/SimpleIOCContainer.xml");
 
         }
         public string GetFragment(string fragmentName)

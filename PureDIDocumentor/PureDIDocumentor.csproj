@@ -34,10 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleIOCContainer\SimpleIOCContainer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="WebApiContrib.Core.TagHelpers.Markdown">
       <HintPath>..\..\WebAPIContrib.Core\src\WebApiContrib.Core.TagHelpers.Markdown\bin\Debug\netstandard1.6\WebApiContrib.Core.TagHelpers.Markdown.dll</HintPath>
     </Reference>
@@ -46,6 +42,10 @@
   <ItemGroup>
     <Folder Include="Simple\" />
     <Folder Include="wwwroot\Simple\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PureDI\PureDI.csproj" />
   </ItemGroup>
 
 </Project>
