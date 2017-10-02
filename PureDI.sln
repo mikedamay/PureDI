@@ -14,13 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code_snippets", "code_snipp
 		oldpara.snippet = oldpara.snippet
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{1C3A8AAC-C2A3-48C8-9B07-199AC3251DCB}"
-	ProjectSection(SolutionItems) = preProject
-		Introduction.html = Introduction.html
-		Introduction.md = Introduction.md
-		Documentation\Test.md = Documentation\Test.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10DE335E-7FBC-4135-9F25-298EA8834055}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
