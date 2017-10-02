@@ -1,4 +1,4 @@
-## SimpleIOCContainer
+## PureDI
 #### Version
 Pre-alpha
 #### Documentation
@@ -7,7 +7,7 @@ Documentation can be found at [http://mikedamay.co.uk/Simple/index.html]
 usage:
 To run tests:
 install dotnetcore 2.0
-cd SimpleIOCContainerTest
+cd PureDITest
 
 then
 On Windows
@@ -23,11 +23,11 @@ all case sensitive
 
 Sample programs:
 
-LoadTest, SimpleIOCCDemo
+LoadTest, PureDIDemo
 change to directory and do "dotnet run"
 
-SimpleIOCCDocumentor
-cd SimpleIOCCDocumentor
+PureDIDocumentor
+cd PureDIDocumentor
 dotnet run
 
 browse to http://localhost:60653/

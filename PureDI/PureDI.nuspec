@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>PureDI</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>mikedamay</authors>
+    <owners>mikedamay</owners>
+    <licenseUrl>https://github.com/mikedamay/PureDI/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mikedamay/PureDI</projectUrl>
+    <iconUrl>https://github.com/mikedamay/PureDI/blob/master/SimpleIOCCDocumentor/wwwroot/glyphicons_free/glyphicons/png/glyphicons-159-show-lines.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Thread safe Dependency Injector</description>
+    <releaseNotes>First Release </releaseNotes>
+    <copyright>Copyright Michael May (TheDisappointedProgrammer.com) 2017</copyright>
+  </metadata>
+</package>
