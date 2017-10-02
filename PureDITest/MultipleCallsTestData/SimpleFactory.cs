@@ -24,10 +24,10 @@ namespace IOCCTest.MultipleCallsTestData
     [Bean]
     public class ActualFactory : IFactory
     {
-        [BeanReference] private PDependencyInjector simpleIocContainer = null;
+        [BeanReference] private PDependencyInjector injector = null;
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return simpleIocContainer.CreateAndInjectDependencies<SimpleChild>(injectionState);
+            return injector.CreateAndInjectDependencies<SimpleChild>(injectionState);
         }
     }
     [Bean]

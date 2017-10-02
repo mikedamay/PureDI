@@ -43,7 +43,7 @@ namespace IOCCTest
             var parms = new CompilerParameters(
               CombineReferencedAssemblies(new string[]
               {"mscorlib.dll", "System.Core.dll", "System.dll", "Microsoft.CSharp.dll"
-              ,"PDependencyInjector.dll", "SimpleIOCContainerTest.dll"}
+              ,"PDependencyInjector.dll", "PureDITest.dll"}
               , ExtraAssemblies)
               , SelectAssemblyName(TargetAssemblyName));
             parms.GenerateExecutable = false;

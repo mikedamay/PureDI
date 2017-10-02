@@ -10,7 +10,7 @@ namespace IOCCTest
 {
     internal static class Utils
     {
-        public const string TestResourcePrefix = "SimpleIOCContainerTest";
+        public const string TestResourcePrefix = "PureDITest";
         public static
             (dynamic result, IOCCDiagnostics diagnostics)
             CreateAndRunAssembly(string nameSpace, string className)

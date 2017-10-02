@@ -2,7 +2,7 @@
 using com.TheDisappointedProgrammer.IOCC;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleIOCContainerTest.TestCode;
+using PureDITest.TestCode;
 using WithNames = IOCCTest.TestCode.WithNames;
 
 namespace IOCCTest

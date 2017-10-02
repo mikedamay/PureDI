@@ -55,7 +55,7 @@ namespace IOCCTest
             Assert.ThrowsException<IOCCException>(() =>
                 {
                     string codeText = GetResource(
-                        "SimpleIOCContainerTest.NamespaceData.DuplicateAssemblies.cs");
+                        "PureDITest.NamespaceData.DuplicateAssemblies.cs");
                     //string codeText = "public class abc {}";
                     Assembly assembly = new AssemblyMaker().MakeAssembly(
                         codeText, "RemoteAssembly", new[] { this.GetType().Assembly});

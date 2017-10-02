@@ -208,11 +208,11 @@ namespace IOCCTest
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
-                {("SimpleIOCContainerTest.TestData.NamedBeanBase", ""),"SimpleIOCContainerTest.TestData.NamedBeanBase"}
-                ,{("SimpleIOCContainerTest.TestData.INamedBean", ""),"SimpleIOCContainerTest.TestData.NamedBeanBase"}
-                ,{("SimpleIOCContainerTest.TestData.ANamedBean", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
-                ,{("SimpleIOCContainerTest.TestData.NamedBeanBase", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
-                ,{("SimpleIOCContainerTest.TestData.INamedBean", "derived"),"SimpleIOCContainerTest.TestData.ANamedBean"}
+                {("PureDITest.TestData.NamedBeanBase", ""),"PureDITest.TestData.NamedBeanBase"}
+                ,{("PureDITest.TestData.INamedBean", ""),"PureDITest.TestData.NamedBeanBase"}
+                ,{("PureDITest.TestData.ANamedBean", "derived"),"PureDITest.TestData.ANamedBean"}
+                ,{("PureDITest.TestData.NamedBeanBase", "derived"),"PureDITest.TestData.ANamedBean"}
+                ,{("PureDITest.TestData.INamedBean", "derived"),"PureDITest.TestData.ANamedBean"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NamedBeanBase.cs", mapExpected);
 
@@ -273,7 +273,7 @@ namespace IOCCTest
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()
             {
-                {("SimpleIOCContainerTest.TestData.NonBeanDerivedFromBean+BeanClass", ""),"SimpleIOCContainerTest.TestData.NonBeanDerivedFromBean+BeanClass"}
+                {("PureDITest.TestData.NonBeanDerivedFromBean+BeanClass", ""),"PureDITest.TestData.NonBeanDerivedFromBean+BeanClass"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.NonBeanDerivedFromBean.cs", mapExpected);
 

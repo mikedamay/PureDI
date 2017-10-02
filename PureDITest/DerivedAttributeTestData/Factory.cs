@@ -50,7 +50,7 @@ namespace IOCCTest.DerivedAttributeTestData
     public class Factory : IResultGetter
     {
         [Resource(typeof(PDependencyInjector)
-          , "SimpleIOCContainer.Docs.DiagnosticSchema.xml")]
+          , "PureDI.Docs.DiagnosticSchema.xml")]
         public string resource;
 
         public dynamic GetResults()

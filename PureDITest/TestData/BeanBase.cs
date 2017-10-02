@@ -1,6 +1,6 @@
 ﻿using com.TheDisappointedProgrammer.IOCC;
 
-namespace SimpleIOCContainerTest.TestData
+namespace PureDITest.TestData
 {
 
     public class IBean
