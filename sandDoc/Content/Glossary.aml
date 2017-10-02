@@ -5,28 +5,11 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <glossary>
-      <!-- <title>Optional title</title> -->
-
-      <!-- Glossary division.  You can use these to group entries.  If you only
-           have one group, you can omit it and list the glossaryEntry elements
-           directly.
-
-           If used, be sure to give each glossaryDiv a unique address attribute
-           and a title element.  These will be used to create an index at the
-           top of the glossary page.
-
-           Glossary divisions will appear in the order defined in the topic.
-           Glossary entries will be sorted by the first term for the entry.
-           Terms are sorted by their value. -->
-      <glossaryDiv address="Group1">
-        <title>Group #1</title>
+      <glossaryDiv address="Glossary">
+        <title>Terms &amp; Definitions</title>
 
         <glossaryEntry>
           <terms>
-            <!-- One or more terms associated with the definition.  Add a termId
-               attribute if you need to link to it from a relatedEntry element.
-               Otherwise, it can be omitted.  Terms appear as a comma-separated
-               list above the definition. -->
             <term termId="xyz">1st term</term>
             <term>Other term (if any)</term>
           </terms>
@@ -35,11 +18,160 @@
             <para>The definition of the term(s)</para>
           </definition>
 
-          <!-- One or more optional related entries.  Creates a "See Also"
-               line after the definition with links to each related term. -->
-          <!-- <relatedEntry termId="xyz" /> -->
         </glossaryEntry>
 
+        <glossaryEntry>
+          <terms>
+            <term>Bean</term>
+          </terms>
+
+          <definition>
+            <para>
+              The documentation uses the term, _Bean_, rather loosely.  It refers either to a class
+              marked with the `[Bean]` attribute which is ready to be injected into
+              some other class by the container.  The name may seem a little misleading
+              as beans imply something small and uniform.  You might expect the name
+              to apply to value objects such as DTOs but beans are more typically singletons
+              such as services or repositories.  Blame <externalLink>
+              <linkText>Spring</linkText>
+              <linkUri>http://spring.io</linkUri>
+            </externalLink>.
+            </para>
+
+            <para>Alternatively, the term bean is used to refer to an instantiated object of such a class.</para>
+          </definition>
+        </glossaryEntry>
+        <glossaryEntry>
+          <terms>
+            <term>Injection</term>
+          </terms>
+
+          <definition>
+            <para>
+              Injection is the process of assignment by the container of some object
+              to the member variable or constructor parameter of some other object.  It sometimes
+              loosely extended to include the creation of the injected object.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Dependency</term>
+          </terms>
+
+          <definition>
+            <para>
+              The documentation uses the term, <legacyItalic>Dependency</legacyItalic>, to refer to the relationship
+              between two classes where one is an class to be injected and the other
+              has a member which refers to the bean.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Injectable</term>
+          </terms>
+
+          <definition>
+            <para>More descriptive synonym for a bean.</para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Injection Site</term>
+          </terms>
+
+          <definition>
+            <para>Either a member variable or a constructor parameter marked as a <codeInline>[BeanReference]</codeInline></para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>(Object) Tree</term>
+          </terms>
+
+          <definition>
+            <para>
+              Also known as the object model.  This is a conceptual construct which sees
+              the objects related by a set of injections with a root object (being the
+              type passed to <codeInline>CreateAndInjectDependnecies</codeInline>.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Container</term>
+          </terms>
+
+          <definition>
+            <para>
+              The container controls the creation of the object tree and retains meta
+              data so that additions can be made to the tree at subsequent entry points
+              to the program.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Prototype</term>
+          </terms>
+
+          <definition>
+            <para>
+              This terminology is borrowed from Spring rather than javascript or
+              the GOF design pattern.  The object created to be assigned to a
+              `[BeanReference(Scope=Scope.Prorotype]` marked as a prototype is
+              is not make part of the object tree but treated as a one-off.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>Singleton</term>
+          </terms>
+
+          <definition>
+            <para>
+              This term is typically applied to services, repositories or other objects
+              orchestrating the work flow of the application.  There tends to be only
+              one of each type of object fulfilling a particular role.
+            </para>
+          </definition>
+        </glossaryEntry>
+
+        <glossaryEntry>
+          <terms>
+            <term>RootType / RootObject</term>
+          </terms>
+
+          <definition>
+            <para>
+              <codeInline>CreateAndInjectDependency</codeInline> takes a type known 
+              as the <legacyItalic>RootType</legacyItalic> as
+              a starting point for injection.  It examines each of that type's
+              <codeInline>[BeanReference]</codeInline> occurrences and in each case creates an appropriate
+              bean which it assigns to the member or the constructor parameter.
+              Alternatively, if the bean has been created for some prior reference
+              then it simply assigns the same instance.  This the container
+              works its way through a conceptual tree (more accurately, a graph) and
+              following the same procedure.
+            </para>
+
+            <para>
+              <codeInline>CreateAndInjectDependencies</codeInline> returns an object 
+              of <legacyItalic>Root Type</legacyItalic> and This
+              is known as the <legacyItalic>Root object</legacyItalic>.  In many cases it will a call to
+              a method of this object that kicks of processing within the application.
+            </para>
+          </definition>
+        </glossaryEntry>
       </glossaryDiv>
 
     </glossary>
