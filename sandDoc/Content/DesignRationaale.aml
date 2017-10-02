@@ -4,86 +4,183 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
 
-      <para>Required introduction</para>
+      <para>This section describes the principles behind the design</para>
     </introduction>
 
-    <!-- Add one or more top-level section elements.  These are collapsible.
-         If using <autoOutline />, add an address attribute to identify it
-         and specify a title so that it can be jumped to with a hyperlink. -->
     <section address="Section1">
-      <title>Optional section title</title>
+      <title>Rationale</title>
       <content>
-        <!-- Uncomment this to create a sub-section outline
-        <autoOutline /> -->
-        <para>Add one or more sections with content</para>
+        <para>Three aspirations underly the design of the container:</para>
+        <list class="bullet">
+          <listItem>
+            <para>Simplicity</para>
+          </listItem>
+          <listItem>
+            <para>Transparency</para>
+          </listItem>
+          <listItem>
+            <para>Verifiability</para>
+          </listItem>
+        </list>
+
+        <para>Simplicity</para>
+
+        <para>In the interests of simplicity the libraries surface area is restricted to:</para>
+
+        <list class="bullet">
+          <listItem>
+            <para>A single significant operational class <codeInline>SimpleIOCContainer</codeInline> coupled with 3 enums</para>
+          </listItem>
+          <listItem>
+            <para>
+              A single constructor for the container and a single
+              method <codeInline>CreateAndInjectDependencies</codeInline> albeit with 4 overloads
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              The Diagnostics class and its components which for most purposes can be
+              ignored except to list warnings with <codeInline>ToString()</codeInline>
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              4 attributes <codeInline>[Bean]</codeInline>, <codeInline>[BeanReference]</codeInline> etc. for identifying injectables and the
+              sites where they can be injected plus some ancillary "value" classes such as <codeInline>BeanFactoryArgs</codeInline>
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              4 base classes for users to derive their own attributes
+              (not-so-simple but can be safely ignored)
+            </para>
+          </listItem>
+          <listItem>
+            <para>3 exception classes - all trivial</para>
+          </listItem>
+        </list>
+          <para>
+            There is only one way to define the injectables and injection sites, i.e. by
+            the use of attributes.  There is no XML alternative or privileged configuration
+            by code.
+          </para>
+          <para>The library is lightweight with no non-Microsoft dependencies</para>
+
+        <para>Transparency</para>
+
+        <para>
+        Transparency is in evidence through the lack of "magic" such as
+        AOP (Aspect Oriented Programming) or code generation.  The only
+        magic is the actual injection using basic reflection.  The
+        requirement to consistently mark injectables and injection sites
+        with attributes ([Bean] and [BeanReference] respectively)
+        is seen as promoting transparency - the coder's
+        intention is very clear to those who come after.
+      </para>
+
+        <para>
+        The requirement for the library user to specify which assemblies
+        should be subject to injection also supports this aspiration.
+      </para>
+
+        <para>
+        The implementation of the library is simple and is described
+        elsewhere.  This will hopefully allow coders to reason about
+        the container when tackling edge cases.
+      </para>
+
+        <para>
+        The code tries to promote type safety but this is not always
+        possible - see bean factories, for example
+      </para>.
+
+        <para>Verifiability</para>
+
+        <para>
+        The "configuration-over-convention" approach which provides transparency
+        also helps with the third aspiration of Verifiability.  By insisting
+        that he user explicitly states their intention to inject functionality
+        but the use of <codeInline>[Bean]</codeInline> and <codeInline>[BeanReference]</codeInline> attributes we can
+        provide rich diagnostics so that when things don't work the coder
+        can investigate in some depth.  The <codeInline>IOCCDiagnostics</codeInline> object provides
+        full details of anomalies discovered when carrying out the injections.
+      </para>
+
+        <para>
+        As part of this aspiration there is a more concrete aspiration (for a later version) to
+        build code analyzers so that much of the validation can be done at
+        compile time rather than run-time.
+      </para>
+
+        <para>Trade-offs</para>
+
+        <para>Fulfilling such aspirations comes at a cost.</para>
+
+        <list class="bullet">
+          <listItem>
+            <para>Overhead requiring the attribute boilerplate</para>
+          </listItem>
+          <listItem>
+            <para>Absence of hooks for 3rd party frameworks which might otherwise use the container</para>
+          </listItem>
+          <listItem>
+            <para>Possibly some minor performance degradation caused by diagnostic collection</para>
+          </listItem>
+          <listItem>
+            <para>The object model is static - although new objects can be added at program entry points
+        there is no facility to remove anything.  This will be addressed in the case of
+        request and session scope objects for web applications in a future version.  In
+        the mean time where this is necessary beans will have to be created with Prototype scope</para>
+          </listItem>
+          <listItem>
+            <para>
+              There is an absence of convenience/shortcut injections such as allowing values
+              to be substituted at the point of injection from a configuration file or the environment
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              A bean reference cannot have parameters which makes creating multiple objects with
+              the same implementation class but different parameters difficult.
+            </para>
+          </listItem>
+          <listItem>
+            <para>The library is dotnetstandard 2.0 using C# 7.1.</para>
+          </listItem>
+          <listItem>
+            <para>
+              You cannot simply stick a bean reference on some bean
+              and expect injection to take place.  It must be in the graph produced by
+              <codeInline>CreateAndInjectDependencies</codeInline>.
+            </para>
+          </listItem>
+        </list>
+        <para>Motivation</para>
+
+        <para>
+        The author used <externalLink>
+          <linkText>Java Spring</linkText>
+          <linkUri>http://spring.io</linkUri>
+        </externalLink> for 5 years.  I thought Spring was an
+        excellent, well architected, well documented robust and reliable framework.  It was
+        particularly suitable for enterprise computing where a consistency of approach in the
+        team and across teams to core functionality, persistence, web MVC, SOAP, REST,
+        security, batch processing etc. has a lot to be said for it.  However I found (
+        albeit picking up the framework in conjunction with a brown-field project which
+        had been worked on by a variety of developers with a variety of skill levels)
+        that Spring's ability to do a great deal for the coder behind the scenes was not
+        my preferred approach.  In particular the AOP involved in enforcing database
+        transactions was a piece of "magic" too far.  A lot of the design decisions here
+        are a reaction against the that aspect of Spring.  However I acknowledge the Spring framework as a towering
+        achievement.
+      </para>
       </content>
-      <!-- If a section contains a sections element, its content creates
-           sub-sections.  These are not collapsible.
-      <sections>
-          <section address="SubSection1">
-              <title>Sub-section 1</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-          <section address="SubSection2">
-              <title>Sub-section 2</title>
-              <content>
-                  <para>Sub-section content.</para>
-              </content>
-          </section>
-      </sections> -->
     </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID"/>
-      <link xlink:href="Other Topic's ID">Link inner text</link>
-
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <link xlink:href="IOCC-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

@@ -137,7 +137,7 @@ public class SomeTest
     </section>
 
     <relatedTopics>
-      <link xlink:href="IOCC-BeanNames">html Bean Names (or one interface - two implementations</link>
+      <link xlink:href="IOCC-BeanNames">html Bean Names</link>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>
