@@ -15,7 +15,7 @@ namespace IOCCTest
     {
         private static readonly string ResourceLocationPrefix = Common.ResourcePrefix;
         // .NET framework uses namespace, .NET core uses assembly name
-        // "com.thedisappointedprogrammer.IOCC"
+        // "PureDI"
         private static readonly string TestResourcePrefix = ResourceLocationPrefix;
         [TestMethod]
         public void ShouldCreateGroupFromWellFormedSchema()

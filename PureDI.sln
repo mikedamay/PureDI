@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleIOCContainerTest", "SimpleIOCContainerTest\SimpleIOCContainerTest.csproj", "{8F6A96C3-C146-453B-BAFB-6162A1F66788}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadTest", "LoadTest\LoadTest.csproj", "{ACB09FD9-EEB5-41F0-84F6-4DEC19CF014F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleCode", "SampleCode\SampleCode.csproj", "{C88F7623-F908-47B9-A997-311CAB5E8AA8}"
@@ -47,15 +45,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Interesting|Any CPU.ActiveCfg = Release|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.LinuxTest|Any CPU.ActiveCfg = LinuxTest|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.LinuxTest|Any CPU.Build.0 = LinuxTest|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.MacOsTest|Any CPU.ActiveCfg = MacOsTest|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.MacOsTest|Any CPU.Build.0 = MacOsTest|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F6A96C3-C146-453B-BAFB-6162A1F66788}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ACB09FD9-EEB5-41F0-84F6-4DEC19CF014F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACB09FD9-EEB5-41F0-84F6-4DEC19CF014F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB09FD9-EEB5-41F0-84F6-4DEC19CF014F}.Interesting|Any CPU.ActiveCfg = Interesting|Any CPU
