@@ -94,7 +94,7 @@ namespace PureDI
     // DONE test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly
-    // TODO tidy up DiagnosticSchema to remove references to user guide.
+    // DONE tidy up DiagnosticSchema to remove references to user guide.
     // N/A change names from PDependencyInjector to SimpleDependencyInjector
     // N/A remove nocache headers from documentation
     // DONE can we handle bean references in a base class?  Tests required
