@@ -72,6 +72,7 @@
     <None Include="Content\DesignRationaale.aml" />
     <None Include="Content\Glossary.aml" />
     <None Include="Content\InjectionByConstructor.aml" />
+    <None Include="Content\InjectionState.aml" />
     <None Include="Content\Introduction.aml" />
     <None Include="Content\LimitationsAndGotchas.aml" />
     <None Include="Content\OddsAndEnds.aml" />

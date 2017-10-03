@@ -95,40 +95,47 @@ public class Logger
           the member variable follows execution of <legacyItalic>Pragram&apos;s</legacyItalic>
           constructor, as you would expect.
         </para>
-        <para>Notes</para>
-        <list class="bullet">
-          <listItem>
-            <para>
-              Classes to be injected are annotated with the `[Bean]` attribute.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              Classes where a bean is to be injected must also be marked as beans
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              The site of the injection is annotated with the <codeInline>[BeanReference]</codeInline> attribute
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              The type of a member variable where a bean is to be injected 
-              should an interface, a direct or indirect base class of the bean or the the class
-              that implements the bean
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              Once <codeInline>CreateAndInjectDependencies</codeInline> has been called all beans will have 
-              been instantiated and assigned to any matching bean references.  Typically, calls
-              will only be made to the injector, subsequently, if the program has other
-              entry points
-            </para>
-          </listItem>
-        </list>
+        </content>
+      <sections>
+        <section address="Notes">
+          <title>Notes</title>
+          <content>
+          <list class="bullet">
+            <listItem>
+              <para>
+                Classes to be injected are annotated with the `[Bean]` attribute.
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                Classes where a bean is to be injected must also be marked as beans
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                The site of the injection is annotated with the <codeInline>[BeanReference]</codeInline> attribute
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                The type of a member variable where a bean is to be injected
+                should an interface, a direct or indirect base class of the bean or the the class
+                that implements the bean
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                Once <codeInline>CreateAndInjectDependencies</codeInline> has been called all beans will have
+                been instantiated and assigned to any matching bean references.  Typically, calls
+                will only be made to the injector, subsequently, if the program has other
+                entry points
+              </para>
+            </listItem>
+          </list>
       </content>
+
+        </section> 
+      </sections>
     </section>
 
     <relatedTopics>

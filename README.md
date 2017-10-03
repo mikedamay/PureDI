@@ -2,7 +2,7 @@
 #### Version
 Pre-alpha
 #### Documentation
-Documentation can be found at [http://mikedamay.co.uk/Simple/index.html]
+Documentation can be found at [http://mikedamay.co.uk/PureDI]
 
 usage:
 To run tests:
