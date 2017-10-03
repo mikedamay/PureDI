@@ -54,6 +54,7 @@ namespace PureDI
     //
     // TODO documentation:
     // TODO API reference
+    // TODO set up remarks and notes as top level section headings in each topic
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // N/A and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
@@ -91,6 +92,8 @@ namespace PureDI
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
     // TODO Mass Test - 2 days
+    // TODO ExcludeSimpleIOCCContainer name change in main code
+    // TODO ExcludeSimpleIOCCContainer name change in SandDoc
     // DONE test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly
@@ -170,6 +173,11 @@ namespace PureDI
     // TODO Later: add tables to markdown
     // TODO Later: add references to help to diagnostics
     // TODO Later: rudimentary developer guide
+    // TODO docs: IOCC-OddsAndEnds examples for object cycles
+    // TODO docs: IOCC-Assemblies example of including a reference to PDependencyInjector
+    // TODO docs: in a factory bean
+    // TODO docs: example of assembly exclusion
+    // TODO docs: connect up summary and details in DesignRationale
     /// <summary>
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>

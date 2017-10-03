@@ -29,7 +29,7 @@
             <para>
               The documentation uses the term, _Bean_, rather loosely.  It refers either to a class
               marked with the `[Bean]` attribute which is ready to be injected into
-              some other class by the container.  The name may seem a little misleading
+              some other class by the injector.  The name may seem a little misleading
               as beans imply something small and uniform.  You might expect the name
               to apply to value objects such as DTOs but beans are more typically singletons
               such as services or repositories.  Blame <externalLink>
@@ -48,7 +48,7 @@
 
           <definition>
             <para>
-              Injection is the process of assignment by the container of some object
+              Injection is the process of assignment by the injector of some object
               to the member variable or constructor parameter of some other object.  It sometimes
               loosely extended to include the creation of the injected object.
             </para>
@@ -105,12 +105,12 @@
 
         <glossaryEntry>
           <terms>
-            <term>Container</term>
+            <term>injector</term>
           </terms>
 
           <definition>
             <para>
-              The container controls the creation of the object tree and retains meta
+              The injector controls the creation of the object tree and retains meta
               data so that additions can be made to the tree at subsequent entry points
               to the program.
             </para>
@@ -159,7 +159,7 @@
               <codeInline>[BeanReference]</codeInline> occurrences and in each case creates an appropriate
               bean which it assigns to the member or the constructor parameter.
               Alternatively, if the bean has been created for some prior reference
-              then it simply assigns the same instance.  This the container
+              then it simply assigns the same instance.  This the injector
               works its way through a conceptual tree (more accurately, a graph) and
               following the same procedure.
             </para>

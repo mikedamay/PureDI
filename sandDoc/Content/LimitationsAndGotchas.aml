@@ -71,13 +71,13 @@
           <listItem>
             <para>
               A risk, particularly with multiple entry points, is that the coder will forget
-              to include required assemblies when the container is created
+              to include required assemblies when the injector is created
             </para>
           </listItem>
           <listItem>
             <para>
               If a number of beans implement some widely used interface such as <codeInline>IEnumerable of T</codeInline> then
-              each implementing class involved will require bean names so that the container can
+              each implementing class involved will require bean names so that the injector can
               select the appropriate bean for a given injection with the widely used type
             </para>
           </listItem>

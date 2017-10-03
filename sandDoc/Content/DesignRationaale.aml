@@ -5,14 +5,13 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-
       <para>This section describes the principles behind the design</para>
     </introduction>
 
     <section address="Section1">
-      <title>Rationale</title>
+      <title>Remarks</title>
       <content>
-        <para>Three aspirations underly the design of the container:</para>
+        <para>Three aspirations underly the design of the injector:</para>
         <list class="bullet">
           <listItem>
             <para>Simplicity</para>
@@ -31,18 +30,20 @@
 
         <list class="bullet">
           <listItem>
-            <para>A single significant operational class <codeInline>SimpleIOCContainer</codeInline> coupled with 3 enums</para>
+            <para>A single significant operational class <codeInline>PDependencyInjector</codeInline> coupled with some associated enums</para>
           </listItem>
           <listItem>
             <para>
-              A single constructor for the container and a single
-              method <codeInline>CreateAndInjectDependencies</codeInline> albeit with 4 overloads
+              A single constructor for the injector and a single
+              method <codeInline>CreateAndInjectDependencies</codeInline> 
+              albeit with 4 overloads
             </para>
           </listItem>
           <listItem>
             <para>
               The Diagnostics class and its components which for most purposes can be
               ignored except to list warnings with <codeInline>ToString()</codeInline>
+              or all diagnostics with <codeInline>AllToString()</codeInline>
             </para>
           </listItem>
           <listItem>
@@ -54,7 +55,7 @@
           <listItem>
             <para>
               4 base classes for users to derive their own attributes
-              (not-so-simple but can be safely ignored)
+              (not-so-simple but can be safely ignored).
             </para>
           </listItem>
           <listItem>
@@ -67,6 +68,9 @@
             by code.
           </para>
           <para>The library is lightweight with no non-Microsoft dependencies</para>
+        <para>The use of <codeInline>injectionState</codeInline> cannot be seen
+        as promoting simplicity.  See below under <legacyItalic>Verifiability</legacyItalic>.
+      </para>
 
         <para>Transparency</para>
 
@@ -88,7 +92,7 @@
         <para>
         The implementation of the library is simple and is described
         elsewhere.  This will hopefully allow coders to reason about
-        the container when tackling edge cases.
+        the injector when tackling edge cases.
       </para>
 
         <para>
@@ -106,8 +110,13 @@
         provide rich diagnostics so that when things don't work the coder
         can investigate in some depth.  The <codeInline>IOCCDiagnostics</codeInline> object provides
         full details of anomalies discovered when carrying out the injections.
+        This heading is extended to cover the absence of "gotchas" where possible
       </para>
-
+      <para>
+        The <legacyItalic>injectionState</legacyItalic> mechanism whereby all instance state
+        of the PureDI library is held in the <codeInline>InjectionState</codeInline>
+        object should eliminate concerns about concurrency and the use of multiple threads.
+      </para>
         <para>
         As part of this aspiration there is a more concrete aspiration (for a later version) to
         build code analyzers so that much of the validation can be done at
@@ -123,7 +132,7 @@
             <para>Overhead requiring the attribute boilerplate</para>
           </listItem>
           <listItem>
-            <para>Absence of hooks for 3rd party frameworks which might otherwise use the container</para>
+            <para>Absence of hooks for 3rd party frameworks which might otherwise use the injector</para>
           </listItem>
           <listItem>
             <para>Possibly some minor performance degradation caused by diagnostic collection</para>

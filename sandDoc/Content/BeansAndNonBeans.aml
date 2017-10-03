@@ -6,14 +6,15 @@
 
     <introduction>
 
-      <para></para>
+      <para>Some observations on the nature of beans</para>
     </introduction>
 
     <section address="BeansAndNonBeans">
+      <title>Remarks</title>
       <content>
         <para>
           Any concrete class or struct over which you control the
-          source can be marked as a bean by applying the `[Bean]` attribute
+          source can be marked as a bean by applying the <codeInline>[Bean]</codeInline> attribute
           to the class declaration.
         </para>
 
@@ -24,18 +25,21 @@
 
         <para>
           Interfaces, abstract classes and static classes cannot be beans.
-          A run-time warning will be recorded in the _Diagnostics_ object.
+          A run-time warning will be recorded in the <legacyItalic>Diagnostics</legacyItalic> object.
         </para>
 
         <para>
           An inherited class cannot be a bean if any of its derived classes
-          are beans (unless the inherited bean is given a different bean name
-          to that of the derived bean or one of them has a matching profile
+          are beans (unless the inherited class is given a different bean name
+          to that of the derived classes or one of them has a matching 
+          <link
+            xlink:href="IOCC-Profiles">profile
+          </link>
           and the other does not).  (Without
-          a bean name to distinguish them there is no way for the container
+          a bean name to distinguish them there is no way for the injector
           to determine whether a reference to the inherited class is intended
           to refer to the inherited class itself or a derived class.)  Alternatively
-          if you mark the inherited bean as `[IOCCIgnored]` then both beans can be
+          if you mark the inherited bean as <codeInline>[Ignored]</codeInline> then both beans can be
           injected but only through their respective implementation class types.
         </para>
 
@@ -45,6 +49,7 @@
     <relatedTopics>
       <link xlink:href="IOCC-Profiles">Profiles</link>
       <link xlink:href="IOCC-BeanNames">Bean Names</link>
+      <codeEntityReference>T:PureDI.IgnoreAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

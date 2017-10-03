@@ -4,14 +4,7 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-
       <para>Bean Factories are an essential mechanism for extending the power of injection
       and work round the limitations of the library</para>
     </introduction>
@@ -20,7 +13,7 @@
       <title>Remarks</title>
       <content>
         <para>
-          In some situations there is no straightforward way for the container
+          In some situations there is no straightforward way for the injector
           to know how to create a required bean.  For instance a repository might need
           to be connected to its database before it can be injected.
         </para>
@@ -30,29 +23,29 @@
         <para>
           A factory is specified as a parameter to the BeanReference attribute.
           So instead of creating some implementation of the member variable
-          type, the container calls the execute method of the factory which
+          type, the injector calls the <codeInline>Execute</codeInline> method of the factory which
           creates and provides an object of the appropriate type.
         </para>
 
         <para>
-          A factory parameter (`FactoryParameter`) specified on the bean reference
-          can optionally be passed to the factory's execute method.
+          An optional factory parameter (<codeInline>FactoryParameter</codeInline>) specified on the bean reference
+          will be passed to the factory's execute method.
         </para>
 
         <para>The following code provides a simple example.</para>
 
         <code>
-          using System;
-          using com.TheDisappointedProgrammer.IOCC;
+using System;
+using PureDI;
 
-          [Bean]
-          public class FactoryUser
-          {
-          [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
-          private IRepository2 repo = null;
-          public static void Main()
-          {
-          var factoryUser = new SimpleIOCContainer().CreateAndInjectDependencies&lt;FactoryUser>().rootBean;
+[Bean]
+public class FactoryUser
+{
+    [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
+      private IRepository2 repo = null;
+    public static void Main()
+    {
+        var factoryUser = new PDependencyInjector().CreateAndInjectDependencies&lt;FactoryUser>().rootBean;
         Console.WriteLine(factoryUser.repo.GetData());
                 // will print null unless you happen to have an environment
                 // variable called CONNECTION_STRING
@@ -85,10 +78,21 @@ public interface IRepository2
 {
     string GetData();
 }
-        </code>
 
+        </code>
+        <para>
+          The code example above shows a <legacyItalic>FactoryUser</legacyItalic> class 
+          which uses an implementation of <legacyItalic>IRepository2</legacyItalic>.
+        </para>
+        <para>
+          When the injector encounters the reference it instantiates the factory
+          <legacyItalic>EnvironmentVariableFactory</legacyItalic> and invokes its
+          Execute method behind the scenes which, as you can see, instantiates
+          a repository and returns it to the injector which will assign it
+          to the member variable (<legacyItalic>repo</legacyItalic>).
+        </para>
         <para>Note:</para>
-        <list>
+        <list class="bullet">
           <listItem>
             <para>
               Classes over which the library user has no control can
@@ -96,10 +100,10 @@ public interface IRepository2
             </para>
           </listItem>
           <listItem>
-            <para>Factories must be marked with the `[Bean]` attribute</para>
+            <para>Factories must be marked with the <codeInline>[Bean]</codeInline> attribute</para>
           </listItem>
           <listItem>
-            <para>Factories must implement the `IFactory` interface</para>
+            <para>Factories must implement the <codeInline>IFactory</codeInline> interface</para>
           </listItem>
           <listItem>
             <para>
@@ -112,7 +116,7 @@ public interface IRepository2
     </section>
 
     <relatedTopics>
-      <codeEntityReference>F:com.TheDisappointedProgrammer.IOCC.BeanBaseAttribute.Profile</codeEntityReference>
+      <codeEntityReference>F:PureDI.BeanBaseAttribute.Profile</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

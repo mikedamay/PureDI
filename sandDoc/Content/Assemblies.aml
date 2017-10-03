@@ -6,7 +6,8 @@
 
     <introduction>
       <para>Dependency Injection is crucially dependent on a knowledge of available assemblies.  
-      This section discusses the relationship and what it means for the library user.</para>
+      This section discusses the this aspect of the injection mechansim
+      and what it means for the library user.</para>
     </introduction>
 
     <section address="Explanation">
@@ -16,16 +17,17 @@
           The injection mechanism works by examining the metadata of assemblies
           to discover candidate types for injection and then using reflection
           to instantiate beans (objects) and assign them to (inject them into) the member variables of
-          containing beans and constructor parameters.
+          containing beans or constructor parameters of containing beans.
         </para>
         <para>
           In order to accomplish this the library user must provide the injection
           mechanism with the identities of the assemblies that are subject to
-          injection.  These can be passed to the constructor as follows: 
-          <codeInline>var sic = new SimpleIOCContainer(Assemblies: new[] {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
+          injection.  These can be passed to the <codeInline>PDependencyInjector</codeInline>
+          constructor as follows: 
+          <codeInline>var pdi = new PDependencyInjector(Assemblies: new[] {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
           Note that the constructor takes an array of references to assemblies
           rather than the names.  Not only is this is safer but it's actually more
-          convenient for the caller.
+          convenient for the library user once they get the hang of it.
         </para>
         <para>
           You will rarely see assemblies being passed to the constructor in the
@@ -33,17 +35,17 @@
           root bean is automatically scanned for injection by default.  If the root
           type's assembly is the only one for which injection is required then the
           constructor can be called without the <codeInline>Assemblies</codeInline> parameter.
-          <codeInline>var sic = new SimpleIOCContainer();</codeInline>.
+          <codeInline>var pdi = new PDependencyInjector();</codeInline>.
         </para>
         <para>
           One other assembly, besides the root type's, is included by default.  It
-          is that of the SimpleIOCContainer itself.  This is to allow
-          beans such as factories to get access to the container (by including a 
-          <codeInline>[BeanReferene]</codeInline> to the SimpleIOCContainer in
+          is that of the PDependencyInjector itself, i.e. <legacyItalic>PureDI</legacyItalic>.  This is to allow
+          beans such as bean factories to get access to the injector (by including a 
+          <codeInline>[BeanReference]</codeInline> to the PDependencyInjector in
           the factory itself.
         </para>
         <para>
-          All assemblies are must be loaded before <codeInline>SimpleIOCContainer</codeInline>
+          All assemblies must be loaded before <codeInline>PDependencyInjector</codeInline>
           is instantiated.  The mechanism does not currently handle assemblies loaded
           at some later point, say some service provider loaded at a subsequent entry point.
         </para>
@@ -59,11 +61,11 @@
             There may be edge cases where the library user needs to exclude the default assemblies
             from scanning.  This can be achieved by passing one or two AssemblyExclusionFlags
             to the constructor: <codeInline>AssemblyExclusion.ExcludeSimpleIOCContainer</codeInline> to
-            prevent the SimpleIOCContainer library itself from being scanned and <codeInline>
+            prevent the PDependencyInjector library itself from being scanned and <codeInline>
               AssemblyExclusion.ExcludeRootTypeAssembly
             </codeInline> to exclude the root type's assembly. e.g. <lineBreak/><codeInline>
               var sic =
-              new SimpleIOCContainer(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
+              new PDependencyInjector(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
               ExcludeAssemblies: AssemblyExclusion.ExcludeSimpleIOCContainer |
               AssemblyExclusion.ExcludeRootTypeAssembly);
             </codeInline><lineBreak/> will scan only the ClassDerivedFromRootType's assembly. Bear in mind
@@ -77,41 +79,7 @@
 
     <relatedTopics>
       <link xlink:href="IOCC-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID"/>
-      <link xlink:href="Other Topic's ID">Link inner text</link>
-
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <codeEntityReference>T:PureDI.PDependencyInjector.AssemblyExclusion</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

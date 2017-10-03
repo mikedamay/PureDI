@@ -8,7 +8,8 @@ public class FactoryUser
       private IRepository2 repo = null;
     public static void Main()
     {
-        var factoryUser = new PDependencyInjector().CreateAndInjectDependencies<FactoryUser>().rootBean;
+        var factoryUser = new PDependencyInjector()
+          .CreateAndInjectDependencies<FactoryUser>().rootBean;
         Console.WriteLine(factoryUser.repo.GetData());
                 // will print null unless you happen to have an environment
                 // variable called CONNECTION_STRING
@@ -17,9 +18,11 @@ public class FactoryUser
 [Bean]
 public class EnvironmentVariableFactory : IFactory
 {
-    public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
+    public (object bean, InjectionState injectionState) 
+      Execute(InjectionState injectionState, BeanFactoryArgs args)
     {
-        return (new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING")), injectionState);
+        return (new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
+          , injectionState);
     }
 }
 

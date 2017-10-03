@@ -5,7 +5,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-      <para></para>
+      <para>This section discusses various edge cases and topics not discussed elsewhere</para>
     </introduction>
 
     <section address="OddsAndEnd">
@@ -16,33 +16,34 @@
         <para>
           Problems may arise where objects directly or indirectly refer to themselves.
           In the case of member variables this kind of cyclical reference is allowed.
-          In the case of constructor parameters an exception is thrown if
+          In the case of constructor parameters an exception (<codeInline>DIException</codeInline>) is thrown if
           an attempt is made to inject an object into the constructor of a declaring object
-          of the same type.  This is for the obvious reason that infinite recursion would result.
+          of the same type.  This is, as you would imagine, because infinite recursion would result.
         </para>
 
-        <para>Ignore Interface (<codeInline>[IOCCIgnore]</codeInline>)</para>
+        <para>Ignore Interface (<codeInline>[Ignore]</codeInline>)</para>
 
         <para>
-          The IOCCIgnore attribute can be annotated to any interface or class.  It addresses
+          The Ignore attribute can be annotated to any interface or class.  It addresses
           the case where some interface is implemented by multiple bean classes but is not used
-          as a bean reference.  It will cause the container not to report the multiple implementations
-          as duplicates.  It would be applied to some user-inspired equivalent of IComparable or
-          ISerializable.
+          as a bean reference.  The <codeInline>Ignore</codeInline> attribute will cause the injector not to report the multiple implementations
+          as duplicates in its diagnostic output.  It would typically be applied to an utility interface, say some user-inspired equivalent of IComparable or
+          ISerializable.  To reiterate: this does not do much, it just keeps noise out of the diagnostics.
         </para>
 
         <para>Attribute Base Classes</para>
 
         <para>
           The <codeInline>[Bean]</codeInline>, <codeInline>[BeanReference]</codeInline>,
-         <codeInline>[Constructor]</codeInline> and <codeInline>[IOCCIgnore]</codeInline> attributes
-          are sealed classes.  In each case there is an equivalent base class #
+         <codeInline>[Constructor]</codeInline> and <codeInline>[Ignore]</codeInline> attributes
+          are sealed classes.  In each case there is an equivalent base class
           from which user defined classes can be derived.  This might be useful
           if there was a requirement for some complex factory with a number of parameters
-          that could be named.
+          that could be named.  The injector will treat a class derived from <codeInline>BeanBaseAttribute</codeInline>
+          in exactly the same way as it treats <codeInline>BeanAttribute</codeInline>.
         </para>
 
-        <para>The following:</para>
+        <para>As an example, the following:</para>
 
 <code>
   [BeanReference(Factory=typeof(EnvironmentVariableFetcher), FactoryParam="MyEnvVar")]
@@ -62,18 +63,33 @@
 <code>
   public class EnvironementVariableAttribute : BeanReferenceBaseAttribute
   {
-  public EnvironementVariableAttribute(string VariableName )
-  {
-  base.Factory = typeof(EnvironmentVariableFetcher);
-  base.FactoryParam = VariableName;
+    public EnvironementVariableAttribute(string VariableName )
+    {
+      base.Factory = typeof(EnvironmentVariableFetcherFactory);
+      base.FactoryParam = VariableName;
+    }
   }
+  [Bean]
+  public class EnvironmentVariableFetcherFactory : IFactory
+  {
+    (object rootBean, injectionState injectionState)
+      = Execute(InjectionState injectionState, BeanFactoryArgs args)
+      {
+        string rtn = Environment.GetEnvironmentVariable((string)args.FactoryParam);
+        return (rtn, injectionState);
+      }
   }
 </code>
 
       </content>
     </section>
-
     <relatedTopics>
+      <codeEntityReference>T:PureDI.IgnoreAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanBaseAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanReferenceAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanReferenceBaseAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

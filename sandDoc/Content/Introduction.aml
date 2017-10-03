@@ -6,7 +6,7 @@
 
     <introduction>
 
-      <para>The SimpleIOCContainer (Simple Inversion of Control Container) is a
+      <para>The PDependencyInjector (Simple Inversion of Control injector) is a
         C# library providing a Dependency Injection (DI) framework promoting 
         simplicity, transparency and verifiability.</para>
     </introduction>
@@ -20,7 +20,7 @@
         </para>
         <para>
           <command>
-            nuget install TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+            nuget install TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
           </command>
         </para>
         <para>
@@ -28,14 +28,14 @@
         </para>
         <para>
           <command>
-            install-package TheDisappointedProgrammer.SimpleIOCContainer -version 0.1.0-alpha
+            install-package TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
           </command>
         </para>
         <para>
           Source code is available at 
           <externalLink> 
-            <linkText>https://github.com/mikedamay/SimpleIOCContainer.git</linkText>
-            <linkUri>https://github.com/mikedamay/SimpleIOCContainer.git</linkUri>
+            <linkText>https://github.com/mikedamay/PDependencyInjector.git</linkText>
+            <linkUri>https://github.com/mikedamay/PDependencyInjector.git</linkUri>
           </externalLink>
         </para>
         <para>
@@ -47,7 +47,7 @@
         </para>
         <para>
           Usage follows a simple pattern: the caller instantiates some significant object
-          with a call to <codeInline>SimpleIOCContainer.CreateAndInjectDependnecies</codeInline> and that
+          with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
           object is instantiated together with dependencies to which it refers
           and so forth recursively through the tree of dependencies.
         </para>
@@ -64,7 +64,7 @@ public class Program
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        SimpleIOCContainer sic = new SimpleIOCContainer();
+        PDependencyInjector sic = new PDependencyInjector();
         Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
         prog.SaySomething();
     }
@@ -107,7 +107,7 @@ public class Logger
             <para>
               Once <codeInline>CreateAndInjectDependencies</codeInline> has been called all beans will have 
               been instantiated and assigned to any matching bean references.  Typically, calls
-              will only be made to the container, subsequently, if the program has other
+              will only be made to the injector, subsequently, if the program has other
               entry points
             </para>
           </listItem>
@@ -121,7 +121,7 @@ public class Logger
       <link xlink:href="IOCC-DesignRationale">Design Rationale</link>
       <link xlink:href="IOCC-Profiles">Profiles</link>
  
-      <codeEntityReference>T:com.TheDisappointedProgrammer.IOCC.SimpleIOCContainer</codeEntityReference>
+      <codeEntityReference>T:com.TheDisappointedProgrammer.IOCC.PDependencyInjector</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>
