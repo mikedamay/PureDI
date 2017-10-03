@@ -18,13 +18,13 @@
             </xs:element>
             <xs:element name="intro" type ="xs:string"/>
             <xs:element name="background" type ="xs:string"/>
-            <xs:element name="userGuideTitle" type ="xs:string"/>
-            <xs:element name="userGuide" >
+            <!--<xs:element name="userGuideTitle" type ="xs:string"/>-->
+            <!--<xs:element name="userGuide" >
               <xs:complexType mixed="true">
                 <xs:sequence>
                   <xs:element name="div" minOccurs="0" maxOccurs="1">
                     <xs:complexType mixed="true">
-                      <!--<xs:sequence>
+                      <xs:sequence>
                         <xs:element name="pre" minOccurs="1" maxOccurs="1">
                           <xs:complexType>
                             <xs:sequence>
@@ -32,14 +32,14 @@
                             </xs:sequence>
                           </xs:complexType>
                         </xs:element>
-                      </xs:sequence>-->
+                      </xs:sequence>
                       <xs:attribute name="class" type="xs:string" use="required" fixed="pre-scrollable"/>
                     </xs:complexType>
                   </xs:element>
                 </xs:sequence>
               </xs:complexType>
-            </xs:element>
-            <xs:element name="userGuideSeeAlso" type ="xs:string"/>
+            </xs:element>-->
+            <!--<xs:element name="userGuideSeeAlso" type ="xs:string"/>-->
             <xs:element name="template" type ="xs:string"/>
             <xs:element name="artefacts">
               <xs:complexType>

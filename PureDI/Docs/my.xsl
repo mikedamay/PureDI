@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="ascii" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="ascii" indent="yes" method="xml"/>
- <xsl:template match="topic">
-     <!-- <xsl:value-of select="diagnosticSchema/group/topic[text() = 'MissingBean']/following-sibling::intro"/> -->
-     <xsl:text>&#10;</xsl:text>
-     <xsl:value-of select="."/>
+    <xsl:strip-space elements='*'/>
+    
+ <xsl:template match="node()|@*">
+    <xsl:copy>
+        <xsl:apply-templates/>
+    </xsl:copy>
  </xsl:template>
- <xsl:template match="text()"/>
+ <xsl:template match="userGuideTitle"/>
+ <xsl:template match="userGuide"/>
+ <xsl:template match="userGuideSeeAlso"/>
+ <!-- <xsl:template match="text()"/> -->
+    <!-- <xsl:template match="/">
+        <xsl:apply-templates/>
+    </xsl:template> -->
 </xsl:stylesheet>

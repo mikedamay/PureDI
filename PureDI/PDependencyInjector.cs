@@ -54,7 +54,6 @@ namespace PureDI
     //
     // TODO documentation:
     // TODO API reference
-    // TODO rudimentary developer guide
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // N/A and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
@@ -92,11 +91,11 @@ namespace PureDI
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
     // TODO Mass Test - 2 days
-    // TODO test with multiple OSs
+    // DONE test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly
     // TODO tidy up DiagnosticSchema to remove references to user guide.
-    // TODO change names from PDependencyInjector to SimpleDependencyInjector
+    // N/A change names from PDependencyInjector to SimpleDependencyInjector
     // N/A remove nocache headers from documentation
     // DONE can we handle bean references in a base class?  Tests required
     // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
@@ -170,6 +169,7 @@ namespace PureDI
     // TODO Later: handle whether external interfaces are included or excluded from typeMap
     // TODO Later: add tables to markdown
     // TODO Later: add references to help to diagnostics
+    // TODO Later: rudimentary developer guide
     /// <summary>
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>

@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="ascii"?>
-<DiagnosticSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DiagnosticSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="file://. DiagnosticSchemaSchema.xsd">
   <group>
     <topic>DuplicateBean</topic>
     <severity>Warning</severity>
@@ -10,21 +11,18 @@
                interface or base class then use the bean's "name" 
                property to distinguish them and then include that 
                name in the bean reference whose value is to be injected</background>
-    
-    
-    
+    <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
+    <userGuide>
+    </userGuide>
+    <userGuideSeeAlso/>
     <template>attempt to add duplicate bean: {Interface1} {BeanName}, 
               attempting to add ${NewBean}, when ${ExistingBean} is already included.
               </template>
     <artefacts>
-      <Interface1>
-</Interface1>
-      <NewBean>
-</NewBean>
-      <BeanName>
-</BeanName>
-      <ExistingBean>
-</ExistingBean>
+      <Interface1/>
+      <NewBean/>
+      <BeanName/>
+      <ExistingBean/>
     </artefacts>
   </group>
   <group>
@@ -39,15 +37,13 @@
       class or interface, the "Bean" attribute should be applied 
       only to the concrete implementation, not to a parent 
       or interface</background>
-    
-    
-    
+    <userGuideTitle>Beans and non-Beans</userGuideTitle>
+    <userGuide>    </userGuide>
+    <userGuideSeeAlso/>
     <template>{AbstractOrStaticClass} is {ClassMode}</template>
     <artefacts>
-      <AbstractOrStaticClass>
-</AbstractOrStaticClass>
-      <ClassMode>
-</ClassMode>
+      <AbstractOrStaticClass/>
+      <ClassMode/>
     </artefacts>
   </group>  
   <group>
@@ -57,15 +53,13 @@
            cannot do this.</intro>
     <background>The container cannot set the value of an auto property as the
                operation is not supported by reflection.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Member} is an auto property on {Class}</template>
     <artefacts>
-      <Class>
-</Class>
-      <Member>
-</Member>
+      <Class/>
+      <Member/>
     </artefacts>
   </group>
   <group>
@@ -76,13 +70,12 @@
     .For this it needs a non-static constructor
     which takes no arguments.  Alternatively a constructor annotated with the [Constructor] attribute
     can be specified together with all of its parameters annotated as [BeanReference]</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Class} needs a no-arg constructor</template>
     <artefacts>
-      <Class>
-</Class>
+      <Class/>
     </artefacts>   
   </group>
   <group>
@@ -98,19 +91,15 @@
       to mark as injectable a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
       This, of course, amounts to much the same thing.
       You may be attempting the bean through an interface that it does not implement.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>
     <artefacts>
-      <MemberType>
-</MemberType>
-      <MemberBeanName>
-</MemberBeanName>
-      <MemberName>
-</MemberName>
-      <Bean>
-</Bean>
+      <MemberType/>
+      <MemberBeanName/>
+      <MemberName/>
+      <Bean/>
     </artefacts>  
   </group>  
   <group>
@@ -126,15 +115,13 @@
       to access a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
       This, of course, amounts to much the same thing.
       You may be attempting the bean through an interface that it does not implement.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing bean: {BeanType}({BeanName})</template>
     <artefacts>
-      <BeanType>
-</BeanType>
-      <BeanName>
-</BeanName>
+      <BeanType/>
+      <BeanName/>
     </artefacts>  
   </group>  
   <group>
@@ -145,15 +132,13 @@
     to PDependencyInjector.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
     derived from the type was not marked as a bean.  Alternatively the bean may have been found
     to be invalid - see above.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
     <artefacts>
-      <BeanType>
-</BeanType>
-      <BeanName>
-</BeanName>
+      <BeanType/>
+      <BeanName/>
     </artefacts>  
   </group>
   <group>
@@ -163,17 +148,14 @@
     <background>
       Factory beans must be marked as beans [Bean].  They must be in an assembly passed to PDependencyInjector.SetAssemblies().
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
     </artefacts>
   </group>
   <group>
@@ -183,17 +165,14 @@
     <background>
       Factory beans must be marked as beans [Bean].  They must also implement IFactory.
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
     <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
     </artefacts>
   </group>
   <group>
@@ -204,24 +183,19 @@
       The type of the object returned by the Execute() method of a factory must be compatible with the
       type of the member to which it is being assigned
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>
       The type returne from {Factory} for {DeclaringBean}.{Member}
       {ExpectedType} was expected.Excepton: {Exception}
     </template>
     <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-      <ExpectedType>
-</ExpectedType>
-      <Exception>
-</Exception>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+      <ExpectedType/>
+      <Exception/>
     </artefacts>
   </group>
   <group>
@@ -231,22 +205,18 @@
     <background>
       An exception was thrown during the Execute() method of a bean factory
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>
       The exception thrown by {Factory} for {DeclaringBean}.{Member}
       was {Exception}
     </template>
     <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-      <Exception>
-</Exception>
+      <DeclaringBean/>
+      <Member/>
+      <Factory/>
+      <Exception/>
     </artefacts>
   </group>
   <group>
@@ -257,15 +227,13 @@
       a parameter whose own constructor includes a parameter of the original class.
       Add in intermediate ancestors to make this interesting
       a parent bean or </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
     <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <ConstructorParam>
-</ConstructorParam>
+      <DeclaringBean/>
+      <ConstructorParam/>
     </artefacts>
   </group>
   <group>
@@ -278,13 +246,12 @@
       and the "ConstructorName" parameter of the [BeanReference] should be used
       in the reference to the bean to indicate which constructor should be used.
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {Bean} has more than one applicable constructor</template>
     <artefacts>
-      <Bean>
-</Bean>
+      <Bean/>
     </artefacts>
   </group>
   <group>
@@ -298,13 +265,12 @@
       bean then a factory bean can be used to provide the value and the constructor
       should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
     <artefacts>
-      <Bean>
-</Bean>
+      <Bean/>
     </artefacts>
   </group>
   <group>
@@ -316,13 +282,12 @@
       be marked with the [IOCCConstructor] attribute and all that constructor's parameters
       must be marked as [BeanReference].
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
     <artefacts>
-      <Bean>
-</Bean>
+      <Bean/>
     </artefacts>
   </group>
   <group>
@@ -333,13 +298,12 @@
       If a reference to Bean A is injected into Bean B's constructor and a reference to Bean B is
       injected into Bean A's constructor then there is no way to construct both beans.
     </background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Bean} has a cyclical dependency</template>
     <artefacts>
-      <Bean>
-</Bean>
+      <Bean/>
     </artefacts>
   </group>
   <group>
@@ -347,17 +311,14 @@
     <severity>Warning</severity>
     <intro>A bean reference exists in a context where a bean cannot be injected</intro>
     <background>All members for which beans can be injected must exist within classes validly marked as [bean]s.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} has an unreachable member {MemberType} {MemberName}</template>
     <artefacts>
-      <Type>
-</Type>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
+      <Type/>
+      <MemberType/>
+      <MemberName/>
     </artefacts>
   </group>
   <group>
@@ -365,13 +326,12 @@
     <severity>Warning</severity>
     <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
     <background>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} has an unreachable constructor</template>
     <artefacts>
-      <Type>
-</Type>
+      <Type/>
     </artefacts>
   </group>
   <group>
@@ -379,13 +339,12 @@
     <severity>Warning</severity>
     <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
     <background>Factories must implement IFactory and be marked with the [Bean] attribute.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{Type} implements IFactory but is not a bean</template>
     <artefacts>
-      <Type>
-</Type>
+      <Type/>
     </artefacts>
   </group>
   <group>
@@ -394,18 +353,15 @@
     <intro>A value is being injected into a member that has already been initialized</intro>
     <background>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
       have occurred.  Any preceding initialisation will be obliterated by the injection</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>The member, {Member}, of {DeclaringType} was already initialized with {ExistingValue}.  The
       value, {ExistingValue}, has been overwritten</template>
     <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <Member>
-</Member>
-      <ExistingValue>
-</ExistingValue>
+      <DeclaringType/>
+      <Member/>
+      <ExistingValue/>
     </artefacts>
   </group>
   <group>
@@ -413,17 +369,14 @@
     <severity>Warning</severity>
     <intro>An embedded struct bean exists which will never be instantiated</intro>
     <background>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{DeclaringType} has an unreachable member struct {MemberType} {MemberName}</template>
     <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
+      <DeclaringType/>
+      <MemberType/>
+      <MemberName/>
     </artefacts>
   </group>
   <group>
@@ -432,13 +385,12 @@
     <intro>List of Profiles in use by the container</intro>
     <background>The active profiles will determine which types are 
       included in the type map and are available for injection</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Profiles (blank indicates an empty list):{Profiles}</template>
     <artefacts>
-      <Profiles>
-</Profiles>
+      <Profiles/>
     </artefacts>
   </group>
   <group>
@@ -447,13 +399,12 @@
     <intro>List of Assemblies in use by the container</intro>
     <background>The active assemblies will determine which types are 
       included in the type map and are available for injection</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>Assemblies (blank indicates an empty list):{Assemblies}</template>
     <artefacts>
-      <Assemblies>
-</Assemblies>
+      <Assemblies/>
     </artefacts>
   </group>
   <group>
@@ -467,55 +418,44 @@
       * Note that in the case of references containing factories it is the
         factory implementation rather than the actual derived class
         that is reported.</background>
-    
-    
-    
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{ReferenceType} (bean name:{BeanName}) maps to {ImplementationType}</template>
     <artefacts>
-      <ReferenceType>
-</ReferenceType>
-      <BeanName>
-</BeanName>
-      <ImplementationType>
-</ImplementationType>
+      <ReferenceType/>
+      <BeanName/>
+      <ImplementationType/>
     </artefacts>
   </group>
   <group>
     <topic>MemberInjectionsInfo</topic>
     <severity>Info</severity>
     <intro>List of objects injected by the container into member variables</intro>
-    <background>
-</background>
-    
-    
-    
+    <background></background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{{MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
     <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
-      <MemberImplementation>
-</MemberImplementation>
+      <DeclaringType/>
+      <MemberType/>
+      <MemberName/>
+      <MemberImplementation/>
     </artefacts>
   </group>
   <group>
     <topic>ConstructorInjectionsInfo</topic>
     <severity>Info</severity>
     <intro>List of objects injected by the container into the constructor</intro>
-    <background>
-</background>
-    
-    
-    
+    <background></background>
+    <userGuideTitle/>
+    <userGuide/>
+    <userGuideSeeAlso/>
     <template>{ParameterImplementation} has been injected into the constructor of {DeclaringType}</template>
     <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <ParameterImplementation>
-</ParameterImplementation>
+      <DeclaringType/>
+      <ParameterImplementation/>
     </artefacts>
   </group>
 </DiagnosticSchema>
