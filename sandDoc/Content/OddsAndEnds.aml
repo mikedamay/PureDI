@@ -8,8 +8,8 @@
       <para>This section discusses various edge cases and topics not discussed elsewhere</para>
     </introduction>
 
-    <section address="OddsAndEnd">
-      <title></title>
+    <section address="Remarks">
+      <title>Remarks</title>
       <content>
         <para>Object Cycles</para>
 

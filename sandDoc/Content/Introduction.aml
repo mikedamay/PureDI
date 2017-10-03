@@ -6,13 +6,13 @@
 
     <introduction>
 
-      <para>The PDependencyInjector (Simple Inversion of Control injector) is a
-        C# library providing a Dependency Injection (DI) framework promoting 
+      <para>PureDI is a
+        C# library providing a Dependency Injection (DI) library promoting 
         simplicity, transparency and verifiability.</para>
     </introduction>
 
-    <section address="GettingStarted">
-      <title>Getting Started</title>
+    <section address="Remarks">
+      <title>Remarks</title>
       <content>
         <para>It is available from nuget.org with the following command:</para>
         <para>
@@ -20,7 +20,7 @@
         </para>
         <para>
           <command>
-            nuget install TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
+            nuget install PureDI-version 0.1.1-alpha
           </command>
         </para>
         <para>
@@ -28,21 +28,21 @@
         </para>
         <para>
           <command>
-            install-package TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
+            install-package PureDI-version 0.1.0-alpha
           </command>
         </para>
         <para>
           Source code is available at 
           <externalLink> 
-            <linkText>https://github.com/mikedamay/PDependencyInjector.git</linkText>
-            <linkUri>https://github.com/mikedamay/PDependencyInjector.git</linkUri>
+            <linkText>https://github.com/mikedamay/PureDI.git</linkText>
+            <linkUri>https://github.com/mikedamay/PureDI.git</linkUri>
           </externalLink>
         </para>
         <para>
           This documentation is located at 
           <externalLink> 
-            <linkText>http://mikedamay.co.uk/Simple/index.html</linkText>
-            <linkUri>http://mikedamay.co.uk/Simple/index.html</linkUri>
+            <linkText>http://mikedamay.co.uk/PureDI/index.html</linkText>
+            <linkUri>http://mikedamay.co.uk/PureDI/index.html</linkUri>
           </externalLink>
         </para>
         <para>
@@ -56,16 +56,23 @@
           startup.  The framework is principally concerned with singletons that
           have the same life span as the program.
         </para>
+        <para>
+          Calls can be made at subsequent entry points (e.g. in a web application
+          or interactive GUI.  These entry points will be able to create their own
+          tree of objects which they can mix with previously created ones and can
+          easily control the lifetime of the two sets of objects independently.
+        </para>
+        <para>The following illustrates simple usage:</para>
         <code>
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 [Bean]
 public class Program
 {
     [BeanReference] private Logger logger = null;
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        Program prog = sic.CreateAndInjectDependencies&lt;Program&gt;().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        Program prog = pdi.CreateAndInjectDependencies&lt;Program>().rootBean;
         prog.SaySomething();
     }
     private void SaySomething()
@@ -79,6 +86,15 @@ public class Logger
     public void Log(string message) => System.Console.WriteLine(message);
 }
         </code>
+        <para>
+          In the above example the <legacyItalic>Program</legacyItalic> class is 
+          instantiated in the call to <legacyItalic>CreateAndInjectDependencies</legacyItalic>
+          which also creates an instance of Logger (because it is annotated with
+          a <legacyItalic>BeanReferenceAttribute</legacyItalic>) and assigns it
+          to the <legacyItalic>logger</legacyItalic> member variable.  Assignment to 
+          the member variable follows execution of <legacyItalic>Pragram&apos;s</legacyItalic>
+          constructor, as you would expect.
+        </para>
         <para>Notes</para>
         <list class="bullet">
           <listItem>

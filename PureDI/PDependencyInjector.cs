@@ -55,10 +55,13 @@ namespace PureDI
     // TODO documentation:
     // TODO API reference
     // TODO set up remarks and notes as top level section headings in each topic
+    // TODO upload docs to mikedamay.co.uk/PureDI
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // N/A and that generics have the for classname`1[TypeParam]
     // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
     // TODO are combined to support inheritance.  Execute must be virtual.
+    // TODO in gotchas we claim that a dangling bean reference will be assigned
+    // TODO its default value - is that true?
     // DONE document that names apply to factories not the target reference bean.
     // DONE document lack of thread safety
     // DONE document the point that injected members are not available in the constructor
@@ -94,6 +97,7 @@ namespace PureDI
     // TODO Mass Test - 2 days
     // TODO ExcludeSimpleIOCCContainer name change in main code
     // TODO ExcludeSimpleIOCCContainer name change in SandDoc
+    // TODO Move UserGuide.xml from PureDI to PureDiDocumentor
     // DONE test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
     // TODO a scanned assembly

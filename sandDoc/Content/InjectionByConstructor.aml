@@ -10,7 +10,7 @@
     </introduction>
 
     <section address="Constructors">
-      <title>Constructors</title>
+      <title>Remarks</title>
       <content>
         <para>
           It is not always convenient to inject beans directly into the
@@ -23,18 +23,17 @@
 
         <para>
           In the case of multiple constructors the bean reference takes
-          a `ConstructorName` parameter which is matched up to a name
+          a <codeInline>ConstructorName</codeInline> parameter which is matched up to a name
           passed to the <codeInline>[Constructor]</codeInline> attribute.
         </para>
 
         <para>The following code illustrates a simple implementation:</para>
         <code>
 using System;
-using BeanNamesRunner;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 
 [Bean]
-public class Constructor
+public class ConstructorUser
 {
     [BeanReference]
     private ISomeService someService = null;
@@ -42,7 +41,7 @@ public class Constructor
     public static void Main()
     {
         var constructor = new PDependencyInjector()
-          .CreateAndInjectDependencies&lt;Constructor>().rootBean;
+          .CreateAndInjectDependencies&lt;ConstructorUser>().rootBean;
         constructor.someService.DoMeAFavour();   // writes "SomeData"
     }
 }
@@ -90,6 +89,40 @@ public interface ISomeRepository
     void Init(string connectionSTring);
 }
         </code>
+        <para>
+          In the code example above <legacyItalic>ConstructorUser</legacyItalic>
+          instantiates <legacyItalic>SomeService</legacyItalic> by calling the latter's
+          constructor.  This allows SomeService to call Init on the repository which
+          it refers to.
+        </para>
+        <para>For the sake of clarity note that the above could have been achieved
+        with member injection by exposing <legacyItalic>_repo</legacyItalic> as a public read only property.
+        However, I would suggest that using a constructor
+        here is better style.
+      </para>
+        <para>Notes:</para>
+        <list class="bullet">
+          <listItem>
+            <para>
+              You can mix constructor injection with member variable injection in the
+              same object.  If you specify both for some member then the
+              constructor injection will be the effective one.
+            </para>
+          </listItem>
+            <listItem>
+              <para>
+                Where constructor injection is used all parameters of that constructor
+                must be marked as <codeInline>[BeanReference]</codeInline>.
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                There is nothing to prevent a class from having
+                some constructors which are subject to injection and others
+                that are not
+              </para>
+            </listItem>
+        </list>
       </content>
     </section>
 

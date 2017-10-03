@@ -23,7 +23,7 @@
           With the PDependencyInjector we accomplish that by
           allowing a profile string to be associated with any
           bean (class to be instantiated) by including
-          the string as a parameter to the *[Bean]* attribute.
+          the string as a parameter to the <codeInline>[Bean]</codeInline> attribute.
           The injector can
           be set up with a matching profile to ensure a
           matching set of beans are instantiated.
@@ -33,7 +33,7 @@
           The archetypal case is for testing which
           is particularly pertinent for the PDependencyInjector
           with its emphasis on injection into private
-          member variables.
+          member variables - other ways of handling mocks might fail here.
         </para>
         <para>
           The following example shows how mock functionality
@@ -41,15 +41,15 @@
         </para>
         <code>
 using System;
-using com.TheDisappointedProgrammer.IOCC;
+using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public class Profiles
 {
     public static void Main()
     {
-        PDependencyInjector sic = new PDependencyInjector();
-        MyService ms = sic.CreateAndInjectDependencies&lt;MyService>().rootBean;
+        PDependencyInjector pdi = new PDependencyInjector();
+        MyService ms = pdi.CreateAndInjectDependencies&lt;MyService>().rootBean;
         Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
     }
 }
@@ -93,42 +93,36 @@ public class SomeTest
 }
         </code>
         <para>
+          The *myRepository bean* is referenced through an interface (*IMyRepository*)
+          that the bean's class implements.
+          Base classes can perform the same role as interfaces provided that they
+          are not themselves marked as beans.
+        </para>
+        <para>
+          There are two implementations of the interface:
+          MyRepository which is the "production" implementation and *MyTestRepository*
+          available for testing purposes.
+        </para>
+        <para>
+          The main program does not pass a profile when it creates the *PDependencyInjector*.
+          Therefore the production version of IMyRepository is instantiated.
+          However the unit test passes a profile of "test" which matches the profile
+          for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
+        </para>
+        <para>
           Notes:
         </para>
         <list class="bullet">
           <listItem>
             <para>
-              The *myRepository bean* is referenced through an interface (*IMyRepository*)
-              that the bean's class implements.
-              Base classes can perform the same role as interfaces provided that they
-              are not themselves marked as beans.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              There are two implementations of the interface:
-              MyRepository which is the "production" implementation and *MyTestRepository*
-              available for testing purposes.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              The main program does not pass a profile when it creates the *PDependencyInjector*.
-              Therefore the production version of IMyRepository is instantiated.
-              Howver the unit test passes a profile of "test" which matches the profile
-              for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              *CreateAndInjectDependencies* will select a bean with a matching profile or, in the
+              <codeInline>CreateAndInjectDependencies</codeInline> will select a bean with a matching profile or, in the
               absence of a matching bean, a bean with no profile.
             </para>
           </listItem>
           <listItem>
             <para>
-              * It is possible (and, in fact, usual) to specify multiple profiles to the
-              *PDependencyInjector* constructor.  This enables fine grained control at run-time
+              It is possible (and, in fact, usual) to specify multiple profiles to the
+              <codeInline>PDependencyInjector</codeInline> constructor.  This enables fine grained control at run-time
               of which implementations are to be used
             </para>
           </listItem>

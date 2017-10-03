@@ -479,7 +479,7 @@ The following code illustrates a simpple implementation:
 <div class="pre-scrollable">
 
 ```  
-{code-Constructor.cs}
+{code-ConstructorUser.cs}
 ```
 
 </div>

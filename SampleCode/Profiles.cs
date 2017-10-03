@@ -46,7 +46,9 @@ public class SomeTest
     [TestMethod]
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
-            , new PDependencyInjector(Profiles: new[] { "test" }).CreateAndInjectDependencies<MyService>().rootBean.DoStuff()
+            , new PDependencyInjector(
+              Profiles: new[] { "test" }).CreateAndInjectDependencies<MyService>()
+            .rootBean.DoStuff()
         );
 }
 

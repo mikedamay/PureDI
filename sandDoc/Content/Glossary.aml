@@ -10,26 +10,17 @@
 
         <glossaryEntry>
           <terms>
-            <term termId="xyz">1st term</term>
-            <term>Other term (if any)</term>
-          </terms>
-
-          <definition>
-            <para>The definition of the term(s)</para>
-          </definition>
-
-        </glossaryEntry>
-
-        <glossaryEntry>
-          <terms>
             <term>Bean</term>
           </terms>
 
           <definition>
             <para>
-              The documentation uses the term, _Bean_, rather loosely.  It refers either to a class
-              marked with the `[Bean]` attribute which is ready to be injected into
-              some other class by the injector.  The name may seem a little misleading
+              The documentation uses the term, <legacyItalic>Bean</legacyItalic>,
+              rather loosely.  It refers either to a class
+              marked with the <codeInline>[Bean]</codeInline> attribute 
+              which is ready to be injected into
+              some other class by the injector or an instance of such a  class.
+              The name may seem a little misleading
               as beans imply something small and uniform.  You might expect the name
               to apply to value objects such as DTOs but beans are more typically singletons
               such as services or repositories.  Blame <externalLink>
@@ -37,8 +28,6 @@
               <linkUri>http://spring.io</linkUri>
             </externalLink>.
             </para>
-
-            <para>Alternatively, the term bean is used to refer to an instantiated object of such a class.</para>
           </definition>
         </glossaryEntry>
         <glossaryEntry>
@@ -48,7 +37,7 @@
 
           <definition>
             <para>
-              Injection is the process of assignment by the injector of some object
+              <legacyItalic>Injection</legacyItalic> is the process of assignment by the injector of some object
               to the member variable or constructor parameter of some other object.  It sometimes
               loosely extended to include the creation of the injected object.
             </para>
@@ -63,7 +52,7 @@
           <definition>
             <para>
               The documentation uses the term, <legacyItalic>Dependency</legacyItalic>, to refer to the relationship
-              between two classes where one is an class to be injected and the other
+              between two classes where one is a class to be injected and the other
               has a member which refers to the bean.
             </para>
           </definition>
@@ -75,7 +64,7 @@
           </terms>
 
           <definition>
-            <para>More descriptive synonym for a bean.</para>
+            <para>More reductive synonym for a bean.</para>
           </definition>
         </glossaryEntry>
 
@@ -91,13 +80,15 @@
 
         <glossaryEntry>
           <terms>
-            <term>(Object) Tree</term>
+            <term>Object Tree</term>
+            <term>Object Model</term>
+            <term>Tree</term>
           </terms>
 
           <definition>
             <para>
-              Also known as the object model.  This is a conceptual construct which sees
-              the objects related by a set of injections with a root object (being the
+              This is a conceptual construct which sees
+              the objects related by a set of injections with a root object (being of the
               type passed to <codeInline>CreateAndInjectDependnecies</codeInline>.
             </para>
           </definition>
@@ -110,8 +101,10 @@
 
           <definition>
             <para>
-              The injector controls the creation of the object tree and retains meta
-              data so that additions can be made to the tree at subsequent entry points
+              The injector <codeInline>PDependencyInjector</codeInline> 
+              controls the creation of the object tree and returns meta
+              data in the form of an injection state 
+              so that additions can be made to the tree at subsequent entry points
               to the program.
             </para>
           </definition>
@@ -126,7 +119,7 @@
             <para>
               This terminology is borrowed from Spring rather than javascript or
               the GOF design pattern.  The object created to be assigned to a
-              `[BeanReference(Scope=Scope.Prorotype]` marked as a prototype is
+              <codeInline>[BeanReference(Scope=Scope.Prorotype]</codeInline> marked as a prototype is
               is not make part of the object tree but treated as a one-off.
             </para>
           </definition>
@@ -141,14 +134,16 @@
             <para>
               This term is typically applied to services, repositories or other objects
               orchestrating the work flow of the application.  There tends to be only
-              one of each type of object fulfilling a particular role.
+              one of each type of object fulfilling a particular role.  The
+              essence is that all objects in the "tree" will refer to a shared object.
             </para>
           </definition>
         </glossaryEntry>
 
         <glossaryEntry>
           <terms>
-            <term>RootType / RootObject</term>
+            <term>RootType</term>
+            <term>RootObject</term>
           </terms>
 
           <definition>
@@ -160,7 +155,7 @@
               bean which it assigns to the member or the constructor parameter.
               Alternatively, if the bean has been created for some prior reference
               then it simply assigns the same instance.  This the injector
-              works its way through a conceptual tree (more accurately, a graph) and
+              works its way recursively through a conceptual tree (more accurately, a graph) and
               following the same procedure.
             </para>
 

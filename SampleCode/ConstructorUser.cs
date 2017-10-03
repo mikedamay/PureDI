@@ -1,9 +1,8 @@
 ﻿using System;
-using BeanNamesRunner;
 using PureDI;
 
 [Bean]
-public class Constructor
+public class ConstructorUser
 {
     [BeanReference]
     private ISomeService someService = null;
@@ -11,7 +10,7 @@ public class Constructor
     public static void Main()
     {
         var constructor = new PDependencyInjector()
-          .CreateAndInjectDependencies<Constructor>().rootBean;
+          .CreateAndInjectDependencies<ConstructorUser>().rootBean;
         constructor.someService.DoMeAFavour();   // writes "SomeData"
     }
 }
@@ -65,6 +64,6 @@ namespace ConstructorRunner
     [TestClass]
     public class MainRunner
     {
-        [TestMethod] public void RunMain() => Constructor.Main();
+        [TestMethod] public void RunMain() => ConstructorUser.Main();
     }
 }

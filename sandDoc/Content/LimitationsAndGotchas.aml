@@ -5,51 +5,58 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-
       <para>Below is a list of limitations of the library and library behaviour that may
       catch out the unsuspecting user</para>
     </introduction>
 
 
-    <section address="LimitationsAndGotchas">
-      <title>Details</title>
+    <section address="Remarks">
+      <title>Remarks</title>
       <content>
         <para>Limitations</para>
-
         <list class="ordered">
           <listItem>
             <para>
-              The object model is static - although new objects can be added at program entry points
-              there is no facility to remove anything.  This will be addressed in the case of
-              request and session scope objects for web applications in a future version.  In
+              The object model is fairly static.  Injections of singletons are associated with
+              an injection state.  PureDI's reference to the injections is determined by
+              the lifetime of a particular injection state object.
               the mean time where this is necessary beans will have to be created with Prototype scope
             </para>
           </listItem>
           <listItem>
-            <para>static classes and members are not handled</para>
+            <para>Injections cannot be made into static objects</para>
           </listItem>
           <listItem>
             <para>
               <codeInline>readonly</codeInline> properties cannot have their value set by injection.  A constructor
               or field must be involved.
-              is called.
+              is called.  By contrast readonly fields can be the target of injections.
             </para>
           </listItem>
           <listItem>
-            <para>Variadic constructors are not supported</para>
+            <para>VThere is no way to inject through a variadic constructor</para>
           </listItem>
           <listItem>
             <para>
               It is not possible to combine alternative implementations with parallel implementations.
-              Suppose we have an IRepository interface and two concrete classes that implement it say
-              ILocalRepository and IRemoteRepository.  We cannot fulfill a requirement where a) in
-              production some classes need the LocalRepository (say for configuration settings) and
-              some classes the RemoteRepository (for general use) and b) on the developer machine
-              both repositories should be LocalRepository.  In the first case we need the remote
+              Suppose we have an <codeInline>IRepository</codeInline> interface 
+              and two concrete classes that implement it say
+              <codeInline>LocalRepository</codeInline> 
+              and <codeInline>RemoteRepository</codeInline>. 
+              We cannot meet a requirement where a) in
+              production some classes need the <legacyItalic>LocalRepository</legacyItalic>
+              (say for configuration settings) and
+              some classes the <legacyItalic>RemoteRepository</legacyItalic> 
+              (for general use) and b) on the developer machine
+              both repositories should be <legacyItalic>LocalRepository</legacyItalic>.  
+              In the first case we need the remote
               repository to have a bean <legacyBold>name</legacyBold>, say "remote" and
               in the second case a <legacyBold>profile</legacyBold>
               but no <legacyBold>name</legacyBold>.
             </para>
+            <para>The only workaround is to have four versions of the repository
+            each having an unique combination of name and profile.  This
+          might be achieved with some thin "wrapper" derived classes</para>
           </listItem>
         </list>
 
@@ -58,20 +65,22 @@
         <list class="ordered">
           <listItem>
             <para>
-              If a member is incorrectly marked as [IOCCBeanReference] then
-              it will be set to its default value even if it is an initialized member
+              If a member is incorrectly marked as [BeanReference] then
+              it will be set to its default value even if it is an initialized member.
             </para>
+            <para>A warning will be reported in the diagnostics</para>
           </listItem>
           <listItem>
             <para>
-              Factories must both have a `[bean]` attribute and implement <codeInline>IFactory</codeInline>.  If a factory
-              has only one of these then this will be recorded in diagnostics (`IOCCDiagnostics`)
+              Factories must both have a <codeInline>[bean]</codeInline> attribute 
+              and implement <codeInline>IFactory</codeInline>.  If a factory
+              has only one of these then this will be recorded in diagnostics (<codeInline>Diagnostics</codeInline>)
             </para>
           </listItem>
           <listItem>
             <para>
               A risk, particularly with multiple entry points, is that the coder will forget
-              to include required assemblies when the injector is created
+              to include required assemblies when the injector is first created
             </para>
           </listItem>
           <listItem>
@@ -88,14 +97,11 @@
             </para>
           </listItem>
           <listItem>
-            <para><codeInline>CreateAndInjectDependencies()</codeInline> is not thread safe</para>
-          </listItem>
-          <listItem>
-            <para>As you would expect beans have not been injected when the class's constructor</para>
+            <para>As you would expect beans have not been injected when the class's constructor is called</para>
           </listItem>
           <listItem>
             <para>
-              Avoid processing in beans' constructors.  There is a risk of inadvertently
+              Avoid any processing of substance in beans' constructors.  There is a risk of inadvertently
               accessing beans that have not been subject to injection.
             </para>
           </listItem>
@@ -103,14 +109,17 @@
             <para>
               There is no magic.  You cannot simply stick a bean reference on some bean
               and expect injection to take place.  It must be in the graph produced by
-              <codeInline>CreateAndInjectDependencies</codeInline>.
+              <codeInline>CreateAndInjectDependencies</codeInline>.  You mix
+              calls to <codeInline>new</codeInline> and <codeInline>CreateAndInjectDependencies</codeInline>
+              at your own risk.
             </para>
           </listItem>
           <listItem>
             <para>
               If you specify the root bean of the object tree with an interface, make sure
-              that either that interface is declared in the main assembly subject to injection
-              or that the assembly is passed as a parameter to the mechanism's constructor.
+              that either that interface is declared in the main assembly scanned for injection
+              or that the assembly is passed as a parameter to the 
+              <codeInline>PDependencyInjector</codeInline>'s constructor.
             </para>
           </listItem>
         </list>
