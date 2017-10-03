@@ -263,3 +263,8 @@ __pycache__/
 .vscode/launch.json
 .vscode/tasks.json
 .vscode/settings.json
+
+# PureDI
+Simple/*.html
+Simple/DiagnosticSchema/*.html
+Simple/UserGuide/*.html
