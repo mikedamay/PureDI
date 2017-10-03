@@ -2,10 +2,10 @@ using System;
 
 namespace PureDI.Tree
 {
-    internal class IOCCNoArgConstructorException : Exception
+    internal class NoArgConstructorException : Exception
     {
         public string Class { get; }
-        public IOCCNoArgConstructorException(string _class)
+        public NoArgConstructorException(string _class)
         {
             Class = _class;
         }

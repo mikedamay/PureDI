@@ -49,7 +49,7 @@ namespace PureDI.Tree
                        || rootType.IsInstanceOfType(rootObject));
                 return (rootObject, injectionState);
             }
-            catch (IOCCNoArgConstructorException inace)
+            catch (NoArgConstructorException inace)
             {
                 dynamic diagnostic = injectionState.Diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
                 diagnostic.Class = rootType.GetIOCCName();
@@ -113,7 +113,7 @@ namespace PureDI.Tree
                         }
                     }
                 }
-                catch (IOCCNoArgConstructorException inace)
+                catch (NoArgConstructorException inace)
                 {
                     RecordDiagnostic(injectionState.Diagnostics, "MissingNoArgConstructor"
                         , ("Class", inace.Class));
@@ -624,7 +624,7 @@ namespace PureDI.Tree
                 }
                 if (constructorInfo == null)
                 {
-                    throw new IOCCNoArgConstructorException(beanType.GetIOCCName());
+                    throw new NoArgConstructorException(beanType.GetIOCCName());
                     // TODO some diagnostics required here
                 }
                 try
