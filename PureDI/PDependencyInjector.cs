@@ -45,20 +45,13 @@ namespace PureDI
     // DONE inherited attributes
     //
     // DONE change wording of no-arg constructor diagnostic to include constructor based injections
-    // TODO Research:
-    // TODO look at MEF implementations - heard on dnr 8-8-17
-    // TODO testing in untrusted environments
-    // TODO ninject
-    // TODO spring
-    // TODO ASP.NET
-    //
     // TODO documentation:
     // TODO API reference
     // TODO set up remarks and notes as top level section headings in each topic
-    // TODO upload docs to mikedamay.co.uk/PureDI
+    // DONE upload docs to mikedamay.co.uk/PureDI
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // N/A and that generics have the for classname`1[TypeParam]
-    // TODO explain how inheritance, factory with bean name, a separate base factory with IOCCIgnore
+    // TODO explain how inheritance, factory with bean name, a separate base factory with Ignore
     // TODO are combined to support inheritance.  Execute must be virtual.
     // TODO in gotchas we claim that a dangling bean reference will be assigned
     // TODO its default value - is that true?
@@ -70,22 +63,22 @@ namespace PureDI
     // DONE alternative implementations and sometimes you want parallel
     // TODO implementations a la IPropertyMap
     // TODO document that it is not possible to have OS.Any along with OS.Specific
-    // TODO document bean, bean definition and other technical terms
+    // DONE document bean, bean definition and other technical terms
     // TODO developer guide: policy on diagnostics and variation for constructors
     // TODO assert that attribute parameters are non-null and of the correct type.
     // TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO spell check documentation
-    // TODO sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
-    // TODO we need to say or do something about processing in constructors
-    // TODO before the container builder has finished its business.
+    // N/A sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
+    // DONE we need to say or do something about processing in constructors
+    // DONE before the container builder has finished its business.
     // TODO bean names, constructor names and profiles are case insensitive
-    // TODO Even if beans are referenced only by factories they still need names to 
-    // TODO distinguish multiple implementations of the same interface.
-    // TODO Of course classes referenced by factories don't have to be beans.
+    // N/A Even if beans are referenced only by factories they still need names to 
+    // N/A distinguish multiple implementations of the same interface.
+    // N/A Of course classes referenced by factories don't have to be beans.
     // N/A factory beans are typically (but not necessarily) created as prototypes so
-    // N/A if there is another non-factory based injecttion of the bean it will be
+    // N/A if there is another non-factory based injection of the bean it will be
     // N/A a different instance
     // N/A add version to documentation heading
     // 
@@ -94,7 +87,6 @@ namespace PureDI
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
-    // TODO Mass Test - 2 days
     // TODO ExcludeSimpleIOCCContainer name change in main code
     // TODO ExcludeSimpleIOCCContainer name change in SandDoc
     // TODO Move UserGuide.xml from PureDI to PureDiDocumentor
@@ -107,9 +99,6 @@ namespace PureDI
     // DONE can we handle bean references in a base class?  Tests required
     // DONE do we need reconsider abstract base classes?  I think we're ok we pick up inherited members
     // DONE make typemap and mapCreatedSoFar parameters to CreateAndinjectDependencies
-    // TODO red team: deep hierarchies
-    // TODO red team: mix new and CreateAndInject...
-    // TODO red team: self registering classes - that are also beans
     // DONE we need an overload that takes a type
     // DONE add exception handling to other entry points.
     // DONE heading for diagnostic output e.g. Diagnostic Information:
@@ -177,6 +166,15 @@ namespace PureDI
     // TODO Later: add tables to markdown
     // TODO Later: add references to help to diagnostics
     // TODO Later: rudimentary developer guide
+    // TODO Later: look at MEF implementations - heard on dnr 8-8-17
+    // TODO Later: testing in untrusted environments
+    // TODO Later: ninject
+    // TODO Later: spring
+    // TODO Later: ASP.NET
+    // TODO Later: Mass Test - 2 days
+    // TODO Later: red team: deep hierarchies
+    // TODO Later: red team: mix new and CreateAndInject...
+    // TODO Later: red team: self registering classes - that are also beans
     // TODO docs: IOCC-OddsAndEnds examples for object cycles
     // TODO docs: IOCC-Assemblies example of including a reference to PDependencyInjector
     // TODO docs: in a factory bean
