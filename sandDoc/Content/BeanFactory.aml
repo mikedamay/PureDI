@@ -34,7 +34,7 @@
 
         <para>The following code provides a simple example.</para>
 
-        <code>
+        <code language="c#">
 using System;
 using PureDI;
 

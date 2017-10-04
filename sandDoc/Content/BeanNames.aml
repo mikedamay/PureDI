@@ -22,7 +22,7 @@
         </para>
 
         <para>The following code illustrates this:</para>
-        <code>
+        <code language="c#">
 using PureDI;
 
 [Bean]
@@ -67,29 +67,52 @@ internal class MongoDB : IRepository
           uses the name specified in the bean reference to select the appropriate
           implementation.
         </para>
-        <para>Note:</para>
-
-        <list class="bullet">
-          <listItem>
-            <para>
-              The bean reference can specify an interface (or a base class as long as it is
-              not itself a bean) as an alternative to specifying
-              the implementation class.  It is left up to the
-              injector to associate the reference with a concrete class.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              If no name is specified then this is equivalent to an empty string.  Unlike the case with
-              _Profiles_ if no bean is found with a name matching that of the bean reference
-              then the bean instantiation will fail.
-            </para>
-          </listItem>
-          <listItem>
-            <para>Bean names are case insensitive.</para>
-          </listItem>
-        </list>
       </content>
+
+      <sections>
+        <section address="UseCases">
+          <title>Use Cases:</title>
+          <content>
+            <para>
+              A good use case would be that of a client class that needs to
+              have references to more than one repository but to address them
+              through the same interface.
+            </para>
+            <para>
+              <legacyBold>Problem Avoidance - </legacyBold>most of the time the
+              mechanism is used to avoid problems caused by multiple derived
+              classes to the injection mechanism which simply needs some way
+              to distinguish between them.
+            </para>
+          </content>
+        </section>
+        <section address="Note">
+          <title>Note:</title>
+
+          <content>
+            <list class="bullet">
+              <listItem>
+                <para>
+                  The bean reference can specify an interface (or a base class as long as it is
+                  not itself a bean) as an alternative to specifying
+                  the implementation class.  It is left up to the
+                  injector to associate the reference with a concrete class.
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  If no name is specified then this is equivalent to an empty string.  Unlike the case with
+                  _Profiles_ if no bean is found with a name matching that of the bean reference
+                  then the bean instantiation will fail.
+                </para>
+              </listItem>
+              <listItem>
+                <para>Bean names are case insensitive.</para>
+              </listItem>
+            </list>
+          </content>
+        </section>
+      </sections> 
     </section>
 
     <relatedTopics>
