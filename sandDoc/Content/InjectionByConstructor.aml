@@ -5,7 +5,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-      <para>As an alternative to member injection constructor parameters can be used.
+      <para>As an alternative to member injection, constructor parameters can be injected.
       This is discussed below.</para>
     </introduction>
 
@@ -28,7 +28,7 @@
         </para>
 
         <para>The following code illustrates a simple implementation:</para>
-        <code>
+        <code language="c#">
 using System;
 using PureDI;
 
@@ -40,9 +40,9 @@ public class ConstructorUser
 
     public static void Main()
     {
-        var constructor = new PDependencyInjector()
+        var constructorUser = new PDependencyInjector()
           .CreateAndInjectDependencies&lt;ConstructorUser>().rootBean;
-        constructor.someService.DoMeAFavour();   // writes "SomeData"
+        constructorUser.someService.DoMeAFavour();   // writes "SomeData"
     }
 }
 
@@ -67,6 +67,12 @@ public class SomeService : ISomeService
     }
 
 }
+
+public interface ISomeRepository
+{
+    string GetSomeData();
+    void Init(string connectionSTring);
+}
 [Bean]
 public class SomeRepository : ISomeRepository
 {
@@ -82,12 +88,6 @@ public class SomeRepository : ISomeRepository
         _connectionString = initString;
     }
 }
-
-public interface ISomeRepository
-{
-    string GetSomeData();
-    void Init(string connectionSTring);
-}
         </code>
         <para>
           In the code example above <legacyItalic>ConstructorUser</legacyItalic>
@@ -100,31 +100,58 @@ public interface ISomeRepository
         However, I would suggest that using a constructor
         here is better style.
       </para>
-        <para>Notes:</para>
-        <list class="bullet">
-          <listItem>
-            <para>
-              You can mix constructor injection with member variable injection in the
-              same object.  If you specify both for some member then the
-              constructor injection will be the effective one.
-            </para>
-          </listItem>
-            <listItem>
-              <para>
-                Where constructor injection is used all parameters of that constructor
-                must be marked as <codeInline>[BeanReference]</codeInline>.
-              </para>
-            </listItem>
-            <listItem>
-              <para>
-                There is nothing to prevent a class from having
-                some constructors which are subject to injection and others
-                that are not
-              </para>
-            </listItem>
-        </list>
       </content>
-    </section>
+      <sections>
+        <section address="UseCases">
+          <title>Use Cases:</title>
+          <content>
+            <para>
+              <legacyBold>Legacy Code</legacyBold>
+            </para>
+            <para>
+              <legacyBold>Shared Code: </legacyBold>If code is shared between
+              code bases that use <legacyItalic>PureDI</legacyItalic> and ones
+              that don't then constructor injection may play a part.
+            </para>
+            <para>
+              <legacyBold>Technical Constraints: </legacyBold> testing frameworks
+              or other development tools may force the use of constructors.
+            </para>
+            <para>
+              <legacyBold>Less Magical: </legacyBold> You may feel that
+              the use of constructors is more expressive.  But if that's the
+              case you probably avoid DI anyway.
+            </para>
+          </content>
+        </section>
+        <section address="Notes">
+          <title>Notes:</title>
+          <content>
+            <list class="bullet">
+              <listItem>
+                <para>
+                  You can mix constructor injection with member variable injection in the
+                  same object.  If you specify both for some member then the
+                  constructor injection will be the effective one.
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  Where constructor injection is used all parameters of that constructor
+                  must be marked as <codeInline>[BeanReference]</codeInline>.
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  There is nothing to prevent a class from having
+                  some constructors which are subject to injection and others
+                  that are not
+                </para>
+              </listItem>
+            </list>
+          </content>
+        </section>
+      </sections>    </section>
 
     <relatedTopics>
     </relatedTopics>

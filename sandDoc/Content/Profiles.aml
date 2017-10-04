@@ -10,8 +10,8 @@
       </para>
     </introduction>
 
-    <section address="Section1">
-      <title>Profiles</title>
+    <section address="Remarks">
+      <title>Remarks</title>
       <content>
         <para>
           One of the essential purposes of dependency injection is to
@@ -119,7 +119,7 @@ public class SomeTest
       </content>
         <sections>
           <section address="UseCases">
-            <title>Use Cases</title>
+            <title>Use Cases:</title>
             <content>
               <para>
                 <legacyBold>Testing:</legacyBold> the implementation of mock objects
@@ -141,7 +141,7 @@ public class SomeTest
           </section>
           <section>
               <title>
-                Notes
+                Notes:
               </title>
             <content>
               <list class="bullet">

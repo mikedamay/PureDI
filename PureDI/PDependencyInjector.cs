@@ -179,6 +179,9 @@ namespace PureDI
     // TODO Later: red team: deep hierarchies
     // TODO Later: red team: mix new and CreateAndInject...
     // TODO Later: red team: self registering classes - that are also beans
+    // TODO Later: PDependencyInjector or InjectionState should expose active
+    // TODO Later: profiles, particularly for use by factories.
+    // TODO Later: allow user to pass a flag to the injector constructor to treate warnings as errors
     // TODO docs: IOCC-OddsAndEnds examples for object cycles
     // TODO docs: IOCC-Assemblies example of including a reference to PDependencyInjector
     // TODO docs: in a factory bean

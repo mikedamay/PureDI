@@ -9,9 +9,9 @@ public class ConstructorUser
 
     public static void Main()
     {
-        var constructor = new PDependencyInjector()
+        var constructorUser = new PDependencyInjector()
           .CreateAndInjectDependencies<ConstructorUser>().rootBean;
-        constructor.someService.DoMeAFavour();   // writes "SomeData"
+        constructorUser.someService.DoMeAFavour();   // writes "SomeData"
     }
 }
 
@@ -36,6 +36,12 @@ public class SomeService : ISomeService
     }
 
 }
+
+public interface ISomeRepository
+{
+    string GetSomeData();
+    void Init(string connectionSTring);
+}
 [Bean]
 public class SomeRepository : ISomeRepository
 {
@@ -52,11 +58,6 @@ public class SomeRepository : ISomeRepository
     }
 }
 
-public interface ISomeRepository
-{
-    string GetSomeData();
-    void Init(string connectionSTring);
-}
 
 namespace ConstructorRunner
 {

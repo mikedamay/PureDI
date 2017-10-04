@@ -13,7 +13,7 @@
       <title>Remarks</title>
       <content>
         <para>
-          The concept of the injection state (<codeEntityReference>T:PureDI.InjectionState</codeEntityReference>
+          The concept of the injection state (<codeEntityReference>T:PureDI.InjectionState</codeEntityReference>)
           is critical to an advanced use of the injector mechanism where multiple entry points are involved.
         </para>
         <para>The use case may be request handlers in a web or similar server, event handlers in
@@ -86,6 +86,47 @@ public class BigData
           500,000,500,000, it will change each time it is printed doubling, times 3 etc.
         </para>
       </content>
+      <sections>
+        <section address="UseCases">
+          <title>Use Cases:</title>
+          <content>
+            <para>
+              The following discuss areas where it might be necessary to invoke
+              <codeInline>CreateAndInectDependencies</codeInline> with a non-empty
+              injection state</para>
+            <para>
+              <legacyBold>Web Requests: </legacyBold>An object tree might be
+              instantiated in a handler at the start of the request and
+              would be expected to disappear (assuming nothing had kept a reference
+              to any of the objects) when the injection state went out of scope
+              at the end of the request
+            </para>
+            <para>
+              <legacyBold>Web Session: </legacyBold>Similarly to the web request
+              session data could be instantiated using the injector at when
+              the user logs in and the injection state stored in the session object
+              so as to automatically surrender its references when the session
+              object is no longer required.
+            </para>
+            <para>
+              <legacyBold>Interactive UI: </legacyBold>Where a user triggered event
+              occurs an object tree may be created linking up with the main object tree
+              and this would automatically go out of scope at the end of the event.
+            </para>
+          </content>
+        </section>
+        <section address="Notes">
+          <title>Notes:</title>
+          <content>
+            <para>
+              <codeInline>PDependencyInjector</codeInline> is immutable so it follows that
+              the injection state instance can passed to any instance of the injector.
+              However the injector must have the same set of profiles as the one that
+              created <codeInline>InjectionState</codeInline>
+            </para>
+          </content>
+        </section>
+      </sections>
     </section>
 
     <relatedTopics>
