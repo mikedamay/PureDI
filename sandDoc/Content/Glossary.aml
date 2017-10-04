@@ -101,9 +101,9 @@
 
           <definition>
             <para>
-              The injector <codeInline>PDependencyInjector</codeInline> 
+              The injector <codeInline>PDependencyInjector</codeInline>
               controls the creation of the object tree and returns meta
-              data in the form of an injection state 
+              data in the form of an injection state
               so that additions can be made to the tree at subsequent entry points
               to the program.
             </para>
@@ -148,7 +148,7 @@
 
           <definition>
             <para>
-              <codeInline>CreateAndInjectDependency</codeInline> takes a type known 
+              <codeInline>CreateAndInjectDependency</codeInline> takes a type known
               as the <legacyItalic>RootType</legacyItalic> as
               a starting point for injection.  It examines each of that type's
               <codeInline>[BeanReference]</codeInline> occurrences and in each case creates an appropriate
@@ -160,11 +160,28 @@
             </para>
 
             <para>
-              <codeInline>CreateAndInjectDependencies</codeInline> returns an object 
+              <codeInline>CreateAndInjectDependencies</codeInline> returns an object
               of <legacyItalic>Root Type</legacyItalic> and This
               is known as the <legacyItalic>Root object</legacyItalic>.  In many cases it will a call to
               a method of this object that kicks of processing within the application.
             </para>
+          </definition>
+        </glossaryEntry>
+        <glossaryEntry>
+          <terms>
+            <term>scan</term>
+            <term>scanning</term>
+          </terms>
+
+          <definition>
+            <para>
+             Assemblies are said to be scanned for injection when
+             the dependency injector examines each type in the assembly
+             to see whether it is a bean and if so instantiates the
+             bean and carries out the same process on each of its
+             member variables marked as a bean reference.
+            </para>
+
           </definition>
         </glossaryEntry>
       </glossaryDiv>

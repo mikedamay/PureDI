@@ -11,7 +11,7 @@
     <section address="Section1">
       <title>Remarks</title>
       <content>
-        <para>Three aspirations underly the design of the injector:</para>
+        <para>Three aspirations underly the design of the library:</para>
         <list class="bullet">
           <listItem>
             <para>Simplicity</para>
@@ -23,169 +23,204 @@
             <para>Verifiability</para>
           </listItem>
         </list>
+      </content>
 
-        <para>Simplicity</para>
+      <sections>
+      <section address="Simplicity">
+        <title>Simplicity</title>
 
-        <para>In the interests of simplicity the libraries surface area is restricted to:</para>
+        <content>
+          <para>In the interests of simplicity the library's surface area is restricted to:</para>
 
-        <list class="bullet">
-          <listItem>
-            <para>A single significant operational class <codeInline>PDependencyInjector</codeInline> coupled with some associated enums</para>
-          </listItem>
-          <listItem>
-            <para>
-              A single constructor for the injector and a single
-              method <codeInline>CreateAndInjectDependencies</codeInline> 
-              albeit with 4 overloads
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              The Diagnostics class and its components which for most purposes can be
-              ignored except to list warnings with <codeInline>ToString()</codeInline>
-              or all diagnostics with <codeInline>AllToString()</codeInline>
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              4 attributes <codeInline>[Bean]</codeInline>, <codeInline>[BeanReference]</codeInline> etc. for identifying injectables and the
-              sites where they can be injected plus some ancillary "value" classes such as <codeInline>BeanFactoryArgs</codeInline>
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              4 base classes for users to derive their own attributes
-              (not-so-simple but can be safely ignored).
-            </para>
-          </listItem>
-          <listItem>
-            <para>3 exception classes - all trivial</para>
-          </listItem>
-        </list>
+          <list class="bullet">
+            <listItem>
+              <para>
+                A single significant operational class,
+                <codeInline>PDependencyInjector</codeInline>,
+                coupled with some associated enums an opaque
+                object holding the library's state
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                A single constructor for the injector and a single
+                method, <codeInline>CreateAndInjectDependencies</codeInline>,
+                albeit with 4 overloads
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                The Diagnostics class and its constituent parts which for most purposes can be
+                ignored; except to list warnings with <codeInline>ToString()</codeInline>
+                or all diagnostics with <codeInline>AllToString()</codeInline>
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                4 attributes <codeInline>[Bean]</codeInline>, <codeInline>[BeanReference]</codeInline> etc. for identifying injectables and the
+                sites where they can be injected plus some ancillary "value" classes such as <codeInline>BeanFactoryArgs</codeInline>
+              </para>
+            </listItem>
+            <listItem>
+              <para>
+                4 base classes for users to derive their own attributes
+                (not-so-simple but can be safely ignored).
+              </para>
+            </listItem>
+            <listItem>
+              <para>3 exception classes - all straight forward</para>
+            </listItem>
+          </list>
           <para>
             There is only one way to define the injectables and injection sites, i.e. by
             the use of attributes.  There is no XML alternative or privileged configuration
             by code.
           </para>
-          <para>The library is lightweight with no non-Microsoft dependencies</para>
-        <para>The use of <codeInline>injectionState</codeInline> cannot be seen
-        as promoting simplicity.  See below under <legacyItalic>Verifiability</legacyItalic>.
-      </para>
+          <para>The library is lightweight, with no non-Microsoft dependencies</para>
+          <para>
+            Admittedly, the use of <codeInline>injectionState</codeInline> cannot be seen
+            as promoting simplicity.  See below under <legacyItalic>Verifiability</legacyItalic>.
+          </para>
+        </content>
+      </section>
 
-        <para>Transparency</para>
+        <section address="Transparaency">
+          <title>Transparency</title>
 
-        <para>
-        Transparency is in evidence through the lack of "magic" such as
-        AOP (Aspect Oriented Programming) or code generation.  The only
-        magic is the actual injection using basic reflection.  The
-        requirement to consistently mark injectables and injection sites
-        with attributes ([Bean] and [BeanReference] respectively)
-        is seen as promoting transparency - the coder's
-        intention is very clear to those who come after.
-      </para>
-
-        <para>
-        The requirement for the library user to specify which assemblies
-        should be subject to injection also supports this aspiration.
-      </para>
-
-        <para>
-        The implementation of the library is simple and is described
-        elsewhere.  This will hopefully allow coders to reason about
-        the injector when tackling edge cases.
-      </para>
-
-        <para>
-        The code tries to promote type safety but this is not always
-        possible - see bean factories, for example
-      </para>.
-
-        <para>Verifiability</para>
-
-        <para>
-        The "configuration-over-convention" approach which provides transparency
-        also helps with the third aspiration of Verifiability.  By insisting
-        that he user explicitly states their intention to inject functionality
-        but the use of <codeInline>[Bean]</codeInline> and <codeInline>[BeanReference]</codeInline> attributes we can
-        provide rich diagnostics so that when things don't work the coder
-        can investigate in some depth.  The <codeInline>IOCCDiagnostics</codeInline> object provides
-        full details of anomalies discovered when carrying out the injections.
-        This heading is extended to cover the absence of "gotchas" where possible
-      </para>
-      <para>
-        The <legacyItalic>injectionState</legacyItalic> mechanism whereby all instance state
-        of the PureDI library is held in the <codeInline>InjectionState</codeInline>
-        object should eliminate concerns about concurrency and the use of multiple threads.
-      </para>
-        <para>
-        As part of this aspiration there is a more concrete aspiration (for a later version) to
-        build code analyzers so that much of the validation can be done at
-        compile time rather than run-time.
-      </para>
-
-        <para>Trade-offs</para>
-
-        <para>Fulfilling such aspirations comes at a cost.</para>
-
-        <list class="bullet">
-          <listItem>
-            <para>Overhead requiring the attribute boilerplate</para>
-          </listItem>
-          <listItem>
-            <para>Absence of hooks for 3rd party frameworks which might otherwise use the injector</para>
-          </listItem>
-          <listItem>
-            <para>Possibly some minor performance degradation caused by diagnostic collection</para>
-          </listItem>
-          <listItem>
-            <para>The object model is static - although new objects can be added at program entry points
-        there is no facility to remove anything.  This will be addressed in the case of
-        request and session scope objects for web applications in a future version.  In
-        the mean time where this is necessary beans will have to be created with Prototype scope</para>
-          </listItem>
-          <listItem>
+          <content>
             <para>
-              There is an absence of convenience/shortcut injections such as allowing values
-              to be substituted at the point of injection from a configuration file or the environment
+              Transparency is in evidence through the lack of "magic" such as
+              AOP (Aspect Oriented Programming) or code generation.  The only
+              magic is the actual injection using basic reflection.  The
+              requirement to consistently mark injectables and injection sites
+              with attributes ([Bean] and [BeanReference] respectively)
+              is seen as promoting transparency - the developer's
+              intention is very clear to those who come after.
             </para>
-          </listItem>
-          <listItem>
-            <para>
-              A bean reference cannot have parameters which makes creating multiple objects with
-              the same implementation class but different parameters difficult.
-            </para>
-          </listItem>
-          <listItem>
-            <para>The library is dotnetstandard 2.0 using C# 7.1.</para>
-          </listItem>
-          <listItem>
-            <para>
-              You cannot simply stick a bean reference on some bean
-              and expect injection to take place.  It must be in the graph produced by
-              <codeInline>CreateAndInjectDependencies</codeInline>.
-            </para>
-          </listItem>
-        </list>
-        <para>Motivation</para>
 
-        <para>
-        The author used <externalLink>
-          <linkText>Java Spring</linkText>
-          <linkUri>http://spring.io</linkUri>
-        </externalLink> for 5 years.  I thought Spring was an
-        excellent, well architected, well documented robust and reliable framework.  It was
-        particularly suitable for enterprise computing where a consistency of approach in the
-        team and across teams to core functionality, persistence, web MVC, SOAP, REST,
-        security, batch processing etc. has a lot to be said for it.  However I found (
-        albeit picking up the framework in conjunction with a brown-field project which
-        had been worked on by a variety of developers with a variety of skill levels)
-        that Spring's ability to do a great deal for the coder behind the scenes was not
-        my preferred approach.  In particular the AOP involved in enforcing database
-        transactions was a piece of "magic" too far.  A lot of the design decisions here
-        are a reaction against the that aspect of Spring.  However I acknowledge the Spring framework as a towering
-        achievement.
-      </para>
-      </content>
+            <para>
+              The requirement for the library user to specify which assemblies
+              should be scanned for injection also supports this aspiration.
+            </para>
+
+            <para>
+              The implementation of the library is simple and is described
+              elsewhere.  This will hopefully allow developers to reason about
+              the injector when tackling edge cases.  Appropriate knowledge
+              of the implementation is seen as something to supplement
+              familiar abstractions and assist the developer in
+              reasoning about application behaviour
+            </para>
+
+            <para>
+              The code tries to promote type safety but this is not always
+              possible - see bean factories, for example
+            </para>
+          </content>
+        </section>
+
+        <section address="Verifiability">
+          <title>Verifiability</title>
+
+          <content>
+            <para>
+              The "configuration-over-convention" approach which provides transparency
+              also helps with the third aspiration of Verifiability.  By insisting
+              that he user explicitly states their intention to inject functionality
+              but the use of <codeInline>[Bean]</codeInline> and <codeInline>[BeanReference]</codeInline> attributes we can
+              provide rich diagnostics so that when things don't work,
+              due to an error or misunderstanding, the developer
+              can investigate in some depth.  The <codeInline>IOCCDiagnostics</codeInline> object provides
+              full details of anomalies discovered when carrying out the injections.
+              This heading is extended to cover the absence of "gotchas" where possible
+            </para>
+            <para>
+              The <legacyItalic>injectionState</legacyItalic> mechanism whereby all instance state
+              of the PureDI library is held in the <codeInline>InjectionState</codeInline>
+              object should eliminate concerns about concurrency and the use of multiple threads.
+            </para>
+            <para>
+              As part of this aspiration there is a more concrete aspiration (for a later version) to
+              build code analyzers so that much of the validation can be done at
+              compile time rather than run-time.
+            </para>
+          </content>
+        </section>
+
+        <section address="tradeOffs">
+          <title>Trade-offs</title>
+
+          <content>
+            <para>Fulfilling such aspirations comes at a cost.</para>
+
+            <list class="bullet">
+              <listItem>
+                <para>Overhead requiring the attribute boilerplate</para>
+              </listItem>
+              <listItem>
+                <para>Absence of hooks for 3rd party frameworks which might otherwise use the injector</para>
+              </listItem>
+              <listItem>
+                <para>Possibly some minor performance degradation caused by diagnostic collection</para>
+              </listItem>
+              <listItem>
+                <para>
+                  The object model is static - although new objects can be added at program entry points
+                  there is no facility to remove anything.  This will be addressed in the case of
+                  request and session scope objects for web applications in a future version.  In
+                  the mean time where this is necessary beans will have to be created with Prototype scope
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  There is an absence of convenience/shortcut injections such as allowing values
+                  to be substituted at the point of injection from a configuration file or the environment
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  A bean reference cannot have parameters which makes creating multiple objects with
+                  the same implementation class but different parameters difficult.
+                </para>
+              </listItem>
+              <listItem>
+                <para>The library is netcoreapp2.0 using C# 7.1.</para>
+              </listItem>
+              <listItem>
+                <para>
+                  You cannot simply stick a bean reference on some bean
+                  and expect injection to take place.  It must be in the graph produced by
+                  <codeInline>CreateAndInjectDependencies</codeInline>.
+                </para>
+              </listItem>
+            </list>
+          </content>
+        </section>
+
+        <section address="Motivation">
+          <title>Motivation</title>
+
+          <content>
+            <para>
+              The author used <externalLink>
+                <linkText>Java Spring</linkText>
+                <linkUri>http://spring.io</linkUri>
+              </externalLink> for 5 years.  I thought Spring was an
+              excellent, well architected, well documented, robust and reliable framework.  It was
+              particularly suitable for enterprise computing where a consistency of approach in the
+              team and across teams to core functionality, persistence, web MVC, SOAP, REST,
+              security, batch processing etc. has a lot to be said for it.  However I found (
+              albeit picking up the framework in conjunction with a brown-field project which
+              had been worked on by a variety of developers with a variety of skill levels)
+              that Spring's ability to do a great deal for the developer behind the scenes was not
+              my preferred approach.  In particular the AOP involved in enforcing database
+              transactions was a piece of "magic" too far.  A lot of the design decisions here
+              are a reaction against the that aspect of Spring.  However I acknowledge
+              the Spring framework as a great achievement.
+            </para>
+          </content>
+        </section>
+      </sections>
     </section>
 
     <relatedTopics>
