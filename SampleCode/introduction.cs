@@ -6,7 +6,8 @@ public class Program
     public static void Main()
     {
         PDependencyInjector pdi = new PDependencyInjector();
-        Program prog = pdi.CreateAndInjectDependencies<Program>().rootBean;
+        Program prog = pdi.CreateAndInjectDependencies<Program>()
+          .rootBean;
         prog.SaySomething();
     }
     private void SaySomething()

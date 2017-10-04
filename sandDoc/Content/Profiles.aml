@@ -5,23 +5,25 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-      <para>Profiles provide a means for the library user to select which classes to inject
-      at run-time</para>
+      <para>Profiles provide a means for the library user to select, at run-time,
+      which classes should be injected
+      </para>
     </introduction>
 
     <section address="Section1">
       <title>Profiles</title>
       <content>
         <para>
-          The essential purpose of dependency injection is to
-          allow classes to be used by some class in the program
+          One of the essential purposes of dependency injection is to
+          allow classes that implement some interface
           to be swapped out without need to recode the calling
           class in any way.
         </para>
 
         <para>
-          With the PDependencyInjector we accomplish that by
-          allowing a profile string to be associated with any
+          With the PDependencyInjector this is accomplished through
+          the use of profiles.
+          A profile string can be associated with any
           bean (class to be instantiated) by including
           the string as a parameter to the <codeInline>[Bean]</codeInline> attribute.
           The injector can
@@ -88,50 +90,87 @@ public class SomeTest
     [TestMethod]
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
-            , new PDependencyInjector(Profiles: new[] { "test" }).CreateAndInjectDependencies&lt;MyService>().rootBean.DoStuff()
+            , new PDependencyInjector(
+              Profiles: new[] { "test" }).CreateAndInjectDependencies
+            &lt;MyService>().rootBean.DoStuff()
         );
 }
         </code>
         <para>
-          The *myRepository bean* is referenced through an interface (*IMyRepository*)
+          The <legacyItalic>myRepository</legacyItalic>
+          bean is referenced through an interface (<legacyItalic>IMyRepository</legacyItalic>)
           that the bean's class implements.
           Base classes can perform the same role as interfaces provided that they
           are not themselves marked as beans.
         </para>
         <para>
           There are two implementations of the interface:
-          MyRepository which is the "production" implementation and *MyTestRepository*
+          <legacyItalic>MyRepository</legacyItalic> which is the "production" implementation 
+          and <legacyItalic>MyTestRepository</legacyItalic>
           available for testing purposes.
         </para>
         <para>
-          The main program does not pass a profile when it creates the *PDependencyInjector*.
-          Therefore the production version of IMyRepository is instantiated.
+          The main program does not pass a profile when it creates 
+          the <legacyItalic>PDependencyInjector</legacyItalic>.
+          Therefore the production version of <legacyItalic>IMyRepository</legacyItalic> is instantiated.
           However the unit test passes a profile of "test" which matches the profile
-          for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
+          for MyTestRepository and allows the repository to be mocked when testing *MyService*.
         </para>
-        <para>
-          Notes:
-        </para>
-        <list class="bullet">
-          <listItem>
-            <para>
-              <codeInline>CreateAndInjectDependencies</codeInline> will select a bean with a matching profile or, in the
-              absence of a matching bean, a bean with no profile.
-            </para>
-          </listItem>
-          <listItem>
-            <para>
-              It is possible (and, in fact, usual) to specify multiple profiles to the
-              <codeInline>PDependencyInjector</codeInline> constructor.  This enables fine grained control at run-time
-              of which implementations are to be used
-            </para>
-          </listItem>
-        </list>
       </content>
+        <sections>
+          <section address="UseCases">
+            <title>Use Cases</title>
+            <content>
+              <para>
+                <legacyBold>Testing:</legacyBold> the implementation of mock objects
+                can have a "test" profile <codeInline>[BeanReference(Profile="test"]</codeInline>.
+                The object under test can then be instantiated with
+                <codeInline>CreateAndInjectDependencies(Profiles: new[]{"test"});</codeInline>
+              </para>
+              <para>
+                <legacyBold>Software Product Line (SPL): </legacyBold>
+                <externalLink>
+                  <linkText>http://www.sei.cmu.edu/productlines/</linkText>
+                  <linkUri>http://www.sei.cmu.edu/productlines/</linkUri>
+                </externalLink>
+              </para>
+              <para>
+                <legacyBold>A/B Testing</legacyBold>
+              </para>
+            </content>
+          </section>
+          <section>
+              <title>
+                Notes
+              </title>
+            <content>
+              <list class="bullet">
+                <listItem>
+                  <para>
+                    <codeInline>CreateAndInjectDependencies</codeInline> will select a bean with a matching profile or, in the
+                    absence of a matching bean, a bean with no profile.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    It is possible (and, in fact, usual) to specify multiple profiles to the
+                    <codeInline>PDependencyInjector</codeInline> constructor.  This enables fine grained control at run-time
+                    of which implementations are to be used.
+                  
+                  </para>
+                  <para>Note that each bean can only have one profile string</para>
+                </listItem>
+              </list>
+            </content>
+          </section>
+        </sections>
     </section>
 
     <relatedTopics>
-      <link xlink:href="IOCC-BeanNames">html Bean Names</link>
+      <link xlink:href="IOCC-BeanNames">Bean Names</link>
+      <codeEntityReference>T:PureDI.BeanAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
+      <codeEntityReference>M:PureDI.PDependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.PDependencyInjector.AssemblyExclusion)</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

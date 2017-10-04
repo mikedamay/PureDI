@@ -5,65 +5,85 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-
-      <para>PureDI is a
-        C# library providing a Dependency Injection (DI) library promoting 
-        simplicity, transparency and verifiability.</para>
+      <para>
+        PureDI is a
+        C# library providing a Dependency Injection (DI) promoting
+        simplicity, transparency and verifiability.
+      </para>
+      <para>
+        The library is fully functional (feature complete with thorough testing).
+        It lacks real-world use.
+      </para>
     </introduction>
 
     <section address="Remarks">
       <title>Remarks</title>
-      <content>
-        <para>It is available from nuget.org with the following command:</para>
-        <para>
-          from the command line do:
-        </para>
-        <para>
-          <command>
-            nuget install PureDI-version 0.1.1-alpha
-          </command>
-        </para>
-        <para>
-          From Visual Studio Package Manager Console do:
-        </para>
-        <para>
-          <command>
-            install-package PureDI-version 0.1.0-alpha
-          </command>
-        </para>
-        <para>
-          Source code is available at 
-          <externalLink> 
-            <linkText>https://github.com/mikedamay/PureDI.git</linkText>
-            <linkUri>https://github.com/mikedamay/PureDI.git</linkUri>
-          </externalLink>
-        </para>
-        <para>
-          This documentation is located at 
-          <externalLink> 
-            <linkText>http://mikedamay.co.uk/PureDI/index.html</linkText>
-            <linkUri>http://mikedamay.co.uk/PureDI/index.html</linkUri>
-          </externalLink>
-        </para>
-        <para>
-          Usage follows a simple pattern: the caller instantiates some significant object
-          with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
-          object is instantiated together with dependencies to which it refers
-          and so forth recursively through the tree of dependencies.
-        </para>
-        <para>
-          The call to <codeInline>CreateAndInjectDependencies</codeInline> is typically made at program
-          startup.  The framework is principally concerned with singletons that
-          have the same life span as the program.
-        </para>
-        <para>
-          Calls can be made at subsequent entry points (e.g. in a web application
-          or interactive GUI.  These entry points will be able to create their own
-          tree of objects which they can mix with previously created ones and can
-          easily control the lifetime of the two sets of objects independently.
-        </para>
-        <para>The following illustrates simple usage:</para>
-        <code>
+      <content/>
+      <sections>
+        <section address="Setup">
+          <title>Setup</title>
+          <content>
+            <para>The library is available from nuget.org with the following command:</para>
+            <para>
+              from the command line do:
+            </para>
+            <para>
+              <command>
+                nuget install PureDI-version 0.1.2-alpha
+              </command>
+            </para>
+            <para>
+              From the Visual Studio Package Manager console do:
+            </para>
+            <para>
+              <command>
+                install-package PureDI-version 0.1.2-alpha
+              </command>
+            </para>
+            <para>
+              Source code is available at
+              <externalLink>
+                <linkText>https://github.com/mikedamay/PureDI.git</linkText>
+                <linkUri>https://github.com/mikedamay/PureDI.git</linkUri>
+              </externalLink>
+            </para>
+            <para>
+              This documentation is located at
+              <externalLink>
+                <linkText>http://mikedamay.co.uk/PureDI</linkText>
+                <linkUri>http://mikedamay.co.uk/PureDI</linkUri>
+              </externalLink>
+            </para>
+          </content>
+        </section>
+        <section address="Usage">
+          <title>Usage</title>
+          <content>
+            <para>
+              Usage follows this pattern: the caller instantiates some significant object
+              with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
+              object is instantiated together with dependencies to which it refers
+              and so forth recursively through the tree of dependencies.
+            </para>
+            <para>
+              The call to <codeInline>CreateAndInjectDependencies</codeInline> is typically made at program
+              startup.  The framework is principally concerned with singletons that
+              have the same life span as the program.
+            </para>
+            <para>
+              Dependent classes are identified with the <codeInline>[Bean]</codeInline>
+              attribute and the corresponding member variables with 
+              <codeInline>[BeanReference</codeInline> attributes.
+            </para>
+            <para>
+              Similar injections can be made at subsequent entry 
+              points (e.g. in a web application
+              or interactive GUI).  These entry points will be able to create their own
+              tree of objects which they can mix with previously created ones and can
+              easily control the lifetime of the two sets of objects independently.
+            </para>
+            <para>The following illustrates simple usage:</para>
+            <code>
 using PureDI;
 [Bean]
 public class Program
@@ -85,25 +105,25 @@ public class Logger
 {
     public void Log(string message) => System.Console.WriteLine(message);
 }
-        </code>
-        <para>
-          In the above example the <legacyItalic>Program</legacyItalic> class is 
-          instantiated in the call to <legacyItalic>CreateAndInjectDependencies</legacyItalic>
-          which also creates an instance of Logger (because it is annotated with
-          a <legacyItalic>BeanReferenceAttribute</legacyItalic>) and assigns it
-          to the <legacyItalic>logger</legacyItalic> member variable.  Assignment to 
-          the member variable follows execution of <legacyItalic>Pragram&apos;s</legacyItalic>
-          constructor, as you would expect.
-        </para>
-        </content>
-      <sections>
+            </code>
+            <para>
+              In the above example the <legacyItalic>Program</legacyItalic> class is
+              instantiated in the call to <legacyItalic>CreateAndInjectDependencies</legacyItalic>
+              which also creates an instance of <legacyItalic>Logger</legacyItalic> (because it is annotated with
+              a <legacyItalic>BeanReferenceAttribute</legacyItalic>) and assigns it
+              to the <legacyItalic>logger</legacyItalic> member variable.  Assignment to
+              the member variable follows execution of <legacyItalic>Pragram&apos;s</legacyItalic>
+              constructor, as you would expect.
+            </para>
+          </content>
+        </section>
         <section address="Notes">
           <title>Notes</title>
           <content>
           <list class="bullet">
             <listItem>
               <para>
-                Classes to be injected are annotated with the `[Bean]` attribute.
+                Classes to be injected are annotated with the <codeInline>[Bean]</codeInline> attribute.
               </para>
             </listItem>
             <listItem>
@@ -131,6 +151,13 @@ public class Logger
                 entry points
               </para>
             </listItem>
+            <listItem>
+              <para>
+                If a call is made to <codeInline>CreateAndInjectDependencies</codeInline>
+                in respect of a type that has already been instantiated then
+                a reference to that object is returned and no other processing is performed.
+              </para>
+            </listItem>
           </list>
       </content>
 
@@ -144,7 +171,8 @@ public class Logger
       <link xlink:href="IOCC-DesignRationale">Design Rationale</link>
       <link xlink:href="IOCC-Profiles">Profiles</link>
  
-      <codeEntityReference>T:com.TheDisappointedProgrammer.IOCC.PDependencyInjector</codeEntityReference>
+      <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
+      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.String,System.String,PureDI.BeanScope)</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

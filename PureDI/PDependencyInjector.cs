@@ -48,6 +48,10 @@ namespace PureDI
     // TODO documentation:
     // TODO API reference
     // TODO set up remarks and notes as top level section headings in each topic
+    // TODO FAQ / Workarounds
+    // TODO embolden key text
+    // TODO how to handle injection state passed to an injector with a different
+    // TODO set of profiles
     // DONE upload docs to mikedamay.co.uk/PureDI
     // N/A document the fact that member type is based on the type's GetIOCCName() attribute - IOCCName == FullName
     // N/A and that generics have the for classname`1[TypeParam]

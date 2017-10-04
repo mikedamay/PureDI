@@ -12,8 +12,8 @@
   <Topic id="IOCC-DesignRationale" visible="True" title="Design Rationale" />
   <Topic id="IOCC-Glossary" visible="True" />
   <Topic id="IOCC-InjectionByConstructor" visible="True" title="Injection By Constructor" />
-  <Topic id="3a5d7e35-2d4c-4f46-862b-122d83fa5047" visible="True" isSelected="true" title="Injection State &amp; Multiple Entry Points" />
-  <Topic id="IOCC-Introduction" visible="True" />
+  <Topic id="3a5d7e35-2d4c-4f46-862b-122d83fa5047" visible="True" title="Injection State &amp; Multiple Entry Points" />
+  <Topic id="IOCC-Introduction" visible="True" isDefault="true" isSelected="true" />
   <Topic id="IOCC-LimitationsAndGotchas" visible="True" title="Limitations &amp; Gotchas" />
   <Topic id="IOCC-OddsAndEnds" visible="True" title="Odds &amp; Ends" />
   <Topic id="IOCC-Profiles" visible="True" />
