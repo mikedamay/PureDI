@@ -130,6 +130,7 @@ public class BigData
     </section>
 
     <relatedTopics>
+      <codeEntityReference>T:PureDI.InjectionState</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

@@ -151,9 +151,11 @@ public class SomeRepository : ISomeRepository
             </list>
           </content>
         </section>
-      </sections>    </section>
+      </sections>    
+    </section>
 
     <relatedTopics>
+      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

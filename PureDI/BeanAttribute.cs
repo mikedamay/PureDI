@@ -41,6 +41,7 @@ namespace PureDI
     /// The injection mechanism will instantiate them if 
     /// a reference <code>[BeanReference]</code> to them is found.
     /// </summary>
+    /// <inheritdoc cref="BeanBaseAttribute"/>
     /// <example>[Bean] private SomeOtherBean other;</example>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     public sealed class BeanAttribute : BeanBaseAttribute

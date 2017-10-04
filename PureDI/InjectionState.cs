@@ -7,8 +7,8 @@ namespace PureDI
 {
     /// <summary>
     /// This class contains the history of dependencies injected in
-    /// previous calls to <code>CreateAndInjectDependencies</code>.
-    /// It is returned by <code>CreateAndInjectDependencies</code> and the expectation
+    /// previous calls to <codeInline>CreateAndInjectDependencies</codeInline>.
+    /// It is returned by <codeInline>CreateAndInjectDependencies</codeInline> and the expectation
     /// is that it will be passed to subsequent calls.  This pattern allows 
     /// multiple calls to share the same data whilst supporting thread safety and
     /// avoiding memory leaks where injections are transitory

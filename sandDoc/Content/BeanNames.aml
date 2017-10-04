@@ -116,6 +116,8 @@ internal class MongoDB : IRepository
     </section>
 
     <relatedTopics>
+      <codeEntityReference>P:PureDI.BeanBaseAttribute.Name</codeEntityReference>
+      <codeEntityReference>P:PureDI.BeanReferenceBaseAttribute.Name</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>
