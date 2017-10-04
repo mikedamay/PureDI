@@ -91,32 +91,59 @@ public interface IRepository2
           a repository and returns it to the injector which will assign it
           to the member variable (<legacyItalic>repo</legacyItalic>).
         </para>
-        <para>Note:</para>
-        <list class="bullet">
-          <listItem>
-            <para>
-              Classes over which the library user has no control can
-              be injected using factories.  This can include strings, ints etc.
-            </para>
-          </listItem>
-          <listItem>
-            <para>Factories must be marked with the <codeInline>[Bean]</codeInline> attribute</para>
-          </listItem>
-          <listItem>
-            <para>Factories must implement the <codeInline>IFactory</codeInline> interface</para>
-          </listItem>
-          <listItem>
-            <para>
-              Many use cases not covered by other mechanisms can be
-              addressed with the use of bean factories.
-            </para>
-          </listItem>
-        </list>
       </content>
+      <sections>
+        <section address="UseCases">
+          <title>Use Cases:</title>
+          <content>
+            <para>
+              <legacyBold>Primitives - </legacyBold>Factories allow you to inject values into non-classes such as strings
+              or integers
+            </para>
+            <para>
+              <legacyBold>3rd Party Classes - </legacyBold>You can use factories
+              to instantiate and inject classes where you do not control the source.
+            </para>
+            <para>
+              <legacyBold>Classes Requiring Initialisation</legacyBold>
+            </para>
+          </content>
+        </section>
+        <section address="Note">
+          <title>Note:</title>
+          <content>
+            <list class="bullet">
+              <listItem>
+                <para>
+                  Classes over which the library user has no control can
+                  be injected using factories.  This can include strings, ints etc.
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  Factories must be marked with the <codeInline>[Bean]</codeInline> attribute
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  Factories must implement the <codeInline>IFactory</codeInline> interface
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  Many use cases not covered by other mechanisms can be
+                  addressed with the use of bean factories.
+                </para>
+              </listItem>
+            </list>
+          </content>
+        </section>
+      </sections> 
     </section>
 
     <relatedTopics>
-      <codeEntityReference>F:PureDI.BeanBaseAttribute.Profile</codeEntityReference>
+      <codeEntityReference>T:PureDI.IFactory</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanReferenceAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

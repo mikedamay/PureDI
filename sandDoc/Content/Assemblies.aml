@@ -6,12 +6,12 @@
 
     <introduction>
       <para>Dependency Injection is crucially dependent on a knowledge of available assemblies.  
-      This section discusses the this aspect of the injection mechansim
+      This section discusses the this aspect of the injection mechanism
       and what it means for the library user.</para>
     </introduction>
 
-    <section address="Explanation">
-      <title>Explanation</title>
+    <section address="Remarks">
+      <title>Remarks</title>
       <content>
         <para>
           The injection mechanism works by examining the metadata of assemblies
@@ -49,36 +49,43 @@
           is instantiated.  The mechanism does not currently handle assemblies loaded
           at some later point, say some service provider loaded at a subsequent entry point.
         </para>
-        <para>Note:</para>
-        <list class="bullet">
-          <listItem>
-            <para>
-            There is no point in including an assembly for scanning that does not contain beans.
-            </para>         
-          </listItem>
-          <listItem>
-            <para>
-            There may be edge cases where the library user needs to exclude the default assemblies
-            from scanning.  This can be achieved by passing one or two AssemblyExclusionFlags
-            to the constructor: <codeInline>AssemblyExclusion.ExcludeSimpleIOCContainer</codeInline> to
-            prevent the PDependencyInjector library itself from being scanned and <codeInline>
-              AssemblyExclusion.ExcludeRootTypeAssembly
-            </codeInline> to exclude the root type's assembly. e.g. <lineBreak/><codeInline>
-              var sic =
-              new PDependencyInjector(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
-              ExcludeAssemblies: AssemblyExclusion.ExcludeSimpleIOCContainer |
-              AssemblyExclusion.ExcludeRootTypeAssembly);
-            </codeInline><lineBreak/> will scan only the ClassDerivedFromRootType's assembly. Bear in mind
-            that the root type passed to <codeInline>CreateAndInjectDependencies</codeInline> can
-            be an interface or base class of ClassDerivedFromRootType.
-            </para>
-          </listItem>
-        </list>
       </content>
+        <sections>
+          <section address="Note">
+            <title>Note:</title>
+            <content>
+              <list class="bullet">
+                <listItem>
+                  <para>
+                    There is no point in including an assembly for scanning that does not contain beans.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There may be edge cases where the library user needs to exclude the default assemblies
+                    from scanning.  This can be achieved by passing one or two AssemblyExclusionFlags
+                    to the constructor: <codeInline>AssemblyExclusion.ExcludeSimpleIOCContainer</codeInline> to
+                    prevent the PDependencyInjector library itself from being scanned and <codeInline>
+                      AssemblyExclusion.ExcludeRootTypeAssembly
+                    </codeInline> to exclude the root type's assembly. e.g. <lineBreak/><codeInline>
+                      var sic =
+                      new PDependencyInjector(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
+                      ExcludeAssemblies: AssemblyExclusion.ExcludeSimpleIOCContainer |
+                      AssemblyExclusion.ExcludeRootTypeAssembly);
+                    </codeInline><lineBreak/> will scan only the ClassDerivedFromRootType's assembly. Bear in mind
+                    that the root type passed to <codeInline>CreateAndInjectDependencies</codeInline> can
+                    be an interface or base class of ClassDerivedFromRootType.
+                  </para>
+                </listItem>
+              </list>
+            </content>
+          </section>
+        </sections>
     </section>
 
     <relatedTopics>
       <link xlink:href="IOCC-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
+      <codeEntityReference>M:PureDI.PDependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.PDependencyInjector.AssemblyExclusion)</codeEntityReference>
       <codeEntityReference>T:PureDI.PDependencyInjector.AssemblyExclusion</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>

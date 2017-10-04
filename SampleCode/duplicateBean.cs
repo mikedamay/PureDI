@@ -8,7 +8,9 @@ public class DuplicateBean
 
     public static void Main()
     {
-        var beans = new PDependencyInjector().CreateAndInjectDependencies<DuplicateBean>().rootBean;
+        var beans = new PDependencyInjector()
+          .CreateAndInjectDependencies<DuplicateBean>()
+          .rootBean;
         beans.ListDatabases();
     }
     private void ListDatabases()
