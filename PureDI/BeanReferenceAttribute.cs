@@ -58,7 +58,7 @@ namespace PureDI
         /// <summary>
         /// Where a member type is given as an interface or a  base class
         /// and there is more than one implementation available to the
-        /// injection mechansim then the selection depends on matching
+        /// injection mechanism then the selection depends on matching
         /// the name given in the bean reference to that on a candidate
         /// implementation.
         /// </summary>
@@ -81,19 +81,20 @@ namespace PureDI
             set => constructorName = value.ToLower();
         }
         private string name = PDependencyInjector.DEFAULT_BEAN_NAME;
+
         /// <summary>
         /// optionally a bean reference can delegate injection to a
         /// factory which provides considerable flexibility for the
         /// mechanism.
         /// </summary>
         /// <conceptualLink target="IOCC-BeanFactory">See Factory</conceptualLink>
-        public Type Factory = null;
+        public Type Factory { get; set; }
         /// <summary>
         /// When a bean is injected by a factory the factory parameter
         /// is available to the execute method to provide ancillary
         /// information
         /// </summary>
-        public object FactoryParameter = null;
+        public object FactoryParameter { get; set; }
         /// <summary>
         /// There is typically only one bean of each type
         /// instantiated.  Multiple bean references point
@@ -105,7 +106,7 @@ namespace PureDI
         /// separate instance.
         /// </summary>
         /// <see cref="BeanScope"/>
-        public BeanScope Scope = BeanScope.Singleton;
+        public BeanScope Scope { get; set; } = BeanScope.Singleton;
         private string constructorName = PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
     }
     /// <summary>
