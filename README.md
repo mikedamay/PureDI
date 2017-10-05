@@ -3,7 +3,7 @@
 Alpha
 #### Documentation
 Documentation can be found at [http://mikedamay.co.uk/PureDI]
-Library Maintainer Notes at Documentation/LibraryMaintainerNotes.md
+Library Maintainer Notes at [Documentation/LibraryMaintainerNotes.md](Documentation/LibraryMaintainerNotes.md)
 
 
 usage:
