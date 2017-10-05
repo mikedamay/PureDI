@@ -3,10 +3,11 @@
 Alpha
 #### Documentation
 Documentation can be found at [http://mikedamay.co.uk/PureDI]
+
 Library Maintainer Notes at [Documentation/LibraryMaintainerNotes.md](Documentation/LibraryMaintainerNotes.md)
 
 
-usage:
+#### Usage
 To run tests:
 install dotnetcore 2.0
 cd PureDITest
