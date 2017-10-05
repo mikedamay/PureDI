@@ -5,7 +5,8 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
-      <para>Dependency Injection is crucially dependent on a knowledge of available assemblies.  
+      <para>Dependency Injection is crucially dependent on a knowledge of assemblies
+      that are or are expected to be loaded.  
       This section discusses the this aspect of the injection mechanism
       and what it means for the library user.</para>
     </introduction>

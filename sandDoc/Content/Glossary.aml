@@ -144,6 +144,8 @@
           <terms>
             <term>RootType</term>
             <term>RootObject</term>
+            <term>Root Bean</term>
+            <term>Root</term>
           </terms>
 
           <definition>
@@ -154,16 +156,32 @@
               <codeInline>[BeanReference]</codeInline> occurrences and in each case creates an appropriate
               bean which it assigns to the member or the constructor parameter.
               Alternatively, if the bean has been created for some prior reference
-              then it simply assigns the same instance.  This the injector
+              then it simply assigns the same instance.  Thus the injector
               works its way recursively through a conceptual tree (more accurately, a graph) and
               following the same procedure.
+            
             </para>
 
             <para>
               <codeInline>CreateAndInjectDependencies</codeInline> returns an object
               of <legacyItalic>Root Type</legacyItalic> and This
-              is known as the <legacyItalic>Root object</legacyItalic>.  In many cases it will a call to
+              is known as the <legacyItalic>Root object</legacyItalic>
+              or <legacyItalic>Root Bean</legacyItalic> or just 
+              <legacyItalic>root</legacyItalic>.  In many cases it will a call to
               a method of this object that kicks of processing within the application.
+            </para>
+
+            <para>
+              This metaphor of root and tree works well for programs with a single
+              entry point.  Typically it is necessary to call through the 
+              root bean to access other beans.  It is a logical arrangement.
+              However, where there are multiple entry points (and conceivably in
+              some cases where there is a single entry point) the metaphor breaks
+              down.  What we see is more of a graph.  "Root" can look something
+              of a misnomer particularly in the corner case where the caller
+              makes a call to <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies(System.Object,PureDI.InjectionState)
+              </codeEntityReference> to instantiate some object with the express purpose
+              of having that object available for a tree that is subsequently created.
             </para>
           </definition>
         </glossaryEntry>

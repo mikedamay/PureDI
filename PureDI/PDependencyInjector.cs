@@ -289,7 +289,7 @@ namespace PureDI
         /// <param name="injectionState">This is null the first time the method is called.
         /// Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="rootBeanName">pass a bean name in the edge case when an interface
-        /// or base class is passed as the root type but hs multiple implementations</param>
+        /// or base class is passed as the root type but has multiple implementations</param>
         /// <param name="rootConstructorName">pass a constructor name in the edge case when 
         /// a class is being passed as the root type with multiple constructors</param>
         /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 

@@ -7,12 +7,12 @@
     <introduction>
       <para>
         PureDI is a
-        C# library providing a Dependency Injection (DI) promoting
+        C# library providing Dependency Injection (DI) promoting
         simplicity, transparency and verifiability.
       </para>
       <para>
         The library is fully functional (feature complete with thorough testing).
-        It lacks real-world use.
+        It needs hardening in the real world.
       </para>
     </introduction>
 
@@ -62,8 +62,9 @@
             <para>
               Usage follows this pattern: the caller instantiates some significant object
               with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
-              object is instantiated together with dependencies to which it refers
-              and so forth recursively through the tree of dependencies.
+              object is created together with dependencies to which it refers
+              and so forth recursively through the tree of dependencies.  The root of the
+              tree is returned and the caller methods on that.
             </para>
             <para>
               The call to <codeInline>CreateAndInjectDependencies</codeInline> is typically made at program
@@ -73,14 +74,14 @@
             <para>
               Dependent classes are identified with the <codeInline>[Bean]</codeInline>
               attribute and the corresponding member variables with 
-              <codeInline>[BeanReference</codeInline> attributes.
+              <codeInline>[BeanReference]</codeInline> attributes.
             </para>
             <para>
               Similar injections can be made at subsequent entry 
               points (e.g. in a web application
               or interactive GUI).  These entry points will be able to create their own
-              tree of objects which they can mix with previously created ones and can
-              easily control the lifetime of the two sets of objects independently.
+              tree of objects which they can mix with previously created ones. This can
+              be a useful mechanism in controlling the lifetime of the multiple sets of objects independently.
             </para>
             <para>The following illustrates simple usage:</para>
             <code>
@@ -133,13 +134,13 @@ public class Logger
             </listItem>
             <listItem>
               <para>
-                The site of the injection is annotated with the <codeInline>[BeanReference]</codeInline> attribute
+                The site of the injection is annotated with a <codeInline>[BeanReference]</codeInline> attribute
               </para>
             </listItem>
             <listItem>
               <para>
                 The type of a member variable where a bean is to be injected
-                should an interface, a direct or indirect base class of the bean or the the class
+                should be an interface, a direct or indirect base class of the bean or the the class
                 that implements the bean
               </para>
             </listItem>
