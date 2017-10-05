@@ -2,6 +2,11 @@ Miek May - October 2017
 
 Documnetation of the library user is at http://mikedamay.co.uk/PureDI
 
+Release Procedure
+releases are saved to branches:
+v0_1_2_0
+
+
 Build Documentation
 ===================
 
