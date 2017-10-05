@@ -2,6 +2,12 @@ Miek May - October 2017
 
 Documnetation of the library user is at http://mikedamay.co.uk/PureDI
 
+Code Status
+==============
+* No Warnings except in Sandcastle Help Builder
+* All Tests Pass
+* Useable (except for the absence of real-world hardening)
+
 Prerequisites
 =============
 VS2017 or environment for dotnet core.
@@ -11,7 +17,7 @@ Sandcastle build helper extension (2017.5.15)
 Build Documentation
 ===================
 
-Add sandDoc project (the solution is persisted with this removed from the solution
+Add sandDoc project (when the solution is persisted with this removed from the .sln file
 as the sandDoc project requires the full .NET framework.  It also slows down the build)
 
 Change the targetFramework of the PureDI.csproj from nestandard2.0 to netcoreapp2.0 before building
@@ -39,6 +45,7 @@ dotnet pack & msbuild /t:pack produce a file but ignore our
 
 Release Activities
 ==================
+-1 Remove SandDoc project from solution
 0. Ensure PureDI targets netstandard2.0 (not netcoreapp)
 1. Build & Test on Windows
 2. Build & Test on Linux
@@ -58,3 +65,5 @@ Release Activities
 16. final check in on branch
 17. merge branch into masterr
 18. push master
+19. Upload latest help files to mikedamay.co.uk
+20. Test nuget install on Mac or Linux or Windows

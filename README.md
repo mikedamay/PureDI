@@ -1,6 +1,12 @@
 ## PureDI
+
+A simple dependency injection mechanism
+
 #### Version
 Alpha
+
+If anybody wants to take this for a spin I would be grateful and responsive
+
 #### Documentation
 Documentation can be found at [http://mikedamay.co.uk/PureDI]
 

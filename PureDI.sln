@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\LibraryMaintainerNotes.md = Documentation\LibraryMaintainerNotes.md
 	EndProjectSection
 EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "sandDoc", "sandDoc\sandDoc.shfbproj", "{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,16 @@ Global
 		{E204099F-D02E-4E4D-9AB8-72032F8ADDBB}.MacOsTest|Any CPU.Build.0 = MacOsTest|Any CPU
 		{E204099F-D02E-4E4D-9AB8-72032F8ADDBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E204099F-D02E-4E4D-9AB8-72032F8ADDBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Interesting|Any CPU.ActiveCfg = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Interesting|Any CPU.Build.0 = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.LinuxTest|Any CPU.ActiveCfg = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.LinuxTest|Any CPU.Build.0 = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.MacOsTest|Any CPU.ActiveCfg = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.MacOsTest|Any CPU.Build.0 = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
