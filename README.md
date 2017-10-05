@@ -1,8 +1,10 @@
 ## PureDI
 #### Version
-Pre-alpha
+Alpha
 #### Documentation
 Documentation can be found at [http://mikedamay.co.uk/PureDI]
+Library Maintainer Notes at Documentation/LibraryMaintainerNotes.md
+
 
 usage:
 To run tests:
