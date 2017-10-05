@@ -80,6 +80,9 @@
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\VersionHistory\VersionHistory.aml" />
+    <None Include="Content\VersionHistory\v0.1.2.0.aml" />
+    <None Include="Content\VersionHistory\v0.1.1.0.aml" />
     <None Include="Content\Assemblies.aml" />
     <None Include="Content\BeanFactory.aml" />
     <None Include="Content\BeanNames.aml" />
@@ -92,9 +95,6 @@
     <None Include="Content\LimitationsAndGotchas.aml" />
     <None Include="Content\OddsAndEnds.aml" />
     <None Include="Content\Profiles.aml" />
-    <None Include="Content\VersionHistory\v0.1.1.0.aml" />
-    <None Include="Content\VersionHistory\v1.0.0.0.aml" />
-    <None Include="Content\VersionHistory\VersionHistory.aml" />
     <None Include="Content\Welcome.aml" />
   </ItemGroup>
   <ItemGroup>

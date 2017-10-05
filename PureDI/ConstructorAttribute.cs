@@ -13,7 +13,7 @@ namespace PureDI
     /// attribute with their own bean they could use the
     /// base class.
     /// </summary>
-    /// <remarks>All parameters must be annotated with a <code>[BeanReference]</code> attribute</remarks>
+    /// <remarks>All parameters must be annotated with a [BeanReference] attribute</remarks>
     [AttributeUsage(AttributeTargets.Constructor)]
     public abstract class ConstructorBaseAttribute : Attribute
     {
@@ -27,9 +27,9 @@ namespace PureDI
     /// <summary>
     /// Where the library user needs to inject dependencies through 
     /// a constructor the constructor in question must be annotated
-    /// with the <code>[Constructor]</code> attribute.
+    /// with the [Constructor] attribute.
     /// </summary>
-    /// <remarks>All parameters must be annotated with a <code>[BeanReference]</code> attribute.
+    /// <remarks>All parameters must be annotated with a [BeanReference] attribute.
     /// Note that where injection is made to member variables a no-args constructor must
     /// be present but there is no need to annotate it.
     /// </remarks>

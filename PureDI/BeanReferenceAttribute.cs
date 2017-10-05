@@ -47,7 +47,7 @@ namespace PureDI
     /// <summary>
     /// Any member which will have some bean assigned to it (injected into it)
     /// must be annotated with an attribute derived from
-    /// the bean reference base class.  Typically the <code>[BeanReference]</code>
+    /// the bean reference base class.  Typically the [BeanReference]
     /// concrete class will be used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property
@@ -99,9 +99,9 @@ namespace PureDI
         /// There is typically only one bean of each type
         /// instantiated.  Multiple bean references point
         /// to the same object.  This comes about because the
-        /// default scope is <code>BeanScope.Singleton</code>.
+        /// default scope is BeanScope.Singleton.
         /// Where this behaviour is not desired the bean reference
-        /// scope can be specified as <code>BeanScope.Prototype</code>.
+        /// scope can be specified as BeanScope.Prototype.
         /// In this case each bean reference will point to a
         /// separate instance.
         /// </summary>

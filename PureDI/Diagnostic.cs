@@ -29,18 +29,18 @@ namespace PureDI
             Members = CreateArtefactMap(group.ArtefactSchema);
         }
 
-        private IDictionary<string, object> 
-          CreateArtefactMap(ISet<string> groupArtefactSchema)
+        private IDictionary<string, object>
+            CreateArtefactMap(ISet<string> groupArtefactSchema)
         {
             return groupArtefactSchema.ToDictionary<
-              string, string, object>(a => a, a => null);
+                string, string, object>(a => a, a => null);
         }
         /// <summary>
-        /// 
+        /// strictly here to fulfill our obligations as a dynamic object
         /// </summary>
-        /// <param name="binder"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="binder">here to fulfill our obligations as a dynamic object</param>
+        /// <param name="result">here to fulfill our obligations as a dynamic object</param>
+        /// <returns>here to fulfill our obligations as a dynamic object</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             if (!Members.ContainsKey(binder.Name))
@@ -52,11 +52,11 @@ namespace PureDI
             return true;
         }
         /// <summary>
-        /// 
+        /// here to fulfill our obligations as a dynamic object
         /// </summary>
-        /// <param name="binder"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="binder">here to fulfill our obligations as a dynamic object</param>
+        /// <param name="value">here to fulfill our obligations as a dynamic object</param>
+        /// <returns>here to fulfill our obligations as a dynamic object</returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             if (!Members.ContainsKey(binder.Name))

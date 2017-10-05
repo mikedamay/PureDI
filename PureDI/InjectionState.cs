@@ -64,13 +64,13 @@ namespace PureDI
         /// shortcut to diagnostics.AllToString()
         /// <see cref="PureDI.Diagnostics.AllToString"/>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>a multi-line string containing all warnings and other info</returns>
         public string AllDiagnosticsToString() => diagnostics.AllToString();
         /// <summary>
         /// shortcut to diagnostics.ToString()
         /// <see cref="PureDI.Diagnostics.ToString"/>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>multi-line string containing all warnings</returns>
         public string WarningsToString() => diagnostics.ToString();
         /// <summary>
         /// convenient starting point and useful for library user edge

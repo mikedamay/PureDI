@@ -13,14 +13,15 @@
   <Topic id="IOCC-Glossary" visible="True" />
   <Topic id="IOCC-InjectionByConstructor" visible="True" title="Injection By Constructor" />
   <Topic id="3a5d7e35-2d4c-4f46-862b-122d83fa5047" visible="True" title="Injection State &amp; Multiple Entry Points" />
-  <Topic id="IOCC-Introduction" visible="True" isDefault="true" isSelected="true" />
+  <Topic id="IOCC-Introduction" visible="True" isDefault="true" />
   <Topic id="IOCC-LimitationsAndGotchas" visible="True" title="Limitations &amp; Gotchas" />
   <Topic id="IOCC-OddsAndEnds" visible="True" title="Odds &amp; Ends" />
   <Topic id="IOCC-Profiles" visible="True" />
-  <Topic id="0c9d7895-4488-4df5-845f-8e27d0e3da73" visible="True" isExpanded="true" title="Version History">
+  <Topic id="0c9d7895-4488-4df5-845f-8e27d0e3da73" visible="True" isExpanded="true" isSelected="true" title="Version History">
     <HelpKeywords>
       <HelpKeyword index="K" term="version, history" />
     </HelpKeywords>
-    <Topic id="1fe92a53-a679-45ad-9ff6-59b7a585a298" visible="True" title="Version 0.1.1.0-alpha" />
+    <Topic id="IOCC-Version_0_1_1_0" visible="True" />
+    <Topic id="IOCC-Version_0_1_2_0" visible="True" />
   </Topic>
 </Topics>

@@ -29,6 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureDIDocumentor", "PureDID
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureDITest", "PureDITest\PureDITest.csproj", "{E204099F-D02E-4E4D-9AB8-72032F8ADDBB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F3B4F805-2885-4ACB-866A-6D72CD7E0ED5}"
+	ProjectSection(SolutionItems) = preProject
+		LibraryMaintainerNotes.md = LibraryMaintainerNotes.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

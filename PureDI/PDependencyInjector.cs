@@ -261,12 +261,13 @@ namespace PureDI
         /// The assembly containing SimpleIOCCBean class itself is always included
         /// by default.  It does not need to be specified.  The purpose
         /// of the inclusion is to allow callers to include the PDependencyInjector
-        /// bean itself in factories.  The assumbly is included to make this intuitive.
+        /// bean itself in factories.  The assembly is included to make this intuitive.
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
         /// <param name="Profiles">See detailed description of profiles (See Also, below)</param>
-        /// <param name="Assemblies"></param>
-        /// <param name="ExcludeAssemblies"></param>
+        /// <param name="Assemblies">the assemblies to be scanned for injection</param>
+        /// <param name="ExcludeAssemblies">flags to indicate which assemblies 
+        /// (that would otherwise be automatically included in the scan) should be excluded</param>
         /// <onceptualLink target="IOCC-Profiles">See description of profiles</onceptualLink>
         public PDependencyInjector(string[] Profiles = null
           , Assembly[] Assemblies = null
@@ -294,7 +295,7 @@ namespace PureDI
         /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
         /// root bean only.  It has no effect on the rest of the tree.</param>
         /// <returns>an object of rootType</returns>
-        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
+        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
             CreateAndInjectDependencies<TRootType>(
                 InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
@@ -318,7 +319,7 @@ namespace PureDI
         /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
         /// root bean only.  It has no effect on the rest of the tree.</param>
         /// <returns>an object of rootType</returns>
-        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
+        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType
             ,InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
@@ -349,7 +350,7 @@ namespace PureDI
         /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
         /// root bean only.  It has no effect on the rest of the tree.</param>
         /// <returns>an object of rootType</returns>
-        /// <conceptualLink target="BeanReference">see BeanReference for an explanation of Scope</conceptualLink>
+        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(
           string rootTypeName, InjectionState injectionState = null
             , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
@@ -381,7 +382,15 @@ namespace PureDI
                 , rootConstructorName, scope);
         }
         /// <summary>
+        /// This version of the injection method allows the library user to instantiate an object
+        /// using "new" or by whatever other means and have it injected into the object tree.
         /// 
+        /// It may be appropriate to make one or more calls to create objects that will be needed in the tree
+        /// before using a different call to create the full tree.
+        /// 
+        /// Currently this method will attempt to recursively inject dependencies for rootObject and
+        /// this may not be the desired behaviour.  This is a shortcoming and will be addressed
+        /// in a future version.
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         /// to attach to the object tree</param>
@@ -627,7 +636,7 @@ namespace PureDI
     }
 
     /// <summary>
-    /// The <code>BeanScope</code> enum is in
+    /// The BeanScope enum is in
     /// conjunction with bean references to determine
     /// how multiple references to a particular bean will be
     /// dealt with.  Where the scope is Singleton (which is

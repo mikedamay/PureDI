@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="IOCC-Version_0_1_1_0" revisionNumber="1">
+<topic id="IOCC-Version_0_1_2_0" revisionNumber="1">
   <developerConceptualDocument
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <introduction>
       <para>
-        Early pre-alpha.
+        Early alpha.
       </para>
     </introduction>
 
@@ -16,9 +16,8 @@
 
         <list class="bullet">
           <listItem>
-            <para>Initial Release - more or less</para>
+            <para>Mostly documentation changes</para>
           </listItem>
-
         </list>
 
       </content>

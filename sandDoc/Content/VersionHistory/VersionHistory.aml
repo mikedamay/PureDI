@@ -2,31 +2,35 @@
 <topic id="0c9d7895-4488-4df5-845f-8e27d0e3da73" revisionNumber="1">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
-			<para>The topics in this section describe the various changes made to the [TODO: Project Title] over the
+			<para>The topics in this section describe the various changes made to the PureDI library over the
 life of the project.</para>
 		</introduction>
 
-		<section>
-			<title>Version History</title>
-			<content>
-				<para>Select a version below to see a description of its changes.</para>
+	  <section>
+	    <title>Version History</title>
+	    <content>
+	      <para>Select a version below to see a description of its changes.</para>
 
-				<list class="bullet">
-					<listItem>
-						<para><link xlink:href="f6fcf467-c5a0-4ffd-9d1f-a5397293f2e1" /></para>
-					</listItem>
+	      <list class="bullet">
+	        <listItem>
+	          <para>
+	            <link xlink:href="IOCC-Version_0_1_1_0"/>
+	          </para>
+	        </listItem>
 
-					<listItem>
-						<para>[TODO: Add links to each specific version page]</para>
-					</listItem>
+	        <listItem>
+	          <para>
+              <link xlink:href="IOCC-Version_0_1_2_0"/>
+            </para>
+	        </listItem>
 
-				</list>
+	      </list>
 
-			</content>
-		</section>
+	    </content>
+	  </section>
 
 		<relatedTopics>
-			<link xlink:href="02e3193a-d7ed-4677-998d-54ee129a2b1e" />
+			<link xlink:href="IOCC-Introduction" />
 		</relatedTopics>
 
 	</developerConceptualDocument>
