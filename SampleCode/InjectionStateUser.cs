@@ -34,7 +34,7 @@ public class PermanentService
 public class BigData
 {
     private int[] blob = new int[1_000_000];
-    [BeanReference] private PermanentService permanent;
+    [BeanReference] private PermanentService permanent = null;
     private decimal agg;
 
     public decimal AddUp()
