@@ -87,7 +87,7 @@ namespace PureDI
         /// factory which provides considerable flexibility for the
         /// mechanism.
         /// </summary>
-        /// <conceptualLink target="IOCC-BeanFactory">See Factory</conceptualLink>
+        /// <conceptualLink target="DI-BeanFactory">See Factory</conceptualLink>
         public Type Factory { get; set; }
         /// <summary>
         /// When a bean is injected by a factory the factory parameter

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="IOCC-BeansAndNonBeans" revisionNumber="1">
+<topic id="DI-BeansAndNonBeans" revisionNumber="1">
   <developerConceptualDocument
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -37,7 +37,7 @@
           are beans (unless the inherited class is given a different bean name
           to that of the derived classes or one of them has a matching 
           <link
-            xlink:href="IOCC-Profiles">profile
+            xlink:href="DI-Profiles">profile
           </link>
           and the other does not).  (Without
           a bean name to distinguish them there is no way for the injector
@@ -51,8 +51,8 @@
     </section>
 
     <relatedTopics>
-      <link xlink:href="IOCC-Profiles">Profiles</link>
-      <link xlink:href="IOCC-BeanNames">Bean Names</link>
+      <link xlink:href="DI-Profiles">Profiles</link>
+      <link xlink:href="DI-BeanNames">Bean Names</link>
       <codeEntityReference>T:PureDI.IgnoreAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>

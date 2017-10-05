@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="IOCC-Introduction" revisionNumber="1">
+<topic id="DI-Introduction" revisionNumber="1">
   <developerConceptualDocument
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -167,10 +167,10 @@ public class Logger
     </section>
 
     <relatedTopics>
-      <link xlink:href="IOCC-Assemblies">Assemblies</link>
-      <link xlink:href="IOCC-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
-      <link xlink:href="IOCC-DesignRationale">Design Rationale</link>
-      <link xlink:href="IOCC-Profiles">Profiles</link>
+      <link xlink:href="DI-Assemblies">Assemblies</link>
+      <link xlink:href="DI-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
+      <link xlink:href="DI-DesignRationale">Design Rationale</link>
+      <link xlink:href="DI-Profiles">Profiles</link>
  
       <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
       <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.String,System.String,PureDI.BeanScope)</codeEntityReference>

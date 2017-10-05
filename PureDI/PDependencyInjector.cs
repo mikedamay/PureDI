@@ -183,8 +183,8 @@ namespace PureDI
     // TODO Later: profiles, particularly for use by factories.
     // TODO Later: allow user to pass a flag to the injector constructor to treate warnings as errors
     // TODO Later: add an interface for PDependencyInjector
-    // TODO docs: IOCC-OddsAndEnds examples for object cycles
-    // TODO docs: IOCC-Assemblies example of including a reference to PDependencyInjector
+    // TODO docs: DI-OddsAndEnds examples for object cycles
+    // TODO docs: DI-Assemblies example of including a reference to PDependencyInjector
     // TODO docs: in a factory bean
     // TODO docs: example of assembly exclusion
     // TODO docs: connect up summary and details in DesignRationale
@@ -192,7 +192,7 @@ namespace PureDI
     /// <summary>
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>
-    /// <conceptualLink target="IOCC-Introduction">see Introduction</conceptualLink>
+    /// <conceptualLink target="DI-Introduction">see Introduction</conceptualLink>
     [Bean]
     public partial class PDependencyInjector
     {
@@ -230,7 +230,7 @@ namespace PureDI
         /// A parameter of this type can be passed to the constructor
         /// to indicate whether the default scanning of libraries is performed.
         /// </summary>
-        /// <conceptualLink target="IOCC-Assemblies">See the Notes section of Assemblies</conceptualLink>
+        /// <conceptualLink target="DI-Assemblies">See the Notes section of Assemblies</conceptualLink>
         [Flags]
         public enum AssemblyExclusion
         {
@@ -270,7 +270,7 @@ namespace PureDI
         /// <param name="Assemblies">the assemblies to be scanned for injection</param>
         /// <param name="ExcludeAssemblies">flags to indicate which assemblies 
         /// (that would otherwise be automatically included in the scan) should be excluded</param>
-        /// <onceptualLink target="IOCC-Profiles">See description of profiles</onceptualLink>
+        /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
         public PDependencyInjector(string[] Profiles = null
           , Assembly[] Assemblies = null
           , AssemblyExclusion ExcludeAssemblies = AssemblyExclusion.ExcludedNone)

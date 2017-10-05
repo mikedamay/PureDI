@@ -14,13 +14,13 @@ life of the project.</para>
 	      <list class="bullet">
 	        <listItem>
 	          <para>
-	            <link xlink:href="IOCC-Version_0_1_1_0"/>
+	            <link xlink:href="DI-Version_0_1_1_0"/>
 	          </para>
 	        </listItem>
 
 	        <listItem>
 	          <para>
-              <link xlink:href="IOCC-Version_0_1_2_0"/>
+              <link xlink:href="DI-Version_0_1_2_0"/>
             </para>
 	        </listItem>
 
@@ -30,7 +30,7 @@ life of the project.</para>
 	  </section>
 
 		<relatedTopics>
-			<link xlink:href="IOCC-Introduction" />
+			<link xlink:href="DI-Introduction" />
 		</relatedTopics>
 
 	</developerConceptualDocument>

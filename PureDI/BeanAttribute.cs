@@ -32,7 +32,7 @@ namespace PureDI
         /// when that profile is passed to CreateAndInjectDependencies
         /// </summary>
         /// <example>[Bean(Profile="testonly")]</example>
-        /// <conceptualLink target="IOCC-Profiles">Profiles</conceptualLink>
+        /// <conceptualLink target="DI-Profiles">Profiles</conceptualLink>
         public string Profile { get; set; } = PDependencyInjector.DEFAULT_PROFILE_ARG;
 
         // <example>`[Bean(OS=PDependencyInjector.OS.Linux)]`</example>
