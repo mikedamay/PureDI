@@ -3,7 +3,7 @@
   <metadata>
     <id>PureDI</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>PureDI</title>
     <authors>mikedamay</authors>
     <owners>mikedamay</owners>
     <licenseUrl>https://github.com/mikedamay/PureDI/blob/master/LICENSE</licenseUrl>
@@ -13,5 +13,6 @@
     <description>Thread safe Dependency Injector</description>
     <releaseNotes>First Release </releaseNotes>
     <copyright>Copyright Michael May (TheDisappointedProgrammer.com) 2017</copyright>
+    <tags>IoC DI</tags>
   </metadata>
 </package>

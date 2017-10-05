@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code_snippets", "code_snipp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10DE335E-7FBC-4135-9F25-298EA8834055}"
 	ProjectSection(SolutionItems) = preProject
+		publish.bat = publish.bat
 		README.md = README.md
 	EndProjectSection
 EndProject
