@@ -5,11 +5,11 @@ Documnetation of the library user is at http://mikedamay.co.uk/PureDI
 Build Documentation
 ===================
 
-Reload sandDoc project (the solution is persisted with this unloaded
+Add sandDoc project (the solution is persisted with this removed from the solution
 as the sandDoc project requires the full .NET framework.  It also slows down the build)
 
 Change the targetFramework of the PureDI.csproj from nestandard2.0 to netcoreapp2.0 before building
-docs and back afterwards.
+docs and back afterwards.  Do Rebuild Solution - but note the issue below.
 
 The Help Build barfs (unable to find the System assembly) when attempting to build
 with a target of netstandard2.0.
