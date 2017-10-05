@@ -182,11 +182,13 @@ namespace PureDI
     // TODO Later: PDependencyInjector or InjectionState should expose active
     // TODO Later: profiles, particularly for use by factories.
     // TODO Later: allow user to pass a flag to the injector constructor to treate warnings as errors
+    // TODO Later: add an interface for PDependencyInjector
     // TODO docs: IOCC-OddsAndEnds examples for object cycles
     // TODO docs: IOCC-Assemblies example of including a reference to PDependencyInjector
     // TODO docs: in a factory bean
     // TODO docs: example of assembly exclusion
     // TODO docs: connect up summary and details in DesignRationale
+
     /// <summary>
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>
@@ -241,7 +243,7 @@ namespace PureDI
             /// <summary>
             /// The library itself should not be scanned for dependencies
             /// </summary>
-            ExcludeSimpleIOCCContainer = 1,
+            ExcludePDependencyInjector = 1,
             /// <summary>
             /// The assembly containing the type passed to CreateAndInjectDependencies
             /// will not be scanned for beans
@@ -405,7 +407,7 @@ namespace PureDI
             CheckInjectionStateArgument(injectionState);
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState);
-            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
+            if ((excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
                 newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
             }
@@ -437,7 +439,7 @@ namespace PureDI
             Diagnostics diagnostics;
             (diagnostics, typeMap, mapObjectsCreatedSoFar) = injectionState;
             string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            if ((excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)
+            if ((excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
                 injectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
@@ -510,7 +512,7 @@ namespace PureDI
                 .Union(new[] { rootType.Assembly }.Where(a =>
                      (excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
                     .Union(new[] { this.GetType().Assembly }.Where(a =>
-                     (excludedAssemblies & AssemblyExclusion.ExcludeSimpleIOCCContainer) == 0)));
+                     (excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
             IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
