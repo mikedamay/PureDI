@@ -78,6 +78,7 @@
     <Folder Include="Content\VersionHistory" />
     <Folder Include="icons" />
     <Folder Include="media" />
+    <Folder Include="DO THIS CHANGE BEFORE BUILDING DOCS" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\VersionHistory\VersionHistory.aml" />
@@ -101,6 +102,7 @@
     <ContentLayout Include="ContentLayout.content" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DO THIS CHANGE BEFORE BUILDING DOCS\Instructions.txt" />
     <Content Include="icons\Help.png" />
   </ItemGroup>
   <!-- Import the SHFB build targets -->

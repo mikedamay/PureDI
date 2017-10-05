@@ -1,0 +1,7 @@
+﻿Mike May - October 2017
+
+Change the targetFramework of the PureDI.csproj from nestandard2.0 to netcoreapp2.0 before building
+docs and back afterwards.
+
+The Help Build barfs (unable to find the System assembly) when attempting to build
+with a target of netstandard2.0.
