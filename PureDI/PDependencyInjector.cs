@@ -91,8 +91,8 @@ namespace PureDI
     // N/A document use of profiles with factories
     // DONE profile should take the best fit of implementation
     // TODO Implementation:
-    // TODO ExcludeSimpleIOCCContainer name change in main code
-    // TODO ExcludeSimpleIOCCContainer name change in SandDoc
+    // DONE ExcludeSimpleIOCCContainer name change in main code
+    // DONE ExcludeSimpleIOCCContainer name change in SandDoc
     // TODO Move UserGuide.xml from PureDI to PureDiDocumentor
     // DONE test with multiple OSs
     // TODO can we handle an object or type from some assembly as root which is not
