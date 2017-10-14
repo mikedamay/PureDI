@@ -74,6 +74,8 @@ namespace PureDI
     // TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     // TODO test global:: and document that it won't work for root type passed as string
     // TODO spell check documentation
+    // TODO prefix diagnostic header messages with "PureDI: "
+    // TODO allow empty array to be passed as Profiles, or a member with null, or a member with "" maybe
     // N/A sort out problem with angle brackets e.g. IEnumerable<T> in Limitations & Gotchas
     // DONE we need to say or do something about processing in constructors
     // DONE before the container builder has finished its business.
