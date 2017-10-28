@@ -65,19 +65,28 @@ namespace SimpleIOCCDocumentor
             String str = File.ReadAllText(codeFilePath);
             return str;
         }
-
-        /// <param name="doc">the doc can contain at most 1 instande of "{code-xxx.cs}"</param>
-        /// <returns></returns>
-        private void ExtractCodeToken(string doc, Action<string, string, string> action)
+        
+        /// <summary>
+        /// currewntly used only as a subroutine of SubstituteCode
+        /// uses regex to analyse a document potentially containing a token identifying some sample code
+        /// the token looks like this:
+        ///   
+        ///     {code-introduction.cs}
+        /// 
+        /// The contents of the file identified by the token are substituted for the token
+        /// </summary>
+        /// <param name="doc">the doc can contain at most 1 instance of "{code-xxx.cs}"</param>
+        /// <param name="stitchTogether">the function passed in stitches together the 3 strings
+        /// identified by this method and makes the resulting string available within the closure.
+        /// Before concatenating the strings it massages the actual code bit.</param>
+        private void ExtractCodeToken(string doc, Action<string, string, string> stitchTogether)
         {
             string codeToken = string.Empty;
             Regex regex 
               = new Regex(@"(?<pre>.*)\{code-(?<codefile>[A-Za-z\.]*)\}(?<post>.*)"
               , RegexOptions.Singleline);
             Match match = regex.Match(doc);
-            codeToken = string.Join("", match.Groups.Skip(1).Select(g => g.Value));
-                // the first group contains the entire input - don't know why
-            action(
+            stitchTogether(
                 match.Groups.Where(g => g.Name == "codefile").Select(g => g.Value).FirstOrDefault()
                 ,match.Groups.Where(g => g.Name == "pre").Select(g => g.Value).FirstOrDefault()
                 ,match.Groups.Where(g => g.Name == "post").Select(g => g.Value).FirstOrDefault()

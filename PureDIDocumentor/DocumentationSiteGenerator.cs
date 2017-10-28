@@ -65,10 +65,10 @@ namespace SimpleIOCCDocumentor
         {
             var parts = fragmentKey.Split("]");
             return parts[0].Replace("[", string.Empty);
-                    // TODO we should be using the router to do this
         }
 
         /// <param name="documentName">e.g. UserGuide or DiagnosticSchema - no extension</param>
+        /// <param name="fragmentName">e.g. "MissingBean" </param>
         /// <param name="fragment">a string of html which will sit quietly until rendered</param>
         private void SaveAsDocument(string documentName, string fragmentName, string fragment)
         {

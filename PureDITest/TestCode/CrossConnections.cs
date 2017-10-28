@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-using PureDI;
+﻿using PureDI;
 
 namespace IOCCTest.TestCode
 {

@@ -27,7 +27,7 @@ namespace IOCCTest
                 = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform");
             IResultGetter result = rootBean as IResultGetter;
 #if WINDOWSTEST
-            Assert.IsNotNull(result.GetResults().Windows);
+            Assert.IsNotNull(result.GetResults().Windows, "try \"dotnet run -c LinuxTest\" or \"dotnet run -c MacOsTest\"");
 #endif
 #if LINUXTEST
             Assert.IsNotNull(result.GetResults().Linux);
