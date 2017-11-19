@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using PureDI.Common;
 
 namespace PureDI
 {
@@ -22,7 +23,7 @@ namespace PureDI
         /// the name acts as a tie breaker.
         /// </summary>
         /// <see cref="BeanReferenceAttribute"/>
-        public string Name = PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
+        public string Name = Constants.DefaultConstructorName;
     }
     /// <summary>
     /// Where the library user needs to inject dependencies through 

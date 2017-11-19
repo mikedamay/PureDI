@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using PureDI.Common;
+using PureDI.Public;
 using PureDI.Tree;
 using static PureDI.Common.Common;
 
@@ -21,36 +22,9 @@ namespace PureDI
     [Bean]
     public partial class PDependencyInjector
     {
-        /// <summary>
-        /// caches the operating system in which the container is executing.
-        /// Library users may have OS dependent injections
-        /// </summary>
-        public enum OS
-        {
-            /// <summary>
-            /// Beans typically have an OS of OS.Any
-            /// this will match any OS under which the container is executing
-            /// </summary>
-            Any,
-            /// <summary>
-            /// Any version of Linux supporting dotnetstandard 2.0
-            /// </summary>
-            Linux,
-            /// <summary>
-            /// Any version of Windows supporting dotnetstandard 2.0
-            /// </summary>
-            Windows,
-            /// <summary>
-            /// Any MAC version supported by dotnetstandard 2.0
-            /// </summary>
-            MacOS
-        }
-        private readonly OS os = new StdOSDetector().DetectOS();
-        internal const string DEFAULT_PROFILE_ARG = "";
-        internal const string DEFAULT_BEAN_NAME = "";
-        internal const string DEFAULT_CONSTRUCTOR_NAME = "";
+        private readonly Os os = new StdOSDetector().DetectOS();
 
-        private int multipleCallGuard;
+        private int _multipleCallGuard;
         /// <summary>
         /// A parameter of this type can be passed to the constructor
         /// to indicate whether the default scanning of libraries is performed.
@@ -75,9 +49,9 @@ namespace PureDI
             /// </summary>
             ExcludeRootTypeAssembly = 2
         }
-        private readonly AssemblyExclusion excludedAssemblies;
-        private readonly ImmutableArray<Assembly> explicitAssemblies;
-        private readonly ISet<string> profileSet;
+        private readonly AssemblyExclusion _excludedAssemblies;
+        private readonly ImmutableArray<Assembly> _explicitAssemblies;
+        private readonly ISet<string> _profileSet;
 
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -91,21 +65,21 @@ namespace PureDI
         /// bean itself in factories.  The assembly is included to make this intuitive.
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
-        /// <param name="Profiles">See detailed description of profiles (See Also, below)</param>
-        /// <param name="Assemblies">the assemblies to be scanned for injection</param>
-        /// <param name="ExcludeAssemblies">flags to indicate which assemblies 
+        /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
+        /// <param name="assemblies">the assemblies to be scanned for injection</param>
+        /// <param name="excludeAssemblies">flags to indicate which assemblies 
         /// (that would otherwise be automatically included in the scan) should be excluded</param>
         /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
-        public PDependencyInjector(string[] Profiles = null
-          , Assembly[] Assemblies = null
-          , AssemblyExclusion ExcludeAssemblies = AssemblyExclusion.ExcludedNone)
+        public PDependencyInjector(string[] profiles = null
+          , Assembly[] assemblies = null
+          , AssemblyExclusion excludeAssemblies = AssemblyExclusion.ExcludedNone)
         {
-            CheckProfilesArgument(Profiles);
-            excludedAssemblies = ExcludeAssemblies;
-            explicitAssemblies = (Assemblies != null
-              ? ImmutableArray.Create<Assembly>(Assemblies)
+            CheckNoBlankProfiles(profiles);
+            _excludedAssemblies = excludeAssemblies;
+            _explicitAssemblies = (assemblies != null
+              ? ImmutableArray.Create<Assembly>(assemblies)
               : ImmutableArray<Assembly>.Empty).ToImmutableArray();
-            profileSet = new HashSet<string>(Profiles
+            _profileSet = new HashSet<string>(profiles
               ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
 
@@ -125,8 +99,8 @@ namespace PureDI
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
             CreateAndInjectDependencies<TRootType>(
-                InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
-                , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+                InjectionState injectionState = null, string rootBeanName = Constants.DefaultBeanName
+                , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
         {
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
@@ -149,8 +123,8 @@ namespace PureDI
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType
-            ,InjectionState injectionState = null, string rootBeanName = DEFAULT_BEAN_NAME
-            , string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME, BeanScope scope = BeanScope.Singleton)
+            ,InjectionState injectionState = null, string rootBeanName = Constants.DefaultBeanName
+            , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
@@ -180,7 +154,7 @@ namespace PureDI
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(
           string rootTypeName, InjectionState injectionState = null
-            , string rootBeanName = DEFAULT_BEAN_NAME, string rootConstructorName = DEFAULT_CONSTRUCTOR_NAME
+            , string rootBeanName = Constants.DefaultBeanName, string rootConstructorName = Constants.DefaultConstructorName
             , BeanScope scope = BeanScope.Singleton)
         {
             CheckArgument(rootTypeName);
@@ -194,7 +168,7 @@ namespace PureDI
             if (rootType == null)
             {
                 string allAssemblyNames
-                    = ((dynamic)newInjectionState.Diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences[0]).Assemblies;
+                    = ((dynamic)newInjectionState.Diagnostics.Groups[Constants.AssembliesInfo].Occurrences[0]).Assemblies;
                 Diagnostics.Group group = newInjectionState.Diagnostics.Groups["MissingRootBean"];
                 dynamic diag = group.CreateDiagnostic();
                 diag.BeanType = rootTypeName;
@@ -232,15 +206,15 @@ namespace PureDI
             CheckInjectionStateArgument(injectionState);
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState);
-            if ((excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
+            if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
-                newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
             }
-            if ((excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
+            if ((_excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
             {
-                newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), DEFAULT_BEAN_NAME)] = rootObject;
+                newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultBeanName)] = rootObject;
             }
-            string profile = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
+            string profile = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
 
@@ -263,10 +237,10 @@ namespace PureDI
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
             Diagnostics diagnostics;
             (diagnostics, typeMap, mapObjectsCreatedSoFar) = injectionState;
-            string profileSetKey = string.Join(" ", profileSet.OrderBy(p => p).ToList()).ToLower();
-            if ((excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
+            string profileSetKey = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
+            if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
-                injectionState.MapObjectsCreatedSoFar[(this.GetType(), DEFAULT_BEAN_NAME)] = this;
+                injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
             }
@@ -333,19 +307,19 @@ namespace PureDI
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
             var builder = ImmutableList.CreateBuilder<Assembly>();
-            builder.AddRange(explicitAssemblies
+            builder.AddRange(_explicitAssemblies
                 .Union(new[] { rootType.Assembly }.Where(a =>
-                     (excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+                     (_excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
                     .Union(new[] { this.GetType().Assembly }.Where(a =>
-                     (excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
+                     (_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
             IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
             {
                 typeMap = new TypeMapBuilder().BuildTypeMapFromAssemblies(allAssemblies
-                    , ref diagnostics, profileSet, os);
+                    , ref diagnostics, _profileSet, os);
                 LogAssemblies(diagnostics, allAssemblies);
-                LogProfiles(diagnostics, profileSet);
+                LogProfiles(diagnostics, _profileSet);
                 LogTypeMap(diagnostics, typeMap);
             }
             return (typeMap, diagnostics);
@@ -385,10 +359,10 @@ namespace PureDI
         private void LogAssemblies(Diagnostics diagnostics
           , IImmutableList<Assembly> assemblies)
         {
-            Diagnostics.Group group = diagnostics.Groups[Constants.ASSEMBLIES_INFO];
+            Diagnostics.Group group = diagnostics.Groups[Constants.AssembliesInfo];
             dynamic diag = group.CreateDiagnostic();
             diag.Assemblies = string.Join(",", assemblies.Select(a => a.GetName().Name));
-            diagnostics.Groups[Constants.ASSEMBLIES_INFO].Occurrences.Add(diag);
+            diagnostics.Groups[Constants.AssembliesInfo].Occurrences.Add(diag);
         }
 
         /// <summary>
@@ -421,13 +395,13 @@ namespace PureDI
                 throw new ArgumentNullException();
             }
         }
-        private void CheckProfilesArgument(object[] o)
+        private void CheckNoBlankProfiles(string[] o)
         {
             if (o == null)
             {
                 return;
             }
-            if (((string[])o).Any(string.IsNullOrWhiteSpace))
+            if (o.Any(string.IsNullOrWhiteSpace))
             {
                 throw new ArgumentNullException();
             }
@@ -436,7 +410,7 @@ namespace PureDI
         {
             if (injectionState == null)
             {
-                int previousValue = Interlocked.CompareExchange(ref multipleCallGuard, 1, 0);
+                int previousValue = Interlocked.CompareExchange(ref _multipleCallGuard, 1, 0);
                 if (previousValue != 0)
                 {
                     throw new ArgumentException(

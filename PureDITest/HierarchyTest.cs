@@ -14,7 +14,7 @@ namespace IOCCTest
         public void SelfTest()
         {
             PDependencyInjector iocc 
-              = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
+              = new PDependencyInjector(assemblies: new[] { this.GetType().Assembly });
             //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf 
               = iocc.CreateAndInjectDependencies<TestRoot>().rootBean;
@@ -113,7 +113,7 @@ namespace IOCCTest
             Assert.AreEqual("Inherited", bu.Used.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
             (bu, InjectionState)
-                = new PDependencyInjector(Profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
+                = new PDependencyInjector(profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
                     WithNames.BeanUser>();
             diags = InjectionState.Diagnostics;
             Assert.AreEqual("Derived", bu.Used.Val);

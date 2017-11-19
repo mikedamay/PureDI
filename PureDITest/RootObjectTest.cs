@@ -14,7 +14,7 @@ namespace IOCCTest
         public void SHouldCreateTreeForInstantiatedObject()
         {
             Simple simple = new Simple();
-            PDependencyInjector pdi = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly });
+            PDependencyInjector pdi = new PDependencyInjector(assemblies: new[] { this.GetType().Assembly });
             //pdi.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
             pdi.CreateAndInjectDependencies(simple);
             Assert.IsNotNull(simple.GetResults().Child);
@@ -44,7 +44,7 @@ namespace IOCCTest
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
             PDependencyInjector pdi = new PDependencyInjector(
-              Assemblies: new []{this.GetType().Assembly}, ExcludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
+              assemblies: new []{this.GetType().Assembly}, excludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             InjectionState injectionState;
             (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());

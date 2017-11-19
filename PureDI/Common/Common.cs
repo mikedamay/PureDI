@@ -2,7 +2,7 @@
 
 namespace PureDI.Common
 {
-    internal static class Common
+    internal static partial class Common
     {
         public static bool Assert(bool expr)
         {

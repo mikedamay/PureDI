@@ -17,11 +17,11 @@ namespace SimpleIOCCDocumentor
         // we really need constructor paraemters
         [IOCCDocumentParser(
             DocumentPath: "PureDI.Docs.UserGuide.xml"
-            , XmlRoot: Constants.USER_GUIDE_ROOT)]
+            , XmlRoot: Constants.UserGuideRoot)]
         private IDocumentParser userGuideDocumentParser = null;
         [IOCCDocumentParser(
             DocumentPath: "PureDI.Docs.DiagnosticSchema.xml"
-            , XmlRoot: Constants.DIAGNOSTIC_SCHEMA_ROOT)]
+            , XmlRoot: Constants.DiagnosticSchemaRoot)]
         private IDocumentParser diagnosticSchemaDocumentParser = null;
 
         private string path = null;

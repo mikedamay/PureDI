@@ -11,6 +11,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using PureDI.Common;
 using Microsoft.CSharp;
+using PureDI.Public;
 
 namespace IOCCTest
 {
@@ -127,7 +128,7 @@ namespace IOCCTest
                 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), PDependencyInjector.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), Os.Any);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(2, diagnostics.Groups["InvalidBean"].Occurrences.Count)
                 , diagnostics.Groups["InvalidBean"].Occurrences.Count);
 
@@ -144,7 +145,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected
-              , new HashSet<string> { "someProfile" }, PDependencyInjector.OS.Windows);
+              , new HashSet<string> { "someProfile" }, Os.Windows);
         }
         [TestMethod]
         public void ShouldIgnoreNamedProfileAndOsWhenNoParamsPassed()
@@ -154,7 +155,7 @@ namespace IOCCTest
                 {("IOCCTest.TestData.CheckProfileAndOs9", ""),"IOCCTest.TestData.CheckProfileAndOs9"}
             };
             CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.CheckProfileAndOs.cs", mapExpected
-              , new HashSet<string>(), PDependencyInjector.OS.Any);
+              , new HashSet<string>(), Os.Any);
         }
         [TestMethod]
         public void ShouldCreateEmptyTypeMapForAsseemblyWithNoDependencies()
@@ -179,7 +180,7 @@ namespace IOCCTest
 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), PDependencyInjector.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), Os.Any);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(4, map.Keys.Count()), map.Keys.Count());
             Assert.AreEqual(Utils.LessThanIsGoodEnough(1, diagnostics.Groups["DuplicateBean"].Occurrences.Count)
                 , diagnostics.Groups["DuplicateBean"].Occurrences.Count);
@@ -197,7 +198,7 @@ namespace IOCCTest
 
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), PDependencyInjector.OS.Any);
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), Os.Any);
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.AreEqual(Utils.LessThanIsGoodEnough(3, map.Keys.Count()), map.Keys.Count());
             Assert.AreEqual(Utils.LessThanIsGoodEnough(2, diagnostics.Groups["DuplicateBean"].Occurrences.Count)
@@ -246,7 +247,7 @@ namespace IOCCTest
             }
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assemblyInterface, assemblyImplementation }
-              , ref diagnostics, new HashSet<string>(), PDependencyInjector.OS.Any);
+              , ref diagnostics, new HashSet<string>(), Os.Any);
             Assert.AreEqual(3, map.Keys.Count());
         }
 #endif
@@ -288,7 +289,7 @@ namespace IOCCTest
         [TestMethod]
         public void OutputTypeMap_NotReallyATest()
         {
-            void BuildAndOutputTypeMap(string resourceName, string profile, PDependencyInjector.OS os)
+            void BuildAndOutputTypeMap(string resourceName, string profile, Os os)
             {
                 Assembly assembly = Utils.CreateAssembly(resourceName);
                 Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
@@ -299,7 +300,7 @@ namespace IOCCTest
             }
             // change the resource name arg in the call below to generate the code
             // for the specific test
-            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.NonBeanDerivedFromBean.cs", PDependencyInjector.DEFAULT_PROFILE_ARG, PDependencyInjector.OS.Any);
+            BuildAndOutputTypeMap($"{Utils.TestResourcePrefix}.TestData.NonBeanDerivedFromBean.cs", Constants.DefaultProfileArg, Os.Any);
         }
 
         /// <summary>
@@ -344,7 +345,7 @@ namespace IOCCTest
         public static void CommonTypeMapTest(string resourceName
           , IDictionary<(string, string), string> mapExpected
           , ISet<string> profile = null
-          , PDependencyInjector.OS os = PDependencyInjector.OS.Any)
+          , Os os = Os.Any)
         {
             Assembly assembly = Utils.CreateAssembly(resourceName);
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;

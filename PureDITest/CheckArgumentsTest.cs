@@ -1,6 +1,7 @@
 ﻿using System;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Common;
 
 namespace IOCCTest
 {
@@ -39,7 +40,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null
                     );
                 });
 
@@ -64,7 +65,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null
                     );
                 });
 
@@ -101,7 +102,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: PDependencyInjector.DEFAULT_BEAN_NAME, rootConstructorName: null
+                    pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanName: Constants.DefaultBeanName, rootConstructorName: null
                     );
                 });
 
@@ -123,7 +124,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(Profiles: new[] { (string)null });
+                    var pdi = new PDependencyInjector(profiles: new[] { (string)null });
                 });
 
         }
@@ -133,7 +134,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(Profiles: new[] { "" });
+                    var pdi = new PDependencyInjector(profiles: new[] { "" });
                 });
 
         }
@@ -143,7 +144,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(Profiles: new[] { " " });
+                    var pdi = new PDependencyInjector(profiles: new[] { " " });
                 });
 
         }
@@ -153,7 +154,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(Profiles: new[] { "goodstuff", null });
+                    var pdi = new PDependencyInjector(profiles: new[] { "goodstuff", null });
                 });
 
         }

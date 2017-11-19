@@ -1,4 +1,5 @@
 using System;
+using PureDI.Common;
 
 namespace PureDI
 {
@@ -80,7 +81,7 @@ namespace PureDI
             get => constructorName;
             set => constructorName = value.ToLower();
         }
-        private string name = PDependencyInjector.DEFAULT_BEAN_NAME;
+        private string name = Constants.DefaultBeanName;
 
         /// <summary>
         /// optionally a bean reference can delegate injection to a
@@ -107,7 +108,7 @@ namespace PureDI
         /// </summary>
         /// <see cref="BeanScope"/>
         public BeanScope Scope { get; set; } = BeanScope.Singleton;
-        private string constructorName = PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
+        private string constructorName = Constants.DefaultConstructorName;
     }
     /// <summary>
     /// Any member variable or constructor parameter annotated with this attribute

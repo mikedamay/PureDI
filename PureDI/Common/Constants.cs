@@ -2,8 +2,11 @@
 {
     internal static class Constants
     {
-        public const string DIAGNOSTIC_SCHEMA_ROOT = "DiagnosticSchema";
-        public const string USER_GUIDE_ROOT = "UserGuide";
-        public const string ASSEMBLIES_INFO = "AssembliesInfo";
+        public const string DiagnosticSchemaRoot = "DiagnosticSchema";
+        public const string UserGuideRoot = "UserGuide";
+        public const string AssembliesInfo = "AssembliesInfo";
+        internal const string DefaultProfileArg = "";
+        internal const string DefaultBeanName = "";
+        internal const string DefaultConstructorName = "";
     }
 }

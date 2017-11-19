@@ -59,7 +59,7 @@ namespace IOCCTest
                     //string codeText = "public class abc {}";
                     Assembly assembly = new AssemblyMaker().MakeAssembly(
                         codeText, "RemoteAssembly", new[] { this.GetType().Assembly});
-                    PDependencyInjector pdi = new PDependencyInjector(Assemblies: new [] {assembly, this.GetType().Assembly});
+                    PDependencyInjector pdi = new PDependencyInjector(assemblies: new [] {assembly, this.GetType().Assembly});
                     object obj = pdi.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>().rootBean;
                     Assert.IsNotNull(obj);
                     

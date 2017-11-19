@@ -1,41 +1,33 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.0\PureDI.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="PDependencyInjectorMinorMethods.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Docs\DiagnosticSchema.xml" />
     <None Remove="Docs\DiagnosticSchemaSchema.xsd" />
     <None Remove="Docs\UserGuide.xml" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
     <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd" />
     <EmbeddedResource Include="Docs\UserGuide.xml" />
     <EmbeddedResource Include="PDependencyInjectorMinorMethods.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
   </ItemGroup>
-
 </Project>

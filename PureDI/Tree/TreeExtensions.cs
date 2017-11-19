@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using PureDI.Common;
 
 namespace PureDI.Tree
 {
@@ -113,7 +114,7 @@ namespace PureDI.Tree
             {
                 return attr.ConstructorName;
             }
-            return PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME;
+            return Constants.DefaultConstructorName;
         }
 
         public static ConstructorInfo GetConstructorNamed(this Type type, string name)

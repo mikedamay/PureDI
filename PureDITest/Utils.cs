@@ -33,7 +33,7 @@ namespace IOCCTest
             , string className)
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
-            PDependencyInjector iocc = new PDependencyInjector(Assemblies: new[] { assembly });
+            PDependencyInjector iocc = new PDependencyInjector(assemblies: new[] { assembly });
             //iocc.SetAssemblies(assembly.GetName().Name);
             return iocc;
         }

@@ -25,7 +25,7 @@ namespace IOCCTest
         public void ShouldRejectAttemptToCreateTreeForASecondTimeWithoutState()
         {
             //PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
-            PDependencyInjector pdi = new PDependencyInjector(Assemblies: new[] { this.GetType().Assembly});
+            PDependencyInjector pdi = new PDependencyInjector(assemblies: new[] { this.GetType().Assembly});
                     // remote assembly refuses to work (Bad IL Format) in this test despite
                     // being identical to the one above
             Assert.ThrowsException<ArgumentException>(() =>

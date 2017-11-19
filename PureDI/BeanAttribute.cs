@@ -1,4 +1,6 @@
 ﻿using System;
+using PureDI.Common;
+using PureDI.Public;
 
 namespace PureDI
 {
@@ -26,14 +28,14 @@ namespace PureDI
             get { return name; }
             set { name = value.ToLower(); }
         }
-        private string name = PDependencyInjector.DEFAULT_BEAN_NAME;
+        private string name = Constants.DefaultBeanName;
         /// <summary>
         /// beans which have a non-empty profile are only instantiated
         /// when that profile is passed to CreateAndInjectDependencies
         /// </summary>
         /// <example>[Bean(Profile="testonly")]</example>
         /// <conceptualLink target="DI-Profiles">Profiles</conceptualLink>
-        public string Profile { get; set; } = PDependencyInjector.DEFAULT_PROFILE_ARG;
+        public string Profile { get; set; } = Constants.DefaultProfileArg;
 
         // <example>`[Bean(OS=PDependencyInjector.OS.Linux)]`</example>
 
@@ -44,7 +46,7 @@ namespace PureDI
         /// OS.Any means that it will always be instantiated unless
         /// there is an alternative with a specific OS.
         /// </summary>
-        public PDependencyInjector.OS OS { get; set; } = PDependencyInjector.OS.Any;
+        public Os OS { get; set; } = Os.Any;
     }
 
     /// <summary>

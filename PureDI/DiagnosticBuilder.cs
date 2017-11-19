@@ -55,7 +55,7 @@ namespace PureDI
             try
             {
                 XDocument schema = XDocument.Load(diagnosticSchema);
-                IEnumerable<XElement> groups = schema.Element(Constants.DIAGNOSTIC_SCHEMA_ROOT)
+                IEnumerable<XElement> groups = schema.Element(Constants.DiagnosticSchemaRoot)
                     .Elements("group");
                 foreach (var group in groups)
                 {

@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using PureDI.Common;
+using PureDI.Public;
 using static PureDI.Common.Common;
 
 namespace PureDI
@@ -12,7 +13,7 @@ namespace PureDI
     {
         public IWouldBeImmutableDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
-          , ref Diagnostics diagnostics, ISet<string> profileSet, PDependencyInjector.OS os)
+          , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
             WouldBeImmutableDictionary<(Type, string), Type>.Builder map 
               = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
@@ -126,7 +127,7 @@ namespace PureDI
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsABean(this Type type, ISet<string> profileSet, PDependencyInjector.OS os)
+        public static bool TypeIsABean(this Type type, ISet<string> profileSet, Os os)
         {
             BeanBaseAttribute ida 
               = (BeanBaseAttribute)type.GetCustomAttributes()
@@ -134,9 +135,9 @@ namespace PureDI
             return 
               ida != null 
               && (
-              ida.Profile == PDependencyInjector.DEFAULT_PROFILE_ARG
+              ida.Profile == Constants.DefaultProfileArg
               || profileSet.Contains(ida.Profile))
-              && (ida.OS == PDependencyInjector.OS.Any 
+              && (ida.OS == Os.Any 
               || ida.OS == os);
         }
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)

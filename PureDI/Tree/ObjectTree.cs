@@ -204,7 +204,7 @@ namespace PureDI.Tree
                     // until the implementationType is encountered again
                     // further up the stack
                 {
-                    if (constructableType.HasInjectedConstructorParameters(PDependencyInjector.DEFAULT_CONSTRUCTOR_NAME))
+                    if (constructableType.HasInjectedConstructorParameters(Constants.DefaultConstructorName))
                     {
                         dynamic diag = injectionState.Diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
                         diag.Bean = constructableType.FullName;
