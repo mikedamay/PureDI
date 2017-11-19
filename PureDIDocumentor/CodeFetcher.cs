@@ -67,7 +67,7 @@ namespace SimpleIOCCDocumentor
         }
         
         /// <summary>
-        /// currewntly used only as a subroutine of SubstituteCode
+        /// currently used only as a subroutine of SubstituteCode
         /// uses regex to analyse a document potentially containing a token identifying some sample code
         /// the token looks like this:
         ///   

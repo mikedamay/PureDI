@@ -29,7 +29,8 @@
 
         <para>
           Interfaces, abstract classes and static classes cannot be beans.
-          A run-time warning will be recorded in the <legacyItalic>Diagnostics</legacyItalic> object.
+          A run-time warning will be recorded in the <legacyItalic>Diagnostics</legacyItalic> object
+          if this rule is violated.
         </para>
 
         <para>

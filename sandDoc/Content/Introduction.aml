@@ -64,7 +64,7 @@
               with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
               object is created together with dependencies to which it refers
               and so forth recursively through the tree of dependencies.  The root of the
-              tree is returned and the caller methods on that.
+              tree is returned and the caller invokes methods on that.
             </para>
             <para>
               The call to <codeInline>CreateAndInjectDependencies</codeInline> is typically made at program
