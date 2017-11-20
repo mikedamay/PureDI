@@ -175,7 +175,7 @@ namespace IOCCTest
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
             (object bean, InjectionState injectionState) = pdi.CreateAndInjectDependencies(
-              "IOCCTest.ConstructorTestData.NamedRootConstructor", rootConstructorName: "TestConstructor");
+              "IOCCTest.ConstructorTestData.NamedRootConstructor", rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
             Diagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);

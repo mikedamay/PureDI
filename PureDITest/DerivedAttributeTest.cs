@@ -18,7 +18,7 @@ namespace IOCCTest
             (object obj, InjectionState InjectionState) 
                 = pdi.CreateAndInjectDependencies(
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
-                , rootConstructorName: "TestConstructor");
+                ,rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
             IResultGetter result = obj as IResultGetter;
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
