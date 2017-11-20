@@ -31,7 +31,8 @@ namespace PureDI.Tree
         /// <param name="mapObjectsCreatedSoFar"></param>
         /// <returns>an ojbect of root type</returns>
         public (object bean, InjectionState injectionState) 
-          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName, string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
+            ,string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
         {
             try
             {

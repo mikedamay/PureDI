@@ -2,6 +2,7 @@
 using IOCCTest.rootBean;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Public;
 using static IOCCTest.Utils;
 
 namespace IOCCTest
@@ -44,7 +45,7 @@ namespace IOCCTest
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
             PDependencyInjector pdi = new PDependencyInjector(
-              assemblies: new []{this.GetType().Assembly}, excludeAssemblies: PDependencyInjector.AssemblyExclusion.ExcludeRootTypeAssembly);
+              assemblies: new []{this.GetType().Assembly}, excludeAssemblies: AssemblyExclusion.ExcludeRootTypeAssembly);
             object obj;
             InjectionState injectionState;
             (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());

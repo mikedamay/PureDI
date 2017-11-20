@@ -15,56 +15,6 @@ using static PureDI.Common.Common;
 namespace PureDI
 {
     /// <summary>
-    /// An object of this type contains anillary information to identify the "root" bean
-    /// to be created.
-    /// </summary>
-    public class RootBeanSpec
-    {
-        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
-        /// or base class is passed as the root type but has multiple implementations</param>
-        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
-        /// a class is being passed as the root type with multiple constructors</param>
-        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
-        /// root bean only.  It has no effect on the rest of the tree.</param>
-        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
-        public RootBeanSpec(string rootBeanName = Constants.DefaultBeanName
-            , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
-        {
-            RootBeanName = rootBeanName;
-            RootConstrutorName = rootConstructorName;
-            Scope = scope;
-        }
-        /// <summary>
-        /// see contructor
-        /// </summary>
-        /// <param name="rootBeanName">see constructor</param>
-        /// <param name="rootConstructorName">see constructor</param>
-        /// <param name="scope">see constructor</param>
-        public void Deconstruct(out string rootBeanName, out string rootConstructorName
-            , out BeanScope scope)
-        {
-            rootBeanName = RootBeanName;
-            rootConstructorName = RootConstrutorName;
-            scope = Scope;
-        }
-        /// <summary>
-        /// pass a bean name in the edge case when an interface
-        /// or base class is passed as the root type but has multiple implementations
-        /// </summary>
-        public string RootBeanName { get; set; }
-        /// <summary>
-        /// pass a constructor name in the edge case when 
-        /// a class is being passed as the root type with multiple constructors
-        /// </summary>
-        public string RootConstrutorName { get; set; }
-        /// <summary>
-        /// See links below for an explanation of scope.  The scope passed in will apply to the 
-        /// root bean only.  It has no effect on the rest of the tree.
-        /// </summary>
-        public BeanScope Scope { get; set; }
-    }
-
-    /// <summary>
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>
     /// <conceptualLink target="DI-Introduction">see Introduction</conceptualLink>
@@ -74,30 +24,6 @@ namespace PureDI
         private readonly Os os = new StdOSDetector().DetectOS();
 
         private int _multipleCallGuard;
-        /// <summary>
-        /// A parameter of this type can be passed to the constructor
-        /// to indicate whether the default scanning of libraries is performed.
-        /// </summary>
-        /// <conceptualLink target="DI-Assemblies">See the Notes section of Assemblies</conceptualLink>
-        [Flags]
-        public enum AssemblyExclusion
-        {
-            /// <summary>
-            /// default - the assembly containing the root type will
-            /// be scanned for beans as will the PDependencyInjector library
-            /// itself
-            /// </summary>
-            ExcludedNone = 0,
-            /// <summary>
-            /// The library itself should not be scanned for dependencies
-            /// </summary>
-            ExcludePDependencyInjector = 1,
-            /// <summary>
-            /// The assembly containing the type passed to CreateAndInjectDependencies
-            /// will not be scanned for beans
-            /// </summary>
-            ExcludeRootTypeAssembly = 2
-        }
         private readonly AssemblyExclusion _excludedAssemblies;
         private readonly ImmutableArray<Assembly> _explicitAssemblies;
         private readonly ISet<string> _profileSet;
@@ -138,13 +64,14 @@ namespace PureDI
         /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="assemblySpec">descibes assemblies to be included in the injection process</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
-        /// at the root of the object graph</param>
+        ///     at the root of the object graph</param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null
-          , RootBeanSpec rootBeanSpec = null)
+          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, AssemblySpec assemblySpec = null
+          ,RootBeanSpec rootBeanSpec = null)
         {
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
@@ -254,10 +181,8 @@ namespace PureDI
             {
                 newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultBeanName)] = rootObject;
             }
-            string profile = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
-
             return (rootObject, newInjectionState);
         }
         /// <summary>
@@ -275,8 +200,7 @@ namespace PureDI
         {
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            Diagnostics diagnostics;
-            (diagnostics, typeMap, mapObjectsCreatedSoFar) = injectionState;
+            (_, typeMap, mapObjectsCreatedSoFar) = injectionState;
             string profileSetKey = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
@@ -293,9 +217,8 @@ namespace PureDI
                         , mapObjectsCreatedSoFar
                     ));
             }
-            ObjectTree tree = new ObjectTree();
             object rootObject;
-            (rootObject, injectionState) = tree.CreateAndInjectDependencies(
+            (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
               rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
             if (rootObject == null && injectionState.Diagnostics.HasWarnings)
             {
@@ -303,14 +226,6 @@ namespace PureDI
             }
             Assert(rootType.IsAssignableFrom(rootObject.GetType()));
             return (rootObject, injectionState);
-#if false
-            return (rootObject
-                , new InjectionState(
-                    injectionState.Diagnostics
-                    , typeMap
-                    , mapObjectsCreatedSoFar
-                ));
-#endif
         }
         private InjectionState CloneOrCreateInjectionState(Type rootType, InjectionState injectionState)
         {
