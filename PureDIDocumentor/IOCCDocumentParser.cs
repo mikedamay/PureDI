@@ -40,6 +40,7 @@ namespace SimpleIOCCDocumentor
         ///   then the resource needs to be in the PDependencyInjector assembly </param>
         /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
         ///   then the document must be a superset of UserGuide.xml </param>
+        /// <param name="factory">provides tha pparopriate resources e.g. user guide, diagnostics etc.</param>
         public IOCCDocumentParser(string resourcePath, string xmlRoot, XPathNavigatorResourceFactory factory)
         {
             this.xmlRoot = xmlRoot;

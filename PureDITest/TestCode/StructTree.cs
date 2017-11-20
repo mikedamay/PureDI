@@ -39,10 +39,13 @@ namespace IOCCTest.TestCode
     [Bean]
     public struct StructChild2
     {
-        [BeanReference] private ClassChild classChild;
-        public ClassChild GetClassChild()
+#pragma warning disable 649
+        [BeanReference] private ClassChild _classChild;
+#pragma warning restore 649
+
+         public ClassChild GetClassChild()
         {
-            return classChild;
+            return _classChild;
         }
     }
     [Bean]

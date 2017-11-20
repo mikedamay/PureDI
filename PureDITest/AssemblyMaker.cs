@@ -14,7 +14,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace IOCCTest
 {
     /// <summary>
-    /// <see cref="https://stackoverflow.com/questions/826398/is-it-possible-to-dynamically-compile-and-execute-c-sharp-code-fragments"/>
+    /// <see cref="http://stackoverflow.com/questions/826398/is-it-possible-to-dynamically-compile-and-execute-c-sharp-code-fragments"/>
     /// </summary>
     internal class AssemblyMaker
     {
@@ -31,12 +31,12 @@ namespace IOCCTest
         /// assemblies are referenced in codeText
         /// </remarks>
         /// <param name="CodeText">The complete text of an assembly</param>
-        /// <param name="getAssemblyName"></param>
         /// <param name="targetAssemblyName"></param>
-        /// <param name="ExtraAssemblies"></param>
+        /// <param name="extraAssemblies"></param>
+        /// <param name="inMemory"></param>
         /// <returns>An assembly suitable for use in PDependencyInjector testing</returns>
         public Assembly MakeAssembly_obolsete(string CodeText
-            , string TargetAssemblyName = null, string[] ExtraAssemblies = null, bool InMemory = true)
+            , string targetAssemblyName = null, string[] extraAssemblies = null, bool inMemory = true)
         {
             Assembly assembly;
             var csc = new CSharpCodeProvider();
@@ -44,10 +44,10 @@ namespace IOCCTest
               CombineReferencedAssemblies(new string[]
               {"mscorlib.dll", "System.Core.dll", "System.dll", "Microsoft.CSharp.dll"
               ,"PDependencyInjector.dll", "PureDITest.dll"}
-              , ExtraAssemblies)
-              , SelectAssemblyName(TargetAssemblyName));
+              , extraAssemblies)
+              , SelectAssemblyName(targetAssemblyName));
             parms.GenerateExecutable = false;
-            parms.GenerateInMemory = InMemory;
+            parms.GenerateInMemory = inMemory;
             
             CompilerResults result = csc.CompileAssemblyFromSource(parms, new string[] { CodeText });
             if (result.Errors.Count > 0)
