@@ -138,38 +138,35 @@ namespace PureDI
         /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="rootBeanSpec"></param>
+        /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
+        /// at the root of the object graph</param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
             CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, RootBeanSpec rootBeanSpec = null)
         {
-            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
-            (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
-                , rootBeanName, rootConstructorName, scope);
+                , rootBeanSpec);
             return ((TRootType) rootObject, newInjectionState);
         }
+
         /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
         /// <param name="rootType">Typically, the root node of a tree of objects </param>
         /// <param name="injectionState">This is null the first time the method is called.
-        /// Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
-        /// or base class is passed as the root type but hs multiple implementations</param>
-        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
-        /// a class is being passed as the root type with multiple constructors</param>
-        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
-        /// root bean only.  It has no effect on the rest of the tree.</param>
+        ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
+        /// at the root of the object graph</param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies(Type rootType
-            ,InjectionState injectionState = null, string rootBeanName = Constants.DefaultBeanName
-            , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
+          CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null
+          , RootBeanSpec rootBeanSpec = null)
         {
+            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
+            (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
             CheckArgument(rootBeanName);
             CheckArgument(rootConstructorName);
             CheckArgument(rootType);

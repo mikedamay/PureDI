@@ -119,6 +119,18 @@ namespace IOCCTest
                 });
 
         }
+
+        [TestMethod]
+        public void ShouldThrowExceptionForNullBeanNameWithTypeParam()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () =>
+                {
+                    var pdi = new PDependencyInjector();
+                    pdi.CreateAndInjectDependencies(this.GetType(), null, null);
+                }
+            );
+        }
         [TestMethod]
         public void ShouldThrowExceptionForEmptyProfile()
         {
