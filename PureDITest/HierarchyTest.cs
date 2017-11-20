@@ -70,7 +70,7 @@ namespace IOCCTest
         {
             WithNames.CyclicalDependency cd 
               = new PDependencyInjector().CreateAndInjectDependencies<
-                    WithNames.CyclicalDependency>(rootBeanName: "name-A").rootBean;
+                    WithNames.CyclicalDependency>(rootBeanSpec: new RootBeanSpec(rootBeanName: "name-A")).rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
             Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);

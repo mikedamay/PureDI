@@ -14,6 +14,55 @@ using static PureDI.Common.Common;
 
 namespace PureDI
 {
+    /// <summary>
+    /// An object of this type contains anillary information to identify the "root" bean
+    /// to be created.
+    /// </summary>
+    public class RootBeanSpec
+    {
+        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
+        /// or base class is passed as the root type but has multiple implementations</param>
+        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
+        /// a class is being passed as the root type with multiple constructors</param>
+        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
+        /// root bean only.  It has no effect on the rest of the tree.</param>
+        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
+        public RootBeanSpec(string rootBeanName = Constants.DefaultBeanName
+            , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
+        {
+            RootBeanName = rootBeanName;
+            RootConstrutorName = rootConstructorName;
+            Scope = scope;
+        }
+        /// <summary>
+        /// see contructor
+        /// </summary>
+        /// <param name="rootBeanName">see constructor</param>
+        /// <param name="rootConstructorName">see constructor</param>
+        /// <param name="scope">see constructor</param>
+        public void Deconstruct(out string rootBeanName, out string rootConstructorName
+            , out BeanScope scope)
+        {
+            rootBeanName = RootBeanName;
+            rootConstructorName = RootConstrutorName;
+            scope = Scope;
+        }
+        /// <summary>
+        /// pass a bean name in the edge case when an interface
+        /// or base class is passed as the root type but has multiple implementations
+        /// </summary>
+        public string RootBeanName { get; set; }
+        /// <summary>
+        /// pass a constructor name in the edge case when 
+        /// a class is being passed as the root type with multiple constructors
+        /// </summary>
+        public string RootConstrutorName { get; set; }
+        /// <summary>
+        /// See links below for an explanation of scope.  The scope passed in will apply to the 
+        /// root bean only.  It has no effect on the rest of the tree.
+        /// </summary>
+        public BeanScope Scope { get; set; }
+    }
 
     /// <summary>
     /// The key class in the library.  This carries out the dependency injection
@@ -88,20 +137,15 @@ namespace PureDI
         /// </summary>
         /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
         /// <param name="injectionState">This is null the first time the method is called.
-        /// Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="rootBeanName">pass a bean name in the edge case when an interface
-        /// or base class is passed as the root type but has multiple implementations</param>
-        /// <param name="rootConstructorName">pass a constructor name in the edge case when 
-        /// a class is being passed as the root type with multiple constructors</param>
-        /// <param name="scope">See links below for an explanation of scope.  The scope passed in will apply to the 
-        /// root bean only.  It has no effect on the rest of the tree.</param>
+        ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="rootBeanSpec"></param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
-            CreateAndInjectDependencies<TRootType>(
-                InjectionState injectionState = null, string rootBeanName = Constants.DefaultBeanName
-                , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
+            CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, RootBeanSpec rootBeanSpec = null)
         {
+            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
+            (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
                 , rootBeanName, rootConstructorName, scope);

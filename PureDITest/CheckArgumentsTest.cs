@@ -28,7 +28,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>( rootBeanSpec: new RootBeanSpec(rootBeanName: null));
                 });
 
         }
@@ -40,7 +40,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>( rootBeanSpec: new RootBeanSpec(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null)
                     );
                 });
 
@@ -53,7 +53,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: null);
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanSpec: new RootBeanSpec(rootBeanName: null));
                 });
 
         }
@@ -65,7 +65,8 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null
+                    pdi.CreateAndInjectDependencies<CheckArgumentsTest>(
+                      rootBeanSpec: new RootBeanSpec(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null)
                     );
                 });
 
