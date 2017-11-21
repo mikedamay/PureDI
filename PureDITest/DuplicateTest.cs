@@ -20,10 +20,12 @@ namespace IOCCTest
         public void ShouldDetectDuplicatesForProfile()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Duplicate.cs");
-            PDependencyInjector pdi = new PDependencyInjector(profiles: new[] {"myprofile"}, assemblies: new[] { assembly });
+            PDependencyInjector pdi = new PDependencyInjector(profiles: new[] {"myprofile"});
 
         //pdi.SetAssemblies(assembly.GetName().Name);
-            Diagnostics diagnostics = pdi.CreateAndInjectDependencies("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
+            Diagnostics diagnostics = pdi.CreateAndInjectDependencies("IOCCTest.DuplicateTestData.Duplicate"
+              ,assemblySpec: new AssemblySpec(assemblies: assembly)
+              ).injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsTrue(diagnostics.HasWarnings);
         }
@@ -31,9 +33,12 @@ namespace IOCCTest
         public void ShouldCreateTreeForSpecificOs()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Os.cs");
-            PDependencyInjector pdi = new PDependencyInjector(assemblies: new[] { assembly });
-            //pdi.SetAssemblies(assembly.GetName().Name);
-            Diagnostics diagnostics = pdi.CreateAndInjectDependencies("IOCCTest.DuplicateTestData.Duplicate").injectionState.Diagnostics;
+            PDependencyInjector pdi = new PDependencyInjector();
+            Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
+              "IOCCTest.DuplicateTestData.Duplicate"
+              ,assemblySpec: new AssemblySpec(assemblies: assembly)
+              )
+              .injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsFalse(diagnostics.Groups["DuplicateBean"]
               .Occurrences.Any(diag => ((dynamic)diag).Interface.Contains( "MuchoInterface")));

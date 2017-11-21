@@ -1,5 +1,7 @@
-﻿using PureDI;
+﻿using System.Reflection;
+using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Public;
 
 namespace IOCCTest
 {
@@ -11,8 +13,9 @@ namespace IOCCTest
         {
             try
             {
-                PDependencyInjector pdi = Utils.CreateIOCCinAssembly("BadClientTestData", "BadConstructor");
-                pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadConstructor");
+                (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadConstructor");
+                pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadConstructor"
+                  , assemblySpec: new AssemblySpec(assemblies: assembly));
                 Assert.Fail();
             }
             catch (DIException iex)
@@ -31,8 +34,9 @@ namespace IOCCTest
         {
             try
             {
-                PDependencyInjector pdi = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactory");
-                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactory");
+                (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactory");
+                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactory"
+                  , assemblySpec: new AssemblySpec(assemblies: assembly));
                 Assert.Fail();
             }
             catch (DIException iex)
@@ -51,8 +55,9 @@ namespace IOCCTest
         {
             try
             {
-                PDependencyInjector pdi = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactoryForParam");
-                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactoryForParam");
+                (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactoryForParam");
+                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies(
+                  "IOCCTest.BadClientTestData.BadFactoryForParam", assemblySpec: new AssemblySpec(assemblies: assembly));
                 Assert.Fail();
             }
             catch (DIException iex)

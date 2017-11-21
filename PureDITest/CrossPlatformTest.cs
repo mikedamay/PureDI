@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,9 +23,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateLinuxTypesOnLinux()
         {
-            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
             (object rootBean, InjectionState injectionState)
-                = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform");
+              = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform"
+              , assemblySpec: new AssemblySpec(assemblies: assembly));
             IResultGetter result = rootBean as IResultGetter;
 #if WINDOWSTEST
             Assert.IsNotNull(result.GetResults().Windows, "try \"dotnet run -c LinuxTest\" or \"dotnet run -c MacOsTest\"");

@@ -15,9 +15,9 @@ namespace IOCCTest
             (dynamic result, Diagnostics diagnostics)
             CreateAndRunAssembly(string nameSpace, string className)
         {
-            var iocc = CreateIOCCinAssembly(nameSpace, className);
+            (var iocc, var assembly) = CreateIOCCinAssembly(nameSpace, className);
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
-                $"IOCCTest.{nameSpace}.{className}");
+                $"IOCCTest.{nameSpace}.{className}", assemblySpec: new AssemblySpec(assemblies: assembly));
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             dynamic result = (IResultGetter)rootBean;
@@ -29,13 +29,12 @@ namespace IOCCTest
         /// <param name="testDataFolderName">e.g. "ScopeTestData" - no prefix requireed</param>
         /// <param name="className">e.g. "FactoryPrototype" - no ".cs" required</param>
         /// <returns>instantiated container with an assembly based on className but no tree</returns>
-        public static PDependencyInjector CreateIOCCinAssembly(string testDataFolderName
+        public static (PDependencyInjector, Assembly) CreateIOCCinAssembly(string testDataFolderName
             , string className)
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
-            PDependencyInjector iocc = new PDependencyInjector(assemblies: new[] { assembly });
-            //iocc.SetAssemblies(assembly.GetName().Name);
-            return iocc;
+            PDependencyInjector iocc = new PDependencyInjector();
+            return (iocc, assembly);
         }
 
         public static Assembly CreateAssembly(string resourceName)

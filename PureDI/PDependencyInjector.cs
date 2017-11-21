@@ -24,8 +24,8 @@ namespace PureDI
         private readonly Os os = new StdOSDetector().DetectOS();
 
         private int _multipleCallGuard;
-        private readonly AssemblyExclusion _excludedAssemblies;
-        private readonly ImmutableArray<Assembly> _explicitAssemblies;
+        private readonly AssemblyExclusion _excludedAssemblies = AssemblyExclusion.ExcludedNone;
+//        private readonly ImmutableArray<Assembly> _explicitAssemblies = new ImmutableArray<Assembly>();
         private readonly ISet<string> _profileSet;
 
         /// <summary>
@@ -41,19 +41,19 @@ namespace PureDI
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
         /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
-        /// <param name="assemblies">the assemblies to be scanned for injection</param>
-        /// <param name="excludeAssemblies">flags to indicate which assemblies 
-        /// (that would otherwise be automatically included in the scan) should be excluded</param>
         /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
         public PDependencyInjector(string[] profiles = null
-          , Assembly[] assemblies = null
-          , AssemblyExclusion excludeAssemblies = AssemblyExclusion.ExcludedNone)
+//          , Assembly[] assemblies = null
+//          , AssemblyExclusion excludeAssemblies = AssemblyExclusion.ExcludedNone
+          )
         {
             CheckNoBlankProfiles(profiles);
+/*
             _excludedAssemblies = excludeAssemblies;
             _explicitAssemblies = (assemblies != null
               ? ImmutableArray.Create<Assembly>(assemblies)
               : ImmutableArray<Assembly>.Empty).ToImmutableArray();
+*/
             _profileSet = new HashSet<string>(profiles
               ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
@@ -70,12 +70,13 @@ namespace PureDI
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, AssemblySpec assemblySpec = null
+          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null
+          ,AssemblySpec assemblySpec = null
           ,RootBeanSpec rootBeanSpec = null)
         {
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
-                , rootBeanSpec);
+                ,assemblySpec, rootBeanSpec);
             return ((TRootType) rootObject, newInjectionState);
         }
 
@@ -85,13 +86,15 @@ namespace PureDI
         /// <param name="rootType">Typically, the root node of a tree of objects </param>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         /// at the root of the object graph</param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null
-          , RootBeanSpec rootBeanSpec = null)
+          ,AssemblySpec assemblySpec = null
+          ,RootBeanSpec rootBeanSpec = null)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -101,7 +104,8 @@ namespace PureDI
             CheckInjectionStateArgument(injectionState);
 
             object rootObject;
-            InjectionState newInjectionState = CloneOrCreateInjectionState(rootType, injectionState);
+            InjectionState newInjectionState = CloneOrCreateInjectionState(rootType, injectionState
+              , assemblySpec ?? AssemblySpec.Empty);
             (rootObject, newInjectionState) 
                 = CreateAndInjectDependenciesExCommon(
                 rootType, newInjectionState, rootBeanName, rootConstructorName, scope);
@@ -114,13 +118,15 @@ namespace PureDI
         /// <param name="rootTypeName">Typically, the root node of a tree of objects </param>
         /// <param name="injectionState">This is null the first time the method is called.
         /// Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         /// at the root of the object graph</param>
         /// <returns>an object of rootType</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(
           string rootTypeName, InjectionState injectionState = null
-            , RootBeanSpec rootBeanSpec = null)
+          ,AssemblySpec assemblySpec = null
+          ,RootBeanSpec rootBeanSpec = null)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -129,7 +135,8 @@ namespace PureDI
             CheckArgument(rootConstructorName);
             CheckInjectionStateArgument(injectionState);
 
-            InjectionState newInjectionState = CloneOrCreateInjectionState(this.GetType(),injectionState);
+            InjectionState newInjectionState = CloneOrCreateInjectionState(this.GetType(),injectionState
+              , assemblySpec ?? AssemblySpec.Empty);
             (Type rootType, string beanName) = newInjectionState.TypeMap.Keys.FirstOrDefault(k
               => AreTypeNamesEqualish(k.beanType.FullName, rootTypeName));
             if (rootType == null)
@@ -149,30 +156,32 @@ namespace PureDI
                 , newInjectionState, rootBeanName
                 , rootConstructorName, scope);
         }
+
         /// <summary>
         /// This version of the injection method allows the library user to instantiate an object
         /// using "new" or by whatever other means and have it injected into the object tree.
-        /// 
         /// It may be appropriate to make one or more calls to create objects that will be needed in the tree
         /// before using a different call to create the full tree.
-        /// 
         /// Currently this method will attempt to recursively inject dependencies for rootObject and
         /// this may not be the desired behaviour.  This is a shortcoming and will be addressed
         /// in a future version.
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         /// to attach to the object tree</param>
+        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
         /// <param name="injectionState">This is null the first time the method is called.
         /// Subsequent calls will typically take some saved instance of injection state.</param>
         /// <returns>an object which is the root of a tree of dependencies</returns>
         public (object rootBean, InjectionState injectionState) 
           CreateAndInjectDependencies(object rootObject
-          , InjectionState injectionState = null)
+          ,InjectionState injectionState = null
+          ,AssemblySpec assemblySpec = null)
         {
             CheckArgument(rootObject);
             CheckInjectionStateArgument(injectionState);
 
-            InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState);
+            InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
+              , assemblySpec ?? AssemblySpec.Empty);
             if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
                 newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
@@ -186,7 +195,7 @@ namespace PureDI
             return (rootObject, newInjectionState);
         }
         /// <summary>
-        /// <see cref="CreateAndInjectDependencies(string,InjectionState,RootBeanSpec)"/>
+        /// <see cref="CreateAndInjectDependencies(string,InjectionState,AssemblySpec,RootBeanSpec)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>
@@ -227,7 +236,8 @@ namespace PureDI
             Assert(rootType.IsAssignableFrom(rootObject.GetType()));
             return (rootObject, injectionState);
         }
-        private InjectionState CloneOrCreateInjectionState(Type rootType, InjectionState injectionState)
+        private InjectionState CloneOrCreateInjectionState(Type rootType, InjectionState injectionState
+          ,AssemblySpec assemblySpec)
         {
             InjectionState newInjectionState;
             if (injectionState == null || injectionState.IsEmpty())
@@ -236,7 +246,7 @@ namespace PureDI
                 IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
                     new Dictionary<(Type, string), object>();
                 Diagnostics diagnostics;
-                (typeMap, diagnostics) = CreateTypeMap(rootType);
+                (typeMap, diagnostics) = CreateTypeMap(rootType, assemblySpec);
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
             }
             else
@@ -254,7 +264,7 @@ namespace PureDI
 
         private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
           , Type>, Diagnostics diagnostics)
-          CreateTypeMap(Type rootType)
+          CreateTypeMap(Type rootType, AssemblySpec assemblySpec)
         {
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap = null;
@@ -262,11 +272,22 @@ namespace PureDI
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
             var builder = ImmutableList.CreateBuilder<Assembly>();
-            builder.AddRange(_explicitAssemblies
-                .Union(new[] { rootType.Assembly }.Where(a =>
-                     (_excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+            if (assemblySpec.IsEmpty)
+            {
+                builder.AddRange(assemblySpec.ExplicitAssemblies
+                    .Union(new[] { rootType.Assembly }.Where(a =>
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
                     .Union(new[] { this.GetType().Assembly }.Where(a =>
-                     (_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
+            }
+            else
+            {
+                builder.AddRange(assemblySpec.ExplicitAssemblies
+                    .Union(new[] { rootType.Assembly }.Where(a =>
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+                    .Union(new[] { this.GetType().Assembly }.Where(a =>
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
+            }
             IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)

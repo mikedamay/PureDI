@@ -21,8 +21,9 @@ namespace IOCCTest
             Diagnostics diagnostics = null;
             try
             {
-                var pdi = CreateIOCCinAssembly("EntryPointTestData", "RootInterface");
-                pdi.CreateAndInjectDependencies("xxx");
+                (var pdi, var assembly) = CreateIOCCinAssembly("EntryPointTestData", "RootInterface");
+                pdi.CreateAndInjectDependencies("xxx"
+                  , assemblySpec: new AssemblySpec(assemblies: assembly));
                 Assert.Fail();
             }
             catch (DIException iex)

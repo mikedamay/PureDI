@@ -1,4 +1,5 @@
-﻿using PureDI;
+﻿using System.Reflection;
+using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;
@@ -12,12 +13,13 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithDerivedConstructor()
         {
-            PDependencyInjector pdi =
+            (PDependencyInjector pdi, Assembly assembly) =
                 CreateIOCCinAssembly(DERIVED_ATTRIBUTE_TEST_NAMESPACE
                     , "DerivedConstructor");
             (object obj, InjectionState InjectionState) 
                 = pdi.CreateAndInjectDependencies(
                 "IOCCTest.DerivedAttributeTestData.DerivedConstructor"
+                , assemblySpec: new AssemblySpec(assemblies: assembly)
                 ,rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
             IResultGetter result = obj as IResultGetter;
             Diagnostics diagnostics = InjectionState.Diagnostics;

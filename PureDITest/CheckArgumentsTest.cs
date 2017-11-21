@@ -128,7 +128,7 @@ namespace IOCCTest
                 () =>
                 {
                     var pdi = new PDependencyInjector();
-                    pdi.CreateAndInjectDependencies(this.GetType(), null, new RootBeanSpec(rootBeanName: null));
+                    pdi.CreateAndInjectDependencies(this.GetType(), null, null, new RootBeanSpec(rootBeanName: null));
                 }
             );
         }

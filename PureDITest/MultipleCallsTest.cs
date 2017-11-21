@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IOCCTest.TestCode;
@@ -11,13 +12,15 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldExtendTreeWhenMoreCallsAreMode()
         {
-            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
             (object simpleBean, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.Simple");
+              "IOCCTest.MultipleCallsTestData.Simple"
+              , assemblySpec: new AssemblySpec(assemblies: assembly));
             (object furtherBean, InjectionState injectionState2) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.Further", injectionState);
+              "IOCCTest.MultipleCallsTestData.Further", injectionState
+              , assemblySpec: new AssemblySpec(assemblies: assembly));
             Assert.AreEqual(simpleBean, ((IResultGetter)furtherBean)?.GetResults().Simple );
         }
 
@@ -25,17 +28,19 @@ namespace IOCCTest
         public void ShouldRejectAttemptToCreateTreeForASecondTimeWithoutState()
         {
             //PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
-            PDependencyInjector pdi = new PDependencyInjector(assemblies: new[] { this.GetType().Assembly});
+            PDependencyInjector pdi = new PDependencyInjector();
                     // remote assembly refuses to work (Bad IL Format) in this test despite
                     // being identical to the one above
             Assert.ThrowsException<ArgumentException>(() =>
                 {
                     (object simpleBean, InjectionState injectionState) 
-                        = pdi.CreateAndInjectDependencies(
-                        "IOCCTest.MultipleCallsTestData.Fails");
+                      = pdi.CreateAndInjectDependencies(
+                      "IOCCTest.MultipleCallsTestData.Fails",
+                      assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly));
                     (object furtherBean, InjectionState injectionState2) 
-                        = pdi.CreateAndInjectDependencies(
-                        "IOCCTest.MultipleCallsTestData.FurtherFails");
+                      = pdi.CreateAndInjectDependencies(
+                      "IOCCTest.MultipleCallsTestData.FurtherFails"
+                      ,assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly));
                 }
             );
         }
@@ -43,31 +48,31 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithMultipleCallsWithEmptyState()
         {
-            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
             (object empty1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.Empty");
+              "IOCCTest.MultipleCallsTestData.Empty", assemblySpec: new AssemblySpec(assemblies: assembly));
             (object empty2, InjectionState @is2) = pdi.CreateAndInjectDependencies(
-                "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty);
+                "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty, assemblySpec: new AssemblySpec(assemblies: assembly));
             Assert.AreNotEqual(empty1, empty2);
         }
         [TestMethod]
         public void ShouldCreateTreesWithRecursingFactories()
         {
-            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
             (object factory1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.SimpleFactory");
+              "IOCCTest.MultipleCallsTestData.SimpleFactory", assemblySpec: new AssemblySpec(assemblies: assembly));
             Assert.IsNotNull( ((IResultGetter)factory1)?.GetResults().SimpleChild);
         }
 
         [TestMethod]
         public void ShouldCreateTreeWithAComplexArrangementOfFactories()
         {
-            PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
             (object factory1, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
-                    "IOCCTest.MultipleCallsTestData.ComplexFactory");
+                    "IOCCTest.MultipleCallsTestData.ComplexFactory", assemblySpec: new AssemblySpec(assemblies: assembly));
             IResultGetter result = factory1 as IResultGetter;
             ;
             Assert.IsNotNull(result.GetResults()?.ChildOne);

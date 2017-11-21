@@ -54,12 +54,16 @@ namespace IOCCTest
         public void ShouldCreateRootAsPrototype()
         {
             string className = "RootProtoType";
-            var iocc = MakeIOCCForTestAssembly(className);
+            (var iocc, var assembly) = MakeIOCCForTestAssembly(className);
             (object rootBean, InjectionState injectionState1) = iocc.CreateAndInjectDependencies(
-                $"IOCCTest.ScopeTestData.{className}", rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
+                $"IOCCTest.ScopeTestData.{className}"
+                , assemblySpec: new AssemblySpec(assemblies: assembly)
+                , rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
             Diagnostics diagnostics1 = injectionState1.Diagnostics;
             (object rootBean2, InjectionState injectionState2) = iocc.CreateAndInjectDependencies(
-                $"IOCCTest.ScopeTestData.{className}", injectionState1, rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
+                $"IOCCTest.ScopeTestData.{className}", injectionState1
+                , assemblySpec: new AssemblySpec(assemblies: assembly)
+                , rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
             Diagnostics diagnostics2 = injectionState2.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics1);
             System.Diagnostics.Debug.WriteLine(diagnostics2);
@@ -74,7 +78,7 @@ namespace IOCCTest
             return Utils.CreateAndRunAssembly($"ScopeTestData", className);
         }
 
-        private static PDependencyInjector MakeIOCCForTestAssembly(string className)
+        private static (PDependencyInjector, Assembly) MakeIOCCForTestAssembly(string className)
         {
             return Utils.CreateIOCCinAssembly($"ScopeTestData", className);
         }

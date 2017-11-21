@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using System.Reflection;
 using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -171,11 +172,13 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithNamedRootConstructor()
         {
-            PDependencyInjector pdi =
+            (PDependencyInjector pdi, Assembly assembly) =
                 CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE
                 , "NamedRootConstructor");
             (object bean, InjectionState injectionState) = pdi.CreateAndInjectDependencies(
-              "IOCCTest.ConstructorTestData.NamedRootConstructor", rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
+              "IOCCTest.ConstructorTestData.NamedRootConstructor"
+              , assemblySpec: new AssemblySpec(assemblies: assembly)
+              , rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
             Diagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
             System.Diagnostics.Debug.WriteLine(diagnostics);
@@ -188,10 +191,11 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithMultipleConstructorsComplex()
         {
-            PDependencyInjector pdi
+            (PDependencyInjector pdi, Assembly assembly)
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
-              "IOCCTest.ConstructorTestData.MultipleConstructorsComplex").injectionState.Diagnostics;
+              "IOCCTest.ConstructorTestData.MultipleConstructorsComplex"
+              , assemblySpec: new AssemblySpec(assemblies: assembly)).injectionState.Diagnostics;
 
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);
             //Assert.IsNotNull(result.GetResults()?.Second.SecondParam);

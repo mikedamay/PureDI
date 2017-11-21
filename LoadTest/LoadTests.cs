@@ -20,8 +20,9 @@ namespace IOCCTest.LoadTest
             var assembly = BuildAssembly();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            PDependencyInjector pdi = new PDependencyInjector(assemblies : new []{assembly});
-            (object root, InjectionState InjectionState) = pdi.CreateAndInjectDependencies("Level1");
+            PDependencyInjector pdi = new PDependencyInjector();
+            (object root, InjectionState InjectionState) 
+              = pdi.CreateAndInjectDependencies("Level1", assemblySpec: new AssemblySpec(assemblies: assembly));
             Diagnostics diagnostics = InjectionState.Diagnostics;
             sw.Stop();
             WriteLine(sw.Elapsed);

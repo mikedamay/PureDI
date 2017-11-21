@@ -13,8 +13,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithNoNamespace()
         {
-            var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("NoNamespace");
+            (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("NoNamespace"
+              ,assemblySpec: new AssemblySpec(assemblies: assembly));
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -24,8 +25,9 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithReferenceFromNoNamespaceToNamespace()
         {
-            var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass");
+            (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass"
+              , assemblySpec: new AssemblySpec(assemblies: assembly));
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -36,8 +38,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithReferenceToNoNamespaceFromNamespace()
         {
-            var iocc = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
-            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass");
+            (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
+            (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
+              "IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass"
+              , assemblySpec: new AssemblySpec(assemblies: assembly));
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -59,8 +63,10 @@ namespace IOCCTest
                     //string codeText = "public class abc {}";
                     Assembly assembly = new AssemblyMaker().MakeAssembly(
                         codeText, "RemoteAssembly", new[] { this.GetType().Assembly});
-                    PDependencyInjector pdi = new PDependencyInjector(assemblies: new [] {assembly, this.GetType().Assembly});
-                    object obj = pdi.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies.DuplicateAssemblies>().rootBean;
+                    PDependencyInjector pdi = new PDependencyInjector();
+                    object obj = pdi.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies
+                      .DuplicateAssemblies>(
+                      assemblySpec: new AssemblySpec(assemblies: new Assembly[] {assembly,this.GetType().Assembly})).rootBean;
                     Assert.IsNotNull(obj);
                     
                 }
