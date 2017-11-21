@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -224,6 +221,7 @@ namespace PureDI
             InjectionState newInjectionState;
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
             Diagnostics diagnostics;
+            Assembly[] assemblies = assemblySpec.ExplicitAssemblies.Union(new [] {rootType.Assembly}).ToArray();
             if (injectionState == null || injectionState.IsEmpty())
             {
                 IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
@@ -234,7 +232,6 @@ namespace PureDI
             }
             else
             {
-                Assembly[] assemblies = assemblySpec.ExplicitAssemblies.ToArray();
                 assemblies = assemblies.Union(injectionState.Assemblies).ToArray();
                 (typeMap, diagnostics) = CreateTypeMap(rootType
                   , new AssemblySpec(assemblySpec.ExcludedAssemblies, assemblies));
@@ -255,6 +252,7 @@ namespace PureDI
 
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
+/*
             var builder = ImmutableList.CreateBuilder<Assembly>();
             builder.AddRange(assemblySpec.ExplicitAssemblies
                 .Union(new[] { rootType.Assembly }.Where(a =>
@@ -262,6 +260,14 @@ namespace PureDI
                 .Union(new[] { this.GetType().Assembly }.Where(a =>
                     (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
             IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
+*/
+            IReadOnlyList<Assembly> allAssemblies 
+              = assemblySpec.ExplicitAssemblies
+                    .Union(new[] { rootType.Assembly }.Where(a =>
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+                    .Union(new[] { this.GetType().Assembly }.Where(a =>
+                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0))
+               .ToList() ;
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
             {
@@ -306,7 +312,7 @@ namespace PureDI
         }
 
         private void LogAssemblies(Diagnostics diagnostics
-          , IImmutableList<Assembly> assemblies)
+          , IReadOnlyList<Assembly> assemblies)
         {
             Diagnostics.Group group = diagnostics.Groups[Constants.AssembliesInfo];
             dynamic diag = group.CreateDiagnostic();
@@ -368,8 +374,6 @@ namespace PureDI
                 }
             }
         }
-
-
     }   // PDependencyInjector
 
     internal class CaseInsensitiveEqualityComparer : IEqualityComparer<string>
@@ -422,7 +426,7 @@ namespace PureDI
             }
             return sb.ToString();
         }
-        public static string ListContents(this IImmutableList<Assembly> assemblies, string separator = ", ")
+        public static string ListContents(this IReadOnlyList<Assembly> assemblies, string separator = ", ")
         {
             IList<string> assemblyNames = assemblies.Select(a => a.GetName().Name).ToList();
             return ListContents(assemblyNames);

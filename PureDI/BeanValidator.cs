@@ -8,7 +8,7 @@ namespace PureDI
 {
     internal class BeanValidator
     {
-        public void ValidateAssemblies( IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
+        public void ValidateAssemblies( IReadOnlyList<Assembly> assemblies, Diagnostics diagnostics)
         {
             DetectUnreachableMembers(assemblies, diagnostics);
             DetectUnreachableConstructors(assemblies, diagnostics);
@@ -16,7 +16,7 @@ namespace PureDI
             DetectUnreachableStructs(assemblies, diagnostics);
         }
 
-        public void DetectUnreachableMembers(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
+        public void DetectUnreachableMembers(IReadOnlyList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var typesAndMembers = assemblies.SelectMany(a =>
               a.GetTypes().SelectMany(
@@ -37,7 +37,7 @@ namespace PureDI
             }
         }
 
-        public void DetectUnreachableConstructors(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
+        public void DetectUnreachableConstructors(IReadOnlyList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var typesAndConstructors = assemblies.SelectMany(a =>
                 a.GetTypes().SelectMany(
@@ -55,7 +55,7 @@ namespace PureDI
                 group.Add(diag);
             }
         }
-        private void DetectNonBeanWithFactoryInterface(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
+        private void DetectNonBeanWithFactoryInterface(IReadOnlyList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var classesWithFactoryInterface
                 = assemblies.SelectMany(a => a.GetTypes())
@@ -73,7 +73,7 @@ namespace PureDI
                 group.Add(diag);
             }
         }
-        private void DetectUnreachableStructs(IImmutableList<Assembly> assemblies, Diagnostics diagnostics)
+        private void DetectUnreachableStructs(IReadOnlyList<Assembly> assemblies, Diagnostics diagnostics)
         {
             var nonBeanStructMembers
                 = assemblies.SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMembers().Select(m => new {type = t, member = m}))
