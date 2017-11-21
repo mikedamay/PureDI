@@ -103,3 +103,4 @@ browse to http://localhost:60653/
     TODO docs: in a factory bean
     TODO docs: example of assembly exclusion
     TODO docs: connect up summary and details in DesignRationale
+    TODO add debug message for Diagnostics to prevent it showing the view string - maybe

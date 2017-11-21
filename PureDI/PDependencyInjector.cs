@@ -115,7 +115,8 @@ namespace PureDI
         /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
-        /// <param name="rootTypeName">Typically, the root node of a tree of objects </param>
+        /// <param name="rootTypeName">Typically, the root node of a tree of objects.
+        /// Fully specified name including namespace</param>
         /// <param name="injectionState">This is null the first time the method is called.
         /// Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
@@ -209,7 +210,8 @@ namespace PureDI
         {
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
-            (_, typeMap, mapObjectsCreatedSoFar) = injectionState;
+            Assembly[] assemblies;
+            (_, typeMap, mapObjectsCreatedSoFar, assemblies) = injectionState;
             string profileSetKey = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
             if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
             {
@@ -224,6 +226,7 @@ namespace PureDI
                         injectionState.Diagnostics
                         , typeMap
                         , mapObjectsCreatedSoFar
+                        , assemblies
                     ));
             }
             object rootObject;
@@ -240,18 +243,26 @@ namespace PureDI
           ,AssemblySpec assemblySpec)
         {
             InjectionState newInjectionState;
+            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            Diagnostics diagnostics;
             if (injectionState == null || injectionState.IsEmpty())
             {
-                IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
                 IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
                     new Dictionary<(Type, string), object>();
-                Diagnostics diagnostics;
                 (typeMap, diagnostics) = CreateTypeMap(rootType, assemblySpec);
-                newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar);
+                newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar
+                  , assemblySpec.ExplicitAssemblies.ToArray());
             }
             else
             {
-                newInjectionState = CloneInjectionState(injectionState);
+                Assembly[] assemblies = assemblySpec.ExplicitAssemblies.ToArray();
+                assemblies = assemblies.Union(injectionState.Assemblies).ToArray();
+                (typeMap, diagnostics) = CreateTypeMap(rootType
+                  , new AssemblySpec(assemblySpec.ExcludedAssemblies, assemblies));
+                newInjectionState = new InjectionState(diagnostics, typeMap, injectionState.MapObjectsCreatedSoFar
+                  ,assemblies);
+                
+                
             }
             return newInjectionState;
         }

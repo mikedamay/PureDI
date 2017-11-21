@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PureDI.Common;
+using System.Reflection;
 
 namespace PureDI
 {
@@ -18,22 +19,26 @@ namespace PureDI
         private readonly Diagnostics diagnostics;
         private readonly IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
         private readonly IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+        private readonly Assembly[] _assemblies;
         internal InjectionState(Diagnostics diagnostics
           ,IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
-          ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+          ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar, Assembly[] assemblies)
         {
             this.diagnostics = diagnostics;
             this.mapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
             this.typeMap = typeMap;
+            this._assemblies = assemblies;
         }
 
         internal void Deconstruct(out Diagnostics diagnostics
             , out IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
-            , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+            , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar
+            ,out Assembly[] assemblies)
         {
             diagnostics = this.diagnostics;
             mapObjectsCreatedSoFar = this.mapObjectsCreatedSoFar;
             typeMap = this.typeMap;
+            assemblies = _assemblies;
 
         }
 
@@ -44,6 +49,7 @@ namespace PureDI
               new DiagnosticBuilder(this.Diagnostics).Diagnostics
               , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>(this.typeMap)
               , new Dictionary<(Type, string), object>(mapObjectsCreatedSoFar)
+              ,(Assembly[])_assemblies.Clone()
               );
         }
         /// <summary>
@@ -60,6 +66,7 @@ namespace PureDI
         // has been taken from the member information of the declaring task provides the generic argument
         internal IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
         internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
+        internal Assembly[] Assemblies => _assemblies;
         /// <summary>
         /// shortcut to diagnostics.AllToString()
         /// <see cref="PureDI.Diagnostics.AllToString"/>
@@ -82,6 +89,7 @@ namespace PureDI
                     new DiagnosticBuilder().Diagnostics
                     ,new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>()
                     ,new Dictionary<(Type, string), object>()
+                    ,new Assembly[0]
                     );
     }
 }

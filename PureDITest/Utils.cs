@@ -36,7 +36,14 @@ namespace IOCCTest
             PDependencyInjector iocc = new PDependencyInjector();
             return (iocc, assembly);
         }
-
+        /// <summary>
+        /// supports testing by creating remote assembly
+        /// </summary>
+        /// <param name="resourceName">e.g. PureDITest.SomeTestDataFolder.Target.cs
+        /// This is a combination of the assembly name and the path of the resource
+        /// IOCCTest.Utils.TestResourcePrefix constant can usefully be employed by clients
+        /// building the name</param>
+        /// <returns></returns>
         public static Assembly CreateAssembly(string resourceName)
         {
 #if !USE_THIS_ASSEMBLY
