@@ -19,13 +19,10 @@ namespace PureDI
     /// </summary>
     /// <conceptualLink target="DI-Introduction">see Introduction</conceptualLink>
     [Bean]
-    public partial class PDependencyInjector
+    public class PDependencyInjector
     {
         private readonly Os os = new StdOSDetector().DetectOS();
-
         private int _multipleCallGuard;
-        private readonly AssemblyExclusion _excludedAssemblies = AssemblyExclusion.ExcludedNone;
-//        private readonly ImmutableArray<Assembly> _explicitAssemblies = new ImmutableArray<Assembly>();
         private readonly ISet<string> _profileSet;
 
         /// <summary>
@@ -43,17 +40,9 @@ namespace PureDI
         /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
         /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
         public PDependencyInjector(string[] profiles = null
-//          , Assembly[] assemblies = null
-//          , AssemblyExclusion excludeAssemblies = AssemblyExclusion.ExcludedNone
           )
         {
             CheckNoBlankProfiles(profiles);
-/*
-            _excludedAssemblies = excludeAssemblies;
-            _explicitAssemblies = (assemblies != null
-              ? ImmutableArray.Create<Assembly>(assemblies)
-              : ImmutableArray<Assembly>.Empty).ToImmutableArray();
-*/
             _profileSet = new HashSet<string>(profiles
               ?? new string[0], new CaseInsensitiveEqualityComparer());
         }
@@ -183,14 +172,8 @@ namespace PureDI
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblySpec ?? AssemblySpec.Empty);
-            if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
-            {
-                newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
-            }
-            if ((_excludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0)
-            {
-                newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultBeanName)] = rootObject;
-            }
+            newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
+            newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultBeanName)] = rootObject;
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
             return (rootObject, newInjectionState);
@@ -212,13 +195,9 @@ namespace PureDI
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
             Assembly[] assemblies;
             (_, typeMap, mapObjectsCreatedSoFar, assemblies) = injectionState;
-            string profileSetKey = string.Join(" ", _profileSet.OrderBy(p => p).ToList()).ToLower();
-            if ((_excludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)
-            {
-                injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
+            injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
-            }
             if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
             {
                 return (mapObjectsCreatedSoFar[(rootType, rootBeanName)]
@@ -267,12 +246,6 @@ namespace PureDI
             return newInjectionState;
         }
 
-        private
-            InjectionState CloneInjectionState(InjectionState injectionState)
-        {
-            return injectionState?.Clone() ?? InjectionState.Empty;
-        }
-
         private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
           , Type>, Diagnostics diagnostics)
           CreateTypeMap(Type rootType, AssemblySpec assemblySpec)
@@ -283,22 +256,11 @@ namespace PureDI
             // make sure that the IOC Container itself is available as a bean
             // particularly to factories
             var builder = ImmutableList.CreateBuilder<Assembly>();
-            if (assemblySpec.IsEmpty)
-            {
-                builder.AddRange(assemblySpec.ExplicitAssemblies
-                    .Union(new[] { rootType.Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
-                    .Union(new[] { this.GetType().Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
-            }
-            else
-            {
-                builder.AddRange(assemblySpec.ExplicitAssemblies
-                    .Union(new[] { rootType.Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
-                    .Union(new[] { this.GetType().Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
-            }
+            builder.AddRange(assemblySpec.ExplicitAssemblies
+                .Union(new[] { rootType.Assembly }.Where(a =>
+                    (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
+                .Union(new[] { this.GetType().Assembly }.Where(a =>
+                    (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
             IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
