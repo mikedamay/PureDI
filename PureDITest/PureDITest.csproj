@@ -169,6 +169,7 @@
     <EmbeddedResource Include="ProfileTestData\SimpleProfile.cs" />
     <EmbeddedResource Include="ScopeTestData\FactoryPrototype.cs" />
     <EmbeddedResource Include="TestData\BeanBase.cs" />
+    <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
     <EmbeddedResource Include="TestData\CrossPlatform.cs" />
     <EmbeddedResource Include="TestData\IgnoredBean.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
@@ -199,7 +200,6 @@
     <EmbeddedResource Include="TestData\AbstractClass.cs" />
     <EmbeddedResource Include="TestData\BadGeneric.cs" />
     <EmbeddedResource Include="TestData\BlankAssembly.cs" />
-    <EmbeddedResource Include="TestData\CheckProfileAndOs.cs" />
     <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
     <EmbeddedResource Include="TestData\DuplicateBeans.cs" />
     <EmbeddedResource Include="TestData\DuplicateInterfaces.cs" />

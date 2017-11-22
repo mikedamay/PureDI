@@ -1,5 +1,5 @@
 ﻿using PureDI;
-using PureDI.Common;
+using PureDI.Public;
 
 namespace IOCCTest.TestData
 {

@@ -1,10 +1,11 @@
 ﻿using System.Dynamic;
 using PureDI;
 using IOCCTest.TestCode;
+using PureDI.Public;
 
 namespace IOCCTest.TestData
 {
-    [Bean(OS=PDependencyInjector.OS.Any)]
+    [Bean(OS=Os.Any)]
     public class CrossPlatform : IResultGetter
     {
         [BeanReference] private Windows windows = null;
@@ -20,15 +21,15 @@ namespace IOCCTest.TestData
         }
 
     }
-    [Bean(OS= PDependencyInjector.OS.MacOS)]
+    [Bean(OS= Os.MacOs)]
     internal class Macos
     {
     }
-    [Bean(OS= PDependencyInjector.OS.Linux)]
+    [Bean(OS= Os.Linux)]
     internal class Linux
     {
     }
-    [Bean(OS= PDependencyInjector.OS.Windows)]
+    [Bean(OS= Os.Windows)]
     internal class Windows
     {
     }

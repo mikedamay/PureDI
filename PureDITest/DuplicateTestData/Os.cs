@@ -1,5 +1,6 @@
 ﻿using PureDI;
 using IOCCTest.TestCode;
+using PureDI.Public;
 
 namespace IOCCTest.DuplicateTestData
 {
@@ -17,17 +18,17 @@ namespace IOCCTest.DuplicateTestData
 
     }
 
-    [Bean(OS = PDependencyInjector.OS.MacOS)]
+    [Bean(OS = Os.MacOs)]
     public class OsImplMac : MuchoInterface
     {
 
     }
-    [Bean(OS = PDependencyInjector.OS.Windows)]
+    [Bean(OS = Os.Windows)]
     public class OsImplWindows : MuchoInterface
     {
 
     }
-    [Bean(OS = PDependencyInjector.OS.Linux)]
+    [Bean(OS = Os.Linux)]
     public class OsImplLinux : MuchoInterface
     {
 
