@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using static PureDI.Common.Common;
 
 namespace PureDI
 {

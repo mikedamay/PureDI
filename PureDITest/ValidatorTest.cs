@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Reflection;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +14,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.Unreachable.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["UnreachableReference"].Occurrences.Count);
         }
         [TestMethod]
@@ -23,7 +22,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.NonBeanNonStatic.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange( new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["UnreachableReference"].Occurrences.Count);
         }
         [TestMethod]
@@ -31,7 +30,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.MultipleAttributes.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["UnreachableReference"].Occurrences.Count);
         }
         [TestMethod]
@@ -39,7 +38,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.Constructors.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["UnreachableConstructor"].Occurrences.Count);
         }
         [TestMethod]
@@ -47,7 +46,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.ConstructorsWithMultipleAttributes.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(2, diags.Groups["UnreachableConstructor"].Occurrences.Count);
         }
         [TestMethod]
@@ -55,7 +54,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.NonBeanFactory.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["NonBeanFactory"].Occurrences.Count);
             System.Diagnostics.Debug.WriteLine(diags);
         }
@@ -64,7 +63,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.ComplexNonBeanFactory.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(3, diags.Groups["NonBeanFactory"].Occurrences.Count);
             System.Diagnostics.Debug.WriteLine(diags);
         }
@@ -73,7 +72,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.IgnoredNonBeanFactory.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             System.Diagnostics.Debug.WriteLine(diags);
             Assert.AreEqual(0, diags.Groups["NonBeanFactory"].Occurrences.Count);
         }
@@ -82,7 +81,7 @@ namespace IOCCTest
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.ValidatorTestData.UnreachableStruct.cs");
             var diags = new DiagnosticBuilder().Diagnostics;
-            new BeanValidator().ValidateAssemblies(ImmutableList.CreateRange(new List<Assembly> { assembly }), diags);
+            new BeanValidator().ValidateAssemblies(new List<Assembly> { assembly }, diags);
             Assert.AreEqual(1, diags.Groups["UnreachableStruct"].Occurrences.Count);
             System.Diagnostics.Debug.WriteLine(diags);
         }

@@ -18,7 +18,7 @@ namespace PureDI
         public AssemblySpec(AssemblyExclusion exclude 
           = AssemblyExclusion.ExcludedNone, params Assembly[] assemblies)
         {
-            _explicitAssemblies = ImmutableArray.Create(assemblies);
+            _explicitAssemblies = assemblies;
             ExcludedAssemblies = exclude;
             this.IsEmpty = assemblies.Length == 0;
         }
@@ -28,7 +28,7 @@ namespace PureDI
         /// </summary>
         private AssemblySpec()
         {
-            _explicitAssemblies = ImmutableArray<Assembly>.Empty;
+            _explicitAssemblies = new Assembly[0];
 //            _explicitAssemblies = ImmutableArray.Create(new Assembly[] {this.GetType().Assembly});
             this.IsEmpty = true;
         }
@@ -45,13 +45,13 @@ namespace PureDI
         /// <summary>
         /// see constructor
         /// </summary>
-        public ImmutableArray<Assembly> ExplicitAssemblies {
+        public Assembly[] ExplicitAssemblies {
             get { return _explicitAssemblies; } }
 
         /// <summary>
         /// true indicates that the assembly spec contains no assemblies
         /// </summary>
         public Boolean IsEmpty { get; }
-        private ImmutableArray<Assembly> _explicitAssemblies;
+        private Assembly[] _explicitAssemblies;
     }
 }
