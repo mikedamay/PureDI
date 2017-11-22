@@ -50,7 +50,7 @@ namespace IOCCTest
             (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());
             SomeUser someUser = pdi.CreateAndInjectDependencies<SomeUser>(injectionState
               ,assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly
-              ,exclude: AssemblyExclusion.ExcludeRootTypeAssembly)
+              )
               ).rootBean;
             Assert.IsNotNull(someUser.deep);
         }

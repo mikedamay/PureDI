@@ -19,8 +19,9 @@ namespace PureDI
     public class PDependencyInjector
     {
         private readonly Os os = new StdOSDetector().DetectOS();
-        private int _multipleCallGuard;
         private readonly ISet<string> _profileSet;
+        private readonly Boolean _ignoreRootTypeAssembly;
+        private int _multipleCallGuard;
 
         /// <summary>
         /// this routine is called to specify the assemblies to be scanned
@@ -35,13 +36,18 @@ namespace PureDI
         /// </remarks>
         /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
         /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
+        /// <param name="ignoreRootTypeAssembly">if true then the assembly of the
+        /// root type passed to CreateAndInjectDependencies will not be included
+        /// when scanning for dependencies - this is available to support testing
+        /// during the development of this library</param>
         /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
-        public PDependencyInjector(string[] profiles = null
+        public PDependencyInjector(string[] profiles = null, bool ignoreRootTypeAssembly = false
           )
         {
             CheckNoBlankProfiles(profiles);
             _profileSet = new HashSet<string>(profiles
               ?? new string[0], new CaseInsensitiveEqualityComparer());
+            _ignoreRootTypeAssembly = ignoreRootTypeAssembly;
         }
 
         /// <summary>
@@ -250,24 +256,11 @@ namespace PureDI
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap = null;
 
-            // make sure that the IOC Container itself is available as a bean
-            // particularly to factories
-/*
-            var builder = ImmutableList.CreateBuilder<Assembly>();
-            builder.AddRange(assemblySpec.ExplicitAssemblies
-                .Union(new[] { rootType.Assembly }.Where(a =>
-                    (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
-                .Union(new[] { this.GetType().Assembly }.Where(a =>
-                    (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0)));
-            IImmutableList<Assembly> allAssemblies = builder.ToImmutable();
-*/
             IReadOnlyList<Assembly> allAssemblies 
               = assemblySpec.ExplicitAssemblies
-                    .Union(new[] { rootType.Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludeRootTypeAssembly) == 0))
-                    .Union(new[] { this.GetType().Assembly }.Where(a =>
-                        (assemblySpec.ExcludedAssemblies & AssemblyExclusion.ExcludePDependencyInjector) == 0))
-               .ToList() ;
+              .Union(new[] { rootType.Assembly }.Where(a => !_ignoreRootTypeAssembly))
+              .Union(new[] { this.GetType().Assembly })
+              .ToList();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
             {
