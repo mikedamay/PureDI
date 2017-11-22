@@ -17,11 +17,11 @@ namespace PureDI
     public class InjectionState
     {
         private readonly Diagnostics diagnostics;
-        private readonly IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+        private readonly IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
         private readonly IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
         private readonly Assembly[] _assemblies;
         internal InjectionState(Diagnostics diagnostics
-          ,IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
+          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
           ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar, Assembly[] assemblies)
         {
             this.diagnostics = diagnostics;
@@ -31,7 +31,7 @@ namespace PureDI
         }
 
         internal void Deconstruct(out Diagnostics diagnostics
-            , out IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap
+            , out IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
             , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar
             ,out Assembly[] assemblies)
         {
@@ -47,7 +47,7 @@ namespace PureDI
         {
             return new InjectionState(
               new DiagnosticBuilder(this.Diagnostics).Diagnostics
-              , new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>(this.typeMap)
+              , new Dictionary<(Type beanType, string beanName), Type>(this.typeMap)
               , new Dictionary<(Type, string), object>(mapObjectsCreatedSoFar)
               ,(Assembly[])_assemblies.Clone()
               );
@@ -64,7 +64,7 @@ namespace PureDI
         // is a generic type definition.  The builder needs to lay its hands on the type argument
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
-        internal IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
+        internal IReadOnlyDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
         internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         internal Assembly[] Assemblies => _assemblies;
         /// <summary>
@@ -87,7 +87,7 @@ namespace PureDI
         public static InjectionState Empty
           => new InjectionState(
                     new DiagnosticBuilder().Diagnostics
-                    ,new WouldBeImmutableDictionary<(Type beanType, string beanName), Type>()
+                    ,new Dictionary<(Type beanType, string beanName), Type>()
                     ,new Dictionary<(Type, string), object>()
                     ,new Assembly[0]
                     );

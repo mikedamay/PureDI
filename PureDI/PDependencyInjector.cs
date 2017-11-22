@@ -194,7 +194,7 @@ namespace PureDI
           , InjectionState injectionState, string rootBeanName
           , string rootConstructorName, BeanScope scope)
         {
-            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
             Assembly[] assemblies;
             (_, typeMap, mapObjectsCreatedSoFar, assemblies) = injectionState;
@@ -225,7 +225,7 @@ namespace PureDI
           ,AssemblySpec assemblySpec)
         {
             InjectionState newInjectionState;
-            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap;
+            IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
             Diagnostics diagnostics;
             Assembly[] assemblies = assemblySpec.ExplicitAssemblies.Union(new [] {rootType.Assembly}).ToArray();
             if (injectionState == null || injectionState.IsEmpty())
@@ -249,12 +249,12 @@ namespace PureDI
             return newInjectionState;
         }
 
-        private (IWouldBeImmutableDictionary<(Type beanType, string beanName)
+        private (IReadOnlyDictionary<(Type beanType, string beanName)
           , Type>, Diagnostics diagnostics)
           CreateTypeMap(Type rootType, AssemblySpec assemblySpec)
         {
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            IWouldBeImmutableDictionary<(Type beanType, string beanName), Type> typeMap = null;
+            IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap = null;
 
             IReadOnlyList<Assembly> allAssemblies 
               = assemblySpec.ExplicitAssemblies
@@ -274,7 +274,7 @@ namespace PureDI
         }
 
         private void LogTypeMap(Diagnostics diagnostics
-          , IDictionary<(Type beanType, string beanName), Type> types)
+          , IReadOnlyDictionary<(Type beanType, string beanName), Type> types)
         {
             IEnumerable<(Type, string, Type)> typesQuery;
             if (types.Count == 0)

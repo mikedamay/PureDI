@@ -10,12 +10,12 @@ namespace PureDI
 {
     internal class TypeMapBuilder
     {
-        public IWouldBeImmutableDictionary<(Type type, string name), Type> 
+        public IReadOnlyDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
-            WouldBeImmutableDictionary<(Type, string), Type>.Builder map 
-              = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
+            Dictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
+//              = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs
@@ -85,7 +85,7 @@ namespace PureDI
                     }
                 }
             }
-            return map.ToImmutable();
+            return map;
         }
         enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
         private BestFit QueryRemoveDuplicate(IDictionary<(Type, string), Type> map
