@@ -82,14 +82,14 @@ browse to http://localhost:60653/
     TODO Later: diagnostics combination functionality
     TODO Later: Make constructors so that we can inject readonly properties - maybe - probably not
     TODO Later: handle whether external interfaces are included or excluded from typeMap
-    TODO Later: add tables to markdown
+    *** N/A Later: add tables to markdown
     TODO Later: add references to help to diagnostics
     TODO Later: rudimentary developer guide
     TODO Later: look at MEF implementations - heard on dnr 8-8-17
     TODO Later: testing in untrusted environments
     TODO Later: ninject
     TODO Later: spring
-    TODO Later: ASP.NET
+    *** DONE Later: ASP.NET
     TODO Later: Mass Test - 2 days
     TODO Later: red team: deep hierarchies
     TODO Later: red team: mix new and CreateAndInject...
@@ -101,6 +101,6 @@ browse to http://localhost:60653/
     TODO docs: DI-OddsAndEnds examples for object cycles
     TODO docs: DI-Assemblies example of including a reference to PDependencyInjector
     TODO docs: in a factory bean
-    TODO docs: example of assembly exclusion
+    *** N/A docs: example of assembly exclusion
     TODO docs: connect up summary and details in DesignRationale
     TODO add debug message for Diagnostics to prevent it showing the view string - maybe
