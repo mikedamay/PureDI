@@ -4,13 +4,13 @@ using PureDI;
 
 namespace SimpleIOCCDocumentor
 {
-    internal interface IDocumentMaker
+    internal interface IResourceProvider
     { 
         string GetResourceAsString(Type assemblyFinder, string path);
     }
 
     [Bean(Profile = "authoring")]
-    internal class FileDocumentMaker : IDocumentMaker
+    internal class FileResourceProvider : IResourceProvider
     {
         public string GetResourceAsString(Type assemblyFinder, string path)
         {
@@ -18,7 +18,7 @@ namespace SimpleIOCCDocumentor
         }
     }
     [Bean]
-    internal class ResourceDocumentMaker : ResourceFactoryBase, IDocumentMaker
+    internal class EmbeddedResourceProvider : ResourceFactoryBase, IResourceProvider
     {
 
     }

@@ -10,19 +10,19 @@ namespace SimpleIOCCDocumentor
     [Bean(Name="navigator")]
     public class XPathNavigatorResourceFactory : IFactory
     {
-        [BeanReference] private IDocumentMaker documentMaker = null;
-        /// <param name="assemblyFinder">any type whose assembly matches that where the resource is stored</param>
+        [BeanReference] private IResourceProvider _resourceProvider = null;
+        /// <param name="assemblyFinder">any type whose assembly is the assembly where the resource is stored</param>
         /// <param name="resourcePath">absolute path of resource, e.g. "PDependencyInjector.IOCC.DiagnosticSchema.xml"
         ///   in case of doubt run ildasm against the assembly's binary and inspect the manifest
         ///   to ascertain the absolute path</param>
         /// <returns>an XPath navigator ready for calls to navigator.Select(xpath)</returns>
         public XPathNavigator ConvertResourceToXPathNavigator(Type assemblyFinder, string resourcePath)
         {
-            string diagnosticSchema = documentMaker.GetResourceAsString(assemblyFinder, resourcePath);
-            byte[] by = Encoding.UTF8.GetBytes(diagnosticSchema);
-            using (Stream diagnosticStream = new MemoryStream(by))
+            string resourceString = _resourceProvider.GetResourceAsString(assemblyFinder, resourcePath);
+            byte[] by = Encoding.UTF8.GetBytes(resourceString);
+            using (Stream resourceStream = new MemoryStream(by))
             {
-                XPathDocument xdoc = new XPathDocument(diagnosticStream);
+                XPathDocument xdoc = new XPathDocument(resourceStream);
                 return xdoc.CreateNavigator();
             }
         }

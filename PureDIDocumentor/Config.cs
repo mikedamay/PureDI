@@ -29,7 +29,7 @@ namespace SimpleIOCCDocumentor
         /// configuration mapping</param>
         public GenericConfig(params (string key, object value)[] entries)
         {
-            map = entries.ToDictionary((kv) => kv.key, (kv) => kv.value);
+            map = entries.ToDictionary(kv => kv.key, kv => kv.value);
         }
         public object GetValue(string key, object defaultValue)
         {
