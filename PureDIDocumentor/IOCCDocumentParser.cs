@@ -33,7 +33,7 @@ namespace SimpleIOCCDocumentor
 
         private readonly XPathNavigatorResourceFactory factory;
 
-        // inhibit IOCC diagnostic for no arg constructor
+        // inhibit PureDI diagnostic for no arg constructor
         public IOCCDocumentParser() { }
         /// <param name="resourcePath">either "PDependencyInjector.Docs.DiagnosticSchema.xml"}
         ///   or "PDependencyInjector.Docs.UserGuide.xml"} if it's anyhing else
