@@ -24,17 +24,11 @@ namespace PureDI
         private int _multipleCallGuard;
 
         /// <summary>
-        /// this routine is called to specify the assemblies to be scanned
-        /// for beans.  Any bean to be injected must be defined in one
-        /// of these assemblies and must be marked with the [Bean] attribute.
+        /// The dependency injector is created with an optional set or profiles which
+        /// determine which beans are included in the dependency tree (e.g. test 
+        /// objects rather than production objects).
         /// </summary>
-        /// <remarks>
-        /// The assembly containing SimpleIOCCBean class itself is always included
-        /// by default.  It does not need to be specified.  The purpose
-        /// of the inclusion is to allow callers to include the PDependencyInjector
-        /// bean itself in factories.  The assembly is included to make this intuitive.
-        /// </remarks>
-        /// <example>SetAssemblies( true, "MyApp", "MyLib")</example>
+        /// <example>SetAssemblies( new string[] {"test"}, false)</example>
         /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
         /// <param name="ignoreRootTypeAssembly">if true then the assembly of the
         /// root type passed to CreateAndInjectDependencies will not be included
@@ -51,11 +45,13 @@ namespace PureDI
         }
 
         /// <summary>
-        /// Causes classes to be instantiated and injected, starting with the rootType.
+        /// Causes objects to be instantiated and injected, starting with an object
+        /// of the the root class (rootType).
         /// </summary>
         /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
         /// <param name="injectionState">This is null the first time the method is called.
-        ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        ///     Subsequent calls will typically take the previous saved instance 
+        ///     of injection state.</param>
         /// <param name="assemblySpec">descibes assemblies to be included in the injection process</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
@@ -434,13 +430,13 @@ namespace PureDI
 
         public static BeanReferenceBaseAttribute GetBeanReferenceAttribute(this MemberInfo type)
         {
-            return (BeanReferenceBaseAttribute)type.GetCustomAttributes().Where(
-                ca => ca is BeanReferenceBaseAttribute).FirstOrDefault();
+            return (BeanReferenceBaseAttribute)type.GetCustomAttributes(
+                ).FirstOrDefault(ca => ca is BeanReferenceBaseAttribute);
         }
         public static BeanReferenceBaseAttribute GetBeanReferenceAttribute(this ParameterInfo type)
         {
-            return (BeanReferenceBaseAttribute)type.GetCustomAttributes().Where(
-                ca => ca is BeanReferenceBaseAttribute).FirstOrDefault();
+            return (BeanReferenceBaseAttribute)type.GetCustomAttributes(
+                ).FirstOrDefault(ca => ca is BeanReferenceBaseAttribute);
         }
     }
 }
