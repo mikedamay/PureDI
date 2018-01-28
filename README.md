@@ -49,17 +49,17 @@ browse to http://localhost:60653/
     TODO set up remarks and notes as top level section headings in each topic
     TODO FAQ / Workarounds
     TODO embolden key text
-    TODO how to handle injection state passed to an injector with a different
-    TODO set of profiles
+    *** TODO how to handle injection state passed to an injector with a different
+    *** TODO set of profiles
     TODO explain how inheritance, factory with bean name, a separate base factory with Ignore
     TODO are combined to support inheritance.  Execute must be virtual.
     TODO in gotchas we claim that a dangling bean reference will be assigned
     TODO its default value - is that true?
     TODO implementations a la IPropertyMap
-    TODO document that it is not possible to have OS.Any along with OS.Specific
+    *** TODO document that it is not possible to have OS.Any along with OS.Specific
     TODO developer guide: policy on diagnostics and variation for constructors
     TODO assert that attribute parameters are non-null and of the correct type.
-    TODO document that we can't handle with same type from multiple assemblies using aliases - I think this will defeat the IOCC
+    TODO document that we can't handle same type from multiple assemblies using aliases - I think this will defeat the IOCC
     TODO change text on ReadOnlyProperty to mention that this can be set by using the constructor
     TODO test global:: and document that it won't work for root type passed as string
     TODO spell check documentation
