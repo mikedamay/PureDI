@@ -7,8 +7,8 @@
     <introduction>
       <para>
         PureDI is a
-        C# library providing Dependency Injection (DI) promoting
-        simplicity, transparency and verifiability.
+        C# library providing Dependency Injection (DI).  The framework and its approach to DI favour
+        simplicity, transparency and verifiability over sophistication and comprehensiveness.
       </para>
       <para>
         The library is fully functional (feature complete with thorough testing).
@@ -60,8 +60,8 @@
           <title>Usage</title>
           <content>
             <para>
-              Usage follows this pattern: the caller instantiates some significant object
-              with a call to <codeInline>PDependencyInjector.CreateAndInjectDependnecies</codeInline> and that
+              Usage follows the following pattern: the caller instantiates some significant object
+              with a call to <codeInline>PDependencyInjector.CreateAndInjectDependencies</codeInline> and that
               object is created together with dependencies to which it refers
               and so forth recursively through the tree of dependencies.  The root of the
               tree is returned and the caller invokes methods on that.
@@ -73,13 +73,14 @@
             </para>
             <para>
               Dependent classes are identified with the <codeInline>[Bean]</codeInline>
-              attribute and the corresponding member variables with 
+              attribute and the corresponding member variables which refer to them with 
               <codeInline>[BeanReference]</codeInline> attributes.
             </para>
             <para>
-              Similar injections can be made at subsequent entry 
-              points (e.g. in a web application
-              or interactive GUI).  These entry points will be able to create their own
+              It is often inappropriate or impossible to create all objects at program startup 
+              so similar injections can be made at subsequent entry 
+              points (e.g. in a web application at web requests
+              or interactive GUI on UI events).  These entry points will be able to create their own
               tree of objects which they can mix with previously created ones. This can
               be a useful mechanism in controlling the lifetime of the multiple sets of objects independently.
             </para>
@@ -129,7 +130,7 @@ public class Logger
             </listItem>
             <listItem>
               <para>
-                Classes where a bean is to be injected must also be marked as beans
+                Classes where a bean is to be injected (i.e. classes which refer to a bean) must themselves be marked as beans
               </para>
             </listItem>
             <listItem>
@@ -140,8 +141,7 @@ public class Logger
             <listItem>
               <para>
                 The type of a member variable where a bean is to be injected
-                should be an interface, a direct or indirect base class of the bean or the the class
-                that implements the bean
+                should be an interface, a direct or indirect base class of the bean.
               </para>
             </listItem>
             <listItem>
@@ -156,7 +156,9 @@ public class Logger
               <para>
                 If a call is made to <codeInline>CreateAndInjectDependencies</codeInline>
                 in respect of a type that has already been instantiated then
-                a reference to that object is returned and no other processing is performed.
+                a reference to that object is returned, a new object 
+                is not created and no other processing is performed.  This enforces the
+                singleton pattern.
               </para>
             </listItem>
           </list>
@@ -173,7 +175,7 @@ public class Logger
       <link xlink:href="DI-Profiles">Profiles</link>
  
       <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
-      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.String,System.String,PureDI.BeanScope)</codeEntityReference>
+      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,PureDI.AssemblySpec,PureDI.RootBeanSpec)</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

@@ -24,10 +24,13 @@ namespace PureDI
         private int _multipleCallGuard;
 
         /// <summary>
-        /// The dependency injector is created with an optional set or profiles which
+        /// Typically a single dependency injector is created, more often than not, at program startup
+        /// </summary>
+        /// <remarks>
+        /// The dependency injector is created with an optional set of profiles which
         /// determine which beans are included in the dependency tree (e.g. test 
         /// objects rather than production objects).
-        /// </summary>
+        /// </remarks>
         /// <example>SetAssemblies( new string[] {"test"}, false)</example>
         /// <param name="profiles">See detailed description of profiles (See Also, below)</param>
         /// <param name="ignoreRootTypeAssembly">if true then the assembly of the
@@ -45,17 +48,18 @@ namespace PureDI
         }
 
         /// <summary>
-        /// Causes objects to be instantiated and injected, starting with an object
-        /// of the the root class (rootType).
+        /// Creates an object of TRootType and then recursively creates and hooks up its dependencies
         /// </summary>
         /// <typeparam name="TRootType">Typically, the root node of a tree of objects </typeparam>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take the previous saved instance 
         ///     of injection state.</param>
-        /// <param name="assemblySpec">descibes assemblies to be included in the injection process</param>
+        /// <param name="assemblySpec">describes assemblies to be included in the injection process</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
-        /// <returns>an object of rootType</returns>
+        /// <returns>an object of rootType for use by the program and an injection state object which can
+        ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
+        ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
           CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null
@@ -71,13 +75,15 @@ namespace PureDI
         /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
-        /// <param name="rootType">Typically, the root node of a tree of objects </param>
+        /// <param name="rootType">Typically, the root node of a tree of objects to be created by this call </param>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
+        /// <param name="assemblySpec">describes assemblies to be included in the injection process</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
-        /// at the root of the object graph</param>
-        /// <returns>an object of rootType</returns>
+        ///     at the root of the object graph</param>
+        /// <returns>an object of rootType for use by the program and an injection state object which can
+        ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
+        ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null
@@ -103,14 +109,17 @@ namespace PureDI
         /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
-        /// <param name="rootTypeName">Typically, the root node of a tree of objects.
+        /// <param name="rootTypeName">Typically, the name of a class for which an object
+        /// will be instantiated by this call.
         /// Fully specified name including namespace</param>
         /// <param name="injectionState">This is null the first time the method is called.
-        /// Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
+        ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="assemblySpec">describes assemblies to be included in the injection process</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
-        /// at the root of the object graph</param>
-        /// <returns>an object of rootType</returns>
+        ///     at the root of the object graph</param>
+        /// <returns>an object of rootType for use by the program and an injection state object which can
+        ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
+        ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(
           string rootTypeName, InjectionState injectionState = null
@@ -157,10 +166,13 @@ namespace PureDI
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         /// to attach to the object tree</param>
-        /// <param name="assemblySpec">describes the assemblies to be included in the injection</param>
         /// <param name="injectionState">This is null the first time the method is called.
-        /// Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <returns>an object which is the root of a tree of dependencies</returns>
+        ///     Subsequent calls will typically take some saved instance of injection state.</param>
+        /// <param name="assemblySpec">describes assemblies to be included in the injection process</param>
+        /// <returns>an object of rootType for use by the program and an injection state object which can
+        ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
+        ///   which require additional objects to be created.</returns>
+        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) 
           CreateAndInjectDependencies(object rootObject
           ,InjectionState injectionState = null
