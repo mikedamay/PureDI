@@ -26,7 +26,7 @@ namespace IOCCTest
             (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
             (object rootBean, InjectionState injectionState)
               = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform"
-              , assemblySpec: new AssemblySpec(assemblies: assembly));
+              , assemblies: new Assembly[] { assembly});
             IResultGetter result = rootBean as IResultGetter;
 #if WINDOWSTEST
             Assert.IsNotNull(result.GetResults().Windows, "try \"dotnet run -c LinuxTest\" or \"dotnet run -c MacOsTest\"");

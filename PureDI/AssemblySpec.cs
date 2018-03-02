@@ -13,13 +13,10 @@ namespace PureDI
         /// <summary>
         /// creates readonly object
         /// </summary>
-        /// <param name="exclude">2 assemblies are included by default unless this parameter is specified</param>
         /// <param name="assemblies">assemblies required to be included in the injection</param>
-        public AssemblySpec(AssemblyExclusion exclude 
-          = AssemblyExclusion.ExcludedNone, params Assembly[] assemblies)
+        public AssemblySpec(params Assembly[] assemblies)
         {
             _explicitAssemblies = assemblies;
-            ExcludedAssemblies = exclude;
             this.IsEmpty = assemblies.Length == 0;
         }
 
@@ -38,10 +35,6 @@ namespace PureDI
         /// AssemblySpec.Empty serves up a reliable emtpy spec.
         /// </summary>
         public static AssemblySpec Empty => _empty;
-        /// <summary>
-        /// see constructor
-        /// </summary>
-        public AssemblyExclusion ExcludedAssemblies { get; }
         /// <summary>
         /// see constructor
         /// </summary>

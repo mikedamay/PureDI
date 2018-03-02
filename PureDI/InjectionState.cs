@@ -68,16 +68,16 @@ namespace PureDI
         internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         internal Assembly[] Assemblies => _assemblies;
         /// <summary>
-        /// shortcut to diagnostics.AllToString()
+        /// shortcut to diagnostics.AllToString().
+        /// a multi-line string containing all warnings and other info.
         /// <see cref="PureDI.Diagnostics.AllToString"/>
         /// </summary>
-        /// <returns>a multi-line string containing all warnings and other info</returns>
         public string AllDiagnosticsToString() => diagnostics.AllToString();
         /// <summary>
-        /// shortcut to diagnostics.ToString()
+        /// shortcut to diagnostics.ToString().
+        /// multi-line string containing all warnings.
         /// <see cref="PureDI.Diagnostics.ToString"/>
         /// </summary>
-        /// <returns>multi-line string containing all warnings</returns>
         public string WarningsToString() => diagnostics.ToString();
         /// <summary>
         /// convenient starting point and useful for library user edge

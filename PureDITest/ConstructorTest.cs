@@ -177,7 +177,7 @@ namespace IOCCTest
                 , "NamedRootConstructor");
             (object bean, InjectionState injectionState) = pdi.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.NamedRootConstructor"
-              , assemblySpec: new AssemblySpec(assemblies: assembly)
+              , assemblies: new Assembly[] { assembly}
               , rootBeanSpec: new RootBeanSpec( rootConstructorName: "TestConstructor"));
             Diagnostics diagnostics = injectionState.Diagnostics;
             IResultGetter result = bean as IResultGetter;
@@ -195,7 +195,7 @@ namespace IOCCTest
               = CreateIOCCinAssembly(CONSTRUCTOR_TEST_NAMESPACE, "MultipleConstructorsComplex");
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
               "IOCCTest.ConstructorTestData.MultipleConstructorsComplex"
-              , assemblySpec: new AssemblySpec(assemblies: assembly)).injectionState.Diagnostics;
+              , assemblies: new Assembly[] { assembly}).injectionState.Diagnostics;
 
             //Assert.IsNotNull(result.GetResults()?.First.FirstParam);
             //Assert.IsNotNull(result.GetResults()?.Second.SecondParam);

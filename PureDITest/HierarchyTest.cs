@@ -13,12 +13,12 @@ namespace IOCCTest
         [TestMethod]
         public void SelfTest()
         {
-            PDependencyInjector iocc 
-              = new PDependencyInjector();
+            PDependencyInjector iocc
+                = new PDependencyInjector();
             //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
-            TestRoot twf 
-              = iocc.CreateAndInjectDependencies<TestRoot>(
-              assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly)).rootBean;
+            TestRoot twf
+                = iocc.CreateAndInjectDependencies<TestRoot>(
+                    assemblies: new System.Reflection.Assembly[] { this.GetType().Assembly}).rootBean;
             Assert.IsNotNull(twf.test);
         }
         [TestMethod]

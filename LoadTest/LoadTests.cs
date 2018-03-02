@@ -22,7 +22,7 @@ namespace IOCCTest.LoadTest
             sw.Start();
             PDependencyInjector pdi = new PDependencyInjector();
             (object root, InjectionState InjectionState) 
-              = pdi.CreateAndInjectDependencies("Level1", assemblySpec: new AssemblySpec(assemblies: assembly));
+              = pdi.CreateAndInjectDependencies("Level1", assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
             sw.Stop();
             WriteLine(sw.Elapsed);

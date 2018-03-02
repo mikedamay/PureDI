@@ -17,7 +17,7 @@ namespace IOCCTest
         {
             (var iocc, var assembly) = CreateIOCCinAssembly(nameSpace, className);
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
-                $"IOCCTest.{nameSpace}.{className}", assemblySpec: new AssemblySpec(assemblies: assembly));
+                $"IOCCTest.{nameSpace}.{className}", assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             dynamic result = (IResultGetter)rootBean;

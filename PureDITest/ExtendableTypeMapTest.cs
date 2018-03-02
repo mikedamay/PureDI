@@ -13,11 +13,11 @@ namespace IOCCTest
         {
             (var pdi, var initialAssembly) = CreateIOCCinAssembly("InitialAssemblyData", "EntryPoint");
             (var obj1, var @is) = pdi.CreateAndInjectDependencies("IOCCTest.InitialAssemblyData.EntryPoint"
-                , assemblySpec: new AssemblySpec(assemblies: initialAssembly));
+                , assemblies: new Assembly[] { initialAssembly});
             Assert.IsNotNull(obj1);
             Assembly additionalAssembly = CreateAssembly($"{TestResourcePrefix}.AdditionalAssemblyData.EntryPoint.cs");
             (var obj2, _) = pdi.CreateAndInjectDependencies("IOCCTest.AdditionalAssemblyData.EntryPoint", @is
-              , assemblySpec: new AssemblySpec(assemblies: additionalAssembly));
+              , assemblies: new Assembly[] {additionalAssembly});
             Assert.IsNotNull(obj2);
         }
     }

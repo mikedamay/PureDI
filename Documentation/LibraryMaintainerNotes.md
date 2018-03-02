@@ -1,4 +1,4 @@
-Mike May - October 2017
+Mike May - October 2017, Updated March 2018
 
 Documnetation of the *library user* is at http://mikedamay.co.uk/PureDI
 

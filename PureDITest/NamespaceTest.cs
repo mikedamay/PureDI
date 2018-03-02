@@ -15,7 +15,7 @@ namespace IOCCTest
         {
             (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "NoNamespace");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("NoNamespace"
-              ,assemblySpec: new AssemblySpec(assemblies: assembly));
+              ,assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -27,7 +27,7 @@ namespace IOCCTest
         {
             (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceToNamespacedClass");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies("ReferenceToNamespacedClass"
-              , assemblySpec: new AssemblySpec(assemblies: assembly));
+              , assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -41,7 +41,7 @@ namespace IOCCTest
             (var iocc, var assembly) = Utils.CreateIOCCinAssembly("NamespaceData", "ReferenceFromNamespacedClass");
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
               "IOCCTest.NoNamespaceData.ReferenceFromNamespacedClass"
-              , assemblySpec: new AssemblySpec(assemblies: assembly));
+              , assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsNotNull(rootBean);
@@ -66,7 +66,7 @@ namespace IOCCTest
                     PDependencyInjector pdi = new PDependencyInjector();
                     object obj = pdi.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies
                       .DuplicateAssemblies>(
-                      assemblySpec: new AssemblySpec(assemblies: new Assembly[] {assembly,this.GetType().Assembly})).rootBean;
+                      assemblies:  new Assembly[] {assembly,this.GetType().Assembly}).rootBean;
                     Assert.IsNotNull(obj);
                     
                 }

@@ -1,4 +1,5 @@
-﻿using PureDI;
+﻿using System.Reflection;
+using PureDI;
 using IOCCTest.rootBean;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +18,7 @@ namespace IOCCTest
             Simple simple = new Simple();
             PDependencyInjector pdi = new PDependencyInjector();
             //pdi.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
-            pdi.CreateAndInjectDependencies(simple, assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly));
+            pdi.CreateAndInjectDependencies(simple, assemblies: new Assembly[] { this.GetType().Assembly});
             Assert.IsNotNull(simple.GetResults().Child);
         }
 
@@ -49,8 +50,7 @@ namespace IOCCTest
             InjectionState injectionState;
             (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());
             SomeUser someUser = pdi.CreateAndInjectDependencies<SomeUser>(injectionState
-              ,assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly
-              )
+              ,assemblies: new Assembly[] { this.GetType().Assembly}
               ).rootBean;
             Assert.IsNotNull(someUser.deep);
         }

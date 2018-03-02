@@ -23,7 +23,7 @@ namespace PureDI
             Scope = scope;
         }
         /// <summary>
-        /// see contructor
+        /// see constructor
         /// </summary>
         /// <param name="rootBeanName">see constructor</param>
         /// <param name="rootConstructorName">see constructor</param>

@@ -1,4 +1,5 @@
-﻿using PureDI;
+﻿using System.Reflection;
+using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static IOCCTest.Utils;
 
@@ -23,7 +24,7 @@ namespace IOCCTest
             {
                 (var pdi, var assembly) = CreateIOCCinAssembly("EntryPointTestData", "RootInterface");
                 pdi.CreateAndInjectDependencies("xxx"
-                  , assemblySpec: new AssemblySpec(assemblies: assembly));
+                  , assemblies: new Assembly[] { assembly});
                 Assert.Fail();
             }
             catch (DIException iex)

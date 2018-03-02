@@ -15,7 +15,7 @@ namespace IOCCTest
             {
                 (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadConstructor");
                 pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadConstructor"
-                  , assemblySpec: new AssemblySpec(assemblies: assembly));
+                  , assemblies: new Assembly[] { assembly});
                 Assert.Fail();
             }
             catch (DIException iex)
@@ -34,9 +34,11 @@ namespace IOCCTest
         {
             try
             {
-                (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactory");
-                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies("IOCCTest.BadClientTestData.BadFactory"
-                  , assemblySpec: new AssemblySpec(assemblies: assembly));
+                (PDependencyInjector pdi, Assembly assembly) =
+                    Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactory");
+                (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.BadClientTestData.BadFactory"
+                    , assemblies: new Assembly[] { assembly});
                 Assert.Fail();
             }
             catch (DIException iex)
@@ -57,7 +59,7 @@ namespace IOCCTest
             {
                 (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("BadClientTestData", "BadFactoryForParam");
                 (var rootBean, var InjectionState) = pdi.CreateAndInjectDependencies(
-                  "IOCCTest.BadClientTestData.BadFactoryForParam", assemblySpec: new AssemblySpec(assemblies: assembly));
+                  "IOCCTest.BadClientTestData.BadFactoryForParam", assemblies: new Assembly[]{ assembly});
                 Assert.Fail();
             }
             catch (DIException iex)

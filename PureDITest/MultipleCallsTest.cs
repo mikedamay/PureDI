@@ -16,11 +16,11 @@ namespace IOCCTest
             (object simpleBean, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Simple"
-              , assemblySpec: new AssemblySpec(assemblies: assembly));
+              , assemblies: new Assembly[] { assembly});
             (object furtherBean, InjectionState injectionState2) 
               = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Further", injectionState
-              , assemblySpec: new AssemblySpec(assemblies: assembly));
+              , assemblies: new Assembly[] { assembly});
             Assert.AreEqual(simpleBean, ((IResultGetter)furtherBean)?.GetResults().Simple );
         }
 
@@ -36,11 +36,11 @@ namespace IOCCTest
                     (object simpleBean, InjectionState injectionState) 
                       = pdi.CreateAndInjectDependencies(
                       "IOCCTest.MultipleCallsTestData.Fails",
-                      assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly));
+                      assemblies: new Assembly[] { this.GetType().Assembly});
                     (object furtherBean, InjectionState injectionState2) 
                       = pdi.CreateAndInjectDependencies(
                       "IOCCTest.MultipleCallsTestData.FurtherFails"
-                      ,assemblySpec: new AssemblySpec(assemblies: this.GetType().Assembly));
+                      ,assemblies: new Assembly[] { this.GetType().Assembly});
                 }
             );
         }
@@ -51,9 +51,9 @@ namespace IOCCTest
             (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
             (object empty1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.Empty", assemblySpec: new AssemblySpec(assemblies: assembly));
+              "IOCCTest.MultipleCallsTestData.Empty", assemblies: new Assembly[] { assembly});
             (object empty2, InjectionState @is2) = pdi.CreateAndInjectDependencies(
-                "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty, assemblySpec: new AssemblySpec(assemblies: assembly));
+                "IOCCTest.MultipleCallsTestData.Empty", InjectionState.Empty, assemblies: new Assembly[] { assembly});
             Assert.AreNotEqual(empty1, empty2);
         }
         [TestMethod]
@@ -62,7 +62,7 @@ namespace IOCCTest
             (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
             (object factory1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
-              "IOCCTest.MultipleCallsTestData.SimpleFactory", assemblySpec: new AssemblySpec(assemblies: assembly));
+              "IOCCTest.MultipleCallsTestData.SimpleFactory", assemblies: new Assembly[] { assembly});
             Assert.IsNotNull( ((IResultGetter)factory1)?.GetResults().SimpleChild);
         }
 
@@ -72,7 +72,7 @@ namespace IOCCTest
             (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
             (object factory1, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
-                    "IOCCTest.MultipleCallsTestData.ComplexFactory", assemblySpec: new AssemblySpec(assemblies: assembly));
+                    "IOCCTest.MultipleCallsTestData.ComplexFactory", assemblies: new Assembly[] { assembly});
             IResultGetter result = factory1 as IResultGetter;
             ;
             Assert.IsNotNull(result.GetResults()?.ChildOne);

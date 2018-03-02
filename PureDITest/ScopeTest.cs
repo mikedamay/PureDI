@@ -57,12 +57,12 @@ namespace IOCCTest
             (var iocc, var assembly) = MakeIOCCForTestAssembly(className);
             (object rootBean, InjectionState injectionState1) = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.ScopeTestData.{className}"
-                , assemblySpec: new AssemblySpec(assemblies: assembly)
+                , assemblies: new Assembly[] {assembly}
                 , rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
             Diagnostics diagnostics1 = injectionState1.Diagnostics;
             (object rootBean2, InjectionState injectionState2) = iocc.CreateAndInjectDependencies(
-                $"IOCCTest.ScopeTestData.{className}", injectionState1
-                , assemblySpec: new AssemblySpec(assemblies: assembly)
+                (string) $"IOCCTest.ScopeTestData.{className}", injectionState1
+                , (Assembly[]) new Assembly[] {assembly}
                 , rootBeanSpec: new RootBeanSpec( scope: BeanScope.Prototype));
             Diagnostics diagnostics2 = injectionState2.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics1);

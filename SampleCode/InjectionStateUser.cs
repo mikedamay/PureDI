@@ -16,7 +16,16 @@ public class InjectionStateUser
             BigData bigData;
             (bigData, transitoryState)
                 = pdi.CreateAndInjectDependencies<BigData>(injectionState);
-            Console.WriteLine(bigData.AddUp());     // 500_000_500_000 ( 1 + 1_000_000) * 500_000)
+            Console.WriteLine(bigData.AddUp());     // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
         }
     }
 }

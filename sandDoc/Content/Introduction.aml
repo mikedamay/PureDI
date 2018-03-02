@@ -147,8 +147,8 @@ public class Logger
             <listItem>
               <para>
                 Once <codeInline>CreateAndInjectDependencies</codeInline> has been called all beans will have
-                been instantiated and assigned to any matching bean references.  Typically, calls
-                will only be made to the injector, subsequently, if the program has other
+                been instantiated and assigned to any matching bean references.  Typically, further calls
+                will be made to the injector only if the program has other
                 entry points
               </para>
             </listItem>
@@ -158,7 +158,8 @@ public class Logger
                 in respect of a type that has already been instantiated then
                 a reference to that object is returned, a new object 
                 is not created and no other processing is performed.  This enforces the
-                singleton pattern.
+                singleton pattern.  The same applies where references to <codeInline>[BeanReference]</codeInline>
+                are resolved.  For exceptions to this rule follow the link below to BeanScope. 
               </para>
             </listItem>
           </list>
@@ -173,9 +174,11 @@ public class Logger
       <link xlink:href="DI-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
       <link xlink:href="DI-DesignRationale">Design Rationale</link>
       <link xlink:href="DI-Profiles">Profiles</link>
+      <link xlink:href="3a5d7e35-2d4c-4f46-862b-122d83fa5047">Injection State &amp; Multiple Entrypoints</link>
  
       <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
       <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,PureDI.AssemblySpec,PureDI.RootBeanSpec)</codeEntityReference>
+      <codeEntityReference>T:PureDI.BeanScope</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

@@ -38,8 +38,17 @@ public class InjectionStateUser
         {
             BigData bigData;
             (bigData, transitoryState)
-                = pdi.CreateAndInjectDependencies&lt;BigData&gt;(injectionState);
-            Console.WriteLine(bigData.AddUp());     // 500_000_500_000 ( 1 + 1_000_000) * 500_000)
+                = pdi.CreateAndInjectDependencies&lt;BigData>(injectionState);
+            Console.WriteLine(bigData.AddUp());     // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
+                                                    // 500_000_500_000
         }
     }
 }
@@ -57,7 +66,7 @@ public class PermanentService
 public class BigData
 {
     private int[] blob = new int[1_000_000];
-    [BeanReference] private PermanentService permanent;
+    [BeanReference] private PermanentService permanent = null;
     private decimal agg;
 
     public decimal AddUp()

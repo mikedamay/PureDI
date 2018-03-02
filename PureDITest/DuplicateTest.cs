@@ -24,7 +24,7 @@ namespace IOCCTest
 
         //pdi.SetAssemblies(assembly.GetName().Name);
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies("IOCCTest.DuplicateTestData.Duplicate"
-              ,assemblySpec: new AssemblySpec(assemblies: assembly)
+              ,assemblies: new Assembly[] { assembly}
               ).injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsTrue(diagnostics.HasWarnings);
@@ -36,7 +36,7 @@ namespace IOCCTest
             PDependencyInjector pdi = new PDependencyInjector();
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
               "IOCCTest.DuplicateTestData.Duplicate"
-              ,assemblySpec: new AssemblySpec(assemblies: assembly)
+              ,assemblies: new Assembly[] { assembly}
               )
               .injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
