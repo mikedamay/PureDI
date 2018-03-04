@@ -27,7 +27,10 @@
                   </para>
               </listItem>
               <listItem>
-                <para>Injections cannot be made into static objects</para>
+                <para>
+                  <legacyBold>Static Objects do not participate and cannot be included
+                  in any way in the injection mechanism</legacyBold>
+                </para>
               </listItem>
               <listItem>
                 <para>
@@ -99,7 +102,7 @@
               <listItem>
                 <para>
                   <legacyBold>Missing Beans: </legacyBold>A risk, particularly with multiple entry points, is that the library user will forget
-                  to include required assemblies when the injector is first created.
+                  to include required assemblies in the "assemblies" argument when the injector is first created.
                   As a consequence "missing bean" type errors will occur,
                 </para>
               </listItem>

@@ -78,10 +78,10 @@
             </para>
             <para>
               It is often inappropriate or impossible to create all objects at program startup 
-              so similar injections can be made at subsequent entry 
+              so similar injections must and can be made at subsequent entry 
               points (e.g. in a web application at web requests
               or interactive GUI on UI events).  These entry points will be able to create their own
-              tree of objects which they can mix with previously created ones. This can
+              tree of objects which they can mix with previously created ones. This can also
               be a useful mechanism in controlling the lifetime of the multiple sets of objects independently.
             </para>
             <para>The following illustrates simple usage:</para>
@@ -141,7 +141,8 @@ public class Logger
             <listItem>
               <para>
                 The type of a member variable where a bean is to be injected
-                should be an interface, a direct or indirect base class of the bean.
+                should be the type of the reference or an interface, a direct or indirect base class 
+                of the referenced type.
               </para>
             </listItem>
             <listItem>
@@ -159,7 +160,8 @@ public class Logger
                 a reference to that object is returned, a new object 
                 is not created and no other processing is performed.  This enforces the
                 singleton pattern.  The same applies where references to <codeInline>[BeanReference]</codeInline>
-                are resolved.  For exceptions to this rule follow the link below to BeanScope. 
+                are resolved implicitly by the mechanism.
+                For exceptions to this rule follow the link below to BeanScope. 
               </para>
             </listItem>
           </list>
@@ -177,7 +179,7 @@ public class Logger
       <link xlink:href="3a5d7e35-2d4c-4f46-862b-122d83fa5047">Injection State &amp; Multiple Entrypoints</link>
  
       <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
-      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,PureDI.AssemblySpec,PureDI.RootBeanSpec)</codeEntityReference>
+      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec)</codeEntityReference>
       <codeEntityReference>T:PureDI.BeanScope</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>

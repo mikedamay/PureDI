@@ -55,7 +55,9 @@ namespace PureDI
         ///     Subsequent calls will typically take the previous saved instance 
         ///     of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null to include only the assembly in which the call to this method is made</param>
+        ///   Pass null if no additional assemblies are required. 
+        ///   The assembly in which the call to this method is made is included by default
+        ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
@@ -78,7 +80,9 @@ namespace PureDI
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null to include only the assembly in which the call to this method is made</param>
+        ///   Pass null if no additional assemblies are required. 
+        ///   The assembly in which the call to this method is made is included by default
+        ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
@@ -86,7 +90,8 @@ namespace PureDI
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+          CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null
+          , Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -113,7 +118,9 @@ namespace PureDI
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null to include only the assembly in which the call to this method is made</param>
+        ///   Pass null if no additional assemblies are required. 
+        ///   The assembly in which the call to this method is made is included by default
+        ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
@@ -165,7 +172,9 @@ namespace PureDI
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null to include only the assembly in which the call to this method is made</param>
+        ///   Pass null if no additional assemblies are required. 
+        ///   The assembly in which the call to this method is made is included by default
+        ///   irrespective of the argument passed here</param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
@@ -383,7 +392,7 @@ namespace PureDI
     }
 
     /// <summary>
-    /// The BeanScope enum is in
+    /// The BeanScope enum is used in
     /// conjunction with bean references to determine
     /// how multiple references to a particular bean will be
     /// dealt with.  Where the scope is Singleton (which is
@@ -393,8 +402,8 @@ namespace PureDI
     /// to separate objects.
     /// </summary>
     /// <remarks>
-    /// An example of where this might be used is where a web request
-    /// is received and a different user record needs to be instantiated
+    /// An example of where this might be used is where processing of a web request
+    /// requires a different user record to be instantiated
     /// for each request.
     /// </remarks>
     public enum BeanScope

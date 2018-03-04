@@ -25,7 +25,8 @@
           mechanism with the identities of the assemblies that are subject to
           injection.  These can be passed to the <codeInline>PDependencyInjector</codeInline>
           constructor as follows: 
-          <codeInline>var pdi = new PDependencyInjector(Assemblies: new[] {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
+          <codeInline>var pdi = new PDependencyInjector(Assemblies: new Assembly[]
+          {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
           Note that the constructor takes an array of references to assemblies
           rather than the names.  Not only is this is safer but it's actually more
           convenient for the library user once they get the hang of it.
@@ -36,7 +37,8 @@
           root bean is automatically scanned for injection by default.  If the root
           type's assembly is the only one for which injection is required then the
           constructor can be called without the <codeInline>Assemblies</codeInline> parameter.
-          <codeInline>var pdi = new PDependencyInjector();</codeInline>.
+          <codeInline>var pdi = new PDependencyInjector();
+          var result = pdi.CreateAndInjectDependencies&lt;SomeRootClass>();</codeInline>.
         </para>
         <para>
           One other assembly, besides the root type's, is included by default.  It
@@ -46,9 +48,9 @@
           the factory itself.
         </para>
         <para>
-          All assemblies must be loaded before <codeInline>PDependencyInjector</codeInline>
-          is instantiated.  The mechanism does not currently handle assemblies loaded
-          at some later point, say some service provider loaded at a subsequent entry point.
+          All assemblies must be loaded before a related call to  <codeInline>
+          CreateAndInjectDependencies</codeInline>
+          is made.  The injection mechanism does not load referenced assemblies itself.
         </para>
       </content>
         <sections>
@@ -63,19 +65,8 @@
                 </listItem>
                 <listItem>
                   <para>
-                    There may be edge cases where the library user needs to exclude the default assemblies
-                    from scanning.  This can be achieved by passing one or two AssemblyExclusionFlags
-                    to the constructor: <codeInline>AssemblyExclusion.ExcludeSimpleIOCContainer</codeInline> to
-                    prevent the PDependencyInjector library itself from being scanned and <codeInline>
-                      AssemblyExclusion.ExcludeRootTypeAssembly
-                    </codeInline> to exclude the root type's assembly. e.g. <lineBreak/><codeInline>
-                      var sic =
-                      new PDependencyInjector(Assemblies: new[] {typeof(ClassDerivedFromRootType).Assembly},
-                      ExcludeAssemblies: AssemblyExclusion.ExcludeSimpleIOCContainer |
-                      AssemblyExclusion.ExcludeRootTypeAssembly);
-                    </codeInline><lineBreak/> will scan only the ClassDerivedFromRootType's assembly. Bear in mind
-                    that the root type passed to <codeInline>CreateAndInjectDependencies</codeInline> can
-                    be an interface or base class of ClassDerivedFromRootType.
+                    There may be occasions, for example, when running unit tests on the library source
+                    where it 
                   </para>
                 </listItem>
               </list>
@@ -86,8 +77,6 @@
 
     <relatedTopics>
       <link xlink:href="DI-LimitationsAndGotchas">Limitations &amp; Gotchas</link>
-      <codeEntityReference>M:PureDI.PDependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.PDependencyInjector.AssemblyExclusion)</codeEntityReference>
-      <codeEntityReference>T:PureDI.PDependencyInjector.AssemblyExclusion</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

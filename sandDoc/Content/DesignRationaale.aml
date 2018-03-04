@@ -68,7 +68,7 @@
               </para>
             </listItem>
             <listItem>
-              <para>3 exception classes - all straight forward</para>
+              <para>3 exception classes - all straightforward</para>
             </listItem>
           </list>
           <para>
@@ -76,7 +76,7 @@
             the use of attributes.  There is no XML alternative or privileged configuration
             by code.
           </para>
-          <para>The library is lightweight, with no non-Microsoft dependencies</para>
+          <para>The library is lightweight, with no non-Sdk dependencies</para>
           <para>
             Admittedly, the use of <codeInline>injectionState</codeInline> cannot be seen
             as promoting simplicity.  See below under <legacyItalic>Verifiability</legacyItalic>.

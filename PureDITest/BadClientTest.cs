@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PureDI.Public;
 
 namespace IOCCTest
 {

@@ -3,7 +3,6 @@ using PureDI;
 using IOCCTest.rootBean;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PureDI.Public;
 using static IOCCTest.Utils;
 
 namespace IOCCTest
