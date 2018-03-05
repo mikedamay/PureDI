@@ -37,8 +37,8 @@
               <para>
                 A single significant operational class,
                 <codeInline>PDependencyInjector</codeInline>,
-                coupled with some associated enums an opaque
-                object holding the library's state
+                coupled with 2 associated enums an opaque
+                object holding the library's state <codeInline>InjectionState</codeInline>
               </para>
             </listItem>
             <listItem>
@@ -64,11 +64,11 @@
             <listItem>
               <para>
                 4 base classes for users to derive their own attributes
-                (not-so-simple but can be safely ignored).
+                (not-so-simple but can be safely ignored except for advanced usage).
               </para>
             </listItem>
             <listItem>
-              <para>3 exception classes - all straightforward</para>
+              <para>a single exception class</para>
             </listItem>
           </list>
           <para>
@@ -126,11 +126,13 @@
             <para>
               The "configuration-over-convention" approach which provides transparency
               also helps with the third aspiration of Verifiability.  By insisting
-              that he user explicitly states their intention to inject functionality
-              but the use of <codeInline>[Bean]</codeInline> and <codeInline>[BeanReference]</codeInline> attributes we can
+              that the user explicitly states their intention to inject functionality
+              through the use of <codeInline>[Bean]</codeInline> and <codeInline>[BeanReference]</codeInline> attributes
+              and by requiring an explicit reference to the assemblies to be scanned for inspection we can
               provide rich diagnostics so that when things don't work,
               due to an error or misunderstanding, the developer
-              can investigate in some depth.  The <codeInline>IOCCDiagnostics</codeInline> object provides
+              can investigate in some depth.  The <codeInline>Diagnostics</codeInline> object 
+              exposed by <codeInline>InjectionState</codeInline> provides
               full details of anomalies discovered when carrying out the injections.
               This heading is extended to cover the absence of "gotchas" where possible
             </para>
@@ -165,14 +167,6 @@
               </listItem>
               <listItem>
                 <para>
-                  The object model is static - although new objects can be added at program entry points
-                  there is no facility to remove anything.  This will be addressed in the case of
-                  request and session scope objects for web applications in a future version.  In
-                  the mean time where this is necessary beans will have to be created with Prototype scope
-                </para>
-              </listItem>
-              <listItem>
-                <para>
                   There is an absence of convenience/shortcut injections such as allowing values
                   to be substituted at the point of injection from a configuration file or the environment
                 </para>
@@ -190,6 +184,7 @@
                 <para>
                   You cannot simply stick a bean reference on some bean
                   and expect injection to take place.  It must be in the graph produced by
+                  following the dependencies of
                   <codeInline>CreateAndInjectDependencies</codeInline>.
                 </para>
               </listItem>
@@ -215,7 +210,7 @@
               that Spring's ability to do a great deal for the developer behind the scenes was not
               my preferred approach.  In particular the AOP involved in enforcing database
               transactions was a piece of "magic" too far.  A lot of the design decisions here
-              are a reaction against the that aspect of Spring.  However I acknowledge
+              are a reaction against that aspect of Spring.  However I acknowledge
               the Spring framework as a great achievement.
             </para>
           </content>
