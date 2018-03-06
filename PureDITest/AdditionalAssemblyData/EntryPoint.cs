@@ -1,6 +1,6 @@
-﻿namespace IOCCTest.AdditionalAssemblyData
+﻿ namespace IOCCTest.AdditionalAssemblyData
 {
-    [PureDI.Bean]
+    [PureDI.Attributes.Bean]
     public class EntryPoint
     {
         

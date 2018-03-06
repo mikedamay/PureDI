@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using PureDI;
+using PureDI.Attributes;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData

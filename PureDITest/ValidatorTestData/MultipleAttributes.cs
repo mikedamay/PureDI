@@ -1,5 +1,6 @@
 ﻿using System;
 using PureDI;
+using PureDI.Attributes;
 
 namespace IOCCTest.DifficultTypeTestData
 {

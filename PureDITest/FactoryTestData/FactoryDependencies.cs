@@ -1,6 +1,7 @@
 ﻿using System.Dynamic;
 using System.Runtime.CompilerServices;
 using PureDI;
+using PureDI.Attributes;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData

@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using PureDI;
-using IOCCTest.TestCode;
 using PureDI.Attributes;
+using IOCCTest.TestCode;
 
 namespace IOCCTest.MultipleCallsTestData
 {

@@ -3,9 +3,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using PureDI;
+using PureDI.Attributes;
 using PureDI.Tree;
 using IOCCTest.TestCode;
-using PureDI.Attributes;
 
 namespace IOCCTest.DifficultTypeTestData
 {

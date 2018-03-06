@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.IO;
 using System.Reflection;
 using PureDI;
+using PureDI.Attributes;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.DerivedAttributeTestData

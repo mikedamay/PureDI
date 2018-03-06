@@ -1,4 +1,5 @@
 ﻿using PureDI;
+using PureDI.Attributes;
 using PureDI.Public;
 
 namespace IOCCTest.TestData

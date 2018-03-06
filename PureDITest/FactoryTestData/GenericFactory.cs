@@ -1,6 +1,7 @@
 ﻿using System.Dynamic;
 using System.Linq.Expressions;
 using PureDI;
+using PureDI.Attributes;
 using IOCCTest.TestCode;
 
 namespace IOCCTest.FactoryTestData
