@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Xml.XPath;
 using PureDI;
+using PureDI.Attributes;
 using static PureDI.Common.Common;
 
 namespace SimpleIOCCDocumentor

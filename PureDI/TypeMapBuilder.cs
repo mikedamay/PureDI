@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PureDI.Attributes;
 using PureDI.Common;
 using PureDI.Public;
 using static PureDI.Common.Common;

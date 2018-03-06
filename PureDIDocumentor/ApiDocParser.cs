@@ -2,6 +2,7 @@
 using System.IO;
 using PureDI;
 using Microsoft.AspNetCore.Hosting.Builder;
+using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {

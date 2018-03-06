@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using PureDI;
+using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {

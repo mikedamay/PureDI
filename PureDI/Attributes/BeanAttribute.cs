@@ -2,7 +2,7 @@
 using PureDI.Common;
 using PureDI.Public;
 
-namespace PureDI
+namespace PureDI.Attributes
 {
     /// <summary>
     /// Any class to be injected into another class and

@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using PureDI;
+using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {

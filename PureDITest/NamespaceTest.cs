@@ -3,6 +3,7 @@ using System.Reflection;
 using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Attributes;
 using static IOCCTest.Utils;
 
 namespace IOCCTest

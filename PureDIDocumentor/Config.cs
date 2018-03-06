@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PureDI;
 using Microsoft.Extensions.Configuration;
+using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {

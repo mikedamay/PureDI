@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using PureDI;
+using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {

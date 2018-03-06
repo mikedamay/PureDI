@@ -1,4 +1,5 @@
 ﻿using PureDI;
+using PureDI.Attributes;
 using WithNames = IOCCTest.TestCode.WithNames;
 
 namespace PureDITest.TestCode

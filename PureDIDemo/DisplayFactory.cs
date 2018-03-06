@@ -1,5 +1,7 @@
 ﻿using System;
 using PureDI;
+using PureDI.Attributes;
+
 namespace SimpleIOCCDemo
 {
     [Bean]

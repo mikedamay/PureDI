@@ -2,6 +2,7 @@
 using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Attributes;
 
 namespace IOCCTest
 {

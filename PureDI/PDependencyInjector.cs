@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using PureDI.Attributes;
 using PureDI.Common;
 using PureDI.Public;
 using PureDI.Tree;

@@ -1,4 +1,5 @@
 using System;
+using PureDI.Attributes;
 using PureDI.Common;
 
 namespace PureDI

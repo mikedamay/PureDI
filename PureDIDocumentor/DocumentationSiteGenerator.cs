@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Metadata;
 using PureDI;
 using System.IO;
+using PureDI.Attributes;
 using PureDI.Common;
 using IOPath = System.IO.Path; 
 

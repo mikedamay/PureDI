@@ -5,6 +5,7 @@ using System.Reflection;
 using PureDI;
 using PureDI.Tree;
 using IOCCTest.TestCode;
+using PureDI.Attributes;
 
 namespace IOCCTest.DifficultTypeTestData
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using PureDI.Attributes;
 using static PureDI.Common.Common;
 
 namespace PureDI
