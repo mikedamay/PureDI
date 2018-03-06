@@ -45,26 +45,16 @@ namespace IOCCTest.LoadTest
             Assembly assembly = Assembly.Load(ms.GetBuffer());
             return assembly;
         }
-
+        //
+        // used https://roslynquoter.azurewebsites.net/ to generate syntax tree builder code fragments below
+        //
         private SyntaxTree MakeTreeMinor()
         {
             CompilationUnitSyntax cus = CompilationUnit()
                     .WithUsings(
                         SingletonList<UsingDirectiveSyntax>(
-                            UsingDirective(IdentifierName("PureDI"))))
-                                
-                                    
-                                        
-                                   
-                    .WithMembers(MakeVanillaWithBeanClass()
-                        //List<MemberDeclarationSyntax>(new MemberDeclarationSyntax[]
-                        //    {
-                        //        MakeClass("Level1", "Level2a", "Level2b")
-                        //        ,MakeLeafClass("Level2a")
-                        //        ,MakeLeafClass("Level2b")
-                        //    })
-
-                        )
+                            UsingDirective(IdentifierName("PureDI.Attributes"))))
+                    .WithMembers(MakeVanillaWithBeanClass())
                     .NormalizeWhitespace()
                 ;
             SyntaxTree tree = CSharpSyntaxTree.Create(cus);
@@ -77,7 +67,9 @@ namespace IOCCTest.LoadTest
                         SingletonList<UsingDirectiveSyntax>(
                             UsingDirective(
                                
-                                    IdentifierName("PureDI"))))
+                                    QualifiedName(
+                                        IdentifierName("PureDI"),
+                                        IdentifierName("Attributes")))))
                     .WithMembers(
                         List<MemberDeclarationSyntax>(MakeClassList().ToArray()
 

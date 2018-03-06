@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using PureDI.Attributes;
 using PureDI.Common;
 
 namespace PureDI.Tree

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PureDI
+namespace PureDI.Attributes
 {
     /// <summary>
     /// Contains all the functionality of [IOCCIgnore]

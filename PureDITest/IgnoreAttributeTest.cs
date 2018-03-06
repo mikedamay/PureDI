@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IOCCTest
 {
-    [PureDI.Ignore]
+    [PureDI.Attributes.Ignore]
     public interface MyIgnoredReference
     {
         

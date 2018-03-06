@@ -1,8 +1,7 @@
 using System;
-using PureDI.Attributes;
 using PureDI.Common;
 
-namespace PureDI
+namespace PureDI.Attributes
 {
     /// <summary>
     /// an instance of BeanFactoryArgs is passed by the container

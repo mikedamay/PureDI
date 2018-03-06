@@ -2,7 +2,7 @@
 using System.Reflection;
 using PureDI.Common;
 
-namespace PureDI
+namespace PureDI.Attributes
 {
     /// <summary>
     /// Contains all the functionality of [Constructor]
