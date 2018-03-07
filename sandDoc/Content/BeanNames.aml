@@ -24,6 +24,7 @@
         <para>The following code illustrates this:</para>
         <code language="c#">
 using PureDI;
+using PureDI.Attributes;
 
 [Bean]
 public class DuplicateBean
@@ -33,7 +34,9 @@ public class DuplicateBean
 
     public static void Main()
     {
-        var beans = new PDependencyInjector().CreateAndInjectDependencies&lt;DuplicateBean>().rootBean;
+        var beans = new PDependencyInjector()
+          .CreateAndInjectDependencies&lt;DuplicateBean>()
+          .rootBean;
         beans.ListDatabases();
     }
     private void ListDatabases()

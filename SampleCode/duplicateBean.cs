@@ -1,4 +1,5 @@
 ﻿using PureDI;
+using PureDI.Attributes;
 
 [Bean]
 public class DuplicateBean

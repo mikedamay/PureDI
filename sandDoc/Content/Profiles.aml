@@ -45,13 +45,15 @@
 using System;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Attributes;
 
 public class Profiles
 {
     public static void Main()
     {
         PDependencyInjector pdi = new PDependencyInjector();
-        MyService ms = pdi.CreateAndInjectDependencies&lt;MyService>().rootBean;
+        MyService ms = pdi.CreateAndInjectDependencies&lt;MyService>()
+          .rootBean;
         Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
     }
 }
@@ -91,7 +93,7 @@ public class SomeTest
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
             , new PDependencyInjector(
-              Profiles: new[] { "test" }).CreateAndInjectDependencies
+              profiles: new[] { "test" }).CreateAndInjectDependencies
             &lt;MyService>().rootBean.DoStuff()
         );
 }

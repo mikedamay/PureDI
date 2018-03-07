@@ -87,6 +87,8 @@
             <para>The following illustrates simple usage:</para>
             <code>
 using PureDI;
+using PureDI.Attributes;
+
 [Bean]
 public class Program
 {
@@ -94,7 +96,8 @@ public class Program
     public static void Main()
     {
         PDependencyInjector pdi = new PDependencyInjector();
-        Program prog = pdi.CreateAndInjectDependencies&lt;Program>().rootBean;
+        Program prog = pdi.CreateAndInjectDependencies&lt;Program>()
+          .rootBean;
         prog.SaySomething();
     }
     private void SaySomething()
@@ -106,7 +109,7 @@ public class Program
 public class Logger
 {
     public void Log(string message) => System.Console.WriteLine(message);
-}
+}}
             </code>
             <para>
               In the above example the <legacyItalic>Program</legacyItalic> class is

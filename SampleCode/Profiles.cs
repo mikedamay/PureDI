@@ -1,6 +1,7 @@
 ﻿using System;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDI.Attributes;
 
 public class Profiles
 {
@@ -48,7 +49,7 @@ public class SomeTest
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
             , new PDependencyInjector(
-              Profiles: new[] { "test" }).CreateAndInjectDependencies
+              profiles: new[] { "test" }).CreateAndInjectDependencies
             <MyService>().rootBean.DoStuff()
         );
 }
