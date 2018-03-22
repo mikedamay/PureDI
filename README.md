@@ -71,36 +71,56 @@ browse to http://localhost:60653/
     TODO can we handle an object or type from some assembly as root which is not
     TODO a scanned assembly
     TODO Later: implement constructor parameters
-    TODO Later: allow arbitrary objects to be attached to the tree.
+    TODO allow arbitrary objects to be attached to the tree.  Provide them with
+	TODO a BeanSpec.  This should handle the case where there is a single implementation
+	TODO of some bean with multiple varying parameters.
     TODO Later: built-in factories for environement variables, command line arguments, config files
-    TODO Later: seed the tree with a specific implementation
     *** DONE Later: syntax colorisation in documentation
-    TODO Later: Code Analysis
-    TODO Later: deal with exceptions on nested calls to CreateAndInject...()
-    TODO Later: handle extern alias situations
+    TODO Code Analysis
+    TODO deal with exceptions on nested calls to CreateAndInject...()
+    TODO handle extern alias situations
     TODO Later: move documentation site to TheDisappointedProgrammer.com
     TODO Later: diagnostics combination functionality
     TODO Later: Make constructors so that we can inject readonly properties - maybe - probably not
     TODO Later: handle whether external interfaces are included or excluded from typeMap
     *** N/A Later: add tables to markdown
-    TODO Later: add references to help to diagnostics
-    TODO Later: rudimentary developer guide
+    TODO add references to help to diagnostics
+    TODO rudimentary developer guide
     TODO Later: look at MEF implementations - heard on dnr 8-8-17
     TODO Later: testing in untrusted environments
     TODO Later: ninject
-    TODO Later: spring
+    TODO spring
     *** DONE Later: ASP.NET
     TODO Later: Mass Test - 2 days
     TODO Later: red team: deep hierarchies
     TODO Later: red team: mix new and CreateAndInject...
     TODO Later: red team: self registering classes - that are also beans
-    TODO Later: PDependencyInjector or InjectionState should expose active
-    TODO Later: profiles, particularly for use by factories.
-    TODO Later: allow user to pass a flag to the injector constructor to treate warnings as errors
-    TODO Later: add an interface for PDependencyInjector
+    TODO PDependencyInjector or InjectionState should expose active
+    TODO profiles, particularly for use by factories.
+	TODO InjectionState should allow objects to be queried using BeanSpec.
+	TODO   Multiple items will be returned as appropriate
+    TODO Later: allow user to pass a flag to the injector constructor to treat warnings as errors
+    TODO add an interface for PDependencyInjector
     TODO docs: DI-OddsAndEnds examples for object cycles
     TODO docs: DI-Assemblies example of including a reference to PDependencyInjector
     TODO docs: in a factory bean
     *** N/A docs: example of assembly exclusion
     TODO docs: connect up summary and details in DesignRationale
-    TODO add debug message for Diagnostics to prevent it showing the view string - maybe
+    TODO Later: add debug message for Diagnostics to prevent it showing the view string - maybe
+	TODO Add "No lazy initialisation" to the list of limitations.
+	TODO Allow multiple profiles for a bean.  The difficulty here is in testing uniqueness and
+	TODO allowing the user to reason about it.  Perhaps set as limitation.
+	TODO Limitation - no init or cleanup methods
+	TODO Limitation - no aliasing
+	TODO Limitation - miss out on all the advantages of an external configuration, i.e orchestration.
+	TODO Limitation - no lookup-method-injection - rules out flyweight pattern.
+	TODO Limitation - no request, session, application, websocket or custom bean scope
+	TODO Limitation - no autowiring.  In Spring autowiring allows the inclusion of objects in the
+	TODO			  that are not explicitly marked as beans.
+	TODO Limitation - no equivalent of Spring's PropertyOverrideConfigurer
+	TODO LImitation - no abitrary method autowired injection.
+	TODO Limitation - no autowired collections
+	TODO Limitation - no indirect dependencies
+	TODO Limitation - beans can be associated with a single profile only
+	limitations are based on the IOC Container functionality of Spring Core Framework
+

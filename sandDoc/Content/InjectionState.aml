@@ -90,7 +90,8 @@ public class BigData
           <legacyItalic>to CreateAndInjectDependencies</legacyItalic> does not include a record of it.          
         </para>
         <para>
-          If the code is changed to pass <legacyItalic>transitoryState</legacyItalic> instead
+          If the code is changed to pass <legacyItalic>transitoryState</legacyItalic> to 
+          <codeInline>CreateAndInjectDependnecies</codeInline> instead
           of <legacyItalic>injectionState</legacyItalic> then BigData would be instantiated
           only the first time through the loop.  Instead of the result being consistently
           500,000,500,000, it will change each time it is printed doubling, times 3 etc.

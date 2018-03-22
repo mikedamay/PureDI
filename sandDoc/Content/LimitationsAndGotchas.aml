@@ -19,17 +19,10 @@
           <title>Limitations</title>
           <content>
             <list class="ordered">
-              <listItem>
+               <listItem>
                 <para>
-                  <legacyBold>Static Model: </legacyBold>The object model is fairly static.  Injections of singletons are associated with
-                  an injection state.  PureDI's reference to the injections is determined by
-                  the lifetime of a particular injection state object.
-                  </para>
-              </listItem>
-              <listItem>
-                <para>
-                  <legacyBold>Static Objects do not participate and cannot be included
-                  in any way in the injection mechanism</legacyBold>
+                  <legacyBold>Static classes</legacyBold> do not participate and cannot be included
+                  in any way in the injection mechanism
                 </para>
               </listItem>
               <listItem>
@@ -56,7 +49,7 @@
                   (for general use) and b) on the developer machine
                   both repositories should be <legacyItalic>LocalRepository</legacyItalic>.
                   In the first case we need the remote
-                  repository to have a bean <legacyBold>name</legacyBold>, say "remote" and
+                  repository to have a bean <legacyBold>name</legacyBold>, say "remote", and
                   in the second case a <legacyBold>profile</legacyBold>, say "dev",
                   but no <legacyBold>name</legacyBold>.
                 </para>
@@ -67,6 +60,102 @@
                   Alternatively the use of factories and factory parameters
                   could be considered.
                 </para>
+              </listItem>
+              <listItem>
+                <para>
+                  A comparison with Java's fully featured Spring container is informative.
+                </para>
+                <para>
+                  One key difference is the <legacyBold>absence of an external configuration</legacyBold> mechanism (in Spring's case
+                  , XML files) reduces the expressiveness and flexibility of PureDI in orchestrating
+                  alternative configurations say for a development versus a production environment or
+                  to meet the varying requirements of different customers.  PureDI does support
+                  multiple configurations that can be selected at runtime but the logic is distributed
+                  throughout the code base, thus limiting the ability to reason about the configuration.
+                </para>
+                <para>
+                  Perhaps the most serious limitation of PureDI is the <legacyBold>role of types</legacyBold> (classes and interfaces)
+                  as the sole mechanism for defining beans.  Spring provides the facility to define beans
+                  as instances through both XML and Java configuration.  A class such as a repository can be
+                  instantiated twice once with a local connection and once with a remote connection.  Although
+                  PureDi allows the library user to achieve the same effect by instantiating bean instances
+                  in code and injecting them into the object hierarchy, this unsystematic and hampers orchestration
+                  , reasoning about the configuration, static and runtime analysis.
+                </para>
+                <para>
+                  Many limitations can be worked around by instantiating beans before injecting them.
+                  Although this approach reduces expressiveness and flexibility it does allow functionality to
+                  be implemented in many cases without jettisoning the entire mechanism.
+                </para>
+                <para>
+                  The following limitations are evident from a comparison with Spring core framework: 
+                </para>
+                <listItem>
+                  <para>
+                  There are <legacyBold>no post-initialisation or pre-destruction</legacyBold> callbacks or entry points.  To work round this
+                  the library user can institute some sort of registry of call backs with which beans collaborate.               
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There is <legacyBold>no provision for the aliasing</legacyBold> of bean names
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There is no equivalent to Spring's <legacyBold>lookup-method injection</legacyBold>.  The "workaround" is to inject
+                    all beans at the entry point.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There are <legacyBold>no web-request, web-session, application, web socket or custom bean scopes</legacyBold>.  This is mitigated
+                    by the fact that beans can be effectively scoped under user control by the use of InjectionStates
+                    and appropriate coding at entry points.  It is notable that Spring assigns scope to a bean
+                    whereas PureDI assigns it to a reference.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    <legacyBold>No auto wiring</legacyBold>.  Spring allows the injection of non-spring-bean objects such as a third party repository.
+                    The natural workaround for this is to inject an object into the hierarchy.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There is <legacyBold>no equivalent of Spring's PropertyOverrideConfigurer</legacyBold> which supports a mechanism where values
+                    of member variables can be set by specifying their "object-path" in the configuration.  This is too complex
+                    for PureDI's approach.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There is <legacyBold>no injection via arbitrary methods.</legacyBold>  Spring allows logic outside the constructor to be identified
+                    as an injection point.  One or more beans can be injected by passing them as parameters.  This approach
+                    promoting expressiveness and flexibility is not available in PureDI.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    <legacyBold>Member variables that are collections cannot be handled</legacyBold> by PureDI.  The workaround is to use some sort
+                    of wrapper object.  Alternatively use of the constructor and multiple injected
+                    pre-instantiated objects could be used.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    There is no way to require that some bean is instantiated before other beans are
+                    created where the <legacyBold>dependency is indirect</legacyBold> (i.e. it is not realized in the object hierarchy.
+                    The PureDI library user must take responsibility for creating the dependency before
+                    instantiating the indirectly dependent beans.
+                  </para>
+                </listItem>
+                <listItem>
+                  <para>
+                    Beans are associated with a <legacyBold>single profile</legacyBold>.  This restriction limits the ways in which
+                    beans can be combined.
+                  </para>
+                </listItem>
               </listItem>
             </list>
           </content>
