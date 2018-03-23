@@ -176,8 +176,8 @@
               </listItem>
               <listItem>
                 <para>
-                  <legacyBold>Dangling Beans: </legacyBold>If a member is incorrectly marked as <codeInline>[BeanReference]</codeInline> then
-                  it will be set to its default value even if it is an initialized member.
+                  <legacyBold>Dangling References: </legacyBold>If a member is incorrectly marked as <codeInline>[BeanReference]</codeInline> then
+                  it will be set to its type's default value even if it is an initialized member.
                 </para>
                 <para>A warning will be reported in the diagnostics</para>
               </listItem>

@@ -110,17 +110,17 @@ browse to http://localhost:60653/
 	TODO Add "No lazy initialisation" to the list of limitations.
 	TODO Allow multiple profiles for a bean.  The difficulty here is in testing uniqueness and
 	TODO allowing the user to reason about it.  Perhaps set as limitation.
-	TODO Limitation - no init or cleanup methods
-	TODO Limitation - no aliasing
-	TODO Limitation - miss out on all the advantages of an external configuration, i.e orchestration.
-	TODO Limitation - no lookup-method-injection - rules out flyweight pattern.
-	TODO Limitation - no request, session, application, websocket or custom bean scope
-	TODO Limitation - no autowiring.  In Spring autowiring allows the inclusion of objects in the
-	TODO			  that are not explicitly marked as beans.
-	TODO Limitation - no equivalent of Spring's PropertyOverrideConfigurer
-	TODO LImitation - no abitrary method autowired injection.
-	TODO Limitation - no autowired collections
-	TODO Limitation - no indirect dependencies
-	TODO Limitation - beans can be associated with a single profile only
-	limitations are based on the IOC Container functionality of Spring Core Framework
+	*** DONE Limitation - no init or cleanup methods
+	*** DONE Limitation - no aliasing
+	*** DONE Limitation - miss out on all the advantages of an external configuration, i.e orchestration.
+	*** DONE Limitation - no lookup-method-injection - rules out flyweight pattern.
+	*** DONE Limitation - no request, session, application, websocket or custom bean scope
+	*** DONE Limitation - no autowiring.  In Spring autowiring allows the inclusion of objects in the
+	*** DONE			  that are not explicitly marked as beans.
+	*** DONE Limitation - no equivalent of Spring's PropertyOverrideConfigurer
+	*** DONE LImitation - no abitrary method autowired injection.
+	*** DONE Limitation - no autowired collections
+	*** DONE Limitation - no indirect dependencies
+	*** DONE Limitation - beans can be associated with a single profile only
+	*** limitations are based on the IOC Container functionality of Spring Core Framework
 

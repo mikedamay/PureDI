@@ -145,8 +145,8 @@ public interface IRepository2
     </section>
 
     <relatedTopics>
-      <codeEntityReference>T:PureDI.IFactory</codeEntityReference>
-      <codeEntityReference>T:PureDI.BeanReferenceAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.IFactory</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanReferenceAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

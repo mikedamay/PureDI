@@ -66,7 +66,10 @@
                 <listItem>
                   <para>
                     There may be occasions, for example, when running unit tests on the library source
-                    where it 
+                    where it is troublesome to have the "root" assembly included in the set of
+                    assemblies to be scanned.  To address this the optional parameter <codeInline>
+                      ignoreRootTypeAssembly
+                    </codeInline> can be passed in, set to true.  If so the root assembly will not be scanned.
                   </para>
                 </listItem>
               </list>
