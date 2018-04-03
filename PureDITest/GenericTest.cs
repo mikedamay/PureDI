@@ -1,6 +1,7 @@
 ﻿using PureDI;
 using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -46,6 +47,13 @@ namespace IOCCTest
         {
             WrapperUser wu = new PDependencyInjector().CreateAndInjectDependencies<WrapperUser>().rootBean;
             Assert.IsNotNull(wu?.Nested);
+        }
+        [TestMethod]
+        public void ShouldInjectBeanFromGenericInterface()
+        {
+            (var result, var diagnostics) = CreateAndRunAssembly("GenericTestData", "Generic");
+            Assert.AreEqual(0, result.GetResults().Value);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
     }
 }

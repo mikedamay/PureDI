@@ -188,8 +188,8 @@ namespace PureDI
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
-            newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
-            newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultBeanName)] = rootObject;
+            newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultConstructorName)] = this;
+            newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultConstructorName)] = rootObject;
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
             return (rootObject, newInjectionState);
@@ -211,7 +211,7 @@ namespace PureDI
             IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
             Assembly[] assemblies;
             (_, typeMap, mapObjectsCreatedSoFar, assemblies) = injectionState;
-            injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultBeanName)] = this;
+            injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultConstructorName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
             if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
