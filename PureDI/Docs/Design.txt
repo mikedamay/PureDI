@@ -1,0 +1,8 @@
+﻿
+Typemap contains relationships between the types of potential references and the required implementation.
+
+mapObjectsCreatedSoFar (member of injection state) contains each implementation injected together with bean name and constructor name
+
+The typemap needs to indicate the difference between a generic reference and a non-generic reference.
+
+

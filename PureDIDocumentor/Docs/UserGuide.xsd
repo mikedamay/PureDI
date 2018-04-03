@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="UserGuide">
+      <xs:complexType>
+        <xs:sequence>
+        <xs:element name="group" maxOccurs="unbounded">
+          <xs:complexType>
+          <xs:sequence>
+            <xs:element name="topic" type ="xs:string"/>
+            <xs:element name="userGuideTitle" type ="xs:string"/>
+            <xs:element name="userGuide" >
+              <xs:complexType mixed="true">
+                  <xs:sequence>
+                    <xs:element name="div" minOccurs="0" maxOccurs="1">
+                      <xs:complexType mixed="true">
+                          <!--<xs:sequence>
+                            <xs:element name="pre" minOccurs="1" maxOccurs="1">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element name="code" minOccurs="1" maxOccurs="1"/>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:sequence>-->
+                          <xs:attribute name="class" type="xs:string" use="required" fixed="pre-scrollable"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+              </xs:complexType>
+            </xs:element>            
+            <xs:element name="userGuideSeeAlso" type ="xs:string"/>
+          </xs:sequence>      
+          </xs:complexType>
+        </xs:element>
+        </xs:sequence>        
+      </xs:complexType>
+  </xs:element>
+</xs:schema>

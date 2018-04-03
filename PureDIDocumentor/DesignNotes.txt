@@ -1,0 +1,15 @@
+﻿DocumentationSiteGenerator (created by Startup ConfigureServices)
+						   (GenerateSite is invoked at the start of App.Run )
+	IOCCDocumentParaer (for user guide - takes resource id of doc)
+		CodeFetcher
+		IOCCXPathNavigatorCache - prototype (resource id is assigned by the factory)
+	IOCCDocumentParser (for diagnostics - takes resource id of doc)
+
+	In summary communicating the resource id from the DocumentationSiteGenerator
+	where it is specified to the customized navigation cache where it is used
+	is through the IOCCDocumentParserAttribute which is the factory which
+	passes the resource id to the navigation cache's constructor.  The injector
+	subsequently instantiates the navigation cache and when it is assigned to
+	the IOCCDocumentParser the resource id is assigned to the navigation cache's
+	resource id member.  On assignment the cache creates an XPathNavigator using
+	an XPathNavigator factory (also provided by IOCCDocumentParserAttribute).

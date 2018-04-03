@@ -15,7 +15,7 @@ namespace SimpleIOCCDocumentor
     public class DocumentationSiteGenerator : IDocumentationSiteGenerator
     {
         // very wasteful to instantiate the parsers 2x.
-        // we really need constructor paraemters
+        // we really need constructor parameters
         [IOCCDocumentParser(
             DocumentPath: "PureDI.Docs.UserGuide.xml"
             , XmlRoot: Constants.UserGuideRoot)]

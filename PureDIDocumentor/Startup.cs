@@ -19,8 +19,7 @@ namespace SimpleIOCCDocumentor
         {
             PDependencyInjector pdi = new PDependencyInjector(profiles: new string[] {"authoring"});
             InjectionState injectionState;
-            object gc;
-            (gc, injectionState) =
+            (_, injectionState) =
                 pdi.CreateAndInjectDependencies(new GenericConfig(("relativePath", "../../../../Simple")))
                 ;
             diagnostics3 = injectionState.Diagnostics;

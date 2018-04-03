@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UserGuide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="file://. UserGuide.xsd">
+  <group>
+    <topic>Introduction</topic>
+    <userGuideTitle>Introduction to PDependencyInjector</userGuideTitle>
+    <userGuide>
+The PDependencyInjector (Simple Inversion of Control Container) is a
+C# library providing a Dependency Injection (DI) framework promoting 
+simplicity, transparency and verifiability.
+
+It is available from nuget.org with the following command:
+
+```
+install-package TheDisappointedProgrammer.PDependencyInjector -version 0.1.0-alpha
+```
+
+Source code is available at [https://github.com/mikedamay/PDependencyInjector.git](https://github.com/mikedamay/PDependencyInjector.git)
+
+This documentation is located at [http://mikedamay.co.uk/Simple/index.html](http://mikedamay.co.uk/Simple/index.html)
+
+Usage follows a simple pattern: the caller instantiates some significant object
+with a call to ```PDependencyInjector.CreateAndInjectDependnecies``` and that
+object is instiated together with dependencies to which it refers
+and so forth recursively through the tree of dependencies.
+
+The call to *CreateAndInjectDependencies* is typically made at program
+startup.  The framework is principally concerned with singletons that
+have the same life span as the program.
+
+A simple example (Introduction.cs) is as follows:
+
+<div class="pre-scrollable">
+
+```  
+{code-introduction.cs}
+```
+
+</div>
+
+
+### Notes
+
+* Classes to be injected are annotated with the `[Bean]` attribute.
+* Classes where a bean is to be injected must also be marked as beans
+* The site of the injection is annotated with the `[BeanReference]` attribute
+* The type of a member variable where a bean is to be injected 
+should an interface, a direct or indirect base class of the bean or the the class
+that implements the bean
+* Once ```CreateAndInjectDependencies``` has been called all beans will have 
+been instantiated and assigned to any matching bean references.  Typically, calls
+will only be made to the container, subsequently, if the program has other
+entry points
+
+### See Also
+
+[Assemblies (or An early gotcha)](/Simple/diagnosticSchema/MissingBean.html)
+
+[Profiles (or why else bother with DI)](/Simple/UserGuide/Profiles.html)
+
+[Limitations &amp; Gotchas(or why you will hate me)](/Simple/UserGuide/LimitationsAndGotchas.html)
+
+[Design Rationale (or why!!!)](/Simple/UserGuide/DesignRationale.html)
+
+[Glossary](/Simple/UserGuide/Glossary.html)
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>Profiles</topic>
+    <userGuideTitle>Profiles</userGuideTitle>
+    <userGuide>
+
+The essential purpose of dependency injection is to
+allow classes to be used by some class in the program
+to be swapped out without need to recode the calling
+class in any way.
+
+With the PDependencyInjector we accomplish that by
+allowing a profile string to be associated with any
+bean (class to be instantiated) by including
+the string as a parameter to the *[Bean]* attribute.
+The container can
+be set up with a matching profile to ensure a
+matching set of beans are instantiated.
+
+The archetypal case is for testing which
+is particularly pertinent for the PDependencyInjector
+with its emphasis on injection into private
+member variables.
+
+The following example shows how mock functionality
+can be injected:
+
+<div class="pre-scrollable">
+
+```  
+{code-Profiles.cs}
+```
+
+</div>
+
+Note:
+
+* The *myRepository bean* is referenced through an interface (*IMyRepository*)
+that the bean's class implements.
+Base classes can perform the same role as interfaces provided that they
+are not themselves marked as beans.
+* There are two implementations of the interface: 
+MyRepository which is the "production" implementation and *MyTestRepository*
+available for testing purposes.
+* The main program does not pass a profile when it creates the *PDependencyInjector*.
+  Therefore the production version of IMyRepository is instantiated.
+Howver the unit test passes a profile of "test" which matches the profile
+for *MyTestRepository* and allows the repository to be mocked when testing *MyService*.
+* *CreateAndInjectDependencies* will select a bean with a matching profile or, in the
+absence of a matching bean, a bean with no profile.
+* It is possible (and, in fact, usual) to specify multiple profiles to the 
+*PDependencyInjector* constructor.  This enables fine grained control at run-time
+of which implementations are to be used.
+
+See Also:
+
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/BeanNames.html)
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>DesignRationale</topic>
+    <userGuideTitle>Design Rationale</userGuideTitle>
+    <userGuide>
+Three aspirations underly the design of the container:
+
+* Simplicity
+* Transparency
+* Verifiability
+
+#### Simplicity
+
+In the interests of simplicity the libraries surface area is restricted to:
+
+* A single significant operational class `PDependencyInjector` coupled with 3 enums
+* A single constructor for the container and a single 
+method `CreateAndInjectDependencies` albeit with 4 overloads
+* The Diagnostics class and its components which for most purposes can be 
+ignored except to list warnings with `ToString()`
+* 4 attributes `[Bean]`, `[BeanReference]` etc. for identifying injectables and the 
+sites where they can be injected plus some ancillary "value" classes such as `BeanFactoryArgs`
+* 4 base classes for users to derive their own attributes 
+(not-so-simple but can be safely ignored)
+* 3 exception classes - all trivial
+* There is only one way to define the injectables and injection sites, i.e. by
+the use of attributes.  There is no XML alternative or privileged configuration
+by code.
+* The library is lightweight with no non-Microsoft dependencies
+
+#### Transparency
+
+Transparency is in evidence through the lack of "magic" such as
+AOP (Aspect Oriented Programming) or code generation.  The only
+magic is the actual injection using basic reflection.  The
+requirement to consistently mark injectables and injection sites
+with attributes ([Bean] and [BeanReference] respectively)
+is seen as promoting transparency - the coder's
+intention is very clear to those who come after.
+
+The requirement for the library user to specify which assemblies
+should be subject to injection also supports this aspiration.
+
+The implementation of the library is simple and is described
+elsewhere.  This will hopefully allow coders to reason about
+the container when tackling edge cases.
+
+The code tries to promote type safety but this is not always
+possible - see bean factories, for example.
+
+#### Verifiability
+
+The "configuration-over-convention" approach which provides transparency
+also helps with the third aspiration of Verifiability.  By insisting
+that he user explicitly states their intention to inject functionality
+but the use of `[Bean]` and `[BeanRefererne]` attributes we can
+provide rich diagnostics so that when things don't work the coder
+can investigate in some depth.  The `Diagnostics` object provides
+full details of anomalies discovered when carrying out the injections.
+
+As part of this aspiration there is a more concrete aspiration (for a later version) to
+build code analyzers so that much of the validation can be done at
+compile time rather than run-time.
+
+### Trade-offs
+
+Fulfilling such aspirations comes at a cost.
+
+* Overhead requiring the attribute boilerplate
+* Absence of hooks for 3rd party frameworks which might otherwise use the container
+* Possibly some minor performance degradation caused by diagnostic collection
+* The object model is static - although new objects can be added at program entry points
+there is no facility to remove anything.  This will be addressed in the case of
+request and session scope objects for web applications in a future version.  In
+the mean time where this is necessary beans will have to be created with Prototype scope
+* There is an absence of convenience/shortcut injections such as allowing values
+to be substituted at the point of injection from a configuration file or the environment
+* A bean reference cannot have parameters which makes creating multiple objects with
+the same implementation class but different parameters difficult.
+* The library is dotnetstandard 2.0 using C# 7.1.
+* You cannot simply stick a bean reference on some bean
+and expect injection to take place.  It must be in the graph produced by
+`CreateAndInjectDependencies`.
+
+### Motivation
+
+The author used [Java-Spring](http://spring.io) for 5 years.  I thought Spring was an
+excellent, well architected, well documented robust and reliable framework.  It was
+particularly suitable for enterprise computing where a consistency of approach in the
+team and across teams to core functionality, persistence, web MVC, SOAP, REST,
+security, batch processing etc. has a lot to be said for it.  However I found (
+albeit picking up the framework in conjunction with a brown-field project which
+had been worked on by a variety of developers with a variety of skill levels)
+that Spring's ability to do a great deal for the coder behind the scenes was not
+my preferred approach.  In particular the AOP involved in enforcing database
+transactions was a piece of "magic" too far.  A lot of the design decisions here
+are a reaction against the that aspect of Spring.  However I acknowledge the Spring framework as a towering
+achievement.
+
+[Limitations &amp; Gotchas(or why you will hate me)](/Simple/userGuide/LimitationsAndGotchas.html)
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>LimitationsAndGotchas</topic>
+    <userGuideTitle>Limitations &amp; Gotchas</userGuideTitle>
+    <userGuide>
+#### Limitations
+
+1. The object model is static - although new objects can be added at program entry points
+there is no facility to remove anything.  This will be addressed in the case of
+request and session scope objects for web applications in a future version.  In
+the mean time where this is necessary beans will have to be created with Prototype scope
+2. `static` classes and members are not handled
+3. `readonly` properties cannot have their value set by injection.  A constructor
+or field must be involved.
+is called.
+4. Variadic constructors are not supported
+5. It is not possible to combine alternative implementations with parallel implementations.
+Suppose we have an IRepository interface and two concrete classes that implement it say
+ILocalRepository and IRemoteRepository.  We cannot fulfill a reqauirement where a) in 
+production some classes need the LocalRepository (say for configuration settings) and
+some classes the RemoteRepository (for general use) and b) on the developer machine
+both repositories should be LocalRepository.  In the first case we need the remote 
+repostory to have a bean **name**, say "remote" and in the second case a **profile**
+but no **name**.
+
+#### Gotchas
+
+1. If a member is incorrectly marked as [IOCCBeanReference] then
+it will be set to its default value even if it is an initialized member
+2. Factories must both have a `[bean]` attribute and implement `IFactory`.  If a factory
+has only one of these then this will be recorded in diagnostics (`Diagnostics`)
+3. A risk, particularly with multiple entry points, is that the coder will forget
+to include required assemblies when the container is created
+4. If a number of beans implement some widely used interface such as `IEnumerable of T` then
+each implementing class involved will require bean names so that the container can
+select the appropriate bean for a given injection whith the widely used type
+5. For factories the bean name (if present) refers to the selection of the factory.
+It does not relate in any way to the class which is instantiated by the factory
+6. `CreateAndInjectDependencies()` is not thread safe
+7. As you would expect beans have not been injected when the class's constructor
+8. Avoid processing in beans' constructors.  There is a risk of inadvertently
+accdssing beans that have not been subject to injection.
+9. There is no magic.  You cannot simply stick a bean refererence on some bean
+and expect injection to take place.  It must be in the graph produced by
+`CreateAndInjectDependencies`.
+10. If you specify the root bean of the object tree with an interface, make sure
+that either that interface is declared in the main assembly subject to injection
+or that the assembly is passed as a parameter to the mechanism's constructor.
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>Glossary</topic>
+    <userGuideTitle>Glossary</userGuideTitle>
+    <userGuide>
+#### Bean
+
+The documentation uses the term, _Bean_, rather loosely.  It refers either to a class
+marked with the `[Bean]` attribute which is ready to be injected into
+some other class by the container.  The name may seem a little misleading
+as beans imply something small and uniform.  You might expect the name
+to apply to value objects such as DTOs but beans are more typically singletons
+such as services or repositories.  Blame [Spring](http://spring.io).
+
+Alternatively, the term bean is used to refer to an instantiated object of such a class.
+
+#### Injection
+
+_Injection_ is the process of assignment by the container of some object
+to the member variable or constructor parameter of some other object.  It sometimes
+loosely extended to include the creation of the ineected object.
+
+#### Dependency
+
+The documentation uses the term, _Dependency_, to refer to the relationship
+between two classes where one is an class to be injected and the other
+has a member which refers to the bean.
+
+#### Injectable
+
+More descriptive synonym for a bean.
+
+#### Injection Site
+
+Either a member variable or a constructor parmeter marked as a `[BeanReference]`
+
+#### (Object) Tree
+
+Also known as the object model.  This is a conceptual construct which sees
+the objects related by a set of injections with a root object (being the
+type passed to `CreateAndInjectDependnecies`.
+
+#### Container
+
+The container controls the creation of the object tree and retains meta
+data so that additions can be made to the tree at subsequent entry points
+to the program.
+
+#### Prototype
+
+This terminology is borrowed from Spring rather than javascript or
+the GOF design patern.  The object created to be assigned to a
+`[BeanReference(Scope=Scope.Prorotype]` marked as a prototype is 
+is not make part of the object tree but treated as a one-off.
+
+#### Singleton
+
+This term is typically applied to services, repositories or other objects
+orchestrating the workflow of the application.  There tends to be only
+one of each type of object fulfilling a particular role.
+
+#### RootType / RootObject
+
+`CreateAndInjectDependency` takes a type known as the _RootType_ as #
+a starting point for injection.  It examines each of that type's 
+`[BeanReference]` occurrences and in eah case creates an appropriate
+bean which it assigns to the member or the constructor parameter.
+Alternatively, if the bean has been created for some prior reference
+then it simply assigns the same instance.  This the container
+works its way through a conceptual tree (more accurately, a graph) and
+following the same procedure.
+
+`CreateAndInjectDependencies` returns an object of _Root Type_ and This
+is known as the _Root object_.  In many cases it will a call to 
+a method of this object that kicks of processing within the application.
+
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>OddsAndEnds</topic>
+    <userGuideTitle>Odds &amp; Ends</userGuideTitle>
+    <userGuide>
+### Object Cycles
+
+Problems may arise where objects directly or indirectly refer to themselves.
+  In the case of member variables this kind of cyclical reference is allowed.
+  In the case of constructor parameters an exception is thrown if
+an attempt is made to inject an object into the constructor of a declaring object
+of the same type.  This is for the obvious reason that infinite recursion would result.
+
+### Ignnore Interface (`[IOCCIgnore]`)
+
+The IOCCIgnore attribute can be annotated to any interface or class.  It addresses
+the case where some interface is implemented by multiple bean classes but is not used
+as a bean reference.  It will cause the container not to report the multiple implementations
+as duplicates.  It would be applied to sone user-inspired equivalent of IComparable or
+ISerializable.
+
+### Attribute Base Classes
+
+The `[Bean]`, `[BeanReference]`, `[Constructor]` and `[IOCCIgnore]` attributes
+are sealed classes.  In each case there is an equivalent base class #
+from which user defined classes can be derived.  This might be useful
+if there was a requirement for some complex factoory with a number of parameters
+that could be named.
+
+The following:
+
+```
+[BeanReference(Factory=typeof(EnvironmentVariableFetcher), FactoryParam="MyEnvVar")]
+private string _someEnvVar;
+```
+
+would look much more approachable as:
+
+```
+[EnvironmentVariable(VariableName: "MyEnvVar)]
+private string _someEnvVar;
+```
+
+This can be achieved with:
+
+```
+public class EnvironementVariableAttribute : BeanReferenceBaseAttribute
+{
+  public EnvironementVariableAttribute(string VariableName )
+  {
+    base.Factory = typeof(EnvironmentVariableFetcher);
+    base.FactoryParam = VariableName;
+  }
+}
+
+```
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>BeanFactory</topic>
+    <userGuideTitle>Bean Factories</userGuideTitle>
+    <userGuide>
+In some situations there is no straightforward way for the container
+to know how to create a required bean.  For instance a repository might need
+to be connected to its database before it can be injected.
+
+This problem is overcome with the use of bean factories.
+
+A factory is specified as a parameter to the BeanReference attribute.
+  So instead of creating some implementation of the member variable
+type, the container calls the execute method of the factory which
+creates and provides an object of the appropriate type.
+
+A factory parameter (`FactoryParameter`) specified on the bean reference
+can optionally be passed to the factory's execute method.
+
+The following code provides a simple example.
+
+<div class="pre-scrollable">
+
+```  
+{code-FactoryUser.cs}
+```
+
+</div>
+
+
+Note:
+
+* Classes over which the library user has no control can
+be injected using factories.  This can include strings, ints etc.
+* Factories must be marked with the `[Bean]` attribute
+* Factories must implement the `IFactory` interface
+* Many use cases not covered by other mechanisms can be
+addressed with the use of bean factories.
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>InjectionByConstructor</topic>
+    <userGuideTitle>Injection by Constructor</userGuideTitle>
+    <userGuide>
+It is not always convenient to inject beans directly into the
+member variables of an object.  Apart from accommodating existing
+code there are cases where processing is required on the injected
+beans before the declaring object is ready for use.  Finally,
+there are cases where different injections require different
+constructors to be called.
+
+In the case of multiple constructors the bean reference takes
+a `ConstructorName` parameter which is matched up to a name
+passed to the `[Constructor]` attribute.
+
+The following code illustrates a simpple implementation:
+
+<div class="pre-scrollable">
+
+```  
+{code-ConstructorUser.cs}
+```
+
+</div>
+
+
+
+
+Notes:
+
+
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>BeanNames</topic>
+    <userGuideTitle>Bean Names and Multiple Implementations</userGuideTitle>
+    <userGuide>
+Bean names address the case where there are multiple implementations of
+some interface and a bean reference needs to specify which implementation is required.
+This is achieved by passing a `Name` property to the `[BeanReference]` attribute.
+
+The following code (BeanNames.cs) illustrates this:
+<div class="pre-scrollable">
+
+  ```
+  {code-duplicateBean.cs}
+  ```
+
+</div>
+
+Note:
+
+* The bean reference can specify an interface (or a base class as long as it is
+not itself a bean) as an alternative to specifiying
+the implementation class.  It is left up to the
+container to associate the reference with a concrete class.
+* In the above example two repositories are instantiated; one for sql server
+and one for Mongo.  They both have share an interface but the container
+uses the name specified in the bean reference to select the appropriate
+implementation.
+* If no name is spacified then this is equivalent to an empty string.  Unlike the case with
+_Profiles_ if no bean is found with a name matching that of the bean reference
+then the bean instantiation will fail.
+* Bean names are case insensitive.
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+  <group>
+    <topic>BeansAndNonBeans</topic>
+    <userGuideTitle>Beans and non-Beans</userGuideTitle>
+    <userGuide>
+Any concrete class or struct over which you control the
+source can be marked as a bean by applying the `[Bean]` attribute
+to the class declaration.
+
+Primitive types (such as int, string) etc. cannot be beans.
+An attempt to make them beans results in a compiler error.
+
+Interfaces, abstract classes and static classes cannot be beans.
+A run-time warning will be recorded in the _Diagnostics_ object.
+
+An inherited class cannot be a bean if any of its derived classes
+are beans (unless the inherited bean is given a different bean name
+to that of the derived bean or one of them has a matching profile
+and the other does not).  (Without
+a bean name to distinguish them there is no way for the container
+to determine whether a reference to the inherited class is intended
+to refer to the inherited class itself or a derived class.)  Alternatively
+if you mark the inherited bean as `[IOCCIgnored]` then both beans can be
+injected but only through their respective implementation class types.
+
+### See also
+
+[Bean Names (or one interface - two implementations)](/Simple/DiagnosticSchema/BeanNameshtml)
+
+[Profiles (or why bother with DI)](/Simple/userGuide/Profiles.html)
+    </userGuide>
+    <userGuideSeeAlso/>
+  </group>
+
+</UserGuide>

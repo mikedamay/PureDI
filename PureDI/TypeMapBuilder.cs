@@ -16,14 +16,13 @@ namespace PureDI
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
             Dictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
-//              = WouldBeImmutableDictionary.CreateBuilder<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs
                   = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
                   => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                   .Select(i => ((i, d.GetBeanName()), d))).OrderBy(b => b.Item2.FullName);
-                        // only sorting so that testing will cover a couple of tricky branches.
+                        // only sorting so that unit testing is easier.
                 // 'inferred' names for tuple elements not supported by
                 // .NET standard - apparently a 7.1 feature - it doesn't seem to work for me
                 Type beanInterface;
@@ -38,11 +37,11 @@ namespace PureDI
                     if (beanImplementation.IsValueType && beanInterface != beanImplementation)
                     {
                         // this is a struct and dependencyInterface is System.ValueType which
-                        // should be hidden, so we ignore it
+                        // should be hidden, so we ignore it.  Not sure when this crops up.  Maybe enums.
                         continue;
                     }
                     if (beanImplementation.IsAbstract && beanImplementation.IsSealed)
-                    {
+                    {       // IsStatic
                         Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
                         dynamic diag = group.CreateDiagnostic();
                         diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
@@ -61,7 +60,7 @@ namespace PureDI
                     {
                         if (map.ContainsKey((beanInterface, name)))
                         {
-                            BestFit bestFit = QueryRemoveDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
+                            BestFit bestFit = GetBestDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
                             if (bestFit == BestFit.Duplicate)
                             {
                                 Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
@@ -89,7 +88,8 @@ namespace PureDI
             return map;
         }
         enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
-        private BestFit QueryRemoveDuplicate(IDictionary<(Type, string), Type> map
+        // favor beans with a specific profile over those without a profile.
+        private BestFit  GetBestDuplicate(IDictionary<(Type, string), Type> map
           , (Type beanInterface, string name) beanId, Type beanImplementation, ISet<string> profileSet)
         {
             Assert(map.ContainsKey(beanId));
