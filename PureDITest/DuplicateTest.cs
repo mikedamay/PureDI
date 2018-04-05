@@ -41,7 +41,23 @@ namespace IOCCTest
               .injectionState.Diagnostics;
             System.Diagnostics.Debug.WriteLine(diagnostics);
             Assert.IsFalse(diagnostics.Groups["DuplicateBean"]
-              .Occurrences.Any(diag => ((dynamic)diag).Interface.Contains( "MuchoInterface")));
+              .Occurrences.Any(diag => ((dynamic)diag).Interface1.Contains( "MuchoInterface")));
+        }
+
+        [TestMethod]
+        public void ShouldPreferSpecificOs()
+        {
+            Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.PreferredOs.cs");
+            PDependencyInjector pdi = new PDependencyInjector();
+            Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
+              "IOCCTest.DuplicateTestData.PreferredOs"
+              ,assemblies: new Assembly[] { assembly}
+              )
+              .injectionState.Diagnostics;
+            System.Diagnostics.Debug.WriteLine(diagnostics);
+            Assert.IsFalse(diagnostics.Groups["DuplicateBean"]
+              .Occurrences.Any(diag => ((dynamic)diag).Interface1.Contains( "MuchoInterface")));
+            
         }
     }
 }

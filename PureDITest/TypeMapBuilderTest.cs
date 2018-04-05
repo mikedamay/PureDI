@@ -134,6 +134,25 @@ namespace IOCCTest
         }
 
         [TestMethod]
+        public void ShouldWarnOfStaticClassAsBean()
+        {
+            Assembly assembly = Utils.CreateAssembly(
+                $"{Utils.TestResourcePrefix}.TestData.StaticClass.cs");
+            Diagnostics diagnostics;
+            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+                $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
+            {
+                diagnostics = new DiagnosticBuilder(stream).Diagnostics;
+                
+            }
+            var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
+                new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), Os.Any);
+            Assert.AreEqual(Utils.LessThanIsGoodEnough(1, diagnostics.Groups["InvalidBean"].Occurrences.Count)
+                , diagnostics.Groups["InvalidBean"].Occurrences.Count);
+
+        }
+
+        [TestMethod]
         public void ShouldFilterTypesBasedOnProfileAndOS()
         {
             IDictionary<(string, string), string> mapExpected = new Dictionary<(string, string), string>()

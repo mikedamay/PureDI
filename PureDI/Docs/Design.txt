@@ -5,4 +5,14 @@ mapObjectsCreatedSoFar (member of injection state) contains each implementation 
 
 The typemap needs to indicate the difference between a generic reference and a non-generic reference.
 
+a) The typemap maps a relationship between the type of an implementation (bean) and all the interfaces and classes in
+the class hierarchy through which it can be referenced including the type of the implementation itself.
+b) It should report cases where duplicate beans exist for some interface or parent class.
+c) Beans with a matching profile or no profile should be included.  Beans with a non-matching profile are completely ignored.
+d) Where multiple beans exist derived from some interface or parent class then the typemap should include
+the bean with a matching profile in preference to one with no profile.
+e) Beans with any OS or matching OS should be included.
+f) Where there is a choice between a bean with a matching OS and one with any OS then the matching one should be used.
+g) If there is a bean with any OS and a matching profile and a bean with a matching OS but no profile then the one
+   with the matching profile is selected and the other is reported as an issue.
 

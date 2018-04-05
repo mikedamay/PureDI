@@ -48,6 +48,7 @@
     <Compile Remove="DifficultTypeTestData\Unreachable.cs" />
     <Compile Remove="DuplicateTestData\Duplicate.cs" />
     <Compile Remove="DuplicateTestData\Os.cs" />
+    <Compile Remove="DuplicateTestData\PreferredOs.cs" />
     <Compile Remove="EntryPointTestData\RootInterface.cs" />
     <Compile Remove="FactoryTestData\AccessByString.cs" />
     <Compile Remove="FactoryTestData\BadFactory.cs" />
@@ -97,6 +98,7 @@
     <Compile Remove="TestData\NestedClasses.cs" />
     <Compile Remove="TestData\NonBeanDerivedFromBean.cs" />
     <Compile Remove="TestData\SingleImplementation.cs" />
+    <Compile Remove="TestData\StaticClass.cs" />
     <Compile Remove="TestData\StructDependency.cs" />
     <Compile Remove="TestData\TreeWithFields.cs" />
     <Compile Remove="ValidatorTestData\ComplexNonBeanFactory.cs" />
@@ -153,6 +155,7 @@
     <EmbeddedResource Include="DifficultTypeTestData\Tuple.cs" />
     <EmbeddedResource Include="DuplicateTestData\Duplicate.cs" />
     <EmbeddedResource Include="DuplicateTestData\Os.cs" />
+    <EmbeddedResource Include="DuplicateTestData\PreferredOs.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithName.cs" />
     <EmbeddedResource Include="FactoryTestData\ThrowsException.cs">
@@ -176,6 +179,7 @@
     <EmbeddedResource Include="TestData\IgnoredBean.cs" />
     <EmbeddedResource Include="TestData\NamedBeanBase.cs" />
     <EmbeddedResource Include="TestData\NonBeanDerivedFromBean.cs" />
+    <EmbeddedResource Include="TestData\StaticClass.cs" />
     <EmbeddedResource Include="ValidatorTestData\ComplexNonBeanFactory.cs" />
     <EmbeddedResource Include="ValidatorTestData\Constructors.cs" />
     <EmbeddedResource Include="ValidatorTestData\ConstructorsWithMultipleAttributes.cs" />

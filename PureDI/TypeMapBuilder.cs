@@ -19,74 +19,76 @@ namespace PureDI
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs
-                  = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
-                  => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                  .Select(i => ((i, d.GetBeanName()), d))).OrderBy(b => b.Item2.FullName);
-                        // only sorting so that unit testing is easier.
-                // 'inferred' names for tuple elements not supported by
-                // .NET standard - apparently a 7.1 feature - it doesn't seem to work for me
+                    = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
+                        => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
+                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(b => b.ImplementationType.FullName);
+                    // only sorting so that unit testing is easier.
                 Type beanInterface;
                 string name;
                 Type beanImplementation;
-                foreach (((Type beanInterfaceArg, string nameArg) beanInterfaceAndName, Type beanImplementationArg) beanId in wellFormedBeanSpecs)
-                {
-                    beanInterface = beanId.beanInterfaceAndName.beanInterfaceArg;
-                    name = beanId.beanInterfaceAndName.nameArg;
-                    beanImplementation = beanId.beanImplementationArg;
+                var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
+                  && !bs.IsImplementationStatic && !bs.IsImplementationAbstract);
+                var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
+                  bs.IsImplementationStatic || bs.IsImplementationAbstract);
+                    // not sure why we don't log enums as invalid beans
+                LogInvalidBeans(diagnostics, invalidBeanSpecs);
 
-                    if (beanImplementation.IsValueType && beanInterface != beanImplementation)
+
+                foreach (BeanSpec beanSpec in validBeanSpecs)
+                {
+                    beanInterface = beanSpec.InterfaceType;
+                    name = beanSpec.BeanName;
+                    beanImplementation = beanSpec.ImplementationType;
+
+                    if (map.ContainsKey((beanInterface, name)))
                     {
-                        // this is a struct and dependencyInterface is System.ValueType which
-                        // should be hidden, so we ignore it.  Not sure when this crops up.  Maybe enums.
-                        continue;
-                    }
-                    if (beanImplementation.IsAbstract && beanImplementation.IsSealed)
-                    {       // IsStatic
-                        Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
-                        dynamic diag = group.CreateDiagnostic();
-                        diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
-                        diag.ClassMode = "static";
-                        group.Add(diag);
-                    }
-                    else if (beanImplementation.IsAbstract)
-                    {
-                        Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
-                        dynamic diag = group.CreateDiagnostic();
-                        diag.AbstractOrStaticClass = beanImplementation.GetIOCCName();
-                        diag.ClassMode = "abstract";
-                        group.Add(diag);
-                    }
-                    else
-                    {
-                        if (map.ContainsKey((beanInterface, name)))
+                        BestFit bestFit = GetBestDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
+                        if (bestFit == BestFit.Duplicate)
                         {
-                            BestFit bestFit = GetBestDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
-                            if (bestFit == BestFit.Duplicate)
-                            {
-                                Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
-                                dynamic diag = group.CreateDiagnostic();
-                                diag.Interface1 = beanInterface.GetIOCCName();
-                                diag.BeanName = name;
-                                diag.NewBean = beanImplementation.GetIOCCName();
-                                diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
-                                group.Add(diag);
-                                continue;       // don't add the new one - we're in a mess, don't make it worse
-                            }
-                            else if (bestFit == BestFit.NewItemBest)
-                            {
-                                map.Remove((beanInterface, name));  // get rid of this so we can add the new one
-                            }
-                            else if (bestFit == BestFit.ExistingItemBest)
-                            {
-                                continue;   // don't add the new one - we're already ok.
-                            }
+                            Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
+                            dynamic diag = group.CreateDiagnostic();
+                            diag.Interface1 = beanInterface.GetIOCCName();
+                            diag.BeanName = name;
+                            diag.NewBean = beanImplementation.GetIOCCName();
+                            diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
+                            group.Add(diag);
+                            continue;       // don't add the new one - we're in a mess, don't make it worse
                         }
-                        map.Add((beanInterface, name), beanImplementation);                        
+                        else if (bestFit == BestFit.NewItemBest)
+                        {
+                            map.Remove((beanInterface, name));  // get rid of this so we can add the new one
+                        }
+                        else if (bestFit == BestFit.ExistingItemBest)
+                        {
+                            continue;   // don't add the new one - we're already ok.
+                        }
                     }
+                    map.Add((beanInterface, name), beanImplementation);                        
                 }
             }
             return map;
         }
+
+        private void LogInvalidBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> invalidBeanSpecs)
+        {
+            var diagset = invalidBeanSpecs.Select(bs => LogInvalidBeanError(diagnostics, bs
+              , bs.IsImplementationAbstract ? "abstract": "static"));
+            Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
+            foreach (dynamic diag in diagset)
+            {
+                group.Add(diag);
+            }
+        }
+
+        private static Diagnostic LogInvalidBeanError(Diagnostics diagnostics, BeanSpec beanSpec, string errorCategory)
+        {
+            Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.AbstractOrStaticClass = beanSpec.ImplementationType.GetIOCCName();
+            diag.ClassMode = errorCategory;
+            return diag;
+        }
+
         enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
         // favor beans with a specific profile over those without a profile.
         private BestFit  GetBestDuplicate(IDictionary<(Type, string), Type> map
@@ -123,6 +125,26 @@ namespace PureDI
             
         }
 
+        private class BeanSpec
+        {
+            private readonly Type _interfaceType;
+            private readonly string _beanName;
+            private readonly Type _implementationType;
+            public BeanSpec(Type interfaceType, string beanName, Type implementationType)
+            {
+                _interfaceType = interfaceType;
+                _beanName = beanName;
+                _implementationType = implementationType;
+            }
+
+            public Type InterfaceType => _interfaceType;
+            public string BeanName => _beanName;
+            public Type ImplementationType => _implementationType;
+
+            public bool IsImplementationStatic => _implementationType.IsStatic();
+            public bool IsImplementationAbstract => _implementationType.IsAbstract;
+            public bool IsImplementationEnum => _implementationType.IsValueType && InterfaceType != _implementationType;
+        }
     }
 
     internal static class TypeMapExtensions
@@ -166,6 +188,11 @@ namespace PureDI
                     .Concat(type.GetInterfaces())
                     .Concat(type.BaseType.GetBaseClassesAndInterfaces())
                     .Distinct().Where(ci => ci.GetCustomAttributes().Count() == 0 || ci.GetCustomAttributes().All(ca => !(ca is IgnoreBaseAttribute)));
+        }
+
+        public static bool IsStatic(this Type type)
+        {
+            return type.IsAbstract && type.IsSealed;
         }
     }
 
