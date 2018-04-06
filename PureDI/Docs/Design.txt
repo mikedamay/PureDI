@@ -15,4 +15,10 @@ e) Beans with any OS or matching OS should be included.
 f) Where there is a choice between a bean with a matching OS and one with any OS then the matching one should be used.
 g) If there is a bean with any OS and a matching profile and a bean with a matching OS but no profile then the one
    with the matching profile is selected and the other is reported as an issue.
+   Order of Precedence:
+	1) Os && Profile
+	2) Profile
+	3) Os
+	4) Vanilla
+
 

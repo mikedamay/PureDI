@@ -21,8 +21,8 @@ namespace PureDI
                 var wellFormedBeanSpecs
                     = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
                         => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(b => b.ImplementationType.FullName);
-                    // only sorting so that unit testing is easier.
+                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs)
+                            ;
                 Type beanInterface;
                 string name;
                 Type beanImplementation;
@@ -31,8 +31,27 @@ namespace PureDI
                 var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
                   bs.IsImplementationStatic || bs.IsImplementationAbstract);
                     // not sure why we don't log enums as invalid beans
+                var beanSpecComparisons = validBeanSpecs.SelectMany(
+                    bs1 => validBeanSpecs.Where(bs2 => bs1.InterfaceMatches(bs2))
+                    .OrderBy(bs2 => bs2.Precendence).Take(1)
+                    , (bs1, bs2) => new {bs1, bs2});
+                var bestFitBeanSpecs = beanSpecComparisons.Where(t 
+                    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1);
+                var poorFitBeanSpecs = beanSpecComparisons.Where(t 
+                    => t.bs1.Precendence != t.bs2.Precendence).Select(t => t.bs1);
+                var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).SelectMany(
+                        grp => bestFitBeanSpecs.Where(bs2 => grp.Key.ImplementationType == bs2.ImplementationType)
+                        , (grp, bs2) => new {bs1 = grp.Key, bs2})
+                    .Select(t => t.bs1);
+                var duplicateBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).SelectMany(
+                        grp => bestFitBeanSpecs.Where(bs2 => grp.Key.ImplementationType != bs2.ImplementationType)
+                        , (grp, bs2) => new {bs1 = grp.Key, bs2})
+                    .Select(t => t.bs2);
+                //map = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
+                
                 LogInvalidBeans(diagnostics, invalidBeanSpecs);
-
+                LogPoorFitBeans(diagnostics, poorFitBeanSpecs);
+                LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
 
                 foreach (BeanSpec beanSpec in validBeanSpecs)
                 {
@@ -69,25 +88,49 @@ namespace PureDI
             return map;
         }
 
-        private void LogInvalidBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> invalidBeanSpecs)
+        private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> duplicateBeanSpecs)
         {
-            var diagset = invalidBeanSpecs.Select(bs => LogInvalidBeanError(diagnostics, bs
-              , bs.IsImplementationAbstract ? "abstract": "static"));
-            Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
+            Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
+            Diagnostic MakeInvalidBeanError(BeanSpec beanSpec)
+            {
+                dynamic diag = group.CreateDiagnostic();
+                diag.Interface1 = beanSpec.InterfaceType.GetIOCCName();
+                diag.BeanName = beanSpec.BeanName;
+                diag.NewBean = beanSpec.ImplementationType.GetIOCCName();
+                diag.ExistingBean = ""; // the other bean (in the duplicate)
+                return diag;
+            }
+            var diagset = duplicateBeanSpecs.Select(bs => MakeInvalidBeanError(bs));
             foreach (dynamic diag in diagset)
             {
                 group.Add(diag);
             }
         }
 
-        private static Diagnostic LogInvalidBeanError(Diagnostics diagnostics, BeanSpec beanSpec, string errorCategory)
+        private void LogPoorFitBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> poorFitBeanSpecs)
         {
-            Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
-            dynamic diag = group.CreateDiagnostic();
-            diag.AbstractOrStaticClass = beanSpec.ImplementationType.GetIOCCName();
-            diag.ClassMode = errorCategory;
-            return diag;
+            
+
         }
+
+        private void LogInvalidBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> invalidBeanSpecs)
+        {
+           Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
+           Diagnostic MakeInvalidBeanError(BeanSpec beanSpec, string errorCategory)
+            {
+                dynamic diag = group.CreateDiagnostic();
+                diag.AbstractOrStaticClass = beanSpec.ImplementationType.GetIOCCName();
+                diag.ClassMode = errorCategory;
+                return diag;
+            }
+            var diagset = invalidBeanSpecs.Select(bs => MakeInvalidBeanError(bs
+              , bs.IsImplementationAbstract ? "abstract": "static"));
+            foreach (dynamic diag in diagset)
+            {
+                group.Add(diag);
+            }
+        }
+
 
         enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
         // favor beans with a specific profile over those without a profile.
@@ -125,11 +168,13 @@ namespace PureDI
             
         }
 
-        private class BeanSpec
+        private class BeanSpec : IComparable<BeanSpec>
         {
+
             private readonly Type _interfaceType;
             private readonly string _beanName;
             private readonly Type _implementationType;
+
             public BeanSpec(Type interfaceType, string beanName, Type implementationType)
             {
                 _interfaceType = interfaceType;
@@ -144,7 +189,51 @@ namespace PureDI
             public bool IsImplementationStatic => _implementationType.IsStatic();
             public bool IsImplementationAbstract => _implementationType.IsAbstract;
             public bool IsImplementationEnum => _implementationType.IsValueType && InterfaceType != _implementationType;
+
+            public bool InterfaceMatches(BeanSpec bs2)
+            {
+                return this._interfaceType == bs2._interfaceType
+                       && this._beanName == bs2._beanName;
+            }
+
+            public int Precendence =>
+                this._implementationType.GetBeanProfile() != Constants.DefaultProfileArg
+                && this._implementationType.GetBeanOs() != Os.Any
+                    ? 1
+                    : this._implementationType.GetBeanProfile() != Constants.DefaultProfileArg
+                        ? 2
+                        : this._implementationType.GetBeanOs() != Os.Any
+                            ? 3
+                            : 4;
+
+            public string _beanSpecId => _interfaceType.FullName + BeanName;
+
+            protected bool Equals(BeanSpec other)
+            {
+                return string.Equals(_beanSpecId, other._beanSpecId);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((BeanSpec) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return (_beanSpecId != null ? _beanSpecId.GetHashCode() : 0);
+            }
+
+            public int CompareTo(BeanSpec other)
+            {
+                if (ReferenceEquals(this, other)) return 0;
+                if (ReferenceEquals(null, other)) return 1;
+                return string.Compare(_beanSpecId, other._beanSpecId, StringComparison.Ordinal);
+            }
         }
+        
     }
 
     internal static class TypeMapExtensions
@@ -178,6 +267,10 @@ namespace PureDI
         public static string GetBeanProfile(this Type bean)
         {
             return bean.GetCustomAttributes<BeanBaseAttribute>().Select(attr => attr.Profile).FirstOrDefault();
+        }
+        public static Os GetBeanOs(this Type bean)
+        {
+            return bean.GetCustomAttributes<BeanBaseAttribute>().Select(attr => attr.OS).FirstOrDefault();
         }
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(this Type type)
         {
