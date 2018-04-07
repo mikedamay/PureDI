@@ -20,5 +20,5 @@ g) If there is a bean with any OS and a matching profile and a bean with a match
 	2) Profile
 	3) Os
 	4) Vanilla
-
+	dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs, (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.InterfaceType == t.bs2.InterfaceType).ToList()
 

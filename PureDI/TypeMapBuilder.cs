@@ -15,7 +15,7 @@ namespace PureDI
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
-            Dictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
+            IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
             foreach (Assembly assembly in assemblies)
             {
                 var wellFormedBeanSpecs
@@ -23,9 +23,6 @@ namespace PureDI
                         => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                             .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs)
                             ;
-                Type beanInterface;
-                string name;
-                Type beanImplementation;
                 var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
                   && !bs.IsImplementationStatic && !bs.IsImplementationAbstract);
                 var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
@@ -36,56 +33,21 @@ namespace PureDI
                     .OrderBy(bs2 => bs2.Precendence).Take(1)
                     , (bs1, bs2) => new {bs1, bs2});
                 var bestFitBeanSpecs = beanSpecComparisons.Where(t 
-                    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1);
+                    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
                 var poorFitBeanSpecs = beanSpecComparisons.Where(t 
                     => t.bs1.Precendence != t.bs2.Precendence).Select(t => t.bs1);
-                var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).SelectMany(
-                        grp => bestFitBeanSpecs.Where(bs2 => grp.Key.ImplementationType == bs2.ImplementationType)
-                        , (grp, bs2) => new {bs1 = grp.Key, bs2})
-                    .Select(t => t.bs1);
-                var duplicateBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).SelectMany(
-                        grp => bestFitBeanSpecs.Where(bs2 => grp.Key.ImplementationType != bs2.ImplementationType)
-                        , (grp, bs2) => new {bs1 = grp.Key, bs2})
-                    .Select(t => t.bs2);
-                //map = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
-                
-                LogInvalidBeans(diagnostics, invalidBeanSpecs);
-                LogPoorFitBeans(diagnostics, poorFitBeanSpecs);
+                 var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).Select(grp => grp.Key);
+                var duplicateBeanSpecs = dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs, (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.Equals( t.bs2 ) && t.bs1.ImplementationType != t.bs2.ImplementationType).Select(t => t.bs2);
+              IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
+                map = new Dictionary<(Type, string), Type>( map.Concat(mapAssembly));
+          
                 LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
-
-                foreach (BeanSpec beanSpec in validBeanSpecs)
-                {
-                    beanInterface = beanSpec.InterfaceType;
-                    name = beanSpec.BeanName;
-                    beanImplementation = beanSpec.ImplementationType;
-
-                    if (map.ContainsKey((beanInterface, name)))
-                    {
-                        BestFit bestFit = GetBestDuplicate(map, (beanInterface, name), beanImplementation, profileSet);
-                        if (bestFit == BestFit.Duplicate)
-                        {
-                            Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
-                            dynamic diag = group.CreateDiagnostic();
-                            diag.Interface1 = beanInterface.GetIOCCName();
-                            diag.BeanName = name;
-                            diag.NewBean = beanImplementation.GetIOCCName();
-                            diag.ExistingBean = (map[(beanInterface, name)] as Type).GetIOCCName();
-                            group.Add(diag);
-                            continue;       // don't add the new one - we're in a mess, don't make it worse
-                        }
-                        else if (bestFit == BestFit.NewItemBest)
-                        {
-                            map.Remove((beanInterface, name));  // get rid of this so we can add the new one
-                        }
-                        else if (bestFit == BestFit.ExistingItemBest)
-                        {
-                            continue;   // don't add the new one - we're already ok.
-                        }
-                    }
-                    map.Add((beanInterface, name), beanImplementation);                        
-                }
+#if false                   
+                LogPoorFitBeans(diagnostics, poorFitBeanSpecs);
+#endif                
+                LogInvalidBeans(diagnostics, invalidBeanSpecs);
             }
-            return map;
+            return (IReadOnlyDictionary<(Type, string), Type>)map;
         }
 
         private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> duplicateBeanSpecs)
@@ -132,36 +94,6 @@ namespace PureDI
         }
 
 
-        enum BestFit { Duplicate, NewItemBest, ExistingItemBest}
-        // favor beans with a specific profile over those without a profile.
-        private BestFit  GetBestDuplicate(IDictionary<(Type, string), Type> map
-          , (Type beanInterface, string name) beanId, Type beanImplementation, ISet<string> profileSet)
-        {
-            Assert(map.ContainsKey(beanId));
-            Type existingType = map[beanId];
-            string existingProfile = existingType.GetBeanProfile();
-            string newProfile = beanImplementation.GetBeanProfile();
-            bool existingProfileMatch = profileSet.Contains(existingProfile);
-            bool newProfileMatch = profileSet.Contains(newProfile);
-            if (profileSet.Count == 0)
-            {
-                // no profile has been specified
-                return BestFit.Duplicate;
-            }
-            else if (existingProfileMatch && newProfileMatch)
-            {
-                // both candidates are consistent with profile
-                return BestFit.Duplicate;
-            }
-            else if (newProfileMatch)
-            {
-                return BestFit.NewItemBest;
-            }
-            else // if (existingProfileMatch
-            {
-                return BestFit.ExistingItemBest;
-            }
-        }
 
         private void LogWarning(string s)
         {
@@ -228,7 +160,7 @@ namespace PureDI
 
             public int CompareTo(BeanSpec other)
             {
-                if (ReferenceEquals(this, other)) return 0;
+                //if (ReferenceEquals(this, other)) return 0;
                 if (ReferenceEquals(null, other)) return 1;
                 return string.Compare(_beanSpecId, other._beanSpecId, StringComparison.Ordinal);
             }
@@ -238,7 +170,10 @@ namespace PureDI
 
     internal static class TypeMapExtensions
     {
-        public static bool TypeIsABean(this Type type, ISet<string> profileSet, Os os)
+        public static IEnumerable<IGrouping<TKey, TSource>> MyGroupBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) {
+            return Enumerable.GroupBy<TSource, TKey>(source, keySelector);
+        }
+         public static bool TypeIsABean(this Type type, ISet<string> profileSet, Os os)
         {
             BeanBaseAttribute ida 
               = (BeanBaseAttribute)type.GetCustomAttributes()
