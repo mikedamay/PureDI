@@ -15,52 +15,44 @@ namespace PureDI
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
-            IDictionary<(Type, string), Type> map = new Dictionary<(Type, string), Type>();
-            foreach (Assembly assembly in assemblies)
-            {
-                var wellFormedBeanSpecs
-                    = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
-                        => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs.RefId).ThenBy(bs => bs.Precendence)
-                            ;
-                var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
-                  && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
-                var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
-                  bs.IsImplementationStatic || bs.IsImplementationAbstract);
-                    // not sure why we don't log enums as invalid beans
-                //var beanSpecComparisons = validBeanSpecs.SelectMany(
-                //    bs1 => validBeanSpecs.Where(bs2 => bs1.RefId == bs2.RefId)
-                //    .OrderBy(bs2 => bs2.Precendence).Take(1)
-                //    , (bs1, bs2) => new {bs1, bs2}).ToList();
-                //var bestFitBeanSpecs2 = beanSpecComparisons.Where(t 
-                //    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
-                var bestFitBeanSpecs = validBeanSpecs.GroupBy(bs => bs.RefId).SelectMany(
-                    grp => grp.Where(bs2 => bs2.Precendence == grp.ElementAt(0).Precendence), (bs, bs2) => bs2).ToList();
-                var groupedBestFitBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId).ToList();
-                var dedupedBeanSpecs = groupedBestFitBeanSpecs.Select(grp => grp.ElementAt(0)).ToList();
-                var duplicateBeanSpecs = groupedBestFitBeanSpecs.SelectMany(grp => grp.Skip(1)).ToList();
-                IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
-                map = new Dictionary<(Type, string), Type>( map.Concat(mapAssembly));
+            var wellFormedBeanSpecs
+                = assemblies.SelectMany(a => a.GetTypes(), (a, t) => t).Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
+                    => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
+                        .Select(i => new BeanSpec(i, d.GetBeanName(), d)))
+                        .OrderBy(bs => bs.RefId).ThenBy(bs => bs.Precendence)
+                        ;
+            var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
+                && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
+           var bestFitBeanSpecs = validBeanSpecs.GroupBy(bs => bs.RefId).SelectMany(
+                grp => grp.Where(bs2 => bs2.Precendence == grp.ElementAt(0).Precendence), (bs, bs2) => bs2).ToList();
+            var groupedBestFitBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId).ToList();
+            var dedupedBeanSpecs = groupedBestFitBeanSpecs.Select(grp => grp.ElementAt(0)).ToList();
+            IDictionary<(Type, string), Type> map = dedupedBeanSpecs.ToDictionary(
+                bs => (bs.ReferenceType, bs.BeanName), bs => bs.ImplementationType);
           
-                LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
-                LogInvalidBeans(diagnostics, invalidBeanSpecs);
-            }
+            var duplicateBeanSpecs = groupedBestFitBeanSpecs.SelectMany(grp => grp.Skip(1), (grp, bs2) => (grp.ElementAt(0), bs2)).ToList();
+            LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
+            var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
+                bs.IsImplementationStatic || bs.IsImplementationAbstract);
+                // not sure why we don't log enums as invalid beans
+            LogInvalidBeans(diagnostics, invalidBeanSpecs);
+
             return (IReadOnlyDictionary<(Type, string), Type>)map;
         }
 
-        private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> duplicateBeanSpecs)
+        private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<(BeanSpec, BeanSpec)> duplicatePairs)
         {
             Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
-            Diagnostic MakeInvalidBeanError(BeanSpec beanSpec)
+            Diagnostic MakeInvalidBeanError(BeanSpec existingBeanSpec, BeanSpec rejectedBeanSpec)
             {
                 dynamic diag = group.CreateDiagnostic();
-                diag.Interface1 = beanSpec.InterfaceType.GetIOCCName();
-                diag.BeanName = beanSpec.BeanName;
-                diag.NewBean = beanSpec.ImplementationType.GetIOCCName();
-                diag.ExistingBean = ""; // the other bean (in the duplicate)
+                diag.Interface1 = rejectedBeanSpec.ReferenceType.GetIOCCName();
+                diag.BeanName = rejectedBeanSpec.BeanName;
+                diag.NewBean = rejectedBeanSpec.ImplementationType.GetIOCCName();
+                diag.ExistingBean = existingBeanSpec.ImplementationType.GetIOCCName(); // the other bean (in the duplicate)
                 return diag;
             }
-            var diagset = duplicateBeanSpecs.Select(bs => MakeInvalidBeanError(bs));
+            var diagset = duplicatePairs.Select(dp => MakeInvalidBeanError(dp.Item1, dp.Item2));
             foreach (dynamic diag in diagset)
             {
                 group.Add(diag);
@@ -88,30 +80,24 @@ namespace PureDI
         private class BeanSpec
         {
 
-            private readonly Type _interfaceType;
+            private readonly Type _referenceType;
             private readonly string _beanName;
             private readonly Type _implementationType;
 
-            public BeanSpec(Type interfaceType, string beanName, Type implementationType)
+            public BeanSpec(Type referenceType, string beanName, Type implementationType)
             {
-                _interfaceType = interfaceType;
+                _referenceType = referenceType;
                 _beanName = beanName;
                 _implementationType = implementationType;
             }
 
-            public Type InterfaceType => _interfaceType;
+            public Type ReferenceType => _referenceType;
             public string BeanName => _beanName;
             public Type ImplementationType => _implementationType;
 
             public bool IsImplementationStatic => _implementationType.IsStatic();
             public bool IsImplementationAbstract => _implementationType.IsAbstract;
-            public bool IsImplementationEnum => _implementationType.IsValueType && InterfaceType != _implementationType;
-
-            public bool InterfaceMatches(BeanSpec bs2)
-            {
-                return this._interfaceType == bs2._interfaceType
-                       && this._beanName == bs2._beanName;
-            }
+            public bool IsImplementationEnum => _implementationType.IsValueType && ReferenceType != _implementationType;
 
             public int Precendence =>
                 this._implementationType.GetBeanProfile() != Constants.DefaultProfileArg
@@ -123,7 +109,7 @@ namespace PureDI
                             ? 3
                             : 4;
 
-            public string RefId => _interfaceType.FullName + BeanName;
+            public string RefId => _referenceType.FullName + BeanName;
 
         }       // BeanSpec     
     }           // TypeMapBuilder
@@ -135,16 +121,16 @@ namespace PureDI
         }
          public static bool TypeIsABean(this Type type, ISet<string> profileSet, Os os)
         {
-            BeanBaseAttribute ida 
+            BeanBaseAttribute ba 
               = (BeanBaseAttribute)type.GetCustomAttributes()
               .FirstOrDefault(attr => attr is BeanBaseAttribute);
             return 
-              ida != null 
+              ba != null 
               && (
-              ida.Profile == Constants.DefaultProfileArg
-              || profileSet.Contains(ida.Profile))
-              && (ida.OS == Os.Any 
-              || ida.OS == os);
+              ba.Profile == Constants.DefaultProfileArg
+              || profileSet.Contains(ba.Profile))
+              && (ba.OS == Os.Any 
+              || ba.OS == os);
         }
         public static IEnumerable<Type> IncludeImplementation(this IEnumerable<Type> interfaces, Type implementation)
         {
