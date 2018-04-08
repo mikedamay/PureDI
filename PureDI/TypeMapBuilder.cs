@@ -24,19 +24,19 @@ namespace PureDI
                             .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs)
                             ;
                 var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
-                  && !bs.IsImplementationStatic && !bs.IsImplementationAbstract);
+                  && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
                 var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
                   bs.IsImplementationStatic || bs.IsImplementationAbstract);
                     // not sure why we don't log enums as invalid beans
                 var beanSpecComparisons = validBeanSpecs.SelectMany(
                     bs1 => validBeanSpecs.Where(bs2 => bs1.InterfaceMatches(bs2))
                     .OrderBy(bs2 => bs2.Precendence).Take(1)
-                    , (bs1, bs2) => new {bs1, bs2});
+                    , (bs1, bs2) => new {bs1, bs2}).ToList();
                 var bestFitBeanSpecs = beanSpecComparisons.Where(t 
                     => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
                 var poorFitBeanSpecs = beanSpecComparisons.Where(t 
                     => t.bs1.Precendence != t.bs2.Precendence).Select(t => t.bs1);
-                 var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).Select(grp => grp.Key);
+                 var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).Select(grp => grp.Key).ToList();
                 var duplicateBeanSpecs = dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs, (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.Equals( t.bs2 ) && t.bs1.ImplementationType != t.bs2.ImplementationType).Select(t => t.bs2);
               IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
                 map = new Dictionary<(Type, string), Type>( map.Concat(mapAssembly));
