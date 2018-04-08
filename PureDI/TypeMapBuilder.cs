@@ -21,23 +21,24 @@ namespace PureDI
                 var wellFormedBeanSpecs
                     = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
                         => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs.RefId)
+                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs.RefId).ThenBy(bs => bs.Precendence)
                             ;
                 var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
                   && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
                 var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
                   bs.IsImplementationStatic || bs.IsImplementationAbstract);
                     // not sure why we don't log enums as invalid beans
-                var beanSpecComparisons = validBeanSpecs.SelectMany(
-                    bs1 => validBeanSpecs.Where(bs2 => bs1.RefId == bs2.RefId)
-                    .OrderBy(bs2 => bs2.Precendence).Take(1)
-                    , (bs1, bs2) => new {bs1, bs2}).ToList();
-                var bestFitBeanSpecs = beanSpecComparisons.Where(t 
-                    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
-                var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId ).Select(grp => grp.ElementAt(0)).ToList();
-                var duplicateBeanSpecs = dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs
-                  , (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.RefId == t.bs2.RefId
-                  && t.bs1.ImplementationType != t.bs2.ImplementationType).Select(t => t.bs2);
+                //var beanSpecComparisons = validBeanSpecs.SelectMany(
+                //    bs1 => validBeanSpecs.Where(bs2 => bs1.RefId == bs2.RefId)
+                //    .OrderBy(bs2 => bs2.Precendence).Take(1)
+                //    , (bs1, bs2) => new {bs1, bs2}).ToList();
+                //var bestFitBeanSpecs2 = beanSpecComparisons.Where(t 
+                //    => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
+                var bestFitBeanSpecs = validBeanSpecs.GroupBy(bs => bs.RefId).SelectMany(
+                    grp => grp.Where(bs2 => bs2.Precendence == grp.ElementAt(0).Precendence), (bs, bs2) => bs2).ToList();
+                var groupedBestFitBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId).ToList();
+                var dedupedBeanSpecs = groupedBestFitBeanSpecs.Select(grp => grp.ElementAt(0)).ToList();
+                var duplicateBeanSpecs = groupedBestFitBeanSpecs.SelectMany(grp => grp.Skip(1)).ToList();
                 IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
                 map = new Dictionary<(Type, string), Type>( map.Concat(mapAssembly));
           
