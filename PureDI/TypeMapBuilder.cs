@@ -21,7 +21,7 @@ namespace PureDI
                 var wellFormedBeanSpecs
                     = assembly.GetTypes().Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
                         => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
-                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs)
+                            .Select(i => new BeanSpec(i, d.GetBeanName(), d))).OrderBy(bs => bs.RefId)
                             ;
                 var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
                   && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
@@ -29,22 +29,19 @@ namespace PureDI
                   bs.IsImplementationStatic || bs.IsImplementationAbstract);
                     // not sure why we don't log enums as invalid beans
                 var beanSpecComparisons = validBeanSpecs.SelectMany(
-                    bs1 => validBeanSpecs.Where(bs2 => bs1.InterfaceMatches(bs2))
+                    bs1 => validBeanSpecs.Where(bs2 => bs1.RefId == bs2.RefId)
                     .OrderBy(bs2 => bs2.Precendence).Take(1)
                     , (bs1, bs2) => new {bs1, bs2}).ToList();
                 var bestFitBeanSpecs = beanSpecComparisons.Where(t 
                     => t.bs1.Precendence == t.bs2.Precendence).Select(t => t.bs1).ToList();
-                var poorFitBeanSpecs = beanSpecComparisons.Where(t 
-                    => t.bs1.Precendence != t.bs2.Precendence).Select(t => t.bs1);
-                 var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs ).Select(grp => grp.Key).ToList();
-                var duplicateBeanSpecs = dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs, (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.Equals( t.bs2 ) && t.bs1.ImplementationType != t.bs2.ImplementationType).Select(t => t.bs2);
-              IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
+                var dedupedBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId ).Select(grp => grp.ElementAt(0)).ToList();
+                var duplicateBeanSpecs = dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs
+                  , (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.RefId == t.bs2.RefId
+                  && t.bs1.ImplementationType != t.bs2.ImplementationType).Select(t => t.bs2);
+                IDictionary<(Type, string), Type> mapAssembly = dedupedBeanSpecs.ToDictionary(bs => (bs.InterfaceType, bs.BeanName), bs => bs.ImplementationType);
                 map = new Dictionary<(Type, string), Type>( map.Concat(mapAssembly));
           
                 LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
-#if false                   
-                LogPoorFitBeans(diagnostics, poorFitBeanSpecs);
-#endif                
                 LogInvalidBeans(diagnostics, invalidBeanSpecs);
             }
             return (IReadOnlyDictionary<(Type, string), Type>)map;
@@ -69,12 +66,6 @@ namespace PureDI
             }
         }
 
-        private void LogPoorFitBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> poorFitBeanSpecs)
-        {
-            
-
-        }
-
         private void LogInvalidBeans(Diagnostics diagnostics, IEnumerable<BeanSpec> invalidBeanSpecs)
         {
            Diagnostics.Group group = diagnostics.Groups["InvalidBean"];
@@ -93,14 +84,7 @@ namespace PureDI
             }
         }
 
-
-
-        private void LogWarning(string s)
-        {
-            
-        }
-
-        private class BeanSpec : IComparable<BeanSpec>
+        private class BeanSpec
         {
 
             private readonly Type _interfaceType;
@@ -138,35 +122,10 @@ namespace PureDI
                             ? 3
                             : 4;
 
-            public string _beanSpecId => _interfaceType.FullName + BeanName;
+            public string RefId => _interfaceType.FullName + BeanName;
 
-            protected bool Equals(BeanSpec other)
-            {
-                return string.Equals(_beanSpecId, other._beanSpecId);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((BeanSpec) obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return (_beanSpecId != null ? _beanSpecId.GetHashCode() : 0);
-            }
-
-            public int CompareTo(BeanSpec other)
-            {
-                //if (ReferenceEquals(this, other)) return 0;
-                if (ReferenceEquals(null, other)) return 1;
-                return string.Compare(_beanSpecId, other._beanSpecId, StringComparison.Ordinal);
-            }
-        }
-        
-    }
+        }       // BeanSpec     
+    }           // TypeMapBuilder
 
     internal static class TypeMapExtensions
     {
@@ -222,15 +181,5 @@ namespace PureDI
         {
             return type.IsAbstract && type.IsSealed;
         }
-    }
-
-    internal class TypeHolder
-    {
-        public TypeHolder(Type type)
-        {
-            typeOrFactoryMethod = type;
-        }
-        private readonly object typeOrFactoryMethod;
-        public object Content => typeOrFactoryMethod;
-    }
-}
+    }       // TypeMapExtensions
+}           // PureDI
