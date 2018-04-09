@@ -576,24 +576,24 @@ namespace PureDI.Tree
             {
                 return (Activator.CreateInstance(beanType), injectionState);
             }
-            else
+            else  // class
             {
                 BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-                ConstructorInfo constructorInfo;
+                ConstructorInfo constructorInfo  = constructorParameterSpecs?.Count > 0 
+                  ? CheckForNull( () => beanType.GetConstructorNamed(constructorName))
+                  : CheckForNull( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetIOCCName()));
                 if (constructorParameterSpecs?.Count > 0)
                 {
-                    constructorInfo = beanType.GetConstructorNamed(constructorName);
-                    if (constructorInfo == null)
-                    {
-                        throw new IOCCInternalException("gone badly wrong");
-                        // TODO diagnostics and a good exception required here
-                    }
+                    InjectionState @is = injectionState;
+                    var pairs = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
+                        spec => spec.ExecuteFactory(@is, new BeanFactoryArgs(
+                            spec.ParameterInfo.GetBeanReferenceAttribute()
+                                .FactoryParameter)));
                     List<object> parameters = new List<object>();
                     foreach (var spec in constructorParameterSpecs)
                     {
                         if (spec.IsFactory)
                         {
-
                             object obj;
                             try
                             {
@@ -606,7 +606,8 @@ namespace PureDI.Tree
                             {
                                 throw new DIException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
                                   ,ex, injectionState.Diagnostics);
-                            }                            parameters.Add(obj);
+                            }                            
+                            parameters.Add(obj);
                             LogConstructorInjection(injectionState.Diagnostics, beanType, obj.GetType());
                             // TODO it would be good to catch type mismatches during eventual construction
                         }
@@ -618,16 +619,6 @@ namespace PureDI.Tree
                     }
                     args = parameters.ToArray();
                 }
-                else
-                {
-                    var constructorInfos = beanType.GetConstructors(flags);
-                    constructorInfo = constructorInfos.FirstOrDefault(ci => ci.GetParameters().Length == 0);
-                }
-                if (constructorInfo == null)
-                {
-                    throw new NoArgConstructorException(beanType.GetIOCCName());
-                    // TODO some diagnostics required here
-                }
                 try
                 {
                     return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null), injectionState);
@@ -637,10 +628,20 @@ namespace PureDI.Tree
 
                     throw new DIException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
                 }
+            }        // construction of class
+        }            // Construct
 
+        private ConstructorInfo CheckForNull(Func<ConstructorInfo> func, Exception ex = null)
+        {
+            var ci = func();
+            if (ci == null)
+            {
+                throw ex ?? new IOCCInternalException( "gone badly wrong");
+                // TODO diagnostics and a good exception required here
             }
 
-        }
+            return ci;
+        }            
 
         private void LogConstructorInjection(Diagnostics diagnostics
           , Type declaringType, Type parameterImplementation)
@@ -651,5 +652,5 @@ namespace PureDI.Tree
             diag.ParameterImplementation = parameterImplementation;
             group.Add(diag);
         }
-    }
+    }                // ObjectTree
 }

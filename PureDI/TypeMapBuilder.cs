@@ -116,7 +116,7 @@ namespace PureDI
         }       // BeanSpec     
     }           // TypeMapBuilder
 
-    internal static class TypeMapExtensions
+    internal static class TypeMapBuilderExtensions
     {
         public static IEnumerable<IGrouping<TKey, TSource>> MyGroupBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) {
             return Enumerable.GroupBy<TSource, TKey>(source, keySelector);
