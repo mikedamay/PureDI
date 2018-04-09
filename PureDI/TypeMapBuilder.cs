@@ -16,21 +16,23 @@ namespace PureDI
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
             var wellFormedBeanSpecs
-                = assemblies.SelectMany(a => a.GetTypes(), (a, t) => t).Where(d => d.TypeIsABean(profileSet, os)).SelectMany(d
+                = assemblies.SelectMany(a => a.GetTypes(), (a, t) => t).Where(
+                d => d.TypeIsABean(profileSet, os)).SelectMany(d
                     => d.GetBaseClassesAndInterfaces().IncludeImplementation(d)
                         .Select(i => new BeanSpec(i, d.GetBeanName(), d)))
                         .OrderBy(bs => bs.RefId).ThenBy(bs => bs.Precendence)
                         ;
             var validBeanSpecs = wellFormedBeanSpecs.Where(bs => !bs.IsImplementationEnum 
                 && !bs.IsImplementationStatic && !bs.IsImplementationAbstract).ToList();
-           var bestFitBeanSpecs = validBeanSpecs.GroupBy(bs => bs.RefId).SelectMany(
+            var bestFitBeanSpecs = validBeanSpecs.GroupBy(bs => bs.RefId).SelectMany(
                 grp => grp.Where(bs2 => bs2.Precendence == grp.ElementAt(0).Precendence), (bs, bs2) => bs2).ToList();
             var groupedBestFitBeanSpecs = bestFitBeanSpecs.GroupBy(bs => bs.RefId).ToList();
             var dedupedBeanSpecs = groupedBestFitBeanSpecs.Select(grp => grp.ElementAt(0)).ToList();
             IDictionary<(Type, string), Type> map = dedupedBeanSpecs.ToDictionary(
                 bs => (bs.ReferenceType, bs.BeanName), bs => bs.ImplementationType);
           
-            var duplicateBeanSpecs = groupedBestFitBeanSpecs.SelectMany(grp => grp.Skip(1), (grp, bs2) => (grp.ElementAt(0), bs2)).ToList();
+            var duplicateBeanSpecs = groupedBestFitBeanSpecs.SelectMany(
+              grp => grp.Skip(1), (grp, bs2) => (grp.ElementAt(0), bs2)).ToList();
             LogDuplicateBeans(diagnostics, duplicateBeanSpecs);
             var invalidBeanSpecs = wellFormedBeanSpecs.Where(bs =>  
                 bs.IsImplementationStatic || bs.IsImplementationAbstract);

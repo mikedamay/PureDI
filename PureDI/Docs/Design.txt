@@ -1,24 +1,32 @@
 ﻿
-Typemap contains relationships between the types of potential references and the required implementation.
-
-mapObjectsCreatedSoFar (member of injection state) contains each implementation injected together with bean name and constructor name
+Typemap contains relationships between the types of potential references and the required implementation (bean class).
+The references are either the implementation class, itself, a class or interface inherited by the
+implementation.
 
 The typemap needs to indicate the difference between a generic reference and a non-generic reference.
 
-a) The typemap maps a relationship between the type of an implementation (bean) and all the interfaces and classes in
-the class hierarchy through which it can be referenced including the type of the implementation itself.
-b) It should report cases where duplicate beans exist for some interface or parent class.
-c) Beans with a matching profile or no profile should be included.  Beans with a non-matching profile are completely ignored.
-d) Where multiple beans exist derived from some interface or parent class then the typemap should include
-the bean with a matching profile in preference to one with no profile.
-e) Beans with any OS or matching OS should be included.
-f) Where there is a choice between a bean with a matching OS and one with any OS then the matching one should be used.
-g) If there is a bean with any OS and a matching profile and a bean with a matching OS but no profile then the one
-   with the matching profile is selected and the other is reported as an issue.
+a) The typemap maps a relationship between the type of an implementation (bean class) and all the interfaces and classes in
+  the class hierarchy through which it can be referenced including the type of the implementation itself.
+b) Beans with a matching profile or no profile should be included as candidate bean classes.  Beans with 
+  a non-matching profile are completely ignored.
+c) Beans with a matching OS or no OS should be included as candidate bean classes.  Bean classes with 
+  a non-matching OS are completely ignored.
+d) Where multiple bean classes exist derived from some interface or parent class then the typemap should include
+  the bean with a matching profile in preference to one with no profile.
+e) Where multiple bean classes exist derived from some interface or parent class then the typemap should include
+  the bean with a matching OS in preference to one with no OS.
+f) Where multiple bean classes exist derived from some interface or parent class then the typemap should include
+  the bean with a matching OS and profile in preference to any other candidate.
+g) Rules d) to f) can be visualised by applying a "Precedence" to each candidate and selecting the candidate with the
+  lowest Precedence number.
    Order of Precedence:
 	1) Os && Profile
 	2) Profile
 	3) Os
 	4) Vanilla
-	dedupedBeanSpecs.SelectMany(bs => bestFitBeanSpecs, (bs, bs2) => new {bs1 = bs, bs2}).Where(t => t.bs1.InterfaceType == t.bs2.InterfaceType).ToList()
+h) Where multiple canddidates (bean classes derived from a aingle reference) remain after applying
+  all rules up to g) then a random one is selected and the others are reported as duplicates.
+i) Static or abstract classes marked as beans are reported as invalid.  A compliation takes care of non-class
+  entities given an attribute of [Bean].
 
+mapObjectsCreatedSoFar (member of InjectionState) contains each implementation injected together with bean name and constructor name
