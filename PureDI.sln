@@ -31,6 +31,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{1A52E81A-C118-4AAE-BD99-E8CBC5BAF8EA}"
 	ProjectSection(SolutionItems) = preProject
 		Documentation\LibraryMaintainerNotes.md = Documentation\LibraryMaintainerNotes.md
+		Documentation\rider_probs.txt = Documentation\rider_probs.txt
 	EndProjectSection
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "sandDoc", "sandDoc\sandDoc.shfbproj", "{CED939DE-F7BC-43DC-94DD-C9B1CF163E01}"

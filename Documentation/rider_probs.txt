@@ -1,0 +1,246 @@
+debugger started to fail possibly after using decompiler
+
+Loaded application domain 'DefaultDomain (id 1)'
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.CoreLib.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.CoreLib.dll in application domain 1:DefaultDomain
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.CoreLib.dll was not found or failed to read
+Started Thread 5140
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\testhost.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\testhost.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\testhost.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CoreUtilities.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CoreUtilities.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CoreUtilities.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Tracing.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Tracing.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Tracing.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Process.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Process.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Process.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.Primitives.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Extensions.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Extensions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Extensions.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Debug.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Debug.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.Debug.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Thread.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Thread.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Thread.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CrossPlatEngine.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CrossPlatEngine.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CrossPlatEngine.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CommunicationUtilities.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CommunicationUtilities.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.CommunicationUtilities.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.Common.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.Common.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.testhost\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.Common.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.PlatformAbstractions.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.PlatformAbstractions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.testplatform.objectmodel\15.3.0\lib\netstandard1.5\Microsoft.TestPlatform.PlatformAbstractions.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Primitives.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Globalization.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Globalization.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Globalization.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TraceSource.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TraceSource.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TraceSource.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.ThreadPool.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.ThreadPool.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.ThreadPool.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Sockets.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Sockets.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Sockets.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.Primitives.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Overlapped.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Overlapped.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Overlapped.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.NameResolution.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.NameResolution.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Net.NameResolution.dll was not found or failed to read
+Started Thread 11892
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\Microsoft.Win32.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\Microsoft.Win32.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\Microsoft.Win32.Primitives.dll was not found or failed to read
+Started Thread 12048
+Started Thread 11256
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Dynamic.Runtime.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Dynamic.Runtime.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Dynamic.Runtime.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.Expressions.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.Expressions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.Expressions.dll was not found or failed to read
+Started Thread 4796
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Uri.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Uri.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Uri.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Extensions.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Extensions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Extensions.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Linq.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ObjectModel.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ObjectModel.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ObjectModel.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XDocument.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XDocument.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XDocument.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.Linq.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.Linq.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.Linq.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.Xml.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.RegularExpressions.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.RegularExpressions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.RegularExpressions.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.ILGeneration.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.ILGeneration.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.ILGeneration.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Primitives.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.Lightweight.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.Lightweight.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Emit.Lightweight.dll was not found or failed to read
+Loaded Assembly '<unknown>'
+Loading module Anonymously Hosted DynamicMethods Assembly in application domain 1:clrhost
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.Primitives.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.FileSystem.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Loader.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Loader.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Loader.dll was not found or failed to read
+Loaded Assembly 'C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll'
+Loading module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll in application domain 1:clrhost
+Pdb file for assembly C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll was not found or failed to read
+Loaded Assembly 'C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll'
+Loading module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll in application domain 1:clrhost
+Pdb file for assembly C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll was not found or failed to read
+Loaded Assembly 'C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll'
+Loading module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll in application domain 1:clrhost
+Pdb file for assembly C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.TypeConverter.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.TypeConverter.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.TypeConverter.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ComponentModel.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Json.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Json.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.Serialization.Json.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.DataContractSerialization.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.DataContractSerialization.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.DataContractSerialization.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.ReaderWriter.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.ReaderWriter.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.ReaderWriter.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.Extensions.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.Extensions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Text.Encoding.Extensions.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Timer.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Timer.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Timer.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XmlDocument.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XmlDocument.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Xml.XmlDocument.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Resources.ResourceManager.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Resources.ResourceManager.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Resources.ResourceManager.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.RuntimeInformation.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.RuntimeInformation.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Runtime.InteropServices.RuntimeInformation.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\mstest.testframework\1.1.18\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll was not found or failed to read
+Loaded Assembly 'C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDITest.dll'
+Loading module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDITest.dll in application domain 1:clrhost
+Symbols for module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDITest.dll loaded
+Loaded Assembly 'C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDI.dll'
+Loading module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDI.dll in application domain 1:clrhost
+Symbols for module C:\projects\PureDi\PureDITest\bin\Debug\netcoreapp2.0\PureDI.dll loaded
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TextWriterTraceListener.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TextWriterTraceListener.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.TextWriterTraceListener.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Console.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Console.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Console.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.common\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.common\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.common\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Immutable.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Immutable.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Immutable.dll was not found or failed to read
+Loaded Assembly 'C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.csharp\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll'
+Loading module C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.csharp\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll in application domain 1:clrhost
+Pdb file for assembly C:\Users\mikedamay\.nuget\packages\microsoft.codeanalysis.csharp\2.3.2\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ValueTuple.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ValueTuple.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.ValueTuple.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Metadata.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Metadata.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Reflection.Metadata.dll was not found or failed to read
+Started Thread 5456
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.Parallel.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.Parallel.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Tasks.Parallel.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Concurrent.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Concurrent.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Collections.Concurrent.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Algorithms.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Algorithms.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Algorithms.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Primitives.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Primitives.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Security.Cryptography.Primitives.dll was not found or failed to read
+Started Thread 6112
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.StackTrace.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.StackTrace.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Diagnostics.StackTrace.dll was not found or failed to read
+Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.MemoryMappedFiles.dll'
+Loading module C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.MemoryMappedFiles.dll in application domain 1:clrhost
+Pdb file for assembly C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.IO.MemoryMappedFiles.dll was not found or failed to read

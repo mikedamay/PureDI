@@ -585,12 +585,24 @@ namespace PureDI.Tree
                 if (constructorParameterSpecs?.Count > 0)
                 {
                     InjectionState @is = injectionState;
-                    var pairs = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
-                        spec => spec.ExecuteFactory(@is, new BeanFactoryArgs(
-                            spec.ParameterInfo.GetBeanReferenceAttribute()
-                                .FactoryParameter)));
-                    List<object> parameters = new List<object>();
-                    foreach (var spec in constructorParameterSpecs)
+                    var factoryConstructors = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
+                        spec =>
+                        {
+                            object obj;
+                            (obj, @is) = spec.ExecuteFactory(@is, new BeanFactoryArgs(
+                                spec.ParameterInfo.GetBeanReferenceAttribute()
+                                    .FactoryParameter));
+                            return (obj, @is);
+                        }).Select(p => p.obj);
+                    args = factoryConstructors.Union(constructorParameterSpecs.Where(spec => !spec.IsFactory)
+                        .Select(spec => spec.MemberOrFactoryBean)).ToArray();
+                    args.Where(arg => arg != null).Select(arg =>
+                    {
+                        LogConstructorInjection(@is.Diagnostics, beanType, arg.GetType());
+                        return arg;
+                    }).ToList();
+                   List<object> parameters = new List<object>();
+                   foreach (var spec in constructorParameterSpecs)
                     {
                         if (spec.IsFactory)
                         {
@@ -625,7 +637,6 @@ namespace PureDI.Tree
                 }
                 catch (Exception ex2)
                 {
-
                     throw new DIException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
                 }
             }        // construction of class
