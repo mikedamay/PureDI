@@ -6,7 +6,7 @@
     <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest</Configurations>
   </PropertyGroup>
   <ItemGroup>
-	<Compile Remove="AdditionalAssemblyData\EntryPoint.cs" />
+    <Compile Remove="AdditionalAssemblyData\EntryPoint.cs" />
     <Compile Remove="BadClientTestData\BadConstructor.cs" />
     <Compile Remove="BadClientTestData\BadFactory.cs" />
     <Compile Remove="BadClientTestData\BadFactoryForParam.cs" />
@@ -62,7 +62,7 @@
     <Compile Remove="FactoryTestData\ThrowsException.cs" />
     <Compile Remove="FactoryTestData\TypeMismatch.cs" />
     <Compile Remove="GenericTestData\Generic.cs" />
-	<Compile Remove="InitialAssemblyData\EntryPoint.cs" />
+    <Compile Remove="InitialAssemblyData\EntryPoint.cs" />
     <Compile Remove="MinorMethodsTest.cs" />
     <Compile Remove="MultipleCallsTestData\ComplexFactory.cs" />
     <Compile Remove="MultipleCallsTestData\Empty.cs" />
@@ -163,7 +163,7 @@
       </CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="GenericTestData\Generic.cs" />
-	<EmbeddedResource Include="InitialAssemblyData\EntryPoint.cs" />
+    <EmbeddedResource Include="InitialAssemblyData\EntryPoint.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\ComplexFactory.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\Empty.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\Simple.cs" />

@@ -564,13 +564,15 @@ namespace PureDI.Tree
 
         /// <summary>checks if the type to be instantiated has a valid constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
-        /// <param name="constructorParameterSpecs"></param>
+        /// <param name="constructorParameterSpecsArg"></param>
         /// <param name="constructorName"></param>
         /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
         private (object bean, InjectionState injectionState) Construct(Type beanType
-            , IList<ChildBeanSpec> constructorParameterSpecs, string constructorName, InjectionState injectionState)
+            , IList<ChildBeanSpec> constructorParameterSpecsArg, string constructorName, InjectionState injectionState)
         {
+            var constructorParameterSpecs = constructorParameterSpecsArg ?? new List<ChildBeanSpec>();
+            InjectionState @is = injectionState;
             object[] args = new object[0];
             if (beanType.IsStruct())
             {
@@ -580,60 +582,27 @@ namespace PureDI.Tree
             {
                 BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
                 ConstructorInfo constructorInfo  = constructorParameterSpecs?.Count > 0 
-                  ? CheckForNull( () => beanType.GetConstructorNamed(constructorName))
-                  : CheckForNull( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetIOCCName()));
-                if (constructorParameterSpecs?.Count > 0)
+                  ? Check( () => beanType.GetConstructorNamed(constructorName))
+                  : Check( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetIOCCName()));
+                var factoryBasedParameters = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
+                    spec =>
+                    {
+                        object obj;
+                        (obj, @is) = spec.ExecuteFactory(@is, new BeanFactoryArgs(
+                            spec.ParameterInfo.GetBeanReferenceAttribute()
+                                .FactoryParameter));
+                        return (obj, @is);
+                    }).Select(p => p.obj);
+                args = args.Concat(factoryBasedParameters.Concat(constructorParameterSpecs.Where(spec => !spec.IsFactory)
+                    .Select(spec => spec.MemberOrFactoryBean))).ToArray();
+                args.Where(arg => arg != null).Select(arg =>
                 {
-                    InjectionState @is = injectionState;
-                    var factoryConstructors = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
-                        spec =>
-                        {
-                            object obj;
-                            (obj, @is) = spec.ExecuteFactory(@is, new BeanFactoryArgs(
-                                spec.ParameterInfo.GetBeanReferenceAttribute()
-                                    .FactoryParameter));
-                            return (obj, @is);
-                        }).Select(p => p.obj);
-                    args = factoryConstructors.Union(constructorParameterSpecs.Where(spec => !spec.IsFactory)
-                        .Select(spec => spec.MemberOrFactoryBean)).ToArray();
-                    args.Where(arg => arg != null).Select(arg =>
-                    {
-                        LogConstructorInjection(@is.Diagnostics, beanType, arg.GetType());
-                        return arg;
-                    }).ToList();
-                   List<object> parameters = new List<object>();
-                   foreach (var spec in constructorParameterSpecs)
-                    {
-                        if (spec.IsFactory)
-                        {
-                            object obj;
-                            try
-                            {
-                                (obj, injectionState) = (spec.MemberOrFactoryBean as IFactory)
-                                 .Execute(injectionState, new BeanFactoryArgs(
-                                  spec.ParameterInfo.GetBeanReferenceAttribute()
-                                    .FactoryParameter));                           
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new DIException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
-                                  ,ex, injectionState.Diagnostics);
-                            }                            
-                            parameters.Add(obj);
-                            LogConstructorInjection(injectionState.Diagnostics, beanType, obj.GetType());
-                            // TODO it would be good to catch type mismatches during eventual construction
-                        }
-                        else
-                        {
-                            parameters.Add(spec.MemberOrFactoryBean);
-                            LogConstructorInjection(injectionState.Diagnostics, beanType, spec.MemberOrFactoryBean?.GetType());
-                        }
-                    }
-                    args = parameters.ToArray();
-                }
+                    LogConstructorInjection(@is.Diagnostics, beanType, arg.GetType());
+                    return arg;
+                }).ToList();
                 try
                 {
-                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null, args, null), injectionState);
+                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null,  args, null), @is);
                 }
                 catch (Exception ex2)
                 {
@@ -642,7 +611,7 @@ namespace PureDI.Tree
             }        // construction of class
         }            // Construct
 
-        private ConstructorInfo CheckForNull(Func<ConstructorInfo> func, Exception ex = null)
+        private ConstructorInfo Check(Func<ConstructorInfo> func, Exception ex = null)
         {
             var ci = func();
             if (ci == null)
