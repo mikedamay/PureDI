@@ -4,7 +4,7 @@
     <topic>DuplicateBean</topic>
     <severity>Warning</severity>
     <intro>Duplicate beans have been detected.  
-           The IOC container will be unable to determine which 
+           The mechanism will be unable to determine which 
            class an injected reference refers to</intro>
     <background>If there are multiple implementations of some 
                interface or base class then use the bean's "name" 
@@ -71,7 +71,7 @@
   <group>
     <topic>MissingNoArgConstructor</topic>
     <severity>Warning</severity>
-    <intro>A class or struct without a no-arg constructor has been encountered.  All types in the IOC tree must have no-arg constructors</intro>
+    <intro>A class or struct without a no-arg constructor has been encountered.  All types in the object tree must have no-arg constructors</intro>
     <background>The container needs to be able to construct the objects in the tree by reflection
     .For this it needs a non-static constructor
     which takes no arguments.  Alternatively a constructor annotated with the [Constructor] attribute
@@ -290,10 +290,10 @@
   <group>
     <topic>MissingConstructorParameterAttribute</topic>
     <severity>Warning</severity>
-    <intro>A constructor has been found marked as [IOCConstructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
+    <intro>A constructor has been found marked as [Constructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
     <background>
       In order to inject values into a class (bean) via the constructor its constructor must
-      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
+      be marked with the [Constructor] attribute and all that constructor's parameters
       must be marked as [BeanReference].  If a parameter to be injected is not a
       bean then a factory bean can be used to provide the value and the constructor
       should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
@@ -310,16 +310,16 @@
   <group>
     <topic>MissingConstructorAttribute</topic>
     <severity>Warning</severity>
-    <intro>A constructor has been found not marked as [IOCCConstructor] but one or more of whose parameters is marked as [BeanReference]</intro>
+    <intro>A constructor has been found not marked as [Constructor] but one or more of whose parameters is marked as [BeanReference]</intro>
     <background>
       In order to inject values into a class (bean) via the constructor its constructor must
-      be marked with the [IOCCConstructor] attribute and all that constructor's parameters
+      be marked with the [Constructor] attribute and all that constructor's parameters
       must be marked as [BeanReference].
     </background>
     
     
     
-    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [IOCCConstructor] but has marked parameters</template>
+    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [Constructor] but has marked parameters</template>
     <artefacts>
       <Bean>
 </Bean>

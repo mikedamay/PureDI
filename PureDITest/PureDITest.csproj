@@ -69,6 +69,8 @@
     <Compile Remove="MultipleCallsTestData\Simple.cs" />
     <Compile Remove="MultipleCallsTestData\SimpleFactory.cs" />
     <Compile Remove="MultipleCallsTestData\FactoryMadeWithConstructor.cs" />
+    <Compile Remove="MultipleCallsTestData\FactoryMadeWithMember.cs" />
+    <Compile Remove="MultipleCallsTestData\FactoryMadeComplex.cs" />
     <Compile Remove="NamespaceData\DuplicateAssemblies.cs" />
     <Compile Remove="NamespaceData\NoNamespace.cs" />
     <Compile Remove="NamespaceData\ReferenceFromNamespacedClass.cs" />
@@ -170,6 +172,8 @@
     <EmbeddedResource Include="MultipleCallsTestData\Simple.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\SimpleFactory.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\FactoryMadeWithConstructor.cs" />
+    <EmbeddedResource Include="MultipleCallsTestData\FactoryMadeWithMember.cs" />
+    <EmbeddedResource Include="MultipleCallsTestData\FactoryMadeComplex.cs" />
     <EmbeddedResource Include="NamespaceData\DuplicateAssemblies.cs" />
     <EmbeddedResource Include="ProfileTestData\BestCandidate.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />

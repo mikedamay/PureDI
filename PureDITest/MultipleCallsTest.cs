@@ -83,7 +83,7 @@ namespace IOCCTest
               , ((IResultGetter)result.GetResults()?.ChildOne)?.GetResults().ChildTwo);
         }
         [TestMethod]
-        public void ShouldAddFactoryCreatedBeansToInjectionState()
+        public void ShouldAddFactoryCreatedParameterBeansToInjectionState()
         {
             (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
               "MultipleCallsTestData", "FactoryMadeWithConstructor");
@@ -92,6 +92,42 @@ namespace IOCCTest
             (object fmwc, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.FactoryMadeWithConstructor", assemblies: new Assembly[] { assembly});
+            IResultGetter result = fmwc as IResultGetter;
+
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
+            (object furthest, _)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
+        }
+        [TestMethod]
+        public void ShouldAddFactoryCreatedMemberBeansToInjectionState()
+        {
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+              "MultipleCallsTestData", "FactoryMadeWithMember");
+//            Assembly assembly = this.GetType().Assembly;
+//            var pdi = new PDependencyInjector();
+            (object fmwc, InjectionState injectionState)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.FactoryMadeWithMember", assemblies: new Assembly[] { assembly});
+            IResultGetter result = fmwc as IResultGetter;
+
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
+            (object furthest, _)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
+        }
+        [TestMethod]
+        public void ShouldAddFactoryCreatedComplexBeansToInjectionState()
+        {
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+              "MultipleCallsTestData", "FactoryMadeComplex");
+//            Assembly assembly = this.GetType().Assembly;
+//            var pdi = new PDependencyInjector();
+            (object fmwc, InjectionState injectionState)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.FactoryMadeComplex", assemblies: new Assembly[] { assembly});
             IResultGetter result = fmwc as IResultGetter;
 
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);

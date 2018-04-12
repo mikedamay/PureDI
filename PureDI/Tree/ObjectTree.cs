@@ -198,7 +198,7 @@ namespace PureDI.Tree
                                      // or we were unable to create the bean (null)
                     }
                     cyclicalDependencies.Remove(constructableType);
-                    AssignMembers(bean, memberSpecs, injectionState, creationContext);
+                    injectionState = AssignMembers(bean, memberSpecs, injectionState, creationContext);
                 }
                 else // there is a cyclical dependency so we
                     // need to just create the bean itself and defer child creation
