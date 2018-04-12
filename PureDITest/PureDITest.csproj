@@ -68,6 +68,7 @@
     <Compile Remove="MultipleCallsTestData\Empty.cs" />
     <Compile Remove="MultipleCallsTestData\Simple.cs" />
     <Compile Remove="MultipleCallsTestData\SimpleFactory.cs" />
+    <Compile Remove="MultipleCallsTestData\FactoryMadeWithConstructor.cs" />
     <Compile Remove="NamespaceData\DuplicateAssemblies.cs" />
     <Compile Remove="NamespaceData\NoNamespace.cs" />
     <Compile Remove="NamespaceData\ReferenceFromNamespacedClass.cs" />
@@ -168,6 +169,7 @@
     <EmbeddedResource Include="MultipleCallsTestData\Empty.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\Simple.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\SimpleFactory.cs" />
+    <EmbeddedResource Include="MultipleCallsTestData\FactoryMadeWithConstructor.cs" />
     <EmbeddedResource Include="NamespaceData\DuplicateAssemblies.cs" />
     <EmbeddedResource Include="ProfileTestData\BestCandidate.cs" />
     <EmbeddedResource Include="ProfileTestData\ComplexProfile.cs" />
@@ -252,4 +254,7 @@
   <PropertyGroup Condition="'$(Configuration)'=='MacOsTest'">
     <DefineConstants>MACOSTEST</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="DerivedAttributeTest.cs" />
+  </ItemGroup>
 </Project>

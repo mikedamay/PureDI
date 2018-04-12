@@ -62,7 +62,7 @@ namespace PureDI.Tree
         public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState)
         {
             CreationContext cc = new CreationContext(new CycleGuard(), new HashSet<Type>());
-            CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
+            injectionState = CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
             return AssignMembers(rootObject, memberSpecs, injectionState, cc);
 
         }
@@ -144,7 +144,7 @@ namespace PureDI.Tree
                     {
                         foreach (var paramInfo in paramInfos)
                         {
-                            CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members
+                            injectionState = CreateTreeForMemberOrParameter(new Info(paramInfo), declaringBeanType, members
                               , creationContext, injectionState);
                         } // for each constructor parameter
                     }
@@ -172,7 +172,7 @@ namespace PureDI.Tree
                 if (!cyclicalDependencyFound)
                 {
                     cycleGuard.Push(constructableType);
-                    CreateMemberTrees(constructableType, out var memberSpecs, creationContext, injectionState);
+                    injectionState = CreateMemberTrees(constructableType, out var memberSpecs, creationContext, injectionState);
                     CreateConstructorTrees(constructableType, out var parameterSpecs);
                     (complete, bean) = MakeBean(parameterSpecs);
                     Assert(!cyclicalDependencies.Contains(constructableType)
@@ -229,7 +229,7 @@ namespace PureDI.Tree
             return (bean, injectionState);
         }       // CreateObjectTree
 
-        void CreateMemberTrees(Type declaringBeanType, out List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
+        InjectionState CreateMemberTrees(Type declaringBeanType, out List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
         {
             members = new List<ChildBeanSpec>();
             var fieldOrPropertyInfos = declaringBeanType.GetMembers(
@@ -237,9 +237,11 @@ namespace PureDI.Tree
                 .Where(f => f is FieldInfo || f is PropertyInfo);
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
-                CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType
+                injectionState = CreateTreeForMemberOrParameter(new Info(fieldOrPropertyInfo), declaringBeanType
                     , members, creationContext, injectionState);
             } // for each property or field
+
+            return injectionState;
         } // CreateMemberTrees()
 
         private InjectionState CreateTreeForMemberOrParameter(Info fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
@@ -340,7 +342,7 @@ namespace PureDI.Tree
                         {
                             throw new DIException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
                         }
-                        CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
+                        injectionState = CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
                         AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
                         AssignBean(memberSpec, memberBean);
                     }
@@ -564,8 +566,9 @@ namespace PureDI.Tree
 
         /// <summary>checks if the type to be instantiated has a valid constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
-        /// <param name="constructorParameterSpecsArg"></param>
-        /// <param name="constructorName"></param>
+        /// <param name="constructorParameterSpecsArg">the parameters passed into the beanType's constructor
+        ///        identified by constructorName</param>
+        /// <param name="constructorName">The name of one of beanType's constructors</param>
         /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
         private (object bean, InjectionState injectionState) Construct(Type beanType
@@ -584,7 +587,14 @@ namespace PureDI.Tree
                 ConstructorInfo constructorInfo  = constructorParameterSpecs?.Count > 0 
                   ? Check( () => beanType.GetConstructorNamed(constructorName))
                   : Check( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetIOCCName()));
-                var factoryBasedParameters = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
+                        // it is obvious that the system has already determined the correct constructor
+                        // by dint of the fact that the appropriate parameters are passed in (and it would
+                        // need the constructorInfo to enumerate those).  Why is the name rather than constructorInfo passed in?
+                        // The reason is that when Construct is called for a bean where a specified constructor
+                        // is not referenced then there is no requirement by the caller to identify a constructor.
+                        // The downside is that the link is temporarily lost between the tightly coupled
+                        // consructorInfo and the parameters.
+                var factoryCreatedParameters = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
                     spec =>
                     {
                         object obj;
@@ -593,13 +603,9 @@ namespace PureDI.Tree
                                 .FactoryParameter));
                         return (obj, @is);
                     }).Select(p => p.obj);
-                args = args.Concat(factoryBasedParameters.Concat(constructorParameterSpecs.Where(spec => !spec.IsFactory)
+                args = args.Concat(factoryCreatedParameters.Concat(constructorParameterSpecs.Where(spec => !spec.IsFactory)
                     .Select(spec => spec.MemberOrFactoryBean))).ToArray();
-                args.Where(arg => arg != null).Select(arg =>
-                {
-                    LogConstructorInjection(@is.Diagnostics, beanType, arg.GetType());
-                    return arg;
-                }).ToList();
+                LogConstructorInjections(@is.Diagnostics, beanType, args);
                 try
                 {
                     return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null,  args, null), @is);
@@ -621,16 +627,25 @@ namespace PureDI.Tree
             }
 
             return ci;
-        }            
+        }
 
-        private void LogConstructorInjection(Diagnostics diagnostics
-          , Type declaringType, Type parameterImplementation)
+        private void LogConstructorInjections(Diagnostics diagnostics
+            , Type declaringType, object[] args)
         {
-            Diagnostics.Group group = diagnostics.Groups["ConstructorInjectionsInfo"];
-            dynamic diag = group.CreateDiagnostic();
-            diag.DeclaringType = declaringType;
-            diag.ParameterImplementation = parameterImplementation;
-            group.Add(diag);
+            void LogConstructorInjection(
+                Type parameterImplementation)
+            {
+                Diagnostics.Group group = diagnostics.Groups["ConstructorInjectionsInfo"];
+                dynamic diag = group.CreateDiagnostic();
+                diag.DeclaringType = declaringType;
+                diag.ParameterImplementation = parameterImplementation;
+                group.Add(diag);
+            }
+            args.Where(arg => arg != null).Select(arg =>
+            {
+                LogConstructorInjection(arg.GetType());
+                return arg;
+            }).ToList();
         }
     }                // ObjectTree
 }

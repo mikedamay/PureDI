@@ -134,10 +134,9 @@ namespace PureDI.Tree
         public static (object obj, InjectionState @is) ExecuteFactory(
           this ChildBeanSpec spec, InjectionState injectionState, BeanFactoryArgs args)
         {
-            object obj;
             try
             {
-                (obj, injectionState) = (spec.MemberOrFactoryBean as IFactory)
+                return (spec.MemberOrFactoryBean as IFactory)
                     .Execute(injectionState, new BeanFactoryArgs(
                         spec.ParameterInfo.GetBeanReferenceAttribute()
                             .FactoryParameter));                           
@@ -147,8 +146,6 @@ namespace PureDI.Tree
                 throw new DIException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
                     ,ex, injectionState.Diagnostics);
             }
-
-            return (obj, injectionState);
         }
     }
 }

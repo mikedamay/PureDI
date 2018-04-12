@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Reflection;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -80,6 +81,24 @@ namespace IOCCTest
             Assert.IsNotNull(((IResultGetter)result.GetResults()?.ChildOne)?.GetResults().ChildTwo);
             Assert.AreEqual(result?.GetResults().ChildTwo
               , ((IResultGetter)result.GetResults()?.ChildOne)?.GetResults().ChildTwo);
+        }
+        [TestMethod]
+        public void ShouldAddFactoryCreatedBeansToInjectionState()
+        {
+            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+              "MultipleCallsTestData", "FactoryMadeWithConstructor");
+//            Assembly assembly = this.GetType().Assembly;
+//            var pdi = new PDependencyInjector();
+            (object fmwc, InjectionState injectionState)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.FactoryMadeWithConstructor", assemblies: new Assembly[] { assembly});
+            IResultGetter result = fmwc as IResultGetter;
+
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
+            (object furthest, _)
+                = pdi.CreateAndInjectDependencies(
+                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+            Assert.AreEqual(1, result?.GetResults().FurthestCtr);
         }
     }
 }

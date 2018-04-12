@@ -252,7 +252,8 @@ namespace PureDI
                 Assembly[] assemblies = explicitAssemblies.Union(injectionState.Assemblies).ToArray();
                 (typeMap, diagnostics) = CreateTypeMap(rootType
                   , assemblies);
-                newInjectionState = new InjectionState(diagnostics, typeMap, injectionState.MapObjectsCreatedSoFar
+                newInjectionState = new InjectionState(diagnostics, typeMap
+                  , injectionState.MapObjectsCreatedSoFar.ToDictionary(kv => kv.Key, kv => kv.Value)
                   ,assemblies);
                 
                 
