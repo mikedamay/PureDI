@@ -576,7 +576,6 @@ namespace PureDI.Tree
         {
             var constructorParameterSpecs = constructorParameterSpecsArg ?? new List<ChildBeanSpec>();
             InjectionState @is = injectionState;
-            object[] args = new object[0];
             if (beanType.IsStruct())
             {
                 return (Activator.CreateInstance(beanType), injectionState);
@@ -603,12 +602,13 @@ namespace PureDI.Tree
                                 .FactoryParameter));
                         return (obj, @is);
                     }).Select(p => p.obj);
-                args = args.Concat(factoryCreatedParameters.Concat(constructorParameterSpecs.Where(spec => !spec.IsFactory)
-                    .Select(spec => spec.MemberOrFactoryBean))).ToArray();
-                LogConstructorInjections(@is.Diagnostics, beanType, args);
+                var nonFactoryParameters = constructorParameterSpecs.Where(spec => !spec.IsFactory)
+                    .Select(spec => spec.MemberOrFactoryBean);
+                var constructorParameters = new object[0].Concat(factoryCreatedParameters).Concat(nonFactoryParameters).ToArray();
+                LogConstructorInjections(@is.Diagnostics, beanType, constructorParameters);
                 try
                 {
-                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null,  args, null), @is);
+                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null,  constructorParameters, null), @is);
                 }
                 catch (Exception ex2)
                 {
