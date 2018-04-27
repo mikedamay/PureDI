@@ -163,6 +163,21 @@ namespace IOCCTest
             }
         }
         [TestMethod]
+        public void ShouldWarnIfCyclicalDependencyWithNamedConstructor()
+        {
+            try
+            {
+                (dynamic result, var diagnostics) = CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependencyWithNamedConstructor");
+                Assert.Fail();
+            }
+            catch (DIException iex)
+            {
+                System.Diagnostics.Debug.WriteLine(iex.Diagnostics);
+                Assert.IsTrue(true);
+            }
+        }
+        [TestMethod]
         public void ShouldNotWarnIfConstructorsAndParamatersNotMarked()
         {
             (dynamic result, var diagnostics) = CreateAndRunAssembly(

@@ -5,13 +5,13 @@ using IOCCTest.TestCode;
 namespace IOCCTest.ConstructorTestData
 {
     [Bean]
-    public class CyclicalDependency : IResultGetter
+    public class CyclicalDependencyWithNamedConstructor : IResultGetter
     {
         private Level1 level1;
 
         [Constructor]
-        public CyclicalDependency(
-          [BeanReference]Level1 level1)
+        public CyclicalDependencyWithNamedConstructor(
+            [BeanReference]Level1 level1)
         {
             this.level1 = level1;
         }
@@ -27,9 +27,9 @@ namespace IOCCTest.ConstructorTestData
     public class Level1 : IResultGetter
     {
         private Level2 level2;
-        [Constructor]
+        [Constructor(Name="MyConstructor")]
         public Level1(
-          [BeanReference]Level2 level2)
+            [BeanReference]Level2 level2)
         {
             this.level2 = level2;
         }
@@ -46,7 +46,7 @@ namespace IOCCTest.ConstructorTestData
     {
         [Constructor]
         public Level2(
-          [BeanReference] Level1 level1)
+            [BeanReference(ConstructorName="MyConstructor")] Level1 level1)
         {
             
         }

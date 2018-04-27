@@ -30,3 +30,28 @@ i) Static or abstract classes marked as beans are reported as invalid.  A compli
   entities given an attribute of [Bean].
 
 mapObjectsCreatedSoFar (member of InjectionState) contains each implementation injected together with bean name and constructor name
+
+instantiate-object of type (starting with the root type):
+using the referenced type:
+    find the implementation type in the type map
+    discover the corresponding constructable type
+    for each member of the constructable type
+        instantiate-object of member's type
+    for each constructor parameter of the constructable type
+        instantiate-object of parameter's type
+    construct object for the constructable type
+    for each member
+        assign instantiated object to member variable
+        
+Direct or indirect cyclical dependencies are detected
+    if the dependency has constructor parameters then an exception is thrown **
+    otherwise the dependency is instantiated immediately the cyclical dependency is detected.
+        
+        ** This is overkill.  We should care only if the cyclical dependency is a constructor parameter.  It
+           might be a member variable notwithstanding the fact that the dependency has some constructor parameters
+        
+The implementation type is obtained by searching the typemap using the reference type as the search key.
+The implementtion type is either a non-generic concrete class or a generic class with open parameters.
+
+
+        
