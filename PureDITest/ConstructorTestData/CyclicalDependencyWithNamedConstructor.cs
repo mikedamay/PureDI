@@ -11,7 +11,7 @@ namespace IOCCTest.ConstructorTestData
 
         [Constructor]
         public CyclicalDependencyWithNamedConstructor(
-            [BeanReference]Level1 level1)
+            [BeanReference(ConstructorName = "MyConstructor")]Level1 level1)
         {
             this.level1 = level1;
         }

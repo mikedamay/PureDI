@@ -51,7 +51,15 @@ Direct or indirect cyclical dependencies are detected
            might be a member variable notwithstanding the fact that the dependency has some constructor parameters
         
 The implementation type is obtained by searching the typemap using the reference type as the search key.
-The implementtion type is either a non-generic concrete class or a generic class with open parameters.
+The implementtion type is either a non-generic concrete class which implements the non-generic reference
+or a generic with unbound parameters.
+
+The constructable type is 
+a) in the case of a non-generic, the implementation type or
+b) in the case of a generic the type of the bean reference (as this will have its type parameters bound)
+(this is a bad design as it does not cater for generic interfaces - there is a failing test).
+
+
 
 
         

@@ -168,7 +168,8 @@ namespace IOCCTest
             try
             {
                 (dynamic result, var diagnostics) = CreateAndRunAssembly(
-                    CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependencyWithNamedConstructor");
+                    CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependencyWithNamedConstructor"
+                    , usePureDiTest: false);
                 Assert.Fail();
             }
             catch (DIException iex)

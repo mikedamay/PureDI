@@ -106,7 +106,7 @@ namespace PureDI.Tree
         {
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Any(c => CustomAttributeExtensions.GetCustomAttributes((MemberInfo) c).Any(
                 ca => ca is ConstructorBaseAttribute
-                      && (ca as ConstructorBaseAttribute).Name == constructorName));
+                      && (ca as ConstructorBaseAttribute).Name?.ToLower() == constructorName));
         }
 
         public static string GetConstructorNameFromMember(this Type type)

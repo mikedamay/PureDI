@@ -132,7 +132,7 @@ namespace PureDI.Tree
                 , out List<ChildBeanSpec> members)
             {
                 members = new List<ChildBeanSpec>();
-                string constructorName = beanId.Item3;
+                string constructorName = beanId.constructorName;
                 ValidateConstructors(declaringBeanType, constructorName
                   , injectionState.Diagnostics, beanReferenceDetails);
                 if (declaringBeanType.GetConstructors(
@@ -205,7 +205,7 @@ namespace PureDI.Tree
                     // until the implementationType is encountered again
                     // further up the stack
                 {
-                    if (constructableType.HasInjectedConstructorParameters(Constants.DefaultConstructorName))
+                    if (constructableType.HasInjectedConstructorParameters(beanId.constructorName))
                     {
                         dynamic diag = injectionState.Diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
                         diag.Bean = constructableType.FullName;

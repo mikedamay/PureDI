@@ -11,11 +11,34 @@ namespace IOCCTest
     internal static class Utils
     {
         public const string TestResourcePrefix = "PureDITest";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameSpace">Typically the nane of the test data directory (without a preceding
+        /// IOCCTest</param>
+        /// <param name="className">unqualified class name of root type within the test</param>
+        /// <param name="usePureDiTest">Normal usage is to have compiler services
+        /// compile and load an assembly to contain the root type for the test at run-time.
+        /// Set this to true to use the PureDITest assembly to contain the root type.
+        /// Note that the file containing the type must be set to embedded resource
+        /// rather than a compile target</param>
+        /// <returns> diagnostics are as returned by the CreateDependnecy call.
+        /// result is some dynamic member of the root class under test</returns>
         public static
             (dynamic result, Diagnostics diagnostics)
-            CreateAndRunAssembly(string nameSpace, string className)
+        CreateAndRunAssembly(string nameSpace, string className, bool usePureDiTest = false)
         {
-            (var iocc, var assembly) = CreateIOCCinAssembly(nameSpace, className);
+            PDependencyInjector iocc;
+            Assembly assembly;
+            if (usePureDiTest)
+            {
+                assembly = typeof(Utils).Assembly;
+                iocc = new PDependencyInjector();
+            }
+            else
+            {
+                (iocc, assembly) = CreateIOCCinAssembly(nameSpace, className);               
+            }
             (object rootBean, InjectionState InjectionState) = iocc.CreateAndInjectDependencies(
                 $"IOCCTest.{nameSpace}.{className}", assemblies: new Assembly[] { assembly});
             Diagnostics diagnostics = InjectionState.Diagnostics;
