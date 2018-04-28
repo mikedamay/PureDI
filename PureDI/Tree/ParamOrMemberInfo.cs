@@ -3,17 +3,17 @@ using System.Reflection;
 
 namespace PureDI.Tree
 {
-    internal class VariableInfo
+    internal class ParamOrMemberInfo
     {
         public MemberInfo FieldOrPropertyInfo { get; }
         public ParameterInfo ParameterInfo { get; }
 
-        public VariableInfo(MemberInfo fieldOrPropertyInfo)
+        public ParamOrMemberInfo(MemberInfo fieldOrPropertyInfo)
         {
             this.FieldOrPropertyInfo = fieldOrPropertyInfo;
         }
 
-        public VariableInfo(ParameterInfo parameterInfo)
+        public ParamOrMemberInfo(ParameterInfo parameterInfo)
         {
             this.ParameterInfo = parameterInfo;
         }

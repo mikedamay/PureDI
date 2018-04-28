@@ -144,7 +144,7 @@ namespace PureDI.Tree
                     {
                         foreach (var paramInfo in paramInfos)
                         {
-                            injectionState = CreateTreeForMemberOrParameter(new VariableInfo(paramInfo), declaringBeanType, members
+                            injectionState = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(paramInfo), declaringBeanType, members
                               , creationContext, injectionState);
                         } // for each constructor parameter
                     }
@@ -237,14 +237,14 @@ namespace PureDI.Tree
                 .Where(f => f is FieldInfo || f is PropertyInfo);
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
-                injectionState = CreateTreeForMemberOrParameter(new VariableInfo(fieldOrPropertyInfo), declaringBeanType
+                injectionState = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo), declaringBeanType
                     , members, creationContext, injectionState);
             } // for each property or field
 
             return injectionState;
         } // CreateMemberTrees()
 
-        private InjectionState CreateTreeForMemberOrParameter(VariableInfo fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
+        private InjectionState CreateTreeForMemberOrParameter(ParamOrMemberInfo fieldOrPropertyInfo, Type declaringBeanType, List<ChildBeanSpec> members, CreationContext creationContext, InjectionState injectionState)
         {
                  BeanReferenceBaseAttribute attr;
                 if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)

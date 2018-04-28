@@ -14,18 +14,26 @@ namespace PureDI.Tree
     {
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-        // throws an exception for invalid constructors.
-        // With member references there's a good chance that
-        // we can hang around to collect more
-        // diagnostics but with constructors hanging around is
-        // more liable to cause chaos
-        public IReadOnlyList<ChildBeanSpec> CreateConstructorTrees(
+        /// <summary>
+        /// The set of parameters returned by this routine is the complete bunch of
+        /// parameters for the target constructor.  Their presence guarantees that
+        /// they are valid bean references and that they relate to a non-duplicate
+        /// well formed constructor.
+        /// </summary>
+        /// <param name="declaringBeanType">the type which is being scraped</param>
+        /// <param name="constructorName">the name of the required constructor - typically ""</param>
+        /// <param name="diagnostics">repo for all warnings</param>
+        /// <returns>A list of specifications of the parameters of the reqquired constructor
+        /// (empty list if none or a default constructor)
+        /// </returns>
+        public IReadOnlyList<ChildBeanSpec> GetConstructorParameterBeanReferences(
           Type declaringBeanType, string constructorName
-            , Diagnostics diagnostics
- )
+          , Diagnostics diagnostics
+          )
         {
-            List<ChildBeanSpec> members = new List<ChildBeanSpec>();
-            members = new List<ChildBeanSpec>();
+            WarnOfConstructorsWithMissingAttribute(declaringBeanType, diagnostics);
+            List<ChildBeanSpec> @params = new List<ChildBeanSpec>();
+            @params = new List<ChildBeanSpec>();
             ValidateConstructors(declaringBeanType, constructorName, diagnostics);
             if (declaringBeanType.GetConstructors(
               BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
@@ -36,13 +44,34 @@ namespace PureDI.Tree
                 {
                     foreach (var paramInfo in paramInfos)
                     {
-                        CreateTreeForMemberOrParameter(
-                          new VariableInfo(paramInfo), declaringBeanType, members, diagnostics);
+                        var childBeanSpec = CreateTreeForMemberOrParameter(
+                          new ParamOrMemberInfo(paramInfo), declaringBeanType, diagnostics);
+                        if (childBeanSpec != null)
+                        {
+                            @params.Add(childBeanSpec);
+                        }
                     } // for each constructor parameter
                 }
             }
-            return members.AsReadOnly();
+            return @params.AsReadOnly();
         } // CreateConstructorTrees()
+        
+        public IReadOnlyList<ChildBeanSpec> GetMemberBeanReferences(
+          Type declaringBeanType, Diagnostics diagnostics)
+        {
+            List<ChildBeanSpec> members = new List<ChildBeanSpec>();
+            var fieldOrPropertyInfos = declaringBeanType.GetMembers(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(f => f is FieldInfo || f is PropertyInfo);
+            foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
+            {
+                var childBeanSpec = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo)
+                  ,declaringBeanType, diagnostics);
+                members.Add(childBeanSpec);
+            } // for each property or field
+
+            return members.AsReadOnly();
+        } // CreateMemberTrees()
 
         /// <summary>
         /// errros if: 
@@ -55,14 +84,13 @@ namespace PureDI.Tree
         /// <param name="declaringBeanType">whose constructor are we talking about</param>
         /// <param name="constructorName">which of a number of competing construcors are we talking about</param>
         /// <param name="diagnostics"></param>
-        private void ValidateConstructors(Type declaringBeanType
+        private static void ValidateConstructors(Type declaringBeanType
             , string constructorName, Diagnostics diagnostics)
         {
             ConstructorInfo[] constructors
               = declaringBeanType.GetConstructors(constructorFlags
               ).Where(co => co.GetCustomAttributes<ConstructorBaseAttribute>()
               .Any(ca => ca.Name == constructorName)).ToArray();
-            WarnOfConstructorsWithMissingAttribute(declaringBeanType, diagnostics);
             if (constructors.Length == 0)
             {
                 return;
@@ -71,6 +99,7 @@ namespace PureDI.Tree
         }
         /// <summary>
         /// A constructor is considered for this warning if it contains parameters with BeanReference attributes
+        /// but is not itself annotated as a [Constructor]
         /// </summary>
         /// <param name="declaringBeanType">the type whose constructors are examined</param>
         /// <param name="diagnostics">repository for warnings</param>
@@ -115,17 +144,19 @@ namespace PureDI.Tree
                 }
             }
         }
-
-        private void CreateTreeForMemberOrParameter(VariableInfo fieldOrPropertyInfo, Type declaringBeanType
-            , List<ChildBeanSpec> members, Diagnostics diagnostics)
+        // null return indicates this member is not a valid bean reference or constructor parameter
+        private static ChildBeanSpec CreateTreeForMemberOrParameter(ParamOrMemberInfo fieldOrPropertyInfo,
+            Type declaringBeanType
+            , Diagnostics diagnostics)
         {
             BeanReferenceBaseAttribute attr;
+            ChildBeanSpec childBeanSpec = null;
             if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
             {
                 (Type type, string beanName, string constructorName) memberBeanId =
                     MakeMemberBeanId(fieldOrPropertyInfo.Type
                         , attr.Name, attr.ConstructorName);
-                object memberBean;
+                //object memberBean;
                 if (!fieldOrPropertyInfo.IsWriteable)
                 {
                     RecordDiagnostic(diagnostics, "ReadOnlyProperty"
@@ -161,23 +192,25 @@ namespace PureDI.Tree
 */
                         {
                             IFactory factoryBean = (o as IFactory);
-                            members.Add(new ChildBeanSpec(fieldOrPropertyInfo, factoryBean, true));
+                            childBeanSpec = new ChildBeanSpec(fieldOrPropertyInfo, factoryBean, true);
                         }
                     }
                     else // create the member without using a factory
                     {
-                        memberBean = null;
+                        //memberBean = null;
 /*
                         (memberBean, injectionState) = CreateObjectTree(memberBeanId, creationContext, injectionState
                           ,new BeanReferenceDetails(declaringBeanType
                           ,fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
 */
-                        members.Add(new ChildBeanSpec(fieldOrPropertyInfo, memberBean, false));
+                        childBeanSpec = new ChildBeanSpec(fieldOrPropertyInfo, null, false);
                     } // not a factory
                 } // writeable member
             } // this is a bean reference
+
+            return childBeanSpec;
         }
-        ParameterInfo[] GetParametersForConstructorMatching(
+        private static ParameterInfo[] GetParametersForConstructorMatching(
             Type declaringBeanType, string constructorName)
             => declaringBeanType
                 .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
@@ -202,7 +235,7 @@ namespace PureDI.Tree
         /// <param name="memberDeclaredBeanName"></param>
         /// <param name="constructorName"></param>
         /// <returns></returns>
-        private (Type type, string beanName, string constructorName)
+        private static (Type type, string beanName, string constructorName)
             MakeMemberBeanId(Type memberDeclaredBeanType
                 , string memberDeclaredBeanName, string constructorName
             )
