@@ -36,9 +36,15 @@ using the referenced type:
     find the implementation type in the type map
     discover the corresponding constructable type
     for each member of the constructable type
-        instantiate-object of member's type
+        if member is factory
+            execute factory
+        else
+            instantiate-object of member's type
     for each constructor parameter of the constructable type
-        instantiate-object of parameter's type
+        if member is factory
+            execute factory
+        else
+            instantiate-object of parameter's type
     construct object for the constructable type
     for each member
         assign instantiated object to member variable

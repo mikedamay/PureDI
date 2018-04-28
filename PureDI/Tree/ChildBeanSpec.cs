@@ -12,18 +12,18 @@ namespace PureDI.Tree
     {
         public MemberInfo FieldOrPropertyInfo
         {
-            get { return Info.FieldOrPropertyInfo; }
+            get { return VariableInfo.FieldOrPropertyInfo; }
         }
 
         public ParameterInfo ParameterInfo
         {
-            get { return Info.ParameterInfo; }
+            get { return VariableInfo.ParameterInfo; }
         }
         public object MemberOrFactoryBean { get; }
         public bool IsFactory { get; }
-        private Info Info { get; }
+        private VariableInfo VariableInfo { get; }
 
-        /// <param name="fieldOrPropertyInfo">describes the member variable or constructor parameter
+        /// <param name="fieldOrPropertyVariableInfo">describes the member variable or constructor parameter
         /// to which this bean will be assigned.  The object wraps the member or 
         /// parameter info and provides a common interface for many operations where members and parameters
         /// are treated identically.</param>
@@ -31,9 +31,9 @@ namespace PureDI.Tree
         /// or parameter or the factory which will produce the bean.</param>
         /// <param name="isFactory">true if the member variable or constructor parameter is to be
         /// assigned as the result of a factory operation.</param>
-        public ChildBeanSpec(Info fieldOrPropertyInfo, object memberOrFactoryBean, bool isFactory)
+        public ChildBeanSpec(VariableInfo fieldOrPropertyVariableInfo, object memberOrFactoryBean, bool isFactory)
         {
-            this.Info = fieldOrPropertyInfo;
+            this.VariableInfo = fieldOrPropertyVariableInfo;
             this.MemberOrFactoryBean = memberOrFactoryBean;
             this.IsFactory = isFactory;
         }

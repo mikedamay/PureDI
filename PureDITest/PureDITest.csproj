@@ -15,7 +15,7 @@
     <Compile Remove="CaseSensitivityTestData\Simple.cs" />
     <Compile Remove="CaseSensitivityTestData\simple2.cs" />
     <Compile Remove="ConstructorTestData\CyclicalDependency.cs" />
-    <Compile Remove="ConstructorTestData\CyclicalDependencyWithNamedConstructor.cs"/>
+    <Compile Remove="ConstructorTestData\CyclicalDependencyWithNamedConstructor.cs" />
     <Compile Remove="ConstructorTestData\DeepHierarchy.cs" />
     <Compile Remove="ConstructorTestData\DerivedConstructor.cs" />
     <Compile Remove="ConstructorTestData\DuplicateConstructors.cs" />
