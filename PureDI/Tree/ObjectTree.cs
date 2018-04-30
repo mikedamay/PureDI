@@ -422,40 +422,8 @@ namespace PureDI.Tree
             foreach (var memberSpec in childrenArg)
             {
                 object memberBean = default;
-                if (memberSpec.IsFactory)
-                {
-                    try
-                    {
-                        IFactory factory = memberSpec.MemberOrFactoryBean as IFactory;
-                        try
-                        {
-                            (memberBean, injectionState) = factory.Execute(injectionState, new BeanFactoryArgs(
-                                                memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().FactoryParameter));
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new DIException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
-                        }
-                        //injectionState = CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
-                        //AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
-                        AssignBean(memberSpec, memberBean);
-                    }
-                    catch (Exception ex)
-                    {
-                        RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
-                            , ("DeclaringBean", declaringBean.GetType().FullName)
-                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
-                            , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
-                                .FullName)
-                            , ("Exception", ex));
-                        throw;
-                    }
-                }
-                else    // non-factory
-                {
-                    memberBean = memberSpec.MemberOrFactoryBean;
-                    AssignBean(memberSpec, memberBean);
-                }
+                memberBean = memberSpec.MemberOrFactoryBean;
+                AssignBean(memberSpec, memberBean);
             }       // foreach memberSpec
             return injectionState;
         }  // AssignMembers()
@@ -473,13 +441,6 @@ namespace PureDI.Tree
             group.Add(diag);
         }
 
-        ParameterInfo[] GetParametersForConstructorMatching(
-            Type declaringBeanTypeArg, string constructorNameArg)
-            => declaringBeanTypeArg
-                .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(co
-                    => co.GetCustomAttribute<ConstructorBaseAttribute>() != null
-                       && string.Compare(co.GetCustomAttribute<ConstructorBaseAttribute>()?
-                           .Name, constructorNameArg, StringComparison.OrdinalIgnoreCase) == 0)?.GetParameters();
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
             => implementationTypeArg.IsGenericType
@@ -505,7 +466,7 @@ namespace PureDI.Tree
                 (implementationType, injectionState) = GetImplementationFromTypeMap(beanId, injectionState);
                 return (implementationType, injectionState);
             }
-            else
+            else    // error
             {
                 injectionState = result.injectionState;
                 if (beanReferenceDetails.IsRoot)
@@ -528,18 +489,6 @@ namespace PureDI.Tree
                     return (null, injectionState);
                 }
             }
-        }
-
-
-        private static void RecordDiagnostic(Diagnostics diagnostics, string groupName
-            , params (string member, object value)[] occurrences)
-        {
-            dynamic diag = diagnostics.Groups[groupName].CreateDiagnostic();
-            foreach ((var member, var value) in occurrences)
-            {
-                diag.Members[member] = value;
-            }
-            diagnostics.Groups[groupName].Add(diag);
         }
 
         /// <param name="injectionState"></param>
@@ -581,7 +530,9 @@ namespace PureDI.Tree
         /// <summary>checks if the type to be instantiated has a valid constructor and if so constructs it</summary>
         /// <param name="beanType">a concrete clasws typically part of the object tree being instantiated</param>
         /// <param name="constructorParameterSpecsArg">the parameters passed into the beanType's constructor
-        ///        identified by constructorName</param>
+        ///        identified by constructorName.  The constructor parameters in this list
+        ///        are guaranteed not to include factories.  They will have already been
+        ///        resolved into the target parametes by the caller</param>
         /// <param name="constructorName">The name of one of beanType's constructors</param>
         /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
@@ -607,26 +558,18 @@ namespace PureDI.Tree
                         // is not referenced then there is no requirement by the caller to identify a constructor.
                         // The downside is that the link is temporarily lost between the tightly coupled
                         // consructorInfo and the parameters.
-                var factoryCreatedParameters = constructorParameterSpecs.Where(spec => spec.IsFactory).Select(
-                    spec =>
-                    {
-                        object obj;
-                        (obj, @is) = spec.ExecuteFactory(@is, new BeanFactoryArgs(
-                            spec.ParameterInfo.GetBeanReferenceAttribute()
-                                .FactoryParameter));
-                        return (obj, @is);
-                    }).Select(p => p.obj);
-                var nonFactoryParameters = constructorParameterSpecs.Where(spec => !spec.IsFactory)
-                    .Select(spec => spec.MemberOrFactoryBean);
-                var constructorParameters = new object[0].Concat(factoryCreatedParameters).Concat(nonFactoryParameters).ToArray();
+                var constructorParameters = new object[0].Concat(constructorParameterSpecs.Where(spec => !spec.IsFactory)
+                    .Select(spec => spec.MemberOrFactoryBean)).ToArray();
                 LogConstructorInjections(@is.Diagnostics, beanType, constructorParameters);
                 try
                 {
-                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance, null,  constructorParameters, null), @is);
+                    return (constructorInfo.Invoke(flags | BindingFlags.CreateInstance
+                      ,null,  constructorParameters, null), @is);
                 }
                 catch (Exception ex2)
                 {
-                    throw new DIException($"Instantiation of {beanType.FullName} failed", ex2, injectionState.Diagnostics);
+                    throw new DIException($"Instantiation of {beanType.FullName} failed"
+                      ,ex2, injectionState.Diagnostics);
                 }
             }        // construction of class
         }            // Construct
@@ -680,6 +623,24 @@ namespace PureDI.Tree
                     , ("Factory", attr.Factory.FullName)
                 );
             }
+        }
+        private static void RecordDiagnostic(Diagnostics diagnostics, string groupName
+            , params (string member, object value)[] occurrences)
+        {
+            dynamic diag = diagnostics.Groups[groupName].CreateDiagnostic();
+            foreach ((var member, var value) in occurrences)
+            {
+                diag.Members[member] = value;
+            }
+            diagnostics.Groups[groupName].Add(diag);
+        }
+        public InjectionState CreateAndInjectDependenciesNew(object rootObject, InjectionState injectionState)
+        {
+            Type constructableType = rootObject.GetType();
+            string constructorName = Guid.NewGuid().ToString();
+            injectionState.MapObjectsCreatedSoFar.Add((constructableType, constructorName), constructableType);
+            return CreateAndInjectDependencies(constructableType, injectionState, constructorName
+                , Constants.DefaultConstructorName, BeanScope.Singleton, null).injectionState;
         }
     }                // ObjectTree
 }
