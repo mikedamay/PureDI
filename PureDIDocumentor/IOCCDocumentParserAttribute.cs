@@ -13,7 +13,8 @@ namespace SimpleIOCCDocumentor
         private class IOCCDocumentParserFactory : IFactory
         {
             [BeanReference] private IPropertyMap propertyMap = null;
-            [BeanReference(Name="navigator")] private XPathNavigatorResourceFactory navigatorFactory = null;
+            [BeanReference(Name = "navigator")] private XPathNavigatorResourceFactory navigatorFactory = null;
+            [BeanReference] private PDependencyInjector injector = null;
             public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
             {
                 try
@@ -24,6 +25,7 @@ namespace SimpleIOCCDocumentor
                     IOCCDocumentParser ddp = new IOCCDocumentParser(
                         (string)propertyMap.Map(documentPath)
                         ,xmlRoot, navigatorFactory);
+                    (_, injectionState) = injector.CreateAndInjectDependencies(ddp, injectionState);
                     return (ddp, injectionState);
                 }
                 catch (Exception ex)

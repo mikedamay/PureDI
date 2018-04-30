@@ -42,7 +42,7 @@ namespace IOCCTest
         {
             (var result, var diagnostics) = CommonFactoryTest("MissingFactory");
             Assert.IsTrue(diagnostics.HasWarnings);
-            Assert.AreEqual(1, diagnostics.Groups["MissingFactory"].Occurrences.Count);
+            Assert.AreEqual(1, diagnostics.Groups["BadFactory"].Occurrences.Count);
         }
 
         [TestMethod]

@@ -131,3 +131,6 @@ browse to http://localhost:60653/
     TODO exception should be thrown if Execution fails due to type mismatch.
     TODO investigate why catch in outer function does not trap exception
     TODO thrown in inner function.
+    TODO document that factories must take care of any dependency
+    TODO injection for member variables.
+    TODO How does tye cycle guard interact with factories

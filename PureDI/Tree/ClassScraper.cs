@@ -172,7 +172,7 @@ namespace PureDI.Tree
                     {
                         // create the factory
                         object o = null;
-                        if (!typeof(IFactory).IsAssignableFrom(memberBeanId.type))
+                        if (!typeof(IFactory).IsAssignableFrom(attr.Factory))
                         {
                             RecordDiagnostic(diagnostics, "BadFactory"
                                 , ("DeclaringBean", declaringBeanType.FullName)

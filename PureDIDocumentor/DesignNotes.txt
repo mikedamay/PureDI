@@ -1,5 +1,7 @@
-﻿DocumentationSiteGenerator (created by Startup ConfigureServices)
+﻿DocumentationSiteGenerator/IOCCDocumentProcessor (created by Startup ConfigureServices)
 						   (GenerateSite is invoked at the start of App.Run )
+						   provide the parser with a document path literal and a root node literal
+    Each instance of IOCCDocumentParser is built using the [IOCCDocumentParser] attribute (derived from BeanReferenceAttribute)
 	IOCCDocumentParaer (for user guide - takes resource id of doc)
 		CodeFetcher
 		IOCCXPathNavigatorCache - prototype (resource id is assigned by the factory)
