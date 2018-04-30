@@ -62,9 +62,71 @@ namespace PureDI.Tree
         }
         public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState)
         {
-            CreationContext cc = new CreationContext(new CycleGuard(), new HashSet<Type>());
-            injectionState = CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
-            return AssignMembers(rootObject, memberSpecs, injectionState, cc);
+            CreationContext creationContext = new CreationContext(new CycleGuard(), new HashSet<Type>());
+            Type constructableType = rootObject.GetType();
+            //injectionState = CreateMemberTrees(rootObject.GetType(), out var memberSpecs, cc, injectionState);
+            List<ChildBeanSpec> memberSpecs = new List<ChildBeanSpec>();
+            var memberSpecsIncomplete =
+                _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics);
+            foreach (ChildBeanSpec memberSpec in memberSpecsIncomplete)
+            {
+                BeanReferenceBaseAttribute attr;
+                object memberBean = null;
+                attr = new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo)
+                    .GetCustomeAttribute<BeanReferenceBaseAttribute>();
+                if (memberSpec.IsFactory)
+                {
+                    object o = null;
+                    (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName)
+                        , creationContext, injectionState, new BeanReferenceDetails(constructableType
+                            , memberSpec.FieldOrPropertyInfo.Name, attr.Name), attr.Scope);
+                    if (o != null)
+                    {
+                        try
+                        {
+                            (memberBean, injectionState) = (o as IFactory).Execute(injectionState
+                              ,new BeanFactoryArgs(attr.FactoryParameter));
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            RecordDiagnostic(injectionState.Diagnostics, "TypeMismatch"
+                                , ("DeclaringBean", constructableType.FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                    .FullName)
+                                , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
+                                , ("Exception", ae));
+                        }
+                        catch (Exception ex)
+                        {
+                            RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
+                                , ("DeclaringBean", constructableType.FullName)
+                                , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                    .FullName)
+                                , ("Exception", ex));
+                            throw new DIException("factory execution failed", ex, injectionState.Diagnostics);
+                        }
+                    }
+                    RecordCreationDiagnostics(injectionState, o, constructableType, memberSpec, attr);
+                    
+                }
+                else // create the member without using a factory
+                {
+                    (memberBean, injectionState) = CreateObjectTree(
+                        (new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo).Type, attr.Name, attr.ConstructorName)
+                        ,creationContext, injectionState
+                        ,new BeanReferenceDetails(constructableType
+                            ,memberSpec.FieldOrPropertyInfo.Name, attr.Name), attr.Scope);
+                } // not a factory
+
+                if (memberBean != null)
+                {
+                    memberSpecs.Add(new ChildBeanSpec(
+                        new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo), memberBean, false));                            
+                }
+            }
+            return AssignMembers(rootObject, memberSpecs, injectionState, creationContext);
 
         }
 
