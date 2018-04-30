@@ -123,4 +123,11 @@ browse to http://localhost:60653/
 	*** DONE Limitation - no indirect dependencies
 	*** DONE Limitation - beans can be associated with a single profile only
 	*** limitations are based on the IOC Container functionality of Spring Core Framework
-
+    TODO Factory.Execute will not automatically inject the dependencies
+    TODO of the object it creates.  The library user must call 
+    TODO CreateAndInjectDependencies if they want that behaviour
+    TODO a run-time diagnostic should be produced.
+    TODO add test to ClassScraper for invalid beans
+    TODO exception should be thrown if Execution fails due to type mismatch.
+    TODO investigate why catch in outer function does not trap exception
+    TODO thrown in inner function.

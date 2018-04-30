@@ -43,7 +43,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithSimpleConstructor()
         {
             (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
-                CONSTRUCTOR_TEST_NAMESPACE, "SimpleConstructor");
+                CONSTRUCTOR_TEST_NAMESPACE, "SimpleConstructor", usePureDiTestAssembly: false);
             Assert.AreEqual(42, result?.GetResults().SomeValue);
             Assert.IsFalse(Falsify(diagnostics.HasWarnings));
         }
@@ -138,14 +138,18 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfParmeterNotInjectable()
         {
-            // TODO this should really be an exception
-            // TODO we con't seem to have the equivalent for injected members
-            (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
-                CONSTRUCTOR_TEST_NAMESPACE, "ParameterNotInjectable");
-            Assert.IsTrue(diagnostics.HasWarnings);
-            Assert.AreEqual(1, diagnostics.Groups["MissingBean"].Occurrences.Count);
-            Assert.AreEqual("abc"
-              , ((dynamic)diagnostics.Groups["MissingBean"].Occurrences[0]).MemberName);
+            try
+            {
+                (dynamic result, var diagnostics) = Utils.CreateAndRunAssembly(
+                    CONSTRUCTOR_TEST_NAMESPACE, "ParameterNotInjectable");
+                Assert.Fail();
+            }
+            catch (DIException ae)
+            {
+                Assert.AreEqual(1, ae.Diagnostics.Groups["MissingBean"].Occurrences.Count);
+                Assert.AreEqual("abc"
+                  , ((dynamic)ae.Diagnostics.Groups["MissingBean"].Occurrences[0]).MemberName);                
+            }
         }
         [TestMethod]
         public void ShouldWarnIfCyclicalDependency()
@@ -169,7 +173,7 @@ namespace IOCCTest
             {
                 (dynamic result, var diagnostics) = CreateAndRunAssembly(
                     CONSTRUCTOR_TEST_NAMESPACE, "CyclicalDependencyWithNamedConstructor"
-                    , usePureDiTest: false);
+                    , usePureDiTestAssembly: false);
                 Assert.Fail();
             }
             catch (DIException iex)

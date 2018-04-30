@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Json;
 using PureDI.Common;
 using PureDI.Attributes;
 using static PureDI.Common.Common;
@@ -12,7 +13,7 @@ namespace PureDI.Tree
     {
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-
+        private static ClassScraper _classScraper = new ClassScraper();
         public ObjectTree()
         {
         }
@@ -81,7 +82,7 @@ namespace PureDI.Tree
         ///     anything else</param>
         /// <param name="beanScope"></param>
         private (object bean, InjectionState injectionState) 
-          CreateObjectTree((Type beanType, string beanName
+          CreateObjectTreeObsolescent((Type beanType, string beanName
           , string constructorName) beanId, CreationContext creationContext
           , InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
           , BeanScope beanScope)
@@ -89,7 +90,7 @@ namespace PureDI.Tree
             Type implementationType;
 
             (bool constructionComplete, object beanId) 
-              MakeBean(IList<ChildBeanSpec> constructorParameterSpecs = null)
+              MakeBean(List<ChildBeanSpec> constructorParameterSpecs = null)
             {            
                 object constructedBean;
                 try
@@ -300,7 +301,7 @@ namespace PureDI.Tree
             return injectionState;
         }
         // declaringBean - the bean just returned by MakeBean()
-        InjectionState AssignMembers(object declaringBean, List<ChildBeanSpec> childrenArg, InjectionState injectionState, CreationContext creationContext)
+        InjectionState AssignMembers(object declaringBean, IReadOnlyList<ChildBeanSpec> childrenArg, InjectionState injectionState, CreationContext creationContext)
         {
             void AssignBean(ChildBeanSpec memberSpec, object memberBean)
             {
@@ -318,7 +319,23 @@ namespace PureDI.Tree
                             );
                         }
                     }
-                    memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+
+                    try
+                    {
+                        memberSpec.FieldOrPropertyInfo.SetValue(declaringBean, memberBean);
+
+                    }
+                    catch (ArgumentException ae)
+                    {
+                        RecordDiagnostic(injectionState.Diagnostics, "TypeMismatch"
+                            , ("DeclaringBean", declaringBean.GetType().FullName)
+                            , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                            , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                .FullName)
+                            , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
+                            , ("Exception", ae));
+                    }
+
                     LogMemberInjection(injectionState.Diagnostics, declaringBean.GetType()
                         , memberSpec.FieldOrPropertyInfo.GetDeclaredType()
                         , memberSpec.FieldOrPropertyInfo.Name
@@ -342,10 +359,11 @@ namespace PureDI.Tree
                         {
                             throw new DIException($"Execute failed for {factory.GetType().FullName}", ex, injectionState.Diagnostics);
                         }
-                        injectionState = CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
-                        AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
+                        //injectionState = CreateMemberTrees(memberBean.GetType(), out var memberBeanMembers, creationContext, injectionState);
+                        //AssignMembers(memberBean, memberBeanMembers, injectionState, creationContext);
                         AssignBean(memberSpec, memberBean);
                     }
+/*
                     catch (ArgumentException ae)
                     {
                         RecordDiagnostic(injectionState.Diagnostics, "TypeMismatch"
@@ -356,6 +374,7 @@ namespace PureDI.Tree
                             , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
                             , ("Exception", ae));
                     }
+*/
                     catch (Exception ex)
                     {
                         RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
@@ -572,7 +591,7 @@ namespace PureDI.Tree
         /// <param name="injectionState"></param>
         /// <exception>InvalidArgumentException</exception>  
         private (object bean, InjectionState injectionState) Construct(Type beanType
-            , IList<ChildBeanSpec> constructorParameterSpecsArg, string constructorName, InjectionState injectionState)
+            , IReadOnlyList<ChildBeanSpec> constructorParameterSpecsArg, string constructorName, InjectionState injectionState)
         {
             var constructorParameterSpecs = constructorParameterSpecsArg ?? new List<ChildBeanSpec>();
             InjectionState @is = injectionState;
@@ -647,5 +666,307 @@ namespace PureDI.Tree
                 return arg;
             }).ToList();
         }
+        /// <summary>
+        /// see documentation for CreateAndInjectDependencies
+        /// </summary>
+        /// <param name="beanId">the type + beanName for which a bean is to be created.
+        ///     The bean will not necessarily have the type passed in as this
+        ///     may be a base class or interface (constructed generic type)
+        ///     from which the bean is derived</param>
+        /// <param name="creationContext"></param>
+        /// <param name="injectionState"></param>
+        /// <param name="beanReferenceDetails">provides a context to the bean that
+        ///     can be displayed in diagnostic messages - currently not used for
+        ///     anything else</param>
+        /// <param name="beanScope"></param>
+        private (object bean, InjectionState injectionState) 
+          CreateObjectTree((Type beanType, string beanName
+          , string constructorName) beanId, CreationContext creationContext
+          , InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
+          , BeanScope beanScope)
+        {
+            Type implementationType;
+
+            (bool constructionComplete, object beanId) 
+              MakeBean(IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null)
+            {            
+                object constructedBean;
+                try
+                {
+                    Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
+                    if (beanScope != BeanScope.Prototype
+                        && injectionState.MapObjectsCreatedSoFar.ContainsKey((constructableTypeLocal, beanId.constructorName)))
+                    {
+                        // there maybe a cyclical dependency
+                        constructedBean = injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)];
+                        return (true, constructedBean);
+                    }
+                    else
+                    {
+                        // TODO explain why type to be constructed is complicated by generics
+                        (constructedBean, injectionState) = Construct(constructableTypeLocal
+                            , constructorParameterSpecs, beanId.constructorName, injectionState);
+                        if (beanScope != BeanScope.Prototype)
+                        {
+                            injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
+                            // TODO replace first param with ConstructableType
+                        }
+                    }
+                }
+                catch (NoArgConstructorException inace)
+                {
+                    RecordDiagnostic(injectionState.Diagnostics, "MissingNoArgConstructor"
+                        , ("Class", inace.Class));
+                    return (true, null);
+                }
+                return (false, constructedBean);
+            } // MakeBean()
+
+            // throws an exception for invalid constructors.
+            // With member references there's a good chance that
+            // we can hang around to collect more
+            // diagnostics but with constructors hanging around is
+            // more liable to cause chaos
+/*
+            void CreateConstructorTrees(Type declaringBeanType
+                , out List<ChildBeanSpec> members)
+            {
+                members = new List<ChildBeanSpec>();
+                string constructorName = beanId.constructorName;
+                ValidateConstructors(declaringBeanType, constructorName
+                  , injectionState.Diagnostics, beanReferenceDetails);
+                if (declaringBeanType.GetConstructors(
+                  BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                  .Length > 0)
+                {
+                    var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
+                    if (paramInfos != null)
+                    {
+                        foreach (var paramInfo in paramInfos)
+                        {
+                            injectionState = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(paramInfo), declaringBeanType, members
+                              , creationContext, injectionState);
+                        } // for each constructor parameter
+                    }
+
+                }
+            } // CreateConstructorTrees()
+*/
+
+            CycleGuard cycleGuard = creationContext.CycleGuard;
+            ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
+            bool complete;
+            object bean;
+            if (((implementationType, injectionState) 
+              = GetImplementationType(beanId, beanReferenceDetails, injectionState)).implementationType == null)
+            {
+                Assert(injectionState.Diagnostics.HasWarnings);    // diagnostics recorded by callee.
+                return (null, injectionState); // no implementation type found corresponding to this beanId
+                             // we can still carry on and a) this might not be fatal b) other diagnostics may show up
+                            
+            }
+            Type constructableType = MakeConstructableType(beanId, implementationType);
+            bool cyclicalDependencyFound = false;
+            try
+            {
+                List<ChildBeanSpec> memberSpecs = new List<ChildBeanSpec>();
+                List<ChildBeanSpec> parameterSpecs = new List<ChildBeanSpec>();
+                cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Push(constructableType);
+                    var memberSpecsIncomplete =
+                        _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics);
+                    foreach (ChildBeanSpec memberSpec in memberSpecsIncomplete)
+                    {
+                        BeanReferenceBaseAttribute attr;
+                        object memberBean = null;
+                        attr = new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo)
+                            .GetCustomeAttribute<BeanReferenceBaseAttribute>();
+                        if (memberSpec.IsFactory)
+                        {
+                            object o = null;
+                            (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName)
+                                , creationContext, injectionState, new BeanReferenceDetails(constructableType
+                                    , memberSpec.FieldOrPropertyInfo.Name, attr.Name), attr.Scope);
+                            if (o != null)
+                            {
+                                try
+                                {
+                                    (memberBean, injectionState) = (o as IFactory).Execute(injectionState
+                                      ,new BeanFactoryArgs(attr.FactoryParameter));
+                                }
+                                catch (ArgumentException ae)
+                                {
+                                    RecordDiagnostic(injectionState.Diagnostics, "TypeMismatch"
+                                        , ("DeclaringBean", constructableType.FullName)
+                                        , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                        , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                            .FullName)
+                                        , ("ExpectedType", memberSpec.FieldOrPropertyInfo.MemberType)
+                                        , ("Exception", ae));
+                                }
+                                catch (Exception ex)
+                                {
+                                    RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
+                                        , ("DeclaringBean", constructableType.FullName)
+                                        , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                                        , ("Factory", memberSpec.FieldOrPropertyInfo.GetBeanReferenceAttribute().Factory
+                                            .FullName)
+                                        , ("Exception", ex));
+                                    throw new DIException("factory execution failed", ex, injectionState.Diagnostics);
+                                }
+                            }
+                            RecordCreationDiagnostics(injectionState, o, constructableType, memberSpec, attr);
+                            
+                        }
+                        else // create the member without using a factory
+                        {
+                            (memberBean, injectionState) = CreateObjectTree(
+                                (new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo).Type, attr.Name, attr.ConstructorName)
+                                ,creationContext, injectionState
+                                ,new BeanReferenceDetails(constructableType
+                                    ,memberSpec.FieldOrPropertyInfo.Name, attr.Name), attr.Scope);
+                        } // not a factory
+
+                        if (memberBean != null)
+                        {
+                            memberSpecs.Add(new ChildBeanSpec(
+                                new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo), memberBean, false));                            
+                        }
+                    }
+
+                    var parameterSpecsIncomplete = _classScraper.GetConstructorParameterBeanReferences(
+                        constructableType, beanId.constructorName, injectionState.Diagnostics);
+                    foreach (ChildBeanSpec parameterSpec in parameterSpecsIncomplete)
+                    {
+                        BeanReferenceBaseAttribute attr;
+                        object memberBean = null;
+                        attr = new ParamOrMemberInfo(parameterSpec.ParameterInfo)
+                            .GetCustomeAttribute<BeanReferenceBaseAttribute>();
+                        if (parameterSpec.IsFactory)
+                        {
+                            object o = null;
+                            (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName)
+                                , creationContext, injectionState, new BeanReferenceDetails(constructableType
+                                    , parameterSpec.ParameterInfo.Name, attr.Name), attr.Scope);
+                            if (o != null)
+                            {
+                                try
+                                {
+                                    (memberBean, injectionState) = (o as IFactory).Execute(injectionState
+                                      ,new BeanFactoryArgs(attr.FactoryParameter));
+                                }
+                                catch (Exception ex)
+                                {
+                                    RecordDiagnostic(injectionState.Diagnostics, "FactoryExecutionFailure"
+                                        , ("DeclaringBean", constructableType.FullName)
+                                        , ("Member", parameterSpec.ParameterInfo.Name)
+                                        , ("Factory", parameterSpec.ParameterInfo.GetBeanReferenceAttribute().Factory
+                                            .FullName)
+                                        , ("Exception", ex));
+                                    throw;
+                                }
+                            }
+
+                            RecordCreationDiagnostics(injectionState, o, constructableType, parameterSpec, attr);
+
+                        }
+                        else // create the member without using a factory
+                        {
+                            (memberBean, injectionState) = CreateObjectTree(
+                                (new ParamOrMemberInfo(parameterSpec.ParameterInfo).Type, attr.Name,
+                                    attr.ConstructorName)
+                                , creationContext, injectionState
+                                , new BeanReferenceDetails(constructableType
+                                    , parameterSpec.ParameterInfo.Name, attr.Name), attr.Scope);
+                        } // not a factory
+
+                        if (memberBean != null)
+                        {
+                            parameterSpecs.Add(new ChildBeanSpec(
+                              new ParamOrMemberInfo(parameterSpec.ParameterInfo), memberBean, false));                            
+                        }
+                    }
+
+                    //injectionState = CreateMemberTrees(constructableType, out var memberSpecs, creationContext, injectionState);
+                    //CreateConstructorTrees(constructableType, out var parameterSpecs);
+                    (complete, bean) = MakeBean(parameterSpecs);
+                    Assert(!cyclicalDependencies.Contains(constructableType)
+                           || cyclicalDependencies.Contains(constructableType)
+                           && complete
+                           && bean != null); 
+                            // "complete && bean != null" indicates that
+                            // MakeBean found a bean cached in mapObjectsCreatedSoFar.
+                            // 
+                            // if a cyclical dependency was found lower
+                            // in the stack then a bean must have been
+                            // created for it at that time. So wtf!
+                    // There are 3 cases where complete == true (i.e. attempted bean instantiation is complete)
+                    // 1) bean instantiation failed; in which case we will return null - caller can deal
+                    // 2) bean already existed (all of its members will have already been created and assigned).
+                    // 3) bean already existed but because it was a cyclical dependency its
+                    //    members had not been created and assigned and that needs to be done now.
+                    //    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
+                    //     case of 3) it wrongly reports that the bean creation is complete)
+                    if (complete && !cyclicalDependencies.Contains(constructableType))
+                    {
+                        return (bean, injectionState); // either the bean and therefore its children had already been created
+                                     // or we were unable to create the bean (null)
+                    }
+                    cyclicalDependencies.Remove(constructableType);
+                    injectionState = AssignMembers(bean, memberSpecs, injectionState, creationContext);
+                }
+                else // there is a cyclical dependency so we
+                    // need to just create the bean itself and defer child creation
+                    // until the implementationType is encountered again
+                    // further up the stack
+                {
+                    if (constructableType.HasInjectedConstructorParameters(beanId.constructorName))
+                    {
+                        dynamic diag = injectionState.Diagnostics.Groups["CyclicalDependency"].CreateDiagnostic();
+                        diag.Bean = constructableType.FullName;
+                        injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
+                        throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
+                    }
+                    (complete, bean) = MakeBean();
+                    if (bean != null)
+                    {
+                        cyclicalDependencies.Add(constructableType);
+                    }
+                }
+            }
+            finally
+            {
+                if (!cyclicalDependencyFound)
+                {
+                    cycleGuard.Pop();
+                }
+            }
+            return (bean, injectionState);
+        }
+
+        private static void RecordCreationDiagnostics(InjectionState injectionState, object o, Type constructableType,
+            ChildBeanSpec memberSpec, BeanReferenceBaseAttribute attr)
+        {
+            if (o == null)
+            {
+                RecordDiagnostic(injectionState.Diagnostics, "MissingFactory"
+                    , ("DeclaringBean", constructableType.FullName)
+                    , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                    , ("Factory", attr.Factory.FullName)
+                    , ("ExpectedType", new ParamOrMemberInfo(memberSpec.FieldOrPropertyInfo).Type));
+            }
+            else if (!(o is IFactory))
+            {
+                RecordDiagnostic(injectionState.Diagnostics, "BadFactory"
+                    , ("DeclaringBean", constructableType.FullName)
+                    , ("Member", memberSpec.FieldOrPropertyInfo.Name)
+                    , ("Factory", attr.Factory.FullName)
+                );
+            }
+        }
+// CreateObjectTree
+
     }                // ObjectTree
 }

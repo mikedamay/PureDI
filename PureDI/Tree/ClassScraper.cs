@@ -67,7 +67,10 @@ namespace PureDI.Tree
             {
                 var childBeanSpec = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo)
                   ,declaringBeanType, diagnostics);
-                members.Add(childBeanSpec);
+                if (childBeanSpec != null)
+                {
+                    members.Add(childBeanSpec);                   
+                }
             } // for each property or field
 
             return members.AsReadOnly();
@@ -169,6 +172,15 @@ namespace PureDI.Tree
                     {
                         // create the factory
                         object o = null;
+                        if (!typeof(IFactory).IsAssignableFrom(memberBeanId.type))
+                        {
+                            RecordDiagnostic(diagnostics, "BadFactory"
+                                , ("DeclaringBean", declaringBeanType.FullName)
+                                , ("Member", fieldOrPropertyInfo.Name)
+                                , ("Factory", attr.Factory.FullName)
+                            );
+                           
+                        }
 /*
                             (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName), creationContext, injectionState, new BeanReferenceDetails(declaringBeanType
                                 , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
@@ -188,8 +200,8 @@ namespace PureDI.Tree
                                 , ("Factory", attr.Factory.FullName)
                             );
                         }
-                        else // factory successfully created
 */
+                        else // factory successfully created
                         {
                             IFactory factoryBean = (o as IFactory);
                             childBeanSpec = new ChildBeanSpec(fieldOrPropertyInfo, factoryBean, true);

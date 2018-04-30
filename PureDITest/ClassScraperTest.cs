@@ -96,7 +96,6 @@ namespace IOCCTest
             }
             catch (DIException e)
             {
-                Assert.IsTrue(true);
                 Assert.IsTrue(e.Diagnostics.ToString().Contains("MissingConstructorParameterAttribute"));
             }
         }
@@ -116,7 +115,6 @@ namespace IOCCTest
             }
             catch (DIException e)
             {
-                Assert.IsTrue(true);
                 Assert.IsTrue(e.Diagnostics.ToString().Contains("DuplicateConstructors"));
             }
         }
