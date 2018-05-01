@@ -188,8 +188,10 @@ namespace PureDI
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
-            newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultConstructorName)] = this;
-            newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), Constants.DefaultConstructorName)] = rootObject;
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), Constants.DefaultBeanName
+              ,Constants.DefaultConstructorName)] = this;
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(rootObject.GetType(), Constants.DefaultBeanName
+              ,Constants.DefaultConstructorName)] = rootObject;
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
             return (rootObject, newInjectionState);
@@ -224,12 +226,14 @@ namespace PureDI
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
             string beanName = Guid.NewGuid().ToString().ToLower();
-            newInjectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultConstructorName)] = this;
-            newInjectionState.MapObjectsCreatedSoFar[(rootObject.GetType(), beanName)] = rootObject;
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType()
+              ,Constants.DefaultBeanName, Constants.DefaultConstructorName)] = this;
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(rootObject.GetType()
+              ,beanName, Constants.DefaultConstructorName)] = rootObject;
             newInjectionState = AddRootObjectDetails(newInjectionState, (rootObject.GetType(), beanName));
             ObjectTree tree = new ObjectTree();
             (_, newInjectionState) = new ObjectTree().CreateAndInjectDependencies(rootObject.GetType(), newInjectionState
-            , beanName, Constants.DefaultConstructorName, BeanScope.Singleton, null);
+            , beanName, Constants.DefaultConstructorName, BeanScope.Singleton);
             return (rootObject, newInjectionState);
         }
         /// <summary>
@@ -246,15 +250,19 @@ namespace PureDI
           , string rootConstructorName, BeanScope scope)
         {
             IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
-            IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+            IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar;
             Assembly[] assemblies;
             (_, typeMap, mapObjectsCreatedSoFar, assemblies) = injectionState;
-            injectionState.MapObjectsCreatedSoFar[(this.GetType(), Constants.DefaultConstructorName)] = this;
+            injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType()
+              ,Constants.DefaultBeanName
+              ,Constants.DefaultConstructorName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
-            if (mapObjectsCreatedSoFar.ContainsKey((rootType, rootBeanName)))
+            if (mapObjectsCreatedSoFar.ContainsKey(new InstantiatedBeanId(rootType, rootBeanName
+              ,Constants.DefaultConstructorName)))
             {
-                return (mapObjectsCreatedSoFar[(rootType, rootBeanName)]
+                return (mapObjectsCreatedSoFar[
+                  new InstantiatedBeanId(rootType, rootBeanName, Constants.DefaultConstructorName)]
                     , new InjectionState(
                         injectionState.Diagnostics
                         , typeMap
@@ -264,7 +272,7 @@ namespace PureDI
             }
             object rootObject;
             (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
-              rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope, mapObjectsCreatedSoFar);
+              rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope);
             if (rootObject == null && injectionState.Diagnostics.HasWarnings)
             {
                 throw new DIException("Failed to create object tree - see diagnostics for details", injectionState.Diagnostics);
@@ -279,8 +287,8 @@ namespace PureDI
             Diagnostics diagnostics;
             if (injectionState == null || injectionState.IsEmpty())
             {
-                IDictionary<(Type, string), object> mapObjectsCreatedSoFar =
-                    new Dictionary<(Type, string), object>();
+                var mapObjectsCreatedSoFar =
+                    new Dictionary<InstantiatedBeanId, object>();
                 (typeMap, diagnostics) = CreateTypeMap(rootType, explicitAssemblies);
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar
                   , explicitAssemblies);

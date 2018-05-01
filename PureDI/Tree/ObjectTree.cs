@@ -29,11 +29,10 @@ namespace PureDI.Tree
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
-        /// <param name="mapObjectsCreatedSoFar"></param>
         /// <returns>an ojbect of root type</returns>
-        public (object bean, InjectionState injectionState) 
-          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
-            ,string rootConstructorName, BeanScope scope, IDictionary<(Type, string), object> mapObjectsCreatedSoFar)
+        public (object bean, InjectionState injectionState)
+            CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
+                , string rootConstructorName, BeanScope scope)
         {
             try
             {
@@ -159,10 +158,12 @@ namespace PureDI.Tree
                 {
                     Type constructableTypeLocal = MakeConstructableType(beanId, implementationType);
                     if (beanScope != BeanScope.Prototype
-                        && injectionState.MapObjectsCreatedSoFar.ContainsKey((constructableTypeLocal, beanId.constructorName)))
+                        && injectionState.MapObjectsCreatedSoFar.ContainsKey(
+                        new InstantiatedBeanId(constructableTypeLocal, beanId.beanName, beanId.constructorName)))
                     {
                         // there maybe a cyclical dependency
-                        constructedBean = injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)];
+                        constructedBean = injectionState.MapObjectsCreatedSoFar[
+                          new InstantiatedBeanId(constructableTypeLocal, beanId.beanName, beanId.constructorName)];
                         return (true, constructedBean);
                     }
                     else
@@ -172,7 +173,9 @@ namespace PureDI.Tree
                             , constructorParameterSpecs, beanId.constructorName, injectionState);
                         if (beanScope != BeanScope.Prototype)
                         {
-                            injectionState.MapObjectsCreatedSoFar[(constructableTypeLocal, beanId.constructorName)] = constructedBean;
+                            injectionState.MapObjectsCreatedSoFar[
+                              new InstantiatedBeanId(constructableTypeLocal, beanId.beanName, beanId.constructorName)] 
+                              = constructedBean;
                             // TODO replace first param with ConstructableType
                         }
                     }
@@ -637,10 +640,11 @@ namespace PureDI.Tree
         public InjectionState CreateAndInjectDependenciesNew(object rootObject, InjectionState injectionState)
         {
             Type constructableType = rootObject.GetType();
-            string constructorName = Guid.NewGuid().ToString();
-            injectionState.MapObjectsCreatedSoFar.Add((constructableType, constructorName), constructableType);
-            return CreateAndInjectDependencies(constructableType, injectionState, constructorName
-                , Constants.DefaultConstructorName, BeanScope.Singleton, null).injectionState;
+            string beanName = Guid.NewGuid().ToString();
+            injectionState.MapObjectsCreatedSoFar.Add(
+              new InstantiatedBeanId(constructableType, beanName, Constants.DefaultConstructorName), constructableType);
+            return CreateAndInjectDependencies(constructableType, injectionState, beanName
+                , Constants.DefaultConstructorName, BeanScope.Singleton).injectionState;
         }
     }                // ObjectTree
 }

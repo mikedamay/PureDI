@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PureDI.Common;
 using System.Reflection;
+using PureDI.Tree;
 
 namespace PureDI
 {
@@ -18,11 +19,11 @@ namespace PureDI
     {
         private readonly Diagnostics diagnostics;
         private readonly IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
-        private readonly IDictionary<(Type, string), object> mapObjectsCreatedSoFar;
+        private readonly IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar;
         private readonly Assembly[] _assemblies;
         internal InjectionState(Diagnostics diagnostics
           ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
-          ,IDictionary<(Type, string), object> mapObjectsCreatedSoFar, Assembly[] assemblies)
+          ,IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar, Assembly[] assemblies)
         {
             this.diagnostics = diagnostics;
             this.mapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
@@ -32,7 +33,7 @@ namespace PureDI
 
         internal void Deconstruct(out Diagnostics diagnostics
             , out IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
-            , out IDictionary<(Type, string), object> mapObjectsCreatedSoFar
+            , out IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar
             ,out Assembly[] assemblies)
         {
             diagnostics = this.diagnostics;
@@ -48,7 +49,7 @@ namespace PureDI
             return new InjectionState(
               new DiagnosticBuilder(this.Diagnostics).Diagnostics
               , new Dictionary<(Type beanType, string beanName), Type>(this.typeMap)
-              , new Dictionary<(Type, string), object>(mapObjectsCreatedSoFar)
+              , new Dictionary<InstantiatedBeanId, object>(mapObjectsCreatedSoFar)
               ,(Assembly[])_assemblies.Clone()
               );
         }
@@ -65,7 +66,7 @@ namespace PureDI
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
         internal IReadOnlyDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
-        internal IDictionary<(Type, string), object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
+        internal IDictionary<InstantiatedBeanId, object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         internal Assembly[] Assemblies => _assemblies;
         /// <summary>
         /// shortcut to diagnostics.AllToString().
@@ -88,7 +89,7 @@ namespace PureDI
           => new InjectionState(
                     new DiagnosticBuilder().Diagnostics
                     ,new Dictionary<(Type beanType, string beanName), Type>()
-                    ,new Dictionary<(Type, string), object>()
+                    ,new Dictionary<InstantiatedBeanId, object>()
                     ,new Assembly[0]
                     );
     }
