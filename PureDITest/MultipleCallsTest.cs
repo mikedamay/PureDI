@@ -136,5 +136,31 @@ namespace IOCCTest
                     "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
         }
+        [TestMethod]
+        public void ShouldReferenceUserCreatedObject()
+        {
+            PDependencyInjector pdi = new PDependencyInjector();
+            var isbu = new IOCCTest.MultipleCallsTestCode.InstantiatedByUser();
+            isbu.value = 42;
+            (_, InjectionState @is) = pdi.CreateAndInjectDependencies(isbu);
+            (var cup, InjectionState @is2) = pdi.CreateAndInjectDependencies<IOCCTest.MultipleCallsTestCode.CreatedByPureDI>(@is);
+            Assert.IsNotNull(cup.instantiatedByUser);
+            Assert.AreEqual(42, cup.instantiatedByUser?.value);
+        }
     }
 }
+
+namespace IOCCTest.MultipleCallsTestCode
+{
+    using PureDI.Attributes;
+    [Bean]
+    public class InstantiatedByUser
+    {
+        public int value = 0;
+    }
+    [Bean]
+    public class CreatedByPureDI
+    {
+        [BeanReference] public InstantiatedByUser instantiatedByUser = null;
+    }
+} 

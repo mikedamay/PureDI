@@ -16,7 +16,6 @@ namespace IOCCTest
         {
             Simple simple = new Simple();
             PDependencyInjector pdi = new PDependencyInjector();
-            //pdi.SetAssemblies(typeof(RootObjectTest).Assembly.GetName().Name);
             pdi.CreateAndInjectDependencies(simple, assemblies: new Assembly[] { this.GetType().Assembly});
             Assert.IsNotNull(simple.GetResults().Child);
         }

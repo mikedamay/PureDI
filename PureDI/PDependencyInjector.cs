@@ -190,8 +190,6 @@ namespace PureDI
               , assemblies ?? new Assembly[0]);
             newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), Constants.DefaultBeanName
               ,Constants.DefaultConstructorName)] = this;
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(rootObject.GetType(), Constants.DefaultBeanName
-              ,Constants.DefaultConstructorName)] = rootObject;
             ObjectTree tree = new ObjectTree();
             newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
             return (rootObject, newInjectionState);
@@ -218,7 +216,7 @@ namespace PureDI
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) 
-          CreateAndInjectDependenciesNew(object rootObject, InjectionState injectionState = null, Assembly[] assemblies = null)
+          CreateAndInjectDependenciesNewish(object rootObject, InjectionState injectionState = null, Assembly[] assemblies = null)
         {
             CheckArgument(rootObject);
             CheckInjectionStateArgument(injectionState);
@@ -230,7 +228,7 @@ namespace PureDI
               ,Constants.DefaultBeanName, Constants.DefaultConstructorName)] = this;
             newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(rootObject.GetType()
               ,beanName, Constants.DefaultConstructorName)] = rootObject;
-            newInjectionState = AddRootObjectDetails(newInjectionState, (rootObject.GetType(), beanName));
+//            newInjectionState = AddRootObjectDetails(newInjectionState, (rootObject.GetType(), beanName));
             ObjectTree tree = new ObjectTree();
             (_, newInjectionState) = new ObjectTree().CreateAndInjectDependencies(rootObject.GetType(), newInjectionState
             , beanName, Constants.DefaultConstructorName, BeanScope.Singleton);
@@ -303,16 +301,6 @@ namespace PureDI
                   ,assemblies);                
             }
             return newInjectionState;
-        }
-
-        private InjectionState AddRootObjectDetails(
-          InjectionState injectionState, (Type type, string beanName) beanId)
-        {
-            Dictionary<(Type beanType, string beanName), Type> typeMap
-             = new Dictionary<(Type beanType, string beanName), Type>(injectionState.TypeMap);
-            typeMap.Add(beanId, beanId.type);
-            return new InjectionState(injectionState.Diagnostics, typeMap
-              , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies);
         }
         
         private (IReadOnlyDictionary<(Type beanType, string beanName), Type>, Diagnostics diagnostics)
