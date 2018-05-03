@@ -32,7 +32,6 @@ namespace PureDI.Tree
         {
             WarnOfConstructorsWithMissingAttribute(declaringBeanType, diagnostics);
             List<ParamOrMemberInfo> @params = new List<ParamOrMemberInfo>();
-            @params = new List<ParamOrMemberInfo>();
             ValidateConstructors(declaringBeanType, constructorName, diagnostics);
             if (declaringBeanType.GetConstructors(constructorFlags).Length > 0)
             {
@@ -41,11 +40,11 @@ namespace PureDI.Tree
                 {
                     foreach (var paramInfo in paramInfos)
                     {
-                        var childBeanSpec = ChildBeanSpecFromMemberOrParameter(
-                          new ParamOrMemberInfo(paramInfo), declaringBeanType, diagnostics);
-                        if (childBeanSpec != null)
+                        var paramOrMemberInfo = new ParamOrMemberInfo(paramInfo);
+                        if ( ValidateMemberOrParameter(paramOrMemberInfo
+                          , declaringBeanType, diagnostics))
                         {
-                            @params.Add(childBeanSpec);
+                            @params.Add(paramOrMemberInfo);
                         }
                     } // for each constructor parameter
                 }
@@ -61,11 +60,11 @@ namespace PureDI.Tree
               .Where(f => f is FieldInfo || f is PropertyInfo);
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
-                var childBeanSpec = ChildBeanSpecFromMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo)
-                  ,declaringBeanType, diagnostics);
-                if (childBeanSpec != null)
+                var paramOrMemberInfo = new ParamOrMemberInfo(fieldOrPropertyInfo);
+                if (ValidateMemberOrParameter(paramOrMemberInfo
+                  ,declaringBeanType, diagnostics))
                 {
-                    members.Add(childBeanSpec);                   
+                    members.Add(paramOrMemberInfo);                   
                 }
             } // for each property or field
 
@@ -144,50 +143,37 @@ namespace PureDI.Tree
             }
         }
         // null return indicates this member is not a valid bean reference or constructor parameter
-        private static ParamOrMemberInfo ChildBeanSpecFromMemberOrParameter(ParamOrMemberInfo paramOrMemberInfo
+        private static bool ValidateMemberOrParameter(ParamOrMemberInfo paramOrMemberInfo
           ,Type declaringBeanType, Diagnostics diagnostics)
         {
-            BeanReferenceBaseAttribute attr;
-            ChildBeanSpec childBeanSpec = null;
-            if ((attr = paramOrMemberInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
+            if (paramOrMemberInfo.IsBeanReference)
             {
                 if (!paramOrMemberInfo.IsWriteable)
                 {
                     RecordDiagnostic(diagnostics, "ReadOnlyProperty"
                         , ("Class", declaringBeanType.GetIOCCName())
                         , ("Member", paramOrMemberInfo.Name));
-                    return null;
+                    return false;
                 }
                 else // member is writable
                 {
-                    if (attr.Factory != null)
+                    if (paramOrMemberInfo.IsFactory)
                     {
-                        // create the factory
-                        object o = null;
-                        if (!typeof(IFactory).IsAssignableFrom(attr.Factory))
+                        if (!typeof(IFactory).IsAssignableFrom(paramOrMemberInfo.Factory))
                         {
                             RecordDiagnostic(diagnostics, "BadFactory"
                                 , ("DeclaringBean", declaringBeanType.FullName)
                                 , ("Member", paramOrMemberInfo.Name)
-                                , ("Factory", attr.Factory.FullName)
+                                , ("Factory", paramOrMemberInfo.Factory.FullName)
                             );
-                            return null;
-                        }
-                        else // factory successfully created
-                        {
-                            IFactory factoryBean = (o as IFactory);
-                            childBeanSpec = new ChildBeanSpec(paramOrMemberInfo, factoryBean, true);
+                            return false;
                         }
                     }
-                    else // create the member without using a factory
-                    {
-                        childBeanSpec = new ChildBeanSpec(paramOrMemberInfo, null, false);
-                    } // not a factory
                 } // writeable member
-                return paramOrMemberInfo;
+                return true;
             } // this is a bean reference
 
-            return null;
+            return false;
         }
         private static ParameterInfo[] GetParametersForConstructorMatching(
             Type declaringBeanType, string constructorName)

@@ -67,7 +67,19 @@ namespace PureDI.Tree
             }
         }
 
+        public Type Factory => GetBeanReferenceAttribute().Factory;
+        
         public bool IsFactory => GetBeanReferenceAttribute().Factory != null;
+
+        public object FactoryParameter => GetBeanReferenceAttribute().FactoryParameter;
+        
+        public bool IsBeanReference => GetBeanReferenceAttribute() != null;
+
+        public string BeanName => GetBeanReferenceAttribute().Name;
+
+        public string ConstructorName => GetBeanReferenceAttribute().ConstructorName;
+
+        public BeanScope Scope => GetBeanReferenceAttribute().Scope;
         
         public BeanReferenceBaseAttribute GetBeanReferenceAttribute()
         {
