@@ -99,11 +99,9 @@ namespace PureDI.Tree
           , BeanScope beanScope)
         {
             Type implementationType;
-
-
   
             CycleGuard cycleGuard = creationContext.CycleGuard;
-            ISet<Type> cyclicalDependencies = creationContext.CyclicalDependencies;
+            ISet<Type> beansWithDeferredAssignments = creationContext.BeansWithDeferredAssignments;
             bool complete;
             object bean;
             if (((implementationType, injectionState) 
@@ -134,15 +132,15 @@ namespace PureDI.Tree
                             .GetCustomeAttribute<BeanReferenceBaseAttribute>();
                         if (memberSpec.IsFactory)
                         {
-                            object o = null;
-                            (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName)
+                            object oFactory = null;
+                            (oFactory, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName)
                                 , creationContext, injectionState, new BeanReferenceDetails(constructableType
                                     , memberSpec.FieldOrPropertyInfo.Name, attr.Name), attr.Scope);
-                            if (o != null)
+                            if (oFactory != null)
                             {
                                 try
                                 {
-                                    (memberBean, injectionState) = (o as IFactory).Execute(injectionState
+                                    (memberBean, injectionState) = (oFactory as IFactory).Execute(injectionState
                                       ,new BeanFactoryArgs(attr.FactoryParameter));
                                 }
                                 catch (Exception ex)
@@ -156,7 +154,7 @@ namespace PureDI.Tree
                                     throw new DIException("factory execution failed", ex, injectionState.Diagnostics);
                                 }
                             }
-                            RecordCreationDiagnostics(injectionState, o, constructableType, memberSpec, attr);
+                            RecordCreationDiagnostics(injectionState, oFactory, constructableType, memberSpec, attr);
                             
                         }
                         else // create the member without using a factory
@@ -217,8 +215,8 @@ namespace PureDI.Tree
                     (complete, bean) = MakeBean(beanScope
                       ,beanId, implementationType
                       ,injectionState, parameterSpecs );
-                    Assert(!cyclicalDependencies.Contains(constructableType)
-                           || cyclicalDependencies.Contains(constructableType)
+                    Assert(!beansWithDeferredAssignments.Contains(constructableType)
+                           || beansWithDeferredAssignments.Contains(constructableType)
                            && complete
                            && bean != null); 
                             // "complete && bean != null" indicates that
@@ -234,12 +232,12 @@ namespace PureDI.Tree
                     //    members had not been created and assigned and that needs to be done now.
                     //    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
                     //     case of 3) it wrongly reports that the bean creation is complete)
-                    if (complete && !cyclicalDependencies.Contains(constructableType))
+                    if (complete && !beansWithDeferredAssignments.Contains(constructableType))
                     {
                         return (bean, injectionState); // either the bean and therefore its children had already been created
                                      // or we were unable to create the bean (null)
                     }
-                    cyclicalDependencies.Remove(constructableType);
+                    beansWithDeferredAssignments.Remove(constructableType);
                     injectionState = AssignMembers(bean, memberSpecs, injectionState, creationContext);
                 }
                 else // there is a cyclical dependency so we
@@ -259,7 +257,7 @@ namespace PureDI.Tree
                         ,injectionState);
                     if (bean != null)
                     {
-                        cyclicalDependencies.Add(constructableType);
+                        beansWithDeferredAssignments.Add(constructableType);
                     }
                 }
             }

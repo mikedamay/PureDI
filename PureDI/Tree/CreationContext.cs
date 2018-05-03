@@ -6,12 +6,12 @@ namespace PureDI.Tree
         internal class CreationContext
         {
             public CycleGuard CycleGuard { get; }
-            public ISet<Type> CyclicalDependencies { get; }
+            public ISet<Type> BeansWithDeferredAssignments { get; }
 
-            public CreationContext(CycleGuard cycleGuard, ISet<Type> cyclicalDependencies)
+            public CreationContext(CycleGuard cycleGuard, ISet<Type> beansWithDeferredAssignments)
             {
                 CycleGuard = cycleGuard;
-                CyclicalDependencies = cyclicalDependencies;
+                BeansWithDeferredAssignments = beansWithDeferredAssignments;
             }
         }
     }
