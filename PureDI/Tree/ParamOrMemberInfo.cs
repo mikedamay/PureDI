@@ -1,5 +1,7 @@
 using System;
 using System.Reflection;
+using PureDI.Attributes;
+using static PureDI.Common.Common;
 
 namespace PureDI.Tree
 {
@@ -65,6 +67,14 @@ namespace PureDI.Tree
             }
         }
 
+        public bool IsFactory => GetBeanReferenceAttribute().Factory != null;
+        
+        public BeanReferenceBaseAttribute GetBeanReferenceAttribute()
+        {
+            BeanReferenceBaseAttribute attr;
+            attr = this.GetCustomeAttribute<BeanReferenceBaseAttribute>();
+            return attr;
+        }
         public T GetCustomeAttribute<T>() where T :  Attribute
         {
             if (FieldOrPropertyInfo != null)
@@ -76,6 +86,16 @@ namespace PureDI.Tree
                 return ParameterInfo.GetCustomAttribute<T>();
             }
 
+        }
+        public static implicit operator ParameterInfo(ParamOrMemberInfo p)
+        {
+            Assert(p.ParameterInfo != null);
+            return p.ParameterInfo;
+        }
+        public static implicit operator MemberInfo(ParamOrMemberInfo p)
+        {
+            Assert(p.FieldOrPropertyInfo != null);
+            return p.FieldOrPropertyInfo;
         }
     }
 }

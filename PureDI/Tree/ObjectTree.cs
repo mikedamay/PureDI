@@ -124,7 +124,7 @@ namespace PureDI.Tree
                     cycleGuard.Push(constructableType);
                     var memberSpecsIncomplete =
                         _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics);
-                    foreach (ChildBeanSpec memberSpec in memberSpecsIncomplete)
+                    foreach (ParamOrMemberInfo memberSpec in memberSpecsIncomplete)
                     {
                         BeanReferenceBaseAttribute attr;
                         object memberBean = null;
@@ -175,7 +175,7 @@ namespace PureDI.Tree
 
                     var parameterSpecsIncomplete = _classScraper.GetConstructorParameterBeanReferences(
                         constructableType, beanId.constructorName, injectionState.Diagnostics);
-                    foreach (ChildBeanSpec parameterSpec in parameterSpecsIncomplete)
+                    foreach (ParamOrMemberInfo parameterSpec in parameterSpecsIncomplete)
                     {
                         BeanReferenceBaseAttribute attr;
                         object memberBean = null;
@@ -314,7 +314,7 @@ namespace PureDI.Tree
 
         private static (object, InjectionState) ExecuteFactory(InjectionState injectionState
           ,object o, BeanReferenceBaseAttribute attr
-          ,Type constructableType, ChildBeanSpec parameterSpec)
+          ,Type constructableType, ParamOrMemberInfo parameterSpec)
         {
             try
             {
@@ -561,7 +561,7 @@ namespace PureDI.Tree
             }).ToList();
         }
         private static void RecordCreationDiagnostics(InjectionState injectionState, object o, Type constructableType,
-            ChildBeanSpec memberSpec, BeanReferenceBaseAttribute attr)
+            ParamOrMemberInfo memberSpec, BeanReferenceBaseAttribute attr)
         {
             if (o == null)
             {
