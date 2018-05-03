@@ -10,6 +10,7 @@ namespace PureDI.Tree
     /// </summary>
     internal class ChildBeanSpec
     {
+        public enum Roles {Member, ConstructorParameter}
         public MemberInfo FieldOrPropertyInfo
         {
             get { return ParamOrMemberInfo.FieldOrPropertyInfo; }
@@ -21,6 +22,7 @@ namespace PureDI.Tree
         }
         public object MemberOrFactoryBean { get; }
         public bool IsFactory { get; }
+        public Roles Role => ParamOrMemberInfo.FieldOrPropertyInfo != null ? Roles.Member : Roles.ConstructorParameter;
         private ParamOrMemberInfo ParamOrMemberInfo { get; }
 
         /// <param name="fieldOrPropertyParamOrMemberInfo">describes the member variable or constructor parameter

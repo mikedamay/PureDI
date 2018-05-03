@@ -31,8 +31,8 @@ namespace PureDI.Tree
         /// <param name="scope"></param>
         /// <returns>an ojbect of root type</returns>
         public (object bean, InjectionState injectionState)
-            CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
-                , string rootConstructorName, BeanScope scope)
+          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
+          ,string rootConstructorName, BeanScope scope)
         {
             try
             {
@@ -94,9 +94,9 @@ namespace PureDI.Tree
         /// <param name="beanScope"></param>
         private (object bean, InjectionState injectionState) 
           CreateObjectTree((Type beanType, string beanName
-          , string constructorName) beanId, CreationContext creationContext
-          , InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
-          , BeanScope beanScope)
+          ,string constructorName) beanId, CreationContext creationContext
+          ,InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
+          ,BeanScope beanScope)
         {
             Type implementationType;
   
@@ -116,20 +116,19 @@ namespace PureDI.Tree
             bool cyclicalDependencyFound = false;
             try
             {
-                List<ChildBeanSpec> memberSpecs = new List<ChildBeanSpec>();
-                List<ChildBeanSpec> parameterSpecs = new List<ChildBeanSpec>();
+                List<ChildBeanSpec> beanSpecs = new List<ChildBeanSpec>();
                 cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
                 if (!cyclicalDependencyFound)
                 {
                     cycleGuard.Push(constructableType);
                     var memberBeanReferences =
-                        _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics);
+                      _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics)
+                      .Concat(_classScraper.GetConstructorParameterBeanReferences(
+                      constructableType, beanId.constructorName, injectionState.Diagnostics))
+                      ;
                     foreach (ParamOrMemberInfo beanReference in memberBeanReferences)
                     {
-                        BeanReferenceBaseAttribute attr;
                         object memberBean = null;
-                        attr = new ParamOrMemberInfo(beanReference.FieldOrPropertyInfo)
-                            .GetCustomeAttribute<BeanReferenceBaseAttribute>();
                         if (beanReference.IsFactory)
                         {
                             object oFactory = null;
@@ -156,54 +155,15 @@ namespace PureDI.Tree
 
                         if (memberBean != null)
                         {
-                            memberSpecs.Add(new ChildBeanSpec(
+                            beanSpecs.Add(new ChildBeanSpec(
                                 beanReference, memberBean, false));                            
                         }
                     }
 
-                    var parameterBeanReferences = _classScraper.GetConstructorParameterBeanReferences(
-                        constructableType, beanId.constructorName, injectionState.Diagnostics);
-                    foreach (ParamOrMemberInfo beanReference in parameterBeanReferences)
-                    {
-                        BeanReferenceBaseAttribute attr;
-                        object memberBean = null;
-                        attr = new ParamOrMemberInfo(beanReference.ParameterInfo)
-                            .GetCustomeAttribute<BeanReferenceBaseAttribute>();
-                        if (beanReference.IsFactory)
-                        {
-                            object oFactory = null;
-                            (oFactory, injectionState) = CreateObjectTree((beanReference.Factory, beanReference.BeanName
-                              ,beanReference.ConstructorName)
-                              ,creationContext, injectionState, new BeanReferenceDetails(constructableType
-                              ,beanReference.Name, beanReference.BeanName), beanReference.Scope);
-                            if (oFactory != null)
-                            {
-                                (memberBean, injectionState) = ExecuteFactory( injectionState, oFactory
-                                  ,constructableType, beanReference);
-                            }
-
-                            RecordCreationDiagnostics(injectionState, oFactory, constructableType, beanReference);
-
-                        }
-                        else // create the member without using a factory
-                        {
-                            (memberBean, injectionState) = CreateObjectTree(
-                                (beanReference.Type, beanReference.BeanName,
-                                    beanReference.ConstructorName)
-                                , creationContext, injectionState
-                                , new BeanReferenceDetails(constructableType
-                                    , beanReference.Name, beanReference.BeanName), beanReference.Scope);
-                        } // not a factory
-
-                        if (memberBean != null)
-                        {
-                            parameterSpecs.Add(new ChildBeanSpec(
-                              beanReference, memberBean, false));                            
-                        }
-                    }
                     (complete, bean) = MakeBean(beanScope
                       ,beanId, implementationType
-                      ,injectionState, parameterSpecs );
+                      ,injectionState
+                      ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
                     Assert(!beansWithDeferredAssignments.Contains(constructableType)
                            || beansWithDeferredAssignments.Contains(constructableType)
                            && complete
@@ -227,7 +187,9 @@ namespace PureDI.Tree
                                      // or we were unable to create the bean (null)
                     }
                     beansWithDeferredAssignments.Remove(constructableType);
-                    injectionState = AssignMembers(bean, memberSpecs, injectionState, creationContext);
+                    injectionState = AssignMembers(bean
+                      ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.Member).ToList()
+                      ,injectionState, creationContext);
                 }
                 else // there is a cyclical dependency so we
                     // need to just create the bean itself and defer child creation
@@ -259,6 +221,7 @@ namespace PureDI.Tree
             }
             return (bean, injectionState);
         }
+        
         (bool constructionComplete, object beanId) 
           MakeBean(BeanScope beanScope, (Type beanType, string beanName, string constructorName) beanIdArg, Type implementationType
             ,InjectionState injectionState,
