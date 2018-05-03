@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using PureDI.Attributes;
-using static PureDI.Common.Common;
 
 namespace PureDI.Tree
 {
@@ -35,16 +34,14 @@ namespace PureDI.Tree
             List<ChildBeanSpec> @params = new List<ChildBeanSpec>();
             @params = new List<ChildBeanSpec>();
             ValidateConstructors(declaringBeanType, constructorName, diagnostics);
-            if (declaringBeanType.GetConstructors(
-              BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-              .Length > 0)
+            if (declaringBeanType.GetConstructors(constructorFlags).Length > 0)
             {
                 var paramInfos = GetParametersForConstructorMatching(declaringBeanType, constructorName);
                 if (paramInfos != null)
                 {
                     foreach (var paramInfo in paramInfos)
                     {
-                        var childBeanSpec = CreateTreeForMemberOrParameter(
+                        var childBeanSpec = ChildBeanSpecFromMemberOrParameter(
                           new ParamOrMemberInfo(paramInfo), declaringBeanType, diagnostics);
                         if (childBeanSpec != null)
                         {
@@ -65,7 +62,7 @@ namespace PureDI.Tree
                 .Where(f => f is FieldInfo || f is PropertyInfo);
             foreach (var fieldOrPropertyInfo in fieldOrPropertyInfos)
             {
-                var childBeanSpec = CreateTreeForMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo)
+                var childBeanSpec = ChildBeanSpecFromMemberOrParameter(new ParamOrMemberInfo(fieldOrPropertyInfo)
                   ,declaringBeanType, diagnostics);
                 if (childBeanSpec != null)
                 {
@@ -148,18 +145,13 @@ namespace PureDI.Tree
             }
         }
         // null return indicates this member is not a valid bean reference or constructor parameter
-        private static ChildBeanSpec CreateTreeForMemberOrParameter(ParamOrMemberInfo fieldOrPropertyInfo,
-            Type declaringBeanType
-            , Diagnostics diagnostics)
+        private static ChildBeanSpec ChildBeanSpecFromMemberOrParameter(ParamOrMemberInfo fieldOrPropertyInfo
+          ,Type declaringBeanType, Diagnostics diagnostics)
         {
             BeanReferenceBaseAttribute attr;
             ChildBeanSpec childBeanSpec = null;
             if ((attr = fieldOrPropertyInfo.GetCustomeAttribute<BeanReferenceBaseAttribute>()) != null)
             {
-                (Type type, string beanName, string constructorName) memberBeanId =
-                    MakeMemberBeanId(fieldOrPropertyInfo.Type
-                        , attr.Name, attr.ConstructorName);
-                //object memberBean;
                 if (!fieldOrPropertyInfo.IsWriteable)
                 {
                     RecordDiagnostic(diagnostics, "ReadOnlyProperty"
@@ -181,26 +173,6 @@ namespace PureDI.Tree
                             );
                            
                         }
-/*
-                            (o, injectionState) = CreateObjectTree((attr.Factory, attr.Name, attr.ConstructorName), creationContext, injectionState, new BeanReferenceDetails(declaringBeanType
-                                , fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
-                        if (o == null)
-                        {
-                            RecordDiagnostic(injectionState.Diagnostics, "MissingFactory"
-                                , ("DeclaringBean", declaringBeanType.FullName)
-                                , ("Member", fieldOrPropertyInfo.Name)
-                                , ("Factory", attr.Factory.FullName)
-                                , ("ExpectedType", fieldOrPropertyInfo.Type));
-                        }
-                        else if (!(o is IFactory))
-                        {
-                            RecordDiagnostic(injectionState.Diagnostics, "BadFactory"
-                                , ("DeclaringBean", declaringBeanType.FullName)
-                                , ("Member", fieldOrPropertyInfo.Name)
-                                , ("Factory", attr.Factory.FullName)
-                            );
-                        }
-*/
                         else // factory successfully created
                         {
                             IFactory factoryBean = (o as IFactory);
@@ -209,12 +181,6 @@ namespace PureDI.Tree
                     }
                     else // create the member without using a factory
                     {
-                        //memberBean = null;
-/*
-                        (memberBean, injectionState) = CreateObjectTree(memberBeanId, creationContext, injectionState
-                          ,new BeanReferenceDetails(declaringBeanType
-                          ,fieldOrPropertyInfo.Name, memberBeanId.beanName), attr.Scope);
-*/
                         childBeanSpec = new ChildBeanSpec(fieldOrPropertyInfo, null, false);
                     } // not a factory
                 } // writeable member
@@ -240,21 +206,5 @@ namespace PureDI.Tree
             }
             diagnostics.Groups[groupName].Add(diag);
         }
-        /// <summary>
-        /// well, this is tricky.
-        /// </summary>
-        /// <param name="memberDeclaredBeanType"></param>
-        /// <param name="memberDeclaredBeanName"></param>
-        /// <param name="constructorName"></param>
-        /// <returns></returns>
-        private static (Type type, string beanName, string constructorName)
-            MakeMemberBeanId(Type memberDeclaredBeanType
-                , string memberDeclaredBeanName, string constructorName
-            )
-        {
-            Assert(!memberDeclaredBeanType.IsGenericParameter);
-            return (memberDeclaredBeanType, memberDeclaredBeanName, constructorName);
-        }
-
     }
 }
