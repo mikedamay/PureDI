@@ -53,7 +53,7 @@ namespace PureDI.Tree
             catch (NoArgConstructorException inace)    // I suspect this is never executed
             {
                 dynamic diagnostic = injectionState.Diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
-                diagnostic.Class = rootType.GetIOCCName();
+                diagnostic.Class = rootType.GetSafeFullName();
                 injectionState.Diagnostics.Groups["MissingNoArgConstructor"].Add(diagnostic);
                 throw new DIException("Failed to create object tree - see diagnostics for details", inace,
                     injectionState.Diagnostics);
@@ -335,8 +335,16 @@ namespace PureDI.Tree
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
             => implementationTypeArg.IsGenericType
-                ? beanIdArg.beanType
+                ? MakeGenericConstructableType(beanIdArg, implementationTypeArg)
+//                ? beanIdArg.beanType
                 : implementationTypeArg;
+
+        private static Type MakeGenericConstructableType(
+          (Type beanType, string beanName, string constructorName) beanIdArg
+          ,Type implementationTypeArg)
+        {
+            return implementationTypeArg.MakeGenericType(beanIdArg.beanType.GetGenericArguments());
+        }
 
         /*
           * finds the matching concrete type (bean) for some member reference
@@ -363,7 +371,7 @@ namespace PureDI.Tree
                 if (beanReferenceDetails.IsRoot)
                 {
                     RecordDiagnostic(injectionState.Diagnostics, "MissingRoot"
-                        , ("BeanType", beanId.Item1.GetIOCCName())
+                        , ("BeanType", beanId.Item1.GetSafeFullName())
                         , ("BeanName", beanId.Item2)
                     );
                     throw new DIException("failed to create object tree - see diagnostics for detail",
@@ -372,8 +380,8 @@ namespace PureDI.Tree
                 else
                 {
                     RecordDiagnostic(injectionState.Diagnostics, "MissingBean"
-                        , ("Bean", beanReferenceDetails.DeclaringType.GetIOCCName())
-                        , ("MemberType", beanId.Item1.GetIOCCName())
+                        , ("Bean", beanReferenceDetails.DeclaringType.GetSafeFullName())
+                        , ("MemberType", beanId.Item1.GetSafeFullName())
                         , ("MemberName", beanReferenceDetails.MemberName)
                         , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
                     );
@@ -394,11 +402,11 @@ namespace PureDI.Tree
           , string constructorName) beanId, InjectionState injectionState)
         {
 
-            char[] a = beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
+            char[] a = beanId.beanType.GetSafeFullName().TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
             Type referenceType = injectionState.TypeMap.Keys.FirstOrDefault(
-                k => k.beanType.FullName == beanTypeName && k.beanName == beanId.beanName).beanType;
+                k => k.beanType.GetSafeFullName() == beanTypeName && k.beanName == beanId.beanName).beanType;
             return (injectionState.TypeMap[(referenceType, beanId.beanName)], injectionState);
 
         }
@@ -414,7 +422,7 @@ namespace PureDI.Tree
               : beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
-            return (injectionState.TypeMap.Keys.Any(k => k.beanType.FullName 
+            return (injectionState.TypeMap.Keys.Any(k => k.beanType.GetSafeFullName() 
               == beanTypeName && k.beanName == beanId.beanName), injectionState);
         }
 
@@ -441,7 +449,7 @@ namespace PureDI.Tree
                 BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
                 ConstructorInfo constructorInfo  = constructorParameterSpecs?.Count > 0 
                   ? Check( () => beanType.GetConstructorNamed(constructorName))
-                  : Check( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetIOCCName()));
+                  : Check( () => beanType.GetNoArgConstructor(flags), new NoArgConstructorException(beanType.GetSafeFullName()));
                         // it is obvious that the system has already determined the correct constructor
                         // by dint of the fact that the appropriate parameters are passed in (and it would
                         // need the constructorInfo to enumerate those).  Why is the name rather than constructorInfo passed in?

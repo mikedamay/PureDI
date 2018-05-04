@@ -61,7 +61,6 @@
     <Compile Remove="FactoryTestData\SimpleBean.cs" />
     <Compile Remove="FactoryTestData\ThrowsException.cs" />
     <Compile Remove="FactoryTestData\TypeMismatch.cs" />
-    <Compile Remove="GenericTestData\Generic.cs" />
     <Compile Remove="InitialAssemblyData\EntryPoint.cs" />
     <Compile Remove="MinorMethodsTest.cs" />
     <Compile Remove="MultipleCallsTestData\ComplexFactory.cs" />
@@ -130,6 +129,8 @@
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
     <Compile Remove="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <Compile Remove="GenericTestData\Generic.cs" />
+    <EmbeddedResource Include="GenericTestData\Generic.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AdditionalAssemblyData\EntryPoint.cs" />
@@ -167,7 +168,6 @@
       <CopyToOutputDirectory>
       </CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="GenericTestData\Generic.cs" />
     <EmbeddedResource Include="InitialAssemblyData\EntryPoint.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\ComplexFactory.cs" />
     <EmbeddedResource Include="MultipleCallsTestData\Empty.cs" />

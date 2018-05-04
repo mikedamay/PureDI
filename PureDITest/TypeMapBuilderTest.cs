@@ -412,7 +412,7 @@ namespace IOCCTest
                   = map.Keys.FirstOrDefault(k => k.Item1.FullName == interfaceType
                   && k.Item2 == beanName);
                 Assert.IsFalse(match.Equals( default(ValueTuple<Type, string>)));
-                Assert.AreEqual(map[match].GetIOCCName()
+                Assert.AreEqual(map[match].GetSafeFullName()
                     , mapExpected[(interfaceType, beanName)]);
             }
         }
@@ -433,7 +433,7 @@ namespace IOCCTest
             {
                 (Type beanInterface, string beanName) = key;
                 var beanImplementation = map[key] as Type;
-                sb.Append($@"{{(""{beanInterface.GetIOCCName()}"", ""{beanName}""),""{beanImplementation.GetIOCCName()}""}}"
+                sb.Append($@"{{(""{beanInterface.GetSafeFullName()}"", ""{beanName}""),""{beanImplementation.GetSafeFullName()}""}}"
                           + Environment.NewLine);
 
             }
@@ -468,7 +468,7 @@ namespace IOCCTest
             {
                 (Type beanInterface, string beanName) = key;
                 var beanImplementation = map[key] as Type;
-                sb.Append($@"{{(""{beanInterface.GetIOCCName()}"", ""{beanName}""),""{beanImplementation.GetIOCCName()}""}}"
+                sb.Append($@"{{(""{beanInterface.GetSafeFullName()}"", ""{beanName}""),""{beanImplementation.GetSafeFullName()}""}}"
                           + Environment.NewLine);
 
             }

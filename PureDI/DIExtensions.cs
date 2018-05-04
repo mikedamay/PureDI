@@ -10,9 +10,13 @@ namespace PureDI
         /// </summary>
         /// <param name="type">Typically a bean or a bean reference - but can be anything</param>
         /// <returns>combines type full name generic parameters, type arguments</returns>
-        public static string GetIOCCName(this Type type)
+        public static string GetSafeFullName(this Type type)
         {
-            return type.FullName;
+            return type.FullName ?? $"{type.Namespace}.{type.Name}";
+                    // interface generic definitions return null from FullName
+                    // although there are many cases where a type should return
+                    // null as FullName this does not appear to meet the criteria
+                    // it looks like a bug to me
         }
     }
 }

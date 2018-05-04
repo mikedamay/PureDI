@@ -48,10 +48,10 @@ namespace PureDI
             Diagnostic MakeInvalidBeanError(BeanSpec existingBeanSpec, BeanSpec rejectedBeanSpec)
             {
                 dynamic diag = group.CreateDiagnostic();
-                diag.Interface1 = rejectedBeanSpec.ReferenceType.GetIOCCName();
+                diag.Interface1 = rejectedBeanSpec.ReferenceType.GetSafeFullName();
                 diag.BeanName = rejectedBeanSpec.BeanName;
-                diag.NewBean = rejectedBeanSpec.ImplementationType.GetIOCCName();
-                diag.ExistingBean = existingBeanSpec.ImplementationType.GetIOCCName(); // the other bean (in the duplicate)
+                diag.NewBean = rejectedBeanSpec.ImplementationType.GetSafeFullName();
+                diag.ExistingBean = existingBeanSpec.ImplementationType.GetSafeFullName(); // the other bean (in the duplicate)
                 return diag;
             }
             var diagset = duplicatePairs.Select(dp => MakeInvalidBeanError(dp.Item1, dp.Item2));
@@ -67,7 +67,7 @@ namespace PureDI
            Diagnostic MakeInvalidBeanError(BeanSpec beanSpec, string errorCategory)
             {
                 dynamic diag = group.CreateDiagnostic();
-                diag.AbstractOrStaticClass = beanSpec.ImplementationType.GetIOCCName();
+                diag.AbstractOrStaticClass = beanSpec.ImplementationType.GetSafeFullName();
                 diag.ClassMode = errorCategory;
                 return diag;
             }

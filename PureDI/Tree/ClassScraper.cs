@@ -151,7 +151,7 @@ namespace PureDI.Tree
                 if (!paramOrMemberInfo.IsWriteable)
                 {
                     RecordDiagnostic(diagnostics, "ReadOnlyProperty"
-                        , ("Class", declaringBeanType.GetIOCCName())
+                        , ("Class", declaringBeanType.GetSafeFullName())
                         , ("Member", paramOrMemberInfo.Name));
                     return false;
                 }
