@@ -54,7 +54,6 @@
     <Compile Remove="FactoryTestData\AccessByString.cs" />
     <Compile Remove="FactoryTestData\BadFactory.cs" />
     <Compile Remove="FactoryTestData\FactoryDependencies.cs" />
-    <Compile Remove="FactoryTestData\FactoryWithMemberBeans.cs" />
     <Compile Remove="FactoryTestData\FactoryWithName.cs" />
     <Compile Remove="FactoryTestData\Generic.cs" />
     <Compile Remove="FactoryTestData\GenericFactory.cs" />
@@ -129,6 +128,8 @@
     <EmbeddedResource Include="DerivedAttributeTestData\Bean.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\BeanReference.cs" />
     <EmbeddedResource Include="DerivedAttributeTestData\DerivedConstructor.cs" />
+    <Compile Remove="FactoryTestData\FactoryWithMemberBeans.cs" />
+    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AdditionalAssemblyData\EntryPoint.cs" />
@@ -161,7 +162,6 @@
     <EmbeddedResource Include="DuplicateTestData\Duplicate.cs" />
     <EmbeddedResource Include="DuplicateTestData\Os.cs" />
     <EmbeddedResource Include="DuplicateTestData\PreferredOs.cs" />
-    <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <EmbeddedResource Include="FactoryTestData\FactoryWithName.cs" />
     <EmbeddedResource Include="FactoryTestData\ThrowsException.cs">
       <CopyToOutputDirectory>

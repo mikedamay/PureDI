@@ -110,7 +110,7 @@ namespace IOCCTest
             (dynamic result, Diagnostics diagnostics)
             CommonFactoryTest(string className)
         {
-            return Utils.CreateAndRunAssembly("FactoryTestData", className);
+            return Utils.CreateAndRunAssembly("FactoryTestData", className, usePureDiTestAssembly: false);
         }
 
         public static string GetResource(string resourceName)

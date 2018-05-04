@@ -8,17 +8,18 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     internal class MemberFactory : IFactory
     {
+        [BeanReference] private PDependencyInjector injector = null;
         public (object bean, InjectionState injectionState)
             Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            return (new MemberBean(), injectionState);
+            return injector.CreateAndInjectDependencies<MemberBean>(injectionState);
         }
     }
     [Bean]
     public class FactoryWithMemberBeans : IResultGetter
     {
         [BeanReference(Factory = typeof(MemberFactory))]
-        private MemberBean Member;
+        private MemberBean Member = null;
 
         public dynamic GetResults()
         {

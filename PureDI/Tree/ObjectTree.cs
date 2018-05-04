@@ -88,14 +88,14 @@ namespace PureDI.Tree
         ///     from which the bean is derived</param>
         /// <param name="creationContext"></param>
         /// <param name="injectionState"></param>
-        /// <param name="beanReferenceDetails">provides a context to the bean that
+        /// <param name="declaringBeanDetails">provides a context to the bean that
         ///     can be displayed in diagnostic messages - currently not used for
         ///     anything else</param>
         /// <param name="beanScope"></param>
         private (object bean, InjectionState injectionState) 
           CreateObjectTree((Type beanType, string beanName
           ,string constructorName) beanId, CreationContext creationContext
-          ,InjectionState injectionState, BeanReferenceDetails beanReferenceDetails
+          ,InjectionState injectionState, BeanReferenceDetails declaringBeanDetails
           ,BeanScope beanScope)
         {
             Type implementationType;
@@ -105,7 +105,7 @@ namespace PureDI.Tree
             bool complete;
             object bean;
             if (((implementationType, injectionState) 
-              = GetImplementationType(beanId, beanReferenceDetails, injectionState)).implementationType == null)
+              = GetImplementationType(beanId, declaringBeanDetails, injectionState)).implementationType == null)
             {
                 Assert(injectionState.Diagnostics.HasWarnings);    // diagnostics recorded by callee.
                 return (null, injectionState); // no implementation type found corresponding to this beanId
@@ -121,25 +121,26 @@ namespace PureDI.Tree
                 if (!cyclicalDependencyFound)
                 {
                     cycleGuard.Push(constructableType);
-                    var memberBeanReferences =
+                    var beanReferences =
                       _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics)
                       .Concat(_classScraper.GetConstructorParameterBeanReferences(
                       constructableType, beanId.constructorName, injectionState.Diagnostics))
                       ;
-                    foreach (ParamOrMemberInfo beanReference in memberBeanReferences)
+                    foreach (ParamOrMemberInfo beanReference in beanReferences)
                     {
                         object memberBean = null;
+                        var beanReferenceDetails = new BeanReferenceDetails(constructableType
+                          ,beanReference.Name, beanReference.BeanName);
                         if (beanReference.IsFactory)
                         {
                             object oFactory = null;
                             (oFactory, injectionState) = CreateObjectTree((beanReference.Factory, beanReference.BeanName
                               ,beanReference.ConstructorName)
-                              ,creationContext, injectionState, new BeanReferenceDetails(constructableType
-                              ,beanReference.Name, beanReference.BeanName), beanReference.Scope);
+                              ,creationContext, injectionState, beanReferenceDetails, beanReference.Scope);
                             if (oFactory != null)
                             {
                                 (memberBean, injectionState) = ExecuteFactory( injectionState, oFactory
-                                    ,constructableType, beanReference);
+                                  ,constructableType, beanReference);
                             }
                             RecordCreationDiagnostics(injectionState, oFactory, constructableType, beanReference);
                             
@@ -149,8 +150,7 @@ namespace PureDI.Tree
                             (memberBean, injectionState) = CreateObjectTree(
                                 (beanReference.Type, beanReference.BeanName, beanReference.ConstructorName)
                                 ,creationContext, injectionState
-                                ,new BeanReferenceDetails(constructableType
-                                    ,beanReference.Name, beanReference.BeanName), beanReference.Scope);
+                                ,beanReferenceDetails, beanReference.Scope);
                         } // not a factory
 
                         if (memberBean != null)
@@ -160,9 +160,7 @@ namespace PureDI.Tree
                         }
                     }
 
-                    (complete, bean) = MakeBean(beanScope
-                      ,beanId, implementationType
-                      ,injectionState
+                    (complete, bean) = MakeBean(beanScope, beanId, implementationType, injectionState
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
                     Assert(!beansWithDeferredAssignments.Contains(constructableType)
                            || beansWithDeferredAssignments.Contains(constructableType)
@@ -203,9 +201,7 @@ namespace PureDI.Tree
                         injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
                         throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
-                    (complete, bean) = MakeBean(beanScope
-                        ,beanId, implementationType
-                        ,injectionState);
+                    (_, bean) = MakeBean(beanScope, beanId, implementationType, injectionState);
                     if (bean != null)
                     {
                         beansWithDeferredAssignments.Add(constructableType);
@@ -335,18 +331,6 @@ namespace PureDI.Tree
             return injectionState;
         }  // AssignMembers()
 
-
-        private void LogMemberInjection(Diagnostics diagnostics, Type declarngType
-          , Type declaredType, string memberName, Type memberImplementation)
-        {
-            Diagnostics.Group group = diagnostics.Groups["MemberInjectionsInfo"];
-            dynamic diag = group.CreateDiagnostic();
-            diag.DeclaringType = declarngType;
-            diag.MemberType = declaredType;
-            diag.MemberName = memberName;
-            diag.MemberImplementation = memberImplementation;
-            group.Add(diag);
-        }
 
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
@@ -491,6 +475,18 @@ namespace PureDI.Tree
             }
 
             return ci;
+        }
+
+        private void LogMemberInjection(Diagnostics diagnostics, Type declarngType
+            , Type declaredType, string memberName, Type memberImplementation)
+        {
+            Diagnostics.Group group = diagnostics.Groups["MemberInjectionsInfo"];
+            dynamic diag = group.CreateDiagnostic();
+            diag.DeclaringType = declarngType;
+            diag.MemberType = declaredType;
+            diag.MemberName = memberName;
+            diag.MemberImplementation = memberImplementation;
+            group.Add(diag);
         }
 
         private void LogConstructorInjections(Diagnostics diagnostics
