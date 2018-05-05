@@ -3,8 +3,8 @@ namespace PureDI.Tree
 {
     internal class BeanSpec : InstantiatedBeanId
     {        
-        public BeanSpec((Type type, string beanName, string constructorName) beanId)
-            : base(beanId.type, beanId.beanName, beanId.constructorName)
+        public BeanSpec(Type type, string beanName, string constructorName)
+            : base(type, beanName, constructorName)
         {
         }
 
