@@ -4,10 +4,10 @@ namespace PureDI.Tree
 {
     internal class InstantiatedBeanId
     {
-        private readonly Type _type;
-        private readonly string _beanName;
-        private readonly string _constructorName;
-        
+        protected readonly Type _type;
+        protected readonly string _beanName;
+        protected readonly string _constructorName;
+
         public InstantiatedBeanId(Type type, string beanName, string constructorName)
         {
             _type = type;
@@ -16,7 +16,8 @@ namespace PureDI.Tree
         }
         protected bool Equals(InstantiatedBeanId other)
         {
-            return Equals(_type, other._type) && string.Equals(_beanName, other._beanName) && string.Equals(_constructorName, other._constructorName);
+            return Equals(_type, other._type) && string.Equals(_beanName
+              ,other._beanName) && string.Equals(_constructorName, other._constructorName);
         }
 
         public override bool Equals(object obj)
