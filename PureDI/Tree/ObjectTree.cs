@@ -98,21 +98,18 @@ namespace PureDI.Tree
           ,InjectionState injectionState, BeanReferenceDetails declaringBeanDetails
           ,BeanScope beanScope)
         {
-            Type implementationType;
   
             CycleGuard cycleGuard = creationContext.CycleGuard;
             ISet<Type> beansWithDeferredAssignments = creationContext.BeansWithDeferredAssignments;
             bool complete;
             object bean;
-            if (((implementationType, injectionState) 
-              = GetImplementationType(beanId, declaringBeanDetails, injectionState)).implementationType == null)
+            Type constructableType;
+            constructableType = MakeConstructableType(beanId, declaringBeanDetails
+              ,injectionState.TypeMap, injectionState.Diagnostics);
+            if (constructableType == null)
             {
-                Assert(injectionState.Diagnostics.HasWarnings);    // diagnostics recorded by callee.
-                return (null, injectionState); // no implementation type found corresponding to this beanId
-                             // we can still carry on and a) this might not be fatal b) other diagnostics may show up
-                            
+                return (null, injectionState);
             }
-            Type constructableType = MakeConstructableType(beanId, implementationType);
             bool cyclicalDependencyFound = false;
             try
             {
@@ -160,7 +157,7 @@ namespace PureDI.Tree
                         }
                     }
 
-                    (complete, bean) = MakeBean(beanScope, beanId, implementationType, injectionState
+                    (complete, bean) = MakeBean(beanScope, beanId, constructableType, injectionState
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
                     Assert(!beansWithDeferredAssignments.Contains(constructableType)
                            || beansWithDeferredAssignments.Contains(constructableType)
@@ -201,7 +198,7 @@ namespace PureDI.Tree
                         injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
                         throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
-                    (_, bean) = MakeBean(beanScope, beanId, implementationType, injectionState);
+                    (_, bean) = MakeBean(beanScope, beanId, constructableType, injectionState);
                     if (bean != null)
                     {
                         beansWithDeferredAssignments.Add(constructableType);
@@ -219,33 +216,34 @@ namespace PureDI.Tree
         }
         
         (bool constructionComplete, object beanId) 
-          MakeBean(BeanScope beanScope, (Type beanType, string beanName, string constructorName) beanIdArg, Type implementationType
+          MakeBean(BeanScope beanScope, (Type beanType, string beanName, string constructorName) beanIdArg
+            ,Type constructableType
             ,InjectionState injectionState,
             IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null)
         {            
             object constructedBean;
             try
             {
-                Type constructableTypeLocal = MakeConstructableType(beanIdArg
-                  ,implementationType);
+//                Type constructableTypeLocal = MakeConstructableType(beanIdArg
+//                  ,implementationType);
                 if (beanScope != BeanScope.Prototype
                     && injectionState.MapObjectsCreatedSoFar.ContainsKey(
-                    new InstantiatedBeanId(constructableTypeLocal, beanIdArg.beanName, beanIdArg.constructorName)))
+                    new InstantiatedBeanId(constructableType, beanIdArg.beanName, beanIdArg.constructorName)))
                 {
                     // there maybe a cyclical dependency
                     constructedBean = injectionState.MapObjectsCreatedSoFar[
-                      new InstantiatedBeanId(constructableTypeLocal, beanIdArg.beanName, beanIdArg.constructorName)];
+                      new InstantiatedBeanId(constructableType, beanIdArg.beanName, beanIdArg.constructorName)];
                     return (true, constructedBean);
                 }
                 else
                 {
                     // TODO explain why type to be constructed is complicated by generics
-                    (constructedBean, injectionState) = Construct(constructableTypeLocal
+                    (constructedBean, injectionState) = Construct(constructableType
                         , constructorParameterSpecs, beanIdArg.constructorName, injectionState);
                     if (beanScope != BeanScope.Prototype)
                     {
                         injectionState.MapObjectsCreatedSoFar[
-                          new InstantiatedBeanId(constructableTypeLocal, beanIdArg.beanName, beanIdArg.constructorName)] 
+                          new InstantiatedBeanId(constructableType, beanIdArg.beanName, beanIdArg.constructorName)] 
                           = constructedBean;
                         // TODO replace first param with ConstructableType
                     }
@@ -331,12 +329,28 @@ namespace PureDI.Tree
             return injectionState;
         }  // AssignMembers()
 
+        Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanId
+          ,BeanReferenceDetails declaringBeanDetails
+          ,IReadOnlyDictionary<(Type, string), Type> typeMap, Diagnostics diagnostics)
+        {
+            Type implementationType;
+            if ((implementationType
+              = GetImplementationType(beanId, declaringBeanDetails
+              ,typeMap, diagnostics)) == null)
+            {
+                Assert(diagnostics.HasWarnings);    // diagnostics recorded by callee.
+                return null; // no implementation type found corresponding to this beanId
+                // we can still carry on and a) this might not be fatal b) other diagnostics may show up
+                            
+            }
+
+            return MakeConstructableType(beanId, implementationType);
+        }
 
         Type MakeConstructableType((Type beanType, string beanName, string constructorName) beanIdArg,
             Type implementationTypeArg)
             => implementationTypeArg.IsGenericType
                 ? MakeGenericConstructableType(beanIdArg, implementationTypeArg)
-//                ? beanIdArg.beanType
                 : implementationTypeArg;
 
         private static Type MakeGenericConstructableType(
@@ -353,77 +367,77 @@ namespace PureDI.Tree
           * which allows the container to choose between multiple matching concrete classes
           * Alternatively the member reference may be the implementationType itself.
           */
-        (Type implementationType, InjectionState injectionState) 
+        Type 
           GetImplementationType((Type, string, string) beanId
-          , BeanReferenceDetails beanReferenceDetails, InjectionState injectionState)
+          ,BeanReferenceDetails beanReferenceDetails
+          ,IReadOnlyDictionary<(Type, string), Type> typeMap, Diagnostics diagnostics)
         {
-            (bool found, InjectionState injectionState) result;
-            if ((result = IsBeanPresntInTypeMap(beanId, injectionState)).found)
+            if ( IsBeanPresntInTypeMap(beanId, typeMap))
             {
-                injectionState = result.injectionState;
                 Type implementationType;
-                (implementationType, injectionState) = GetImplementationFromTypeMap(beanId, injectionState);
-                return (implementationType, injectionState);
+                implementationType = GetImplementationFromTypeMap(beanId, typeMap);
+                return implementationType;
             }
             else    // error
             {
-                injectionState = result.injectionState;
                 if (beanReferenceDetails.IsRoot)
                 {
-                    RecordDiagnostic(injectionState.Diagnostics, "MissingRoot"
+                    RecordDiagnostic(diagnostics, "MissingRoot"
                         , ("BeanType", beanId.Item1.GetSafeFullName())
                         , ("BeanName", beanId.Item2)
                     );
                     throw new DIException("failed to create object tree - see diagnostics for detail",
-                        injectionState.Diagnostics);
+                        diagnostics);
                 }
                 else
                 {
-                    RecordDiagnostic(injectionState.Diagnostics, "MissingBean"
+                    RecordDiagnostic(diagnostics, "MissingBean"
                         , ("Bean", beanReferenceDetails.DeclaringType.GetSafeFullName())
                         , ("MemberType", beanId.Item1.GetSafeFullName())
                         , ("MemberName", beanReferenceDetails.MemberName)
                         , ("MemberBeanName", beanReferenceDetails.MemberBeanName)
                     );
-                    return (null, injectionState);
+                    return null;
                 }
             }
         }
 
-        /// <param name="injectionState"></param>
         /// <param name="beanId">Typically this is the type of a member 
         ///     marked as a bean reference with [IOCCBeanReference]
         ///     for generics bean type is a generic type definition</param>
+        /// <param name="typeMap"></param>
         /// <returns>This will be a concrete class marked as a bean with [Bean] which
         ///     is derived from the beanId.beanType.  For generics this will be a
         ///     constructed generic type</returns>
-        private (Type implementationType, InjectionState injectionState) 
+        private Type
           GetImplementationFromTypeMap((Type beanType, string beanName
-          , string constructorName) beanId, InjectionState injectionState)
+          ,string constructorName) beanId
+          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap)
         {
 
             char[] a = beanId.beanType.GetSafeFullName().TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
-            Type referenceType = injectionState.TypeMap.Keys.FirstOrDefault(
+            Type referenceType = typeMap.Keys.FirstOrDefault(
                 k => k.beanType.GetSafeFullName() == beanTypeName && k.beanName == beanId.beanName).beanType;
-            return (injectionState.TypeMap[(referenceType, beanId.beanName)], injectionState);
+            return typeMap[(referenceType, beanId.beanName)];
 
         }
 
-        /// <param name="injectionState"></param>
+        /// <param name="typeMap"></param>
         /// <param name="beanId"><see cref="GetImplementationFromTypeMap"/></param>
-        private (bool typeFound, InjectionState injectionState) 
+        private bool
           IsBeanPresntInTypeMap((Type beanType, string beanName
-          , string constructorName) beanId, InjectionState injectionState)
+          ,string constructorName) beanId
+          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap)
         {
             char[] a = beanId.beanType.IsArray 
               ? beanId.beanType.FullName.ToArray() 
               : beanId.beanType.FullName.TakeWhile(n => n != '[').ToArray();
             string beanTypeName = new String(a);
             // trim the generic arguments from a generic
-            return (injectionState.TypeMap.Keys.Any(k => k.beanType.GetSafeFullName() 
-              == beanTypeName && k.beanName == beanId.beanName), injectionState);
+            return typeMap.Keys.Any(k => k.beanType.GetSafeFullName() 
+              == beanTypeName && k.beanName == beanId.beanName);
         }
 
         /// <summary>checks if the type to be instantiated has a valid constructor and if so constructs it</summary>
