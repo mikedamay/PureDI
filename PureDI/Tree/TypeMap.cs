@@ -7,7 +7,7 @@ namespace PureDI.Tree
     {
         
     }
-    internal class TypeMapImpl : Dictionary<(Type, string), Type>, TypeMap
+    internal class TypeMapImpl : Dictionary<(Type beanType, string beanName), Type>, TypeMap
     {
         public TypeMapImpl(IReadOnlyDictionary<(Type beanType, string beanName) , Type> map)
         {
