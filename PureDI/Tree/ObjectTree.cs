@@ -325,7 +325,7 @@ namespace PureDI.Tree
 
         Type MakeConstructableType(BeanSpec beanSpec
           ,BeanReferenceDetails declaringBeanDetails
-          ,IReadOnlyDictionary<(Type, string), Type> typeMap, Diagnostics diagnostics)
+          ,TypeMap typeMap, Diagnostics diagnostics)
         {
             Type implementationType;
             if ((implementationType
@@ -366,7 +366,7 @@ namespace PureDI.Tree
         Type 
           GetImplementationType(BeanSpec beanSpec
           ,BeanReferenceDetails beanReferenceDetails
-          ,IReadOnlyDictionary<(Type, string), Type> typeMap, Diagnostics diagnostics)
+          ,TypeMap typeMap, Diagnostics diagnostics)
         {
             if ( IsBeanPresntInTypeMap(beanSpec, typeMap))
             {
@@ -406,7 +406,7 @@ namespace PureDI.Tree
         ///     constructed generic type</returns>
         private Type
           GetImplementationFromTypeMap(BeanSpec beanSpec
-          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap)
+          ,TypeMap typeMap)
         {
 
             char[] a = beanSpec.Type.GetSafeFullName().TakeWhile(n => n != '[').ToArray();
@@ -420,9 +420,7 @@ namespace PureDI.Tree
 
         /// <param name="typeMap"></param>
         /// <param name="beanSpec"><see cref="GetImplementationFromTypeMap"/></param>
-        private bool
-          IsBeanPresntInTypeMap(BeanSpec beanSpec
-          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap)
+        private bool IsBeanPresntInTypeMap(BeanSpec beanSpec, TypeMap typeMap)
         {
             char[] a = beanSpec.Type.IsArray 
               ? beanSpec.Type.FullName.ToArray() 
@@ -522,8 +520,9 @@ namespace PureDI.Tree
                 return arg;
             }).ToList();
         }
-        private static void RecordCreationDiagnostics(InjectionState injectionState, object oFactory, Type constructableType,
-            ParamOrMemberInfo beanReference)
+        private static void RecordCreationDiagnostics(InjectionState injectionState
+          ,object oFactory, Type constructableType
+          ,ParamOrMemberInfo beanReference)
         {
             if (oFactory == null)
             {

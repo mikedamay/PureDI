@@ -18,7 +18,7 @@ namespace PureDI
     public class InjectionState
     {
         private readonly Diagnostics diagnostics;
-        private readonly IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
+        private readonly TypeMap typeMap;
         private readonly IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar;
         private readonly Assembly[] _assemblies;
         internal InjectionState(Diagnostics diagnostics
@@ -27,7 +27,7 @@ namespace PureDI
         {
             this.diagnostics = diagnostics;
             this.mapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
-            this.typeMap = typeMap;
+            this.typeMap = new TypeMapImpl(typeMap);
             this._assemblies = assemblies;
         }
 
@@ -65,7 +65,8 @@ namespace PureDI
         // is a generic type definition.  The builder needs to lay its hands on the type argument
         // to substitute for the generic parameter.  The second type (beanReferenceType) which
         // has been taken from the member information of the declaring task provides the generic argument
-        internal IReadOnlyDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
+        internal TypeMap TypeMap => typeMap;
+//        internal IReadOnlyDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
         internal IDictionary<InstantiatedBeanId, object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         internal Assembly[] Assemblies => _assemblies;
         /// <summary>
