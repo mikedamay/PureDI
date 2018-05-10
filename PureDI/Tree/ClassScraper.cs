@@ -25,7 +25,7 @@ namespace PureDI.Tree
         /// <returns>A list of specifications of the parameters of the reqquired constructor
         /// (empty list if none or a default constructor)
         /// </returns>
-        public IReadOnlyList<ParamOrMemberInfo> GetConstructorParameterBeanReferences(
+        public IEnumerable<ParamOrMemberInfo> GetConstructorParameterBeanReferences(
           Type declaringBeanType, string constructorName
           , Diagnostics diagnostics
           )
@@ -44,15 +44,16 @@ namespace PureDI.Tree
                         if ( ValidateMemberOrParameter(paramOrMemberInfo
                           , declaringBeanType, diagnostics))
                         {
-                            @params.Add(paramOrMemberInfo);
+                            yield return paramOrMemberInfo;
+//                            @params.Add(paramOrMemberInfo);
                         }
                     } // for each constructor parameter
                 }
             }
-            return @params.AsReadOnly();
+//            return @params.AsReadOnly();
         } // CreateConstructorTrees()
         
-        public IReadOnlyList<ParamOrMemberInfo> GetMemberBeanReferences(
+        public IEnumerable<ParamOrMemberInfo> GetMemberBeanReferences(
           Type declaringBeanType, Diagnostics diagnostics)
         {
             List<ParamOrMemberInfo> members = new List<ParamOrMemberInfo>();
@@ -64,11 +65,12 @@ namespace PureDI.Tree
                 if (ValidateMemberOrParameter(paramOrMemberInfo
                   ,declaringBeanType, diagnostics))
                 {
-                    members.Add(paramOrMemberInfo);                   
+//                    members.Add(paramOrMemberInfo);   
+                    yield return paramOrMemberInfo;
                 }
             } // for each property or field
 
-            return members.AsReadOnly();
+//            return members.AsReadOnly();
         } // CreateMemberTrees()
 
         /// <summary>

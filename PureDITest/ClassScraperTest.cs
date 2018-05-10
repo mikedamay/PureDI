@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using IOCCTest.TestCode;
 using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +20,7 @@ namespace IOCCTest
               typeof(IOCCTest.ClassScraperTestCode.EmptyConstructor)
               ,PureDI.Common.Constants.DefaultConstructorName
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(0, constructorParams.Count);
         }
 
@@ -31,7 +32,7 @@ namespace IOCCTest
               typeof(IOCCTest.ClassScraperTestCode.DefaultConstructor)
               ,PureDI.Common.Constants.DefaultConstructorName
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(0, constructorParams.Count);
         }
         
@@ -43,7 +44,7 @@ namespace IOCCTest
               typeof(IOCCTest.ClassScraperTestCode.Vanilla)
               ,PureDI.Common.Constants.DefaultConstructorName
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(1, constructorParams.Count);
         }
         
@@ -55,7 +56,7 @@ namespace IOCCTest
               typeof(IOCCTest.ClassScraperTestCode.NamedConstructor)
               ,"MyConstructor"
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(1, constructorParams.Count);
         }
         
@@ -66,7 +67,7 @@ namespace IOCCTest
             var members = cs.GetMemberBeanReferences(
               typeof(IOCCTest.ClassScraperTestCode.NamedConstructor)
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(0, members.Count);
         }
         
@@ -77,7 +78,7 @@ namespace IOCCTest
             var members = cs.GetMemberBeanReferences(
               typeof(IOCCTest.ClassScraperTestCode.Vanilla)
               ,createDiagnostics()
-              );
+              ).ToList();
             Assert.AreEqual(2, members.Count);
         }
         
@@ -91,7 +92,7 @@ namespace IOCCTest
                     typeof(IOCCTest.ClassScraperTestCode.NoConstructor)
                     ,PureDI.Common.Constants.DefaultConstructorName
                     ,createDiagnostics()
-                );
+                ).ToList();
                 Assert.Fail();
             }
             catch (DIException e)
@@ -110,7 +111,7 @@ namespace IOCCTest
                     typeof(IOCCTest.ClassScraperTestCode.DuplicateConstructors)
                     ,PureDI.Common.Constants.DefaultConstructorName
                     ,createDiagnostics()
-                );
+                ).ToList();
                 Assert.Fail();
             }
             catch (DIException e)
