@@ -13,7 +13,7 @@ namespace PureDI.Tree
     {
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-        private static ClassScraper _classScraper = new ClassScraper();
+        private static readonly ClassScraper _classScraper = new ClassScraper();
         public ObjectTree()
         {
         }
@@ -100,7 +100,6 @@ namespace PureDI.Tree
   
             CycleGuard cycleGuard = creationContext.CycleGuard;
             ISet<Type> beansWithDeferredAssignments = creationContext.BeansWithDeferredAssignments;
-            bool complete;
             object bean;
             Type constructableType;
             if ((constructableType = MakeConstructableType(beanSpec, declaringBeanDetails
@@ -155,7 +154,10 @@ namespace PureDI.Tree
                         }
                     }
 
-                    (complete, bean) = MakeBean(beanScope, beanSpec, constructableType, injectionState
+                    bool complete;
+                    (complete, bean) = MakeBean(beanScope, beanSpec, constructableType
+                      ,injectionState.MapObjectsCreatedSoFar
+                      ,injectionState.Diagnostics
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
                     Assert(!beansWithDeferredAssignments.Contains(constructableType)
                            || beansWithDeferredAssignments.Contains(constructableType)
@@ -196,7 +198,8 @@ namespace PureDI.Tree
                         injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
                         throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
-                    (_, bean) = MakeBean(beanScope, beanSpec, constructableType, injectionState);
+                    (_, bean) = MakeBean(beanScope, beanSpec, constructableType
+                      ,injectionState.MapObjectsCreatedSoFar, injectionState.Diagnostics);
                     if (bean != null)
                     {
                         beansWithDeferredAssignments.Add(constructableType);
@@ -216,18 +219,19 @@ namespace PureDI.Tree
         (bool constructionComplete, object beanId) 
           MakeBean(BeanScope beanScope, BeanSpec beanSpec
             ,Type constructableType
-            ,InjectionState injectionState,
-            IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null)
+            ,IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar
+            ,Diagnostics diagnostics
+            ,IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null)
         {            
             object constructedBean;
             try
             {
                 if (beanScope != BeanScope.Prototype
-                    && injectionState.MapObjectsCreatedSoFar.ContainsKey(
+                    && mapObjectsCreatedSoFar.ContainsKey(
                     new InstantiatedBeanId(constructableType, beanSpec.BeanName, beanSpec.ConstructorName)))
                 {
                     // there maybe a cyclical dependency
-                    constructedBean = injectionState.MapObjectsCreatedSoFar[
+                    constructedBean = mapObjectsCreatedSoFar[
                       new InstantiatedBeanId(constructableType, beanSpec.BeanName, beanSpec.ConstructorName)];
                     return (true, constructedBean);
                 }
@@ -235,10 +239,10 @@ namespace PureDI.Tree
                 {
                     // TODO explain why type to be constructed is complicated by generics
                     constructedBean = Construct(constructableType
-                        , constructorParameterSpecs, beanSpec.ConstructorName, injectionState.Diagnostics);
+                        , constructorParameterSpecs, beanSpec.ConstructorName, diagnostics);
                     if (beanScope != BeanScope.Prototype)
                     {
-                        injectionState.MapObjectsCreatedSoFar[
+                        mapObjectsCreatedSoFar[
                           new InstantiatedBeanId(constructableType, beanSpec.BeanName, beanSpec.ConstructorName)] 
                           = constructedBean;
                     }
@@ -246,7 +250,7 @@ namespace PureDI.Tree
             }
             catch (NoArgConstructorException inace)
             {
-                RecordDiagnostic(injectionState.Diagnostics, "MissingNoArgConstructor"
+                RecordDiagnostic(diagnostics, "MissingNoArgConstructor"
                     , ("Class", inace.Class));
                 return (true, null);
             }
