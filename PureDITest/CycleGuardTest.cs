@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PureDI;
 using IOCCTest.TestCode;
+using static IOCCTest.Utils;
+
 
 namespace IOCCTest
 {
@@ -155,6 +156,15 @@ namespace IOCCTest
             Assert.IsTrue(cycleGuard.IsPresent(typeof(List<int>)));
             cycleGuard.Pop();
             Assert.IsFalse(cycleGuard.IsPresent(typeof(List<int>)));
+        }
+
+        [TestMethod, Timeout(1000)]
+        public void ShouldCreateTreeWithCyclicalDependecyThroughFactory()
+        {
+            (var result, var diagnostics) = CreateAndRunAssembly("CycleGuardTestData", "MyCycleGuard"
+              , usePureDiTestAssembly: true);
+            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsNotNull(result.GetResults()?.Dependency);
         }
     }
 
