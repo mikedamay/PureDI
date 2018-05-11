@@ -40,7 +40,7 @@ namespace PureDI.Tree
                 Assert(rootBeanName != null);
                 object rootObject;
                 (rootObject, injectionState) = CreateObjectTree(new BeanSpec(rootType, rootBeanName, rootConstructorName)
-                    , new CreationContext(new CycleGuard(), new HashSet<Type>()), injectionState, new BeanReferenceDetails(), scope);
+                    ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new DIException(
@@ -74,9 +74,9 @@ namespace PureDI.Tree
             }
             injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
                 ,beanName, Constants.DefaultConstructorName)] = rootObject;
+            injectionState.CreationContext.BeansWithDeferredAssignments.Add(rootObject.GetType());
             (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, Constants.DefaultConstructorName)
-              , new CreationContext(new CycleGuard()
-              ,new HashSet<Type>{rootObject.GetType()}), injectionState, new BeanReferenceDetails(), BeanScope.Singleton);
+              ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), BeanScope.Singleton);
             return injectionState;
         }
         /// <summary>
@@ -563,7 +563,6 @@ namespace PureDI.Tree
             typeMap.Add(beanId, beanId.type);
             return new InjectionState(injectionState.Diagnostics, typeMap
                 , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies, injectionState.CreationContext);
-        }
-        
+        }        
     }                // ObjectTree
 }

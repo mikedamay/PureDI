@@ -166,6 +166,17 @@ namespace IOCCTest
             Assert.IsFalse(diagnostics.HasWarnings);
             Assert.IsNotNull(result.GetResults()?.Dependency);
         }
+        [TestMethod, Timeout(20000)]
+        public void ShouldCreateTreeWithCyclicalDependecyThroughFactoryDiverse()
+        {
+            (var result, var diagnostics) = CreateAndRunAssembly("CycleGuardTestData", "DiverseCycles"
+              , usePureDiTestAssembly: false);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
+            Assert.IsNotNull(result.GetResults()?.DiverseA);
+            Assert.IsNotNull(result.GetResults()?.DiverseB);
+            Assert.IsNotNull(result.GetResults()?.DiverseC);
+            Assert.IsNotNull(result.GetResults()?.DiverseD);
+        }
     }
 
 }

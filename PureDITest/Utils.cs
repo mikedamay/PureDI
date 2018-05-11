@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using PureDI;
 using IOCCTest.TestCode;
 
@@ -11,6 +12,7 @@ namespace IOCCTest
     internal static class Utils
     {
         public const string TestResourcePrefix = "PureDITest";
+        private static ThreadLocal<bool> _usePureDiTestAssembly = new ThreadLocal<bool>();
         /// <summary>
         /// 
         /// </summary>

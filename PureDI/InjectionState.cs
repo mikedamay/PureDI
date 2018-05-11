@@ -25,8 +25,8 @@ namespace PureDI
         private readonly CreationContext _creationContext;
         internal InjectionState(Diagnostics diagnostics
             , IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
-            , IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar, Assembly[] assemblies,
-            CreationContext creationContext = null)
+            , IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar, Assembly[] assemblies
+            ,CreationContext creationContext = null)
         {
             this.diagnostics = diagnostics;
             this.mapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
