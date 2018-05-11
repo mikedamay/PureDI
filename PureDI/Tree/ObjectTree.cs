@@ -562,7 +562,7 @@ namespace PureDI.Tree
                 = new Dictionary<(Type beanType, string beanName), Type>(injectionState.TypeMap);
             typeMap.Add(beanId, beanId.type);
             return new InjectionState(injectionState.Diagnostics, typeMap
-                , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies);
+                , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies, injectionState.CreationContext);
         }
         
     }                // ObjectTree

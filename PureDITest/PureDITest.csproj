@@ -131,6 +131,8 @@
     <EmbeddedResource Include="FactoryTestData\FactoryWithMemberBeans.cs" />
     <Compile Remove="GenericTestData\Generic.cs" />
     <EmbeddedResource Include="GenericTestData\Generic.cs" />
+    <Compile Remove="CycleGuardTestData\MyCycleGuard.cs" />
+    <EmbeddedResource Include="CycleGuardTestData\MyCycleGuard.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AdditionalAssemblyData\EntryPoint.cs" />

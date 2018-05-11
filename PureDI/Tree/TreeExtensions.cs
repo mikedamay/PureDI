@@ -129,22 +129,5 @@ namespace PureDI.Tree
 
         public static ConstructorInfo GetNoArgConstructor(this Type beanType, BindingFlags flags)
             => beanType.GetConstructors(flags).FirstOrDefault(ci => ci.GetParameters().Length == 0);
-
-        public static (object obj, InjectionState @is) ExecuteFactory(
-          this ChildBeanSpec spec, InjectionState injectionState, BeanFactoryArgs args)
-        {
-            try
-            {
-                return (spec.MemberOrFactoryBean as IFactory)
-                    .Execute(injectionState, new BeanFactoryArgs(
-                        spec.ParameterInfo.GetBeanReferenceAttribute()
-                            .FactoryParameter));                           
-            }
-            catch (Exception ex)
-            {
-                throw new DIException($"Execute failed for {spec.MemberOrFactoryBean.GetType().FullName}"
-                    ,ex, injectionState.Diagnostics);
-            }
-        }
     }
 }

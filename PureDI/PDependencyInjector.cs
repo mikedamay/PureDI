@@ -265,8 +265,7 @@ namespace PureDI
                         injectionState.Diagnostics
                         , typeMap
                         , mapObjectsCreatedSoFar
-                        , assemblies
-                    ));
+                        , assemblies, injectionState.CreationContext));
             }
             object rootObject;
             (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
@@ -289,7 +288,7 @@ namespace PureDI
                     new Dictionary<InstantiatedBeanId, object>();
                 (typeMap, diagnostics) = CreateTypeMap(rootType, explicitAssemblies);
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar
-                  , explicitAssemblies);
+                  , explicitAssemblies, null);
             }
             else
             {
@@ -298,7 +297,7 @@ namespace PureDI
                   , assemblies);
                 newInjectionState = new InjectionState(diagnostics, typeMap
                   , injectionState.MapObjectsCreatedSoFar.ToDictionary(kv => kv.Key, kv => kv.Value)
-                  ,assemblies);                
+                  ,assemblies, injectionState.CreationContext);                
             }
             return newInjectionState;
         }

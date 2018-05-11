@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PureDI.Common;
 using System.Reflection;
+using PureDI.Public;
 using PureDI.Tree;
 
 namespace PureDI
@@ -21,14 +22,17 @@ namespace PureDI
         private readonly TypeMap typeMap;
         private readonly IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar;
         private readonly Assembly[] _assemblies;
+        private readonly CreationContext _creationContext;
         internal InjectionState(Diagnostics diagnostics
-          ,IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
-          ,IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar, Assembly[] assemblies)
+            , IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap
+            , IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar, Assembly[] assemblies,
+            CreationContext creationContext = null)
         {
             this.diagnostics = diagnostics;
             this.mapObjectsCreatedSoFar = mapObjectsCreatedSoFar;
             this.typeMap = new TypeMapImpl(typeMap);
             this._assemblies = assemblies;
+            this._creationContext = creationContext;
         }
 
         internal void Deconstruct(out Diagnostics diagnostics
@@ -69,6 +73,7 @@ namespace PureDI
 //        internal IReadOnlyDictionary<(Type beanType, string beanName), Type> TypeMap => typeMap;
         internal IDictionary<InstantiatedBeanId, object> MapObjectsCreatedSoFar => mapObjectsCreatedSoFar;
         internal Assembly[] Assemblies => _assemblies;
+        internal CreationContext CreationContext => _creationContext;
         /// <summary>
         /// shortcut to diagnostics.AllToString().
         /// a multi-line string containing all warnings and other info.
@@ -91,7 +96,6 @@ namespace PureDI
                     new DiagnosticBuilder().Diagnostics
                     ,new Dictionary<(Type beanType, string beanName), Type>()
                     ,new Dictionary<InstantiatedBeanId, object>()
-                    ,new Assembly[0]
-                    );
+                    ,new Assembly[0], null);
     }
 }

@@ -506,16 +506,33 @@
     <severity>Info</severity>
     <intro>List of objects injected by the container into the constructor</intro>
     <background>
-</background>
-    
-    
-    
+    </background>
+
+
+
     <template>{ParameterImplementation} has been injected into the constructor of {DeclaringType}</template>
     <artefacts>
       <DeclaringType>
-</DeclaringType>
+      </DeclaringType>
       <ParameterImplementation>
-</ParameterImplementation>
+      </ParameterImplementation>
+    </artefacts>
+  </group>
+  <group>
+    <topic>NoCreationContext</topic>
+    <severity>Warning</severity>
+    <intro>Attempt to call CreateAndInjectDependencies() from factory without passing down the creation context</intro>
+    <background>In the Execute() method of a factory object the dependency injector is being used to
+      create some object and inject its dependencies.  This pattern requires that the
+      "parent's" CreationContext is passed down to ensure that no cycclical dependencies are introduced
+      unbeknownst to the injector.
+      The parent's creationContext can be found in the BeanFactoryArgs object passed in as a parameter.
+    </background>
+
+
+    <template>Attempt to create {BeanType}</template>
+    <artefacts>
+      <BeanType/>
     </artefacts>
   </group>
 </DiagnosticSchema>

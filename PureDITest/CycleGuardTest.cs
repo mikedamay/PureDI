@@ -162,7 +162,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithCyclicalDependecyThroughFactory()
         {
             (var result, var diagnostics) = CreateAndRunAssembly("CycleGuardTestData", "MyCycleGuard"
-              , usePureDiTestAssembly: true);
+              , usePureDiTestAssembly: false);
             Assert.IsFalse(diagnostics.HasWarnings);
             Assert.IsNotNull(result.GetResults()?.Dependency);
         }
