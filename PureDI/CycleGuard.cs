@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureDI.Tree;
 using static PureDI.Common.Common;
 
 namespace PureDI
 {
     internal class CycleGuard
     {
-        private readonly HashSet<Type> types = new HashSet<Type>();
-        private readonly Stack<Type> typeStack = new Stack<Type>();
-        public void Push(Type type)
+        private readonly HashSet<ConstructableBean> _beans = new HashSet<ConstructableBean>();
+        private readonly Stack<ConstructableBean> _beanStack = new Stack<ConstructableBean>();
+        public void Push(ConstructableBean constructableBean)
         {
-            Assert(!types.Contains(type));
-            typeStack.Push(type);
-            types.Add(type);
+            Assert(!_beans.Contains(constructableBean));
+            _beanStack.Push(constructableBean);
+            _beans.Add(constructableBean);
         }
-        public Type Pop()
+        public ConstructableBean Pop()
         {
-            Type type = typeStack.Pop();
-            Assert(types.Contains(type));
-            types.Remove(type);
-            return type;
+            ConstructableBean constructableBean = _beanStack.Pop();
+            Assert(_beans.Contains(constructableBean));
+            _beans.Remove(constructableBean);
+            return constructableBean;
         }
-        public bool IsPresent(Type type) => types.Contains(type);
+        public bool IsPresent(ConstructableBean constructableBean) => _beans.Contains(constructableBean);
     }
 }

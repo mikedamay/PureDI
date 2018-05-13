@@ -110,11 +110,12 @@ namespace PureDI.Tree
             bool cyclicalDependencyFound = false;
             try
             {
+                var constructableBean = new ConstructableBean(constructableType, beanSpec.BeanName );
                 List<ChildBeanSpec> beanSpecs = new List<ChildBeanSpec>();
-                cyclicalDependencyFound = cycleGuard.IsPresent(constructableType);
+                cyclicalDependencyFound = cycleGuard.IsPresent(constructableBean);
                 if (!cyclicalDependencyFound)
                 {
-                    cycleGuard.Push(constructableType);
+                    cycleGuard.Push(constructableBean);
                     var beanReferences =
                       _classScraper.GetMemberBeanReferences(constructableType, injectionState.Diagnostics)
                       .Concat(_classScraper.GetConstructorParameterBeanReferences(

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PureDI;
+using PureDI.Tree;
 using IOCCTest.TestCode;
 using static IOCCTest.Utils;
 
@@ -132,38 +133,41 @@ namespace IOCCTest
         [TestMethod]
         public void SimpleCycleGuardTest()
         {
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(string)));
-            cycleGuard.Push(typeof(string));
-            Assert.IsTrue(cycleGuard.IsPresent(typeof(string)));
+            var constructableBean = new ConstructableBean(typeof(string), PureDI.Common.Constants.DefaultBeanName);
+            Assert.IsFalse(cycleGuard.IsPresent(constructableBean));
+            cycleGuard.Push(constructableBean);
+            Assert.IsTrue(cycleGuard.IsPresent(constructableBean));
             cycleGuard.Pop();
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(string)));
+            Assert.IsFalse(cycleGuard.IsPresent(constructableBean));
         }
         [TestMethod]
         public void ConstructedGenericCycleGuardTest()
         {
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(List<int>)));
-            cycleGuard.Push(typeof(List<int>));
-            Assert.IsTrue(cycleGuard.IsPresent(typeof(List<int>)));
+            var constructableBean = new ConstructableBean(typeof(List<int>), PureDI.Common.Constants.DefaultBeanName);
+            Assert.IsFalse(cycleGuard.IsPresent(constructableBean));
+            cycleGuard.Push(constructableBean);
+            Assert.IsTrue(cycleGuard.IsPresent(constructableBean));
             cycleGuard.Pop();
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(List<int>)));
+            Assert.IsFalse(cycleGuard.IsPresent(constructableBean));
         }
 
         [TestMethod]
         public void ShouldNotConfuseConstructedGenerics()
         {
-            cycleGuard.Push(typeof(List<int>));
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(List<string>)));
-            Assert.IsTrue(cycleGuard.IsPresent(typeof(List<int>)));
+            var constructableBean = new ConstructableBean(typeof(List<int>), PureDI.Common.Constants.DefaultBeanName);
+            cycleGuard.Push(constructableBean);
+            Assert.IsFalse(cycleGuard.IsPresent(new ConstructableBean(typeof(List<string>), PureDI.Common.Constants.DefaultBeanName)));
+            Assert.IsTrue(cycleGuard.IsPresent(constructableBean));
             cycleGuard.Pop();
-            Assert.IsFalse(cycleGuard.IsPresent(typeof(List<int>)));
+            Assert.IsFalse(cycleGuard.IsPresent(constructableBean));
         }
 
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(2000)]
         public void ShouldCreateTreeWithCyclicalDependecyThroughFactory()
         {
             (var result, var diagnostics) = CreateAndRunAssembly("CycleGuardTestData", "MyCycleGuard"
               , usePureDiTestAssembly: false);
-            Assert.IsFalse(diagnostics.HasWarnings);
+            Assert.IsFalse(Falsify(diagnostics.HasWarnings));
             Assert.IsNotNull(result.GetResults()?.Dependency);
         }
         [TestMethod, Timeout(20000)]
