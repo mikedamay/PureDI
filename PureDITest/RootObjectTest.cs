@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
 using PureDI;
 using IOCCTest.rootBean;
-using IOCCTest.TestCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static IOCCTest.Utils;
 
 namespace IOCCTest
 {
@@ -61,6 +59,20 @@ namespace IOCCTest
               = pdi.CreateAndInjectDependencies(new InsertedAsObject());
             InferAssembly infer = pdi.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
             Assert.IsNotNull(infer.inserted);
+        }
+
+        [TestMethod]
+        public void ShouldCreateUniqueInstancesWithNamedRootObject()
+        {
+            Instance instanceInstance = new Instance();
+            var pdi = new PDependencyInjector();
+            InjectionState @is, is2;
+            (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance);
+            MultipleInstances multiple;
+            (multiple, is2) = pdi.CreateAndInjectDependencies<MultipleInstances>(@is);
+            Assert.IsNotNull(multiple.InstanceInstance);
+            Assert.IsNotNull(multiple.ClassInstance);
+            Assert.AreNotEqual(multiple.ClassInstance, multiple.InstanceInstance);
         }
     }
 }
