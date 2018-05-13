@@ -74,7 +74,7 @@ namespace PureDI.Tree
             }
             injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
                 ,beanName, Constants.DefaultConstructorName)] = rootObject;
-            injectionState.CreationContext.BeansWithDeferredAssignments.Add(rootObject.GetType());
+            injectionState.CreationContext.BeansWithDeferredAssignments.Add(new ConstructableBean(rootObject.GetType(), beanName));
             (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, Constants.DefaultConstructorName)
               ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), BeanScope.Singleton);
             return injectionState;
@@ -99,7 +99,7 @@ namespace PureDI.Tree
         {
   
             CycleGuard cycleGuard = creationContext.CycleGuard;
-            ISet<Type> beansWithDeferredAssignments = creationContext.BeansWithDeferredAssignments;
+            ISet<ConstructableBean> beansWithDeferredAssignments = creationContext.BeansWithDeferredAssignments;
             object bean;
             Type constructableType;
             if ((constructableType = MakeConstructableType(beanSpec, declaringBeanDetails
@@ -108,6 +108,7 @@ namespace PureDI.Tree
                 return (null, injectionState);
             }
             bool cyclicalDependencyFound = false;
+            var constructableBeanx = new ConstructableBean(constructableType, beanSpec.BeanName);
             try
             {
                 var constructableBean = new ConstructableBean(constructableType, beanSpec.BeanName );
@@ -160,8 +161,8 @@ namespace PureDI.Tree
                       ,injectionState.MapObjectsCreatedSoFar
                       ,injectionState.Diagnostics
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
-                    Assert(!beansWithDeferredAssignments.Contains(constructableType)
-                           || beansWithDeferredAssignments.Contains(constructableType)
+                    Assert(!beansWithDeferredAssignments.Contains(constructableBeanx)
+                           || beansWithDeferredAssignments.Contains(constructableBeanx)
                            && complete
                            && bean != null); 
                             // "complete && bean != null" indicates that
@@ -177,12 +178,12 @@ namespace PureDI.Tree
                     //    members had not been created and assigned and that needs to be done now.
                     //    (the MakeBean() logic cannot distinguish between 2) and 3) so, in the
                     //     case of 3) it wrongly reports that the bean creation is complete)
-                    if (complete && !beansWithDeferredAssignments.Contains(constructableType))
+                    if (complete && !beansWithDeferredAssignments.Contains(constructableBeanx))
                     {
                         return (bean, injectionState); // either the bean and therefore its children had already been created
                                      // or we were unable to create the bean (null)
                     }
-                    beansWithDeferredAssignments.Remove(constructableType);
+                    beansWithDeferredAssignments.Remove(constructableBeanx);
                     AssignMembers(bean
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.Member).ToList()
                       ,injectionState.Diagnostics);
@@ -203,7 +204,7 @@ namespace PureDI.Tree
                       ,injectionState.MapObjectsCreatedSoFar, injectionState.Diagnostics);
                     if (bean != null)
                     {
-                        beansWithDeferredAssignments.Add(constructableType);
+                        beansWithDeferredAssignments.Add(constructableBeanx);
                     }
                 }
             }

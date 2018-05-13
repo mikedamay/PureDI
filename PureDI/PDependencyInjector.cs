@@ -288,7 +288,7 @@ namespace PureDI
                     new Dictionary<InstantiatedBeanId, object>();
                 (typeMap, diagnostics) = CreateTypeMap(rootType, explicitAssemblies);
                 newInjectionState = new InjectionState(diagnostics, typeMap, mapObjectsCreatedSoFar
-                  , explicitAssemblies, new CreationContext(new CycleGuard(), new HashSet<Type>()));
+                  , explicitAssemblies, new CreationContext(new CycleGuard(), new HashSet<ConstructableBean>()));
             }
             else
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PureDI.Tree;
 
 namespace PureDI.Public
 {
@@ -11,9 +12,9 @@ namespace PureDI.Public
         public class CreationContext
         {
             internal CycleGuard CycleGuard { get; }
-            internal ISet<Type> BeansWithDeferredAssignments { get; }
+            internal ISet<ConstructableBean> BeansWithDeferredAssignments { get; }
 
-            internal CreationContext(CycleGuard cycleGuard, ISet<Type> beansWithDeferredAssignments)
+            internal CreationContext(CycleGuard cycleGuard, ISet<ConstructableBean> beansWithDeferredAssignments)
             {
                 CycleGuard = cycleGuard;
                 BeansWithDeferredAssignments = beansWithDeferredAssignments;
