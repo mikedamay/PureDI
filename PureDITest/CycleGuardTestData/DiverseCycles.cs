@@ -3,6 +3,10 @@ using System.Dynamic;
 using IOCCTest.TestCode;
 using PureDI;
 using PureDI.Attributes;
+using PureDI.Common;
+
+// cannot test this class in a separate assembly.  When using CSharpCompilation
+// to create the assembly, on load a Bad IL exception is thrown
 
 namespace IOCCTest.CycleGuardTestData
 {
@@ -50,7 +54,7 @@ namespace IOCCTest.CycleGuardTestData
             {
                 var diverseD = new DiverseD();
                 return pdi.CreateAndInjectDependencies(diverseD
-                  ,PureDI.Common.Constants.DefaultBeanName, injectionState);
+                  ,Constants.DefaultBeanName, injectionState);
             }
         }
     }
@@ -62,7 +66,7 @@ namespace IOCCTest.CycleGuardTestData
 
         public DiverseD()
         {
-            _ = cycles;
+            var xxx = cycles;
         }
     }
 
@@ -73,7 +77,7 @@ namespace IOCCTest.CycleGuardTestData
 
         private DiverseC()
         {
-            _ = cycles;
+            var xxx = cycles;
         }
     }
 
@@ -84,7 +88,7 @@ namespace IOCCTest.CycleGuardTestData
 
         private DiverseB()
         {
-            _ = cycles;
+            var xxx = cycles;
         }
     }
     [Bean]
@@ -94,7 +98,7 @@ namespace IOCCTest.CycleGuardTestData
 
         private DiverseA()
         {
-            _ = cycles;
+            var xxx = cycles;
         }
     }
 
