@@ -170,6 +170,8 @@ namespace PureDI
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         ///     to attach to the object tree</param>
+        /// <param name="beanName">bean references can refer to this object specifically
+        ///   by echoing the beanName here</param>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
@@ -181,17 +183,18 @@ namespace PureDI
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) 
-          CreateAndInjectDependencies(object rootObject, InjectionState injectionState = null, Assembly[] assemblies = null)
+          CreateAndInjectDependencies(object rootObject, string beanName = Constants.DefaultBeanName
+          ,InjectionState injectionState = null, Assembly[] assemblies = null)
         {
             CheckArgument(rootObject);
             CheckInjectionStateArgument(injectionState);
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), Constants.DefaultBeanName
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), beanName
               ,Constants.DefaultConstructorName)] = this;
             ObjectTree tree = new ObjectTree();
-            newInjectionState = tree.CreateAndInjectDependencies(rootObject, newInjectionState);
+            newInjectionState = tree.CreateAndInjectDependencies(rootObject, beanName, newInjectionState);
             return (rootObject, newInjectionState);
         }
         /// <summary>
@@ -293,11 +296,15 @@ namespace PureDI
             else
             {
                 Assembly[] assemblies = explicitAssemblies.Union(injectionState.Assemblies).ToArray();
-                (typeMap, diagnostics) = CreateTypeMap(rootType
-                  , assemblies);
-                newInjectionState = new InjectionState(diagnostics, typeMap
-                  , injectionState.MapObjectsCreatedSoFar.ToDictionary(kv => kv.Key, kv => kv.Value)
-                  ,assemblies, injectionState.CreationContext);                
+                IReadOnlyDictionary<(Type beanType, string beanName), Type> newTypeMap;
+                (newTypeMap, diagnostics) = CreateTypeMap(rootType
+                  ,assemblies);
+                newInjectionState = new InjectionState(diagnostics
+                  ,newTypeMap.Concat(
+                  injectionState.TypeMap.Where(tme => !newTypeMap.Keys.Contains(tme.Key))).ToDictionary(kv => kv.Key, kv => kv.Value)
+                  ,injectionState.MapObjectsCreatedSoFar.ToDictionary(kv => kv.Key, kv => kv.Value)
+                  ,assemblies
+                  ,injectionState.CreationContext);                
             }
             return newInjectionState;
         }

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using PureDI;
+using PureDI.Common;
 using IOCCTest.rootBean;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,7 +25,7 @@ namespace IOCCTest
             ConnectUp connectUp = new ConnectUp();
             PDependencyInjector pdi = new PDependencyInjector();
             var existing = pdi.CreateAndInjectDependencies<ExistingRoot>();
-            pdi.CreateAndInjectDependencies( connectUp, existing.injectionState);
+            pdi.CreateAndInjectDependencies( connectUp, Constants.DefaultBeanName, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
@@ -67,7 +68,7 @@ namespace IOCCTest
             Instance instanceInstance = new Instance();
             var pdi = new PDependencyInjector();
             InjectionState @is, is2;
-            (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance);
+            (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance, "MyInstance");
             MultipleInstances multiple;
             (multiple, is2) = pdi.CreateAndInjectDependencies<MultipleInstances>(@is);
             Assert.IsNotNull(multiple.InstanceInstance);

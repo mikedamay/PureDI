@@ -59,18 +59,18 @@ namespace PureDI.Tree
                     injectionState.Diagnostics);
             }
         }
-        public InjectionState CreateAndInjectDependencies(object rootObject, InjectionState injectionState)
+        public InjectionState CreateAndInjectDependencies(object rootObject, string beanNameArg, InjectionState injectionState)
         {
             Type constructableType = rootObject.GetType();
             string beanName;
-            if (!injectionState.TypeMap.ContainsKey((constructableType, Constants.DefaultBeanName)))
+            if (!injectionState.TypeMap.ContainsKey((constructableType, beanNameArg.ToLower())))
             {
-                beanName = Guid.NewGuid().ToString();
+                beanName = beanNameArg == Constants.DefaultBeanName ? Guid.NewGuid().ToString() : beanNameArg.ToLower();
                 injectionState = AddRootObjectDetailsToTypeMap(injectionState, (constructableType, beanName));                
             }
             else
             {
-                beanName = Constants.DefaultBeanName;
+                beanName = beanNameArg.ToLower();
             }
             injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
                 ,beanName, Constants.DefaultConstructorName)] = rootObject;
