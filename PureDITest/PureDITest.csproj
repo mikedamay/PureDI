@@ -3,7 +3,7 @@
     <!--<TargetFramework>net47</TargetFramework>-->
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest</Configurations>
+    <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest;Debug (WindowsOnly with SandCastle Docs)</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="AdditionalAssemblyData\EntryPoint.cs" />

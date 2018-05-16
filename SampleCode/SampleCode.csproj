@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
       <!-- <TargetFramework>net47</TargetFramework>   -->
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Configurations>Debug;Release;Interesting</Configurations>
+    <Configurations>Debug;Release;Interesting;Debug (WindowsOnly with SandCastle Docs)</Configurations>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -19,6 +19,6 @@
     -->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../PureDI/PureDI.csproj"/>
+    <ProjectReference Include="../PureDI/PureDI.csproj" />
   </ItemGroup> 
 </Project>

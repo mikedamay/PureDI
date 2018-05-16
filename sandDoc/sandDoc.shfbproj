@@ -53,8 +53,9 @@
     <ProjectSummary>The one and only namespace exposed by PureDI</ProjectSummary>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="PureDI" isDocumented="True">The main namespace exposed by PureDI</NamespaceSummaryItem>
-<NamespaceSummaryItem name="PureDI.Attributes" isDocumented="True">A collection of attributes to be included in code using the library together with some closely related classes</NamespaceSummaryItem>
-<NamespaceSummaryItem name="PureDI.Public" isDocumented="True">Utility classes</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="PureDI.Attributes" isDocumented="True">A collection of attributes to be included in code using the library together with some closely related classes</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="PureDI.Public" isDocumented="True">Utility classes</NamespaceSummaryItem>
+    </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
@@ -116,5 +117,8 @@
     <PostBuildEvent>
     </PostBuildEvent>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug (WindowsOnly with SandCastle Docs)' ">
+    <OutputPath>bin\Debug (WindowsOnly with SandCastle Docs)\</OutputPath>
   </PropertyGroup>
 </Project>

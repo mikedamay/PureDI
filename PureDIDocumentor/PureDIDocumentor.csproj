@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Configurations>Debug;Release;Interesting</Configurations>
+    <Configurations>Debug;Release;Interesting;Debug (WindowsOnly with SandCastle Docs)</Configurations>
     <!--<TargetFramework>net47</TargetFramework>-->
   </PropertyGroup>
 
@@ -13,6 +13,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (WindowsOnly with SandCastle Docs)|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile />
