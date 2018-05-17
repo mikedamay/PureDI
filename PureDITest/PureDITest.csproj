@@ -3,7 +3,7 @@
     <!--<TargetFramework>net47</TargetFramework>-->
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest;Debug (WindowsOnly with SandCastle Docs)</Configurations>
+    <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest;Debug (WindowsOnly with SandCastle Docs);FW</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="AdditionalAssemblyData\EntryPoint.cs" />
@@ -254,6 +254,9 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>WINDOWSTEST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='FW'">
     <DefineConstants>WINDOWSTEST</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='LinuxTest'">

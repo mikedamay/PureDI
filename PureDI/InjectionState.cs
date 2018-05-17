@@ -52,7 +52,9 @@ namespace PureDI
         {
             return new InjectionState(
               new DiagnosticBuilder(this.Diagnostics).Diagnostics
-              , new Dictionary<(Type beanType, string beanName), Type>(this.typeMap)
+              , new Dictionary<(Type beanType, string beanName), Type>(this.typeMap.GetDictionary())
+                  // coreapp2.0 allowed a IReadonlyDictionary to be passed as a param to the constructor
+                  // standard2.0 could not handle it
               , new Dictionary<InstantiatedBeanId, object>(mapObjectsCreatedSoFar)
               ,(Assembly[])_assemblies.Clone()
               );

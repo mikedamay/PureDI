@@ -5,7 +5,7 @@ namespace PureDI.Tree
 {
     internal interface TypeMap : IReadOnlyDictionary<(Type beanType, string beanName), Type>
     {
-        
+        IDictionary<(Type beanType, string beanName), Type> GetDictionary();
     }
     internal class TypeMapImpl : Dictionary<(Type beanType, string beanName), Type>, TypeMap
     {
@@ -15,6 +15,12 @@ namespace PureDI.Tree
             {
                 base.Add(entry.Key, entry.Value );
             }           
+        }
+
+        public IDictionary<(Type beanType, string beanName), Type> 
+            GetDictionary()
+        {
+            return this;
         }
     }        
 /*

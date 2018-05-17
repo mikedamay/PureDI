@@ -561,7 +561,10 @@ namespace PureDI.Tree
             InjectionState injectionState, (Type type, string beanName) beanId)
         {
             Dictionary<(Type beanType, string beanName), Type> typeMap
-                = new Dictionary<(Type beanType, string beanName), Type>(injectionState.TypeMap);
+                = new Dictionary<(Type beanType, string beanName), Type>(injectionState.TypeMap.GetDictionary()
+                    // coreapp2.0 allowed a IReadonlyDictionary to be passed as a param to the constructor
+                    // standard2.0 could not handle it
+                );
             typeMap.Add(beanId, beanId.type);
             return new InjectionState(injectionState.Diagnostics, typeMap
                 , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies, injectionState.CreationContext);

@@ -4,10 +4,15 @@
     <OutputType>Exe</OutputType>
       <!--<TargetFramework>net47</TargetFramework>-->  
     <TargetFramework>netcoreapp2.0</TargetFramework>  
-    <Configurations>Debug;Release;Interesting;Debug (WindowsOnly with SandCastle Docs)</Configurations>
+    <Configurations>Debug;Release;Interesting;Debug (WindowsOnly with SandCastle Docs);FW</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FW|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
