@@ -167,6 +167,37 @@ namespace PureDI
         /// Currently this method will attempt to recursively inject dependencies for rootObject and
         /// this may not be the desired behaviour.  This is a shortcoming and will be addressed
         /// in a future version.
+        /// The rules for handling CreateAndInjectDependencies for an instantiated object are a little complicated:
+        /// a) Objects created or injected using any overload of CreateAndInjectDependencies should not be
+        ///    passed as a root object to this overload.  No exception is thrown but warnings that
+        ///    members have already been assigned may be added to the diagnostic results.
+        /// b) If an singleton object is passed to this overload for a class that has already been instantiated
+        ///    by the injector then an exception is thrown.
+        /// c) It is pointless (but not penalised) to pass a prototype object with deferred injections.
+        /// d) If the RootObject is passed as a singleton but its class is not annotated as a bean then
+        ///    a warning will be recorded but it will be instantiated.
+        /// Internal Processing:
+        /// objects are either created using new or (pointlessly) CreateAndInject.  They can be of Singleton or
+        /// Prototype Scope and either defer injections into their members or allow them immediately.
+        /// The table below shows for which input combinations the various internal tables (on InjectionState) are
+        /// updated.
+        /// TypeMap and MapSoFar refer to TypeMap and MapObjectsCreatedSoFar on injection state.
+        /// Deferred In refers to InjectionState.CreationContext.BeansWithDeferredAssignments as passed to this
+        /// overload.
+        /// Deferred Out refers to InjectionState.CreationContext.BeansWithDeferredAssignments returned from this
+        /// overload.  The expectation is that this will be used in a subsequent call to CreateAndInject where
+        /// the recently created RootObject will be picked up and injected as a dependency for some other bean.
+        /// (The Deferred In / Out nastiness is the price we pay to have a single route through ObjectTree.CreateObjectTree
+        /// whilst restricting the complexity of the library user's view to the idea of InjectionState). 
+        /// Creation Method        Defer Injections        Scope                                            TypeMap    MapSoFar    Deferred in    Deferred out
+        /// new                    yes                     Singleton    handle cyclical dependencies        yes        yes         yes            yes
+        /// new                    no                      Singleton    normal creation                     yes        yes         yes            no
+        /// new                    yes                     Prototype    pointless                           no         no          no             no
+        /// new                    no                      Prototype    not avaialble for injection         yes (guid) no          yes            no
+        /// CreateAndInject        yes                     Singleton    pointless - duplicate injections    multiple calls to CreateAndInject
+        /// CreateAndInject        no                      Singleton    pointless - duplicate injections    for the same object are considered
+        /// CreateAndInject        yes                     Prototype    pointless - no injections           pointless and may result in
+        /// CreateAndInject        no                      Prototype    pointless - duplicate injections    diagnostic warnings
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         ///     to attach to the object tree</param>
