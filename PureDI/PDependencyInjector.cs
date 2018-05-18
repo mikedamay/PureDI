@@ -229,46 +229,6 @@ namespace PureDI
             return (rootObject, newInjectionState);
         }
         /// <summary>
-        /// This version of the injection method allows the library user to instantiate an object
-        /// using "new" or by whatever other means and have it injected into the object tree.
-        /// It may be appropriate to make one or more calls to create objects that will be needed in the tree
-        /// before using a different call to create the full tree.
-        /// Currently this method will attempt to recursively inject dependencies for rootObject and
-        /// this may not be the desired behaviour.  This is a shortcoming and will be addressed
-        /// in a future version.
-        /// </summary>
-        /// <param name="rootObject">some instantiated object which the library user needs
-        ///     to attach to the object tree</param>
-        /// <param name="injectionState">This is null the first time the method is called.
-        ///     Subsequent calls will typically take some saved instance of injection state.</param>
-        /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null if no additional assemblies are required. 
-        ///   The assembly in which the call to this method is made is included by default
-        ///   irrespective of the argument passed here</param>
-        /// <returns>an object of rootType for use by the program and an injection state object which can
-        ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
-        ///   which require additional objects to be created.</returns>
-        /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
-        public (object rootBean, InjectionState injectionState) 
-          CreateAndInjectDependenciesNewish(object rootObject, InjectionState injectionState = null, Assembly[] assemblies = null)
-        {
-            CheckArgument(rootObject);
-            CheckInjectionStateArgument(injectionState);
-
-            InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
-              , assemblies ?? new Assembly[0]);
-            string beanName = Guid.NewGuid().ToString().ToLower();
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType()
-              ,Constants.DefaultBeanName, Constants.DefaultConstructorName)] = this;
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(rootObject.GetType()
-              ,beanName, Constants.DefaultConstructorName)] = rootObject;
-//            newInjectionState = AddRootObjectDetails(newInjectionState, (rootObject.GetType(), beanName));
-            ObjectTree tree = new ObjectTree();
-            (_, newInjectionState) = new ObjectTree().CreateAndInjectDependencies(rootObject.GetType(), newInjectionState
-            , beanName, Constants.DefaultConstructorName, BeanScope.Singleton);
-            return (rootObject, newInjectionState);
-        }
-        /// <summary>
         /// <see cref="CreateAndInjectDependencies(string,PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
