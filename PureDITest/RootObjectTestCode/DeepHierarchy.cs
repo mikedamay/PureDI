@@ -1,7 +1,6 @@
-﻿using PureDI;
-using PureDI.Attributes;
+﻿using PureDI.Attributes;
 
-namespace IOCCTest.rootBean
+namespace PureDITest.RootObjectTestCode
 {
     [Bean]
     public class DeepHierarchy

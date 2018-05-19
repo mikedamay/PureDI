@@ -6,35 +6,47 @@ namespace PureDI.Common
 {
     internal class InstantiatedObjectDecisionTable
     {
-        public delegate void TypeMapHandler(Type beanType, BeanSpec beanSpec, object bean);
-        public delegate void MapObjectsCreatedSoFarHandler(InstantiatedBeanId id, object bean);
-        public delegate void DeferredInHandler(ConstructableBean constructableBean);
-        public delegate void DeferredOutHandler(ConstructableBean constructableBean);
+        public delegate void TypeMapHandler(Func<InjectionState, (Type, string)> typeMapUpdater, Type beanType, BeanSpec beanSpec, object bean);
+        public delegate void MapObjectsCreatedSoFarHandler(IDictionary<InstantiatedBeanId, object> map, InstantiatedBeanId id, object bean);
+        public delegate void DeferredInHandler(ISet<ConstructableBean> deferredAssignments, ConstructableBean constructableBean);
+        public delegate void DeferredOutHandler(ISet<ConstructableBean> deferredAssignments, ConstructableBean constructableBean);
 
         private static IDictionary<Key, Entry> map = new Dictionary<Key, Entry>
         {
             {new Key(true, BeanScope.Singleton)
               ,new Entry
                 {
-                    TypeMapHandler = ((type, spec, bean) => _ = type)
+                    TypeMapHandler = (typeMap, type, spec, bean) => { }
+                    ,MapObjectsCreatedSoFarHandler = ((map, id, bean) => _ = id)
+                    ,DeferredInHandler = (deferred, bean) => deferred.Add(bean)
+                    ,DeferredOutHandler = (deferred, bean) => deferred.Add(bean)
                 } 
             }
             ,{new Key(false, BeanScope.Singleton)
                 ,new Entry
                 {
-                    MapObjectsCreatedSoFarHandler = ((id, bean) => _ = id)
+                    TypeMapHandler = (typeMap, type, spec, bean) => _ = type
+                    ,MapObjectsCreatedSoFarHandler = (map, id, bean) => _ = id
+                    ,DeferredInHandler = (deferred, bean) => _ = bean
+                    ,DeferredOutHandler = (deferred, bean) => _ = bean
                 } 
             }
             ,{new Key(true, BeanScope.Prototype)
                 ,new Entry
                 {
-                    DeferredInHandler = (bean => _ = bean)
+                    TypeMapHandler = (typeMap, type, spec, bean) => _ = type
+                    ,MapObjectsCreatedSoFarHandler = (map, id, bean) => _ = id
+                    ,DeferredInHandler = (deferred, bean) => _ = bean
+                    ,DeferredOutHandler = (deferred, bean) => _ = bean
                 } 
             }
             ,{new Key(false, BeanScope.Prototype)
                 ,new Entry
                 {
-                    DeferredOutHandler = (bean => _ = bean)
+                    TypeMapHandler = (typeMap, type, spec, bean) => _ = type
+                    ,MapObjectsCreatedSoFarHandler = (map, id, bean) => _ = id
+                    ,DeferredInHandler = (deferred, bean) => _ = bean
+                    ,DeferredOutHandler = (deferred, bean) => _ = bean
                 } 
             }
         };
@@ -84,22 +96,22 @@ namespace PureDI.Common
         {
             _entry = map[new Key(deferred, beanScope)];
         }
-        public void MaybeAddBeanToTypeMap(Type beanType, BeanSpec beanSpec, object bean)
+        public void MaybeAddBeanToTypeMap(Func<InjectionState, (Type, string)> typeMap, Type beanType, BeanSpec beanSpec, object bean)
         {
-            _entry.TypeMapHandler(beanType, beanSpec, bean);
+            _entry.TypeMapHandler(typeMap, beanType, beanSpec, bean);
         }
-        public void MaybeAddObjectToCreatedSoFarMap(InstantiatedBeanId id, object bean)
+        public void MaybeAddObjectToCreatedSoFarMap(IDictionary<InstantiatedBeanId, object> map, InstantiatedBeanId id, object bean)
         {
-            _entry.MapObjectsCreatedSoFarHandler(id, bean);
+            _entry.MapObjectsCreatedSoFarHandler(map, id, bean);
         }
 
-        public void MaybeAddDeferredIn(ConstructableBean constructableBean)
+        public void MaybeAddDeferredIn(ISet<ConstructableBean> deferredAssignments, ConstructableBean constructableBean)
         {
-            _entry.DeferredInHandler(constructableBean);
+            _entry.DeferredInHandler(deferredAssignments, constructableBean);
         }
-        public void MaybeAddDeferredOut(ConstructableBean constructableBean)
+        public void MaybeAddDeferredOut(ISet<ConstructableBean> deferredAssignments, ConstructableBean constructableBean)
         {
-            _entry.DeferredOutHandler(constructableBean);
+            _entry.DeferredOutHandler(deferredAssignments, constructableBean);
         }
 
     }

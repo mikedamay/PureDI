@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using PureDI;
 using PureDI.Common;
-using IOCCTest.rootBean;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PureDITest.RootObjectTestCode;
 
 namespace IOCCTest
 {
@@ -18,7 +18,6 @@ namespace IOCCTest
             pdi.CreateAndInjectDependencies(simple, assemblies: new Assembly[] { this.GetType().Assembly});
             Assert.IsNotNull(simple.GetResults().Child);
         }
-
         [TestMethod]
         public void ShouldConnectInstantiatedObjectToExistingTree()
         {
@@ -29,7 +28,6 @@ namespace IOCCTest
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
-
         [TestMethod]
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
@@ -38,7 +36,6 @@ namespace IOCCTest
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
         }
-
         [TestMethod]
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
@@ -51,7 +48,6 @@ namespace IOCCTest
               ).rootBean;
             Assert.IsNotNull(someUser.deep);
         }
-
         [TestMethod]
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
@@ -74,6 +70,16 @@ namespace IOCCTest
             Assert.IsNotNull(multiple.InstanceInstance);
             Assert.IsNotNull(multiple.ClassInstance);
             Assert.AreNotEqual(multiple.ClassInstance, multiple.InstanceInstance);
+        }
+
+        [TestMethod]
+        public void ShouldWarnIfRootObjectWasAlreadyInjected()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>();
+            (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is);
+            Assert.AreEqual(1, @is.Diagnostics.Groups["RootObjectExists"].Occurrences.Count);
         }
     }
 }

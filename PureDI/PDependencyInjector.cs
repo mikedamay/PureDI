@@ -128,7 +128,8 @@ namespace PureDI
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
-        public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(string rootTypeName, InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+        public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(string rootTypeName
+          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -171,7 +172,7 @@ namespace PureDI
         /// a) Objects created or injected using any overload of CreateAndInjectDependencies should not be
         ///    passed as a root object to this overload.  No exception is thrown but warnings that
         ///    members have already been assigned may be added to the diagnostic results.
-        /// b) If an singleton object is passed to this overload for a class that has already been instantiated
+        /// b) If a singleton object is passed to this overload for a class that has already been instantiated
         ///    by the injector then an exception is thrown.
         /// c) It is pointless (but not penalised) to pass a prototype object with deferred injections.
         /// d) If the RootObject is passed as a singleton but its class is not annotated as a bean then
