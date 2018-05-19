@@ -26,8 +26,7 @@ namespace SimpleIOCCDocumentor
                     IOCCDocumentParser ddp = new IOCCDocumentParser(
                         (string)propertyMap.Map(documentPath)
                         ,xmlRoot, navigatorFactory);
-                    (_, injectionState) = injector.CreateAndInjectDependencies(ddp
-                      ,PureDI.Common.Constants.DefaultBeanName, injectionState);
+                    (_, injectionState) = injector.CreateAndInjectDependencies(ddp, injectionState);
                     return (ddp, injectionState);
                 }
                 catch (Exception ex)

@@ -202,31 +202,32 @@ namespace PureDI
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         ///     to attach to the object tree</param>
-        /// <param name="beanName">bean references can refer to this object specifically
-        ///   by echoing the beanName here</param>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
-        ///   Pass null if no additional assemblies are required. 
-        ///   The assembly in which the call to this method is made is included by default
-        ///   irrespective of the argument passed here</param>
+        ///     Pass null if no additional assemblies are required. 
+        ///     The assembly in which the call to this method is made is included by default
+        ///     irrespective of the argument passed here</param>
+        /// <param name="rootBeanSpec"></param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
-        public (object rootBean, InjectionState injectionState) 
-          CreateAndInjectDependencies(object rootObject, string beanName = Constants.DefaultBeanName
-          ,InjectionState injectionState = null, Assembly[] assemblies = null)
+        public (object rootBean, InjectionState injectionState)
+          CreateAndInjectDependencies(object rootObject
+          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
         {
+            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
+            (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
             CheckArgument(rootObject);
             CheckInjectionStateArgument(injectionState);
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), beanName
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), rootBeanName
               ,Constants.DefaultConstructorName)] = this;
             ObjectTree tree = new ObjectTree();
-            newInjectionState = tree.CreateAndInjectDependencies(rootObject, beanName, newInjectionState);
+            newInjectionState = tree.CreateAndInjectDependencies(rootObject, rootBeanName, newInjectionState);
             return (rootObject, newInjectionState);
         }
         /// <summary>

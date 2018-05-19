@@ -24,7 +24,7 @@ namespace IOCCTest
             ConnectUp connectUp = new ConnectUp();
             PDependencyInjector pdi = new PDependencyInjector();
             var existing = pdi.CreateAndInjectDependencies<ExistingRoot>();
-            pdi.CreateAndInjectDependencies( connectUp, Constants.DefaultBeanName, existing.injectionState);
+            pdi.CreateAndInjectDependencies( connectUp, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
 
         }
@@ -64,7 +64,7 @@ namespace IOCCTest
             Instance instanceInstance = new Instance();
             var pdi = new PDependencyInjector();
             InjectionState @is, is2;
-            (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance, "MyInstance");
+            (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance, rootBeanSpec:new RootBeanSpec("MyInstance"));
             MultipleInstances multiple;
             (multiple, is2) = pdi.CreateAndInjectDependencies<MultipleInstances>(@is);
             Assert.IsNotNull(multiple.InstanceInstance);

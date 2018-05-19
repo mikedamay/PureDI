@@ -53,8 +53,7 @@ namespace IOCCTest.CycleGuardTestData
             else
             {
                 var diverseD = new DiverseD();
-                return pdi.CreateAndInjectDependencies(diverseD
-                  ,Constants.DefaultBeanName, injectionState);
+                return pdi.CreateAndInjectDependencies(diverseD, injectionState);
             }
         }
     }
