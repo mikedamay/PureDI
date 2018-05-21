@@ -100,8 +100,6 @@ namespace PureDI.Tree
         {
             if (!injectionState.TypeMap.ContainsKey((constructableType, rootBeanSpec.RootBeanName)))
             {
-//                beanName = rootBeanSpec.RootBeanName
-//                  == Constants.DefaultBeanName ? Guid.NewGuid().ToString() : rootBeanSpec.RootBeanName.ToLower();
                 injectionState = AddRootObjectDetailsToTypeMap(injectionState, (constructableType, beanName));
             }
             else
@@ -112,8 +110,6 @@ namespace PureDI.Tree
                     RecordDiagnostic(injectionState.Diagnostics, "RootObjectExists"
                         , ("BeanType", constructableType.FullName));
                 }
-
-//                beanName = rootBeanSpec.RootBeanName;
             }
             return injectionState;
         }

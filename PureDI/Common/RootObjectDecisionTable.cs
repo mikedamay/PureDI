@@ -20,7 +20,7 @@ namespace PureDI.Common
     /// (The Deferred In / Out nastiness is the price we pay to have a single route through ObjectTree.CreateObjectTree
     /// whilst restricting the complexity of the library user's view to the idea of InjectionState). 
     /// Creation Method        Defer Injections        Scope                                            TypeMap    MapSoFar    Deferred in    Deferred out
-    /// new                    yes                     Singleton    handle cyclical dependencies        yes        yes         yes            yes
+    /// new                    yes                     Singleton    handle cyclical dependencies        yes        yes         no             yes
     /// new                    no                      Singleton    normal creation                     yes        yes         yes            no
     /// new                    yes                     Prototype    pointless                           yes        no          no             no
     /// new                    no                      Prototype    not avaialble for injection         yes (guid) no          yes            no
@@ -30,7 +30,7 @@ namespace PureDI.Common
     /// CreateAndInject        no                      Prototype    pointless - duplicate injections    diagnostic warnings
     internal class RootObjectDecisionTable
     {
-        private  delegate void Decide(Action typeMapUpdater);
+        private  delegate void Decide(Action updater);
 
         private static Decide Noop = updater => {};
         private static Decide Update = updater => updater();
