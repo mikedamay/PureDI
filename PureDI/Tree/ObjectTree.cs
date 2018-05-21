@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using PureDI.Common;
@@ -11,6 +12,11 @@ namespace PureDI.Tree
 {
     internal class ObjectTree
     {
+        private delegate (bool constructionComplete, object beanId) BeanMaker(BeanScope beanScope, BeanSpec beanSpec
+            , Type constructableType
+            , IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar
+            , Diagnostics diagnostics
+            , IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null);
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
         private static readonly ClassScraper _classScraper = new ClassScraper();
@@ -40,7 +46,7 @@ namespace PureDI.Tree
                 Assert(rootBeanName != null);
                 object rootObject;
                 (rootObject, injectionState) = CreateObjectTree(new BeanSpec(rootType, rootBeanName, rootConstructorName)
-                    ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope);
+                    ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope, MakeBean);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new DIException(
@@ -59,26 +65,59 @@ namespace PureDI.Tree
                     injectionState.Diagnostics);
             }
         }
-        public InjectionState CreateAndInjectDependencies(object rootObject, string beanNameArg, InjectionState injectionState)
+        public InjectionState CreateAndInjectDependencies(object rootObject,
+            InjectionState injectionState, RootBeanSpec rootBeanSpec = null, bool deferDependencyInjection = false)
         {
             Type constructableType = rootObject.GetType();
-            string beanName;
-            if (!injectionState.TypeMap.ContainsKey((constructableType, beanNameArg.ToLower())))
+            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
+            rootBeanSpec = rootBeanSpec.Scope == BeanScope.Prototype
+              ? new RootBeanSpec("prototype-" + Guid.NewGuid().ToString()
+              , rootBeanSpec.RootConstrutorName, rootBeanSpec.Scope)
+              : rootBeanSpec;
+                // in the call to CreateObjectTree we trick the method to create the dependencies
+                // by adding the prototype uniquely to both the type map and the deferred assignment list
+            var rodt = new RootObjectDecisionTable(deferDependencyInjection, rootBeanSpec.Scope);            
+            string beanName = rootBeanSpec.RootBeanName;
+            rodt.MaybeAddBeanToTypeMap(
+              () => injectionState = UpdateTypeMap(injectionState, rootBeanSpec, constructableType, beanName));
+            rodt.MaybeAddObjectToCreatedSoFarMap(
+              () => injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
+              ,beanName, rootBeanSpec.RootConstrutorName)] = rootObject);
+            rodt.MaybeAddDeferredIn(
+              () => injectionState.CreationContext.BeansWithDeferredAssignments
+              .Add(new ConstructableBean(rootObject.GetType(), beanName)));
+            BeanMaker rootBeanMaker = (bs, bs2, ctx, mocf, diags, cp) => { return (true, rootObject); };
+            (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, rootBeanSpec.RootConstrutorName)
+              ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), rootBeanSpec.Scope, rootBeanMaker);
+            rodt.MaybeAddDeferredOut(
+              () => injectionState.CreationContext.BeansWithDeferredAssignments
+              .Add(new ConstructableBean(rootObject.GetType(), beanName)));
+            return injectionState;
+        }
+
+        private InjectionState UpdateTypeMap(InjectionState injectionState, RootBeanSpec rootBeanSpec, Type constructableType,
+            string beanName)
+        {
+            if (!injectionState.TypeMap.ContainsKey((constructableType, rootBeanSpec.RootBeanName)))
             {
-                beanName = beanNameArg == Constants.DefaultBeanName ? Guid.NewGuid().ToString() : beanNameArg.ToLower();
-                injectionState = AddRootObjectDetailsToTypeMap(injectionState, (constructableType, beanName));                
+//                beanName = rootBeanSpec.RootBeanName
+//                  == Constants.DefaultBeanName ? Guid.NewGuid().ToString() : rootBeanSpec.RootBeanName.ToLower();
+                injectionState = AddRootObjectDetailsToTypeMap(injectionState, (constructableType, beanName));
             }
             else
             {
-                beanName = beanNameArg.ToLower();
+                if (injectionState.MapObjectsCreatedSoFar.ContainsKey(new InstantiatedBeanId(constructableType
+                    , rootBeanSpec.RootBeanName, rootBeanSpec.RootConstrutorName)))
+                {
+                    RecordDiagnostic(injectionState.Diagnostics, "RootObjectExists"
+                        , ("BeanType", constructableType.FullName));
+                }
+
+//                beanName = rootBeanSpec.RootBeanName;
             }
-            injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
-                ,beanName, Constants.DefaultConstructorName)] = rootObject;
-            injectionState.CreationContext.BeansWithDeferredAssignments.Add(new ConstructableBean(rootObject.GetType(), beanName));
-            (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, Constants.DefaultConstructorName)
-              ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), BeanScope.Singleton);
             return injectionState;
         }
+
         /// <summary>
         /// see documentation for CreateAndInjectDependencies
         /// </summary>
@@ -92,10 +131,13 @@ namespace PureDI.Tree
         ///     can be displayed in diagnostic messages - currently not used for
         ///     anything else</param>
         /// <param name="beanScope"></param>
+        /// <param name="beanMaker">normally MakeBean is used to instantiate the bean but
+        ///   where a root object is passed in this method is by-passed by stubbing a simple
+        ///   replacement that returns the root object</param>
         private (object bean, InjectionState injectionState) 
           CreateObjectTree(BeanSpec beanSpec, CreationContext creationContext
           ,InjectionState injectionState, BeanReferenceDetails declaringBeanDetails
-          ,BeanScope beanScope)
+          ,BeanScope beanScope, BeanMaker beanMaker)
         {
   
             CycleGuard cycleGuard = creationContext.CycleGuard;
@@ -132,7 +174,7 @@ namespace PureDI.Tree
                             object oFactory = null;
                             (oFactory, injectionState) = CreateObjectTree(new BeanSpec(beanReference.Factory, beanReference.BeanName
                               ,beanReference.ConstructorName)
-                              ,creationContext, injectionState, beanReferenceDetails, beanReference.Scope);
+                              ,creationContext, injectionState, beanReferenceDetails, beanReference.Scope, MakeBean);
                             if (oFactory != null)
                             {
                                 (memberBean, injectionState) = ExecuteFactory( injectionState, oFactory
@@ -146,7 +188,7 @@ namespace PureDI.Tree
                             (memberBean, injectionState) = CreateObjectTree(
                                 new BeanSpec(beanReference.Type, beanReference.BeanName, beanReference.ConstructorName)
                                 ,creationContext, injectionState
-                                ,beanReferenceDetails, beanReference.Scope);
+                                ,beanReferenceDetails, beanReference.Scope, MakeBean);
                         } // not a factory
 
                         if (memberBean != null)
@@ -157,7 +199,7 @@ namespace PureDI.Tree
                     }
 
                     bool complete;
-                    (complete, bean) = MakeBean(beanScope, beanSpec, constructableType
+                    (complete, bean) = beanMaker(beanScope, beanSpec, constructableType
                       ,injectionState.MapObjectsCreatedSoFar
                       ,injectionState.Diagnostics
                       ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
@@ -200,7 +242,7 @@ namespace PureDI.Tree
                         injectionState.Diagnostics.Groups["CyclicalDependency"].Add(diag);
                         throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
-                    (_, bean) = MakeBean(beanScope, beanSpec, constructableType
+                    (_, bean) = beanMaker(beanScope, beanSpec, constructableType
                       ,injectionState.MapObjectsCreatedSoFar, injectionState.Diagnostics);
                     if (bean != null)
                     {
@@ -217,7 +259,7 @@ namespace PureDI.Tree
             }
             return (bean, injectionState);
         }
-        
+
         (bool constructionComplete, object beanId) 
           MakeBean(BeanScope beanScope, BeanSpec beanSpec
             ,Type constructableType

@@ -177,28 +177,7 @@ namespace PureDI
         /// c) It is pointless (but not penalised) to pass a prototype object with deferred injections.
         /// d) If the RootObject is passed as a singleton but its class is not annotated as a bean then
         ///    a warning will be recorded but it will be instantiated.
-        /// Internal Processing:
-        /// objects are either created using new or (pointlessly) CreateAndInject.  They can be of Singleton or
-        /// Prototype Scope and either defer injections into their members or allow them immediately.
-        /// The table below shows for which input combinations the various internal tables (on InjectionState) are
-        /// updated.
-        /// TypeMap and MapSoFar refer to TypeMap and MapObjectsCreatedSoFar on injection state.
-        /// Deferred In refers to InjectionState.CreationContext.BeansWithDeferredAssignments as passed to this
-        /// overload.
-        /// Deferred Out refers to InjectionState.CreationContext.BeansWithDeferredAssignments returned from this
-        /// overload.  The expectation is that this will be used in a subsequent call to CreateAndInject where
-        /// the recently created RootObject will be picked up and injected as a dependency for some other bean.
-        /// (The Deferred In / Out nastiness is the price we pay to have a single route through ObjectTree.CreateObjectTree
-        /// whilst restricting the complexity of the library user's view to the idea of InjectionState). 
-        /// Creation Method        Defer Injections        Scope                                            TypeMap    MapSoFar    Deferred in    Deferred out
-        /// new                    yes                     Singleton    handle cyclical dependencies        yes        yes         yes            yes
-        /// new                    no                      Singleton    normal creation                     yes        yes         yes            no
-        /// new                    yes                     Prototype    pointless                           no         no          no             no
-        /// new                    no                      Prototype    not avaialble for injection         yes (guid) no          yes            no
-        /// CreateAndInject        yes                     Singleton    pointless - duplicate injections    multiple calls to CreateAndInject
-        /// CreateAndInject        no                      Singleton    pointless - duplicate injections    for the same object are considered
-        /// CreateAndInject        yes                     Prototype    pointless - no injections           pointless and may result in
-        /// CreateAndInject        no                      Prototype    pointless - duplicate injections    diagnostic warnings
+        /// e) Bean name and constructor name on prootype root objects are ignored as they will never be used.
         /// </summary>
         /// <param name="rootObject">some instantiated object which the library user needs
         ///     to attach to the object tree</param>
@@ -209,13 +188,18 @@ namespace PureDI
         ///     The assembly in which the call to this method is made is included by default
         ///     irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec"></param>
+        /// <param name="deferDepedencyInjection">when set to true no attempt will be made to
+        ///   create dependencies and assign them to rootObject's members.  The possible use case
+        ///   is one in which there are cyclical dependencies which cannot be accommodated by
+        ///   more normal processing</param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(object rootObject
-          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null
+          ,bool deferDepedencyInjection = false)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -224,10 +208,11 @@ namespace PureDI
 
             InjectionState newInjectionState = CloneOrCreateInjectionState(rootObject.GetType(), injectionState
               , assemblies ?? new Assembly[0]);
-            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), rootBeanName
+            newInjectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType(), Constants.DefaultBeanName
               ,Constants.DefaultConstructorName)] = this;
             ObjectTree tree = new ObjectTree();
-            newInjectionState = tree.CreateAndInjectDependencies(rootObject, rootBeanName, newInjectionState);
+            newInjectionState = tree.CreateAndInjectDependencies(
+              rootObject, newInjectionState, rootBeanSpec, deferDepedencyInjection);
             return (rootObject, newInjectionState);
         }
         /// <summary>
@@ -252,17 +237,17 @@ namespace PureDI
               ,Constants.DefaultConstructorName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
-            if (mapObjectsCreatedSoFar.ContainsKey(new InstantiatedBeanId(rootType, rootBeanName
-              ,Constants.DefaultConstructorName)))
-            {
-                return (mapObjectsCreatedSoFar[
-                  new InstantiatedBeanId(rootType, rootBeanName, Constants.DefaultConstructorName)]
-                    , new InjectionState(
-                        injectionState.Diagnostics
-                        , typeMap
-                        , mapObjectsCreatedSoFar
-                        , assemblies, injectionState.CreationContext));
-            }
+//            if (mapObjectsCreatedSoFar.ContainsKey(new InstantiatedBeanId(rootType, rootBeanName
+//              ,Constants.DefaultConstructorName)))
+//            {
+//                return (mapObjectsCreatedSoFar[
+//                  new InstantiatedBeanId(rootType, rootBeanName, Constants.DefaultConstructorName)]
+//                    , new InjectionState(
+//                        injectionState.Diagnostics
+//                        , typeMap
+//                        , mapObjectsCreatedSoFar
+//                        , assemblies, injectionState.CreationContext));
+//            }
             object rootObject;
             (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
               rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope);

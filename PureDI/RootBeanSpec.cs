@@ -1,4 +1,5 @@
-﻿using PureDI.Attributes;
+﻿using System;
+using PureDI.Attributes;
 using PureDI.Common;
 
 namespace PureDI
@@ -19,8 +20,8 @@ namespace PureDI
         public RootBeanSpec(string rootBeanName = Constants.DefaultBeanName
             , string rootConstructorName = Constants.DefaultConstructorName, BeanScope scope = BeanScope.Singleton)
         {
-            RootBeanName = rootBeanName;
-            RootConstrutorName = rootConstructorName;
+            RootBeanName = rootBeanName == null ? throw new ArgumentNullException() : rootBeanName.ToLower();
+            RootConstrutorName = rootConstructorName == null ? throw new ArgumentNullException() : rootConstructorName.ToLower();
             Scope = scope;
         }
         /// <summary>

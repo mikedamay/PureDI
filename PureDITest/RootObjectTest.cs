@@ -78,8 +78,74 @@ namespace IOCCTest
             var pdi = new PDependencyInjector();
             InjectionState @is;
             (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>();
-            (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is);
+            (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is
+              );
             Assert.AreEqual(1, @is.Diagnostics.Groups["RootObjectExists"].Occurrences.Count);
+        }
+        [TestMethod]
+        public void ShouldNotWarnIfPrototypeRootObjectWasAlreadyInjected()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>();
+            (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is
+              ,rootBeanSpec: new RootBeanSpec(scope: BeanScope.Prototype));
+            Assert.AreEqual(0, @is.Diagnostics.Groups["RootObjectExists"].Occurrences.Count);
+        }
+        [TestMethod]    // prototype not deferred
+        public void ShouldCreateDependenciesForPrototypeRootObject()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            var rootBean = new AlreadyInstantiated();
+            (_, @is) = pdi.CreateAndInjectDependencies(rootBean
+              ,rootBeanSpec: new RootBeanSpec(scope: BeanScope.Prototype));
+            Assert.IsNotNull(rootBean?.Child);
+        }
+        [TestMethod]    // prototype deferred
+        public void ShouldNotWarnOfPrototypeRootObjectWithDeferredFlag()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            var rootBean = new AlreadyInstantiated();
+            (_, @is) = pdi.CreateAndInjectDependencies(rootBean
+              ,rootBeanSpec: new RootBeanSpec(scope: BeanScope.Prototype), deferDepedencyInjection: true);
+                    // pointless but we don't warn.
+            Assert.IsNull(rootBean?.Child);
+        }
+        [TestMethod]    // singleton not deferred
+        public void ShouldRespectNotDeferredFlag()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            var rootBean = new AlreadyInstantiated();
+            (_, @is) = pdi.CreateAndInjectDependencies(rootBean
+              ,deferDepedencyInjection: false);
+            Assert.IsNotNull(rootBean?.Child);
+        }
+        [TestMethod]    // singleton deferred
+        public void ShouldRespectDeferredFlag()
+        {
+            var pdi = new PDependencyInjector();
+            InjectionState @is;
+            var rootBean = new AlreadyInstantiated();
+            (_, @is) = pdi.CreateAndInjectDependencies(rootBean
+              ,deferDepedencyInjection: true);
+            Assert.IsNull(rootBean?.Child);
+            (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>(@is);
+            Assert.IsNotNull(rootBean?.Child);
+        }
+
+        [TestMethod]
+        public void ShouldRespectConstructorNameOnRootObject()
+        {
+            var pdi = new PDependencyInjector();
+            var named = new NamedConstructor(new MyParam());
+            InjectionState @is;
+            (_, @is) = pdi.CreateAndInjectDependencies(named,
+                rootBeanSpec: new RootBeanSpec(rootConstructorName: "MyConstructor"));
+            (var other, var is2) = pdi.CreateAndInjectDependencies<AnotherClass>(@is);
+            Assert.IsNotNull(other.named);
         }
     }
 }
