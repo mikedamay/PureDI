@@ -1,35 +1,27 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using PureDI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using PureDIDocumentor;
 
 namespace SimpleIOCCDocumentor
 {
     public class Startup
     {
-        private Diagnostics diagnostics;
-        private Diagnostics diagnostics3;
+        private InjectionState injectionState;
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            PDependencyInjector pdi = new PDependencyInjector(profiles: new string[] {"authoring"});
-            InjectionState injectionState;
-            (_, injectionState) =
-                pdi.CreateAndInjectDependencies(new GenericConfig(("relativePath", "../../../../Simple")))
-                ;
-            diagnostics3 = injectionState.Diagnostics;
-            (IDocumentProcessor dp, InjectionState @is) = pdi.CreateAndInjectDependencies<
-                IDocumentProcessor>(injectionState);
-            diagnostics = @is.Diagnostics;
+            IDocumentProcessor dp;
+            IDocumentationSiteGenerator dsg;
+            (dsg, dp, injectionState) = new DependencyConfiguration().Configure();
             services.Add(new ServiceDescriptor(typeof(IDocumentProcessor)
-              , dp));
+              ,dp));
             services.Add(new ServiceDescriptor(typeof(IDocumentationSiteGenerator)
-                , pdi.CreateAndInjectDependencies<IDocumentationSiteGenerator>(@is).rootBean));
+              ,dsg));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,9 +38,9 @@ namespace SimpleIOCCDocumentor
             app.Run(async (context) =>
             {
                 siteGenerator.GenerateSite();
-                if (diagnostics.HasWarnings)
+                if (injectionState.Diagnostics.HasWarnings)
                 {
-                    await context.Response.WriteAsync(diagnostics.ToString());
+                    await context.Response.WriteAsync(injectionState.Diagnostics.ToString());
                     return;
                 }
                 (string document, string fragment) = GetRouteFromRequest(context.Request.Path.Value);

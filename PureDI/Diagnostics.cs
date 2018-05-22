@@ -187,7 +187,7 @@ namespace PureDI
                 str = str + GetStringForSeverity(Severity.Warning);
             }
             str = str + Environment.NewLine + Environment.NewLine
-              + "Note that to see information as well as warnings you should call Diagnostics.AllToString()";
+              + "Note that to see informational messages as well as warnings you should call Diagnostics.AllToString()";
             return str;
         }
 

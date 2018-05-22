@@ -15,3 +15,35 @@
 	the IOCCDocumentParser the resource id is assigned to the navigation cache's
 	resource id member.  On assignment the cache creates an XPathNavigator using
 	an XPathNavigator factory (also provided by IOCCDocumentParserAttribute).
+	
+	
+	
+Count = 27	
+[0] = {ValueTuple<Type,string>} "(PureDI.PDependencyInjector, )"
+[1] = {ValueTuple<Type,string>} "(PureDI.ResourceFactory, )"
+[2] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.ApiDocParser, )"
+[3] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.CodeFetcher, )"
+[4] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.DocumentationSiteGenerator, )"
+[5] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.DocumentMapper, )"
+[6] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.DocumentProcessor, )"
+[7] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.EmbeddedResourceProvider, )"
+[8] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.FileResourceProvider, )"
+[9] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.GenericConfig, )"
+[10] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.GenericConfigFactory, )"
+[11] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IApiDocumentParser, )"
+[12] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.ICodeFetcher, )"
+[13] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IConfig, )"
+[14] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IDocumentationSiteGenerator, )"
+[15] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IDocumentProcessor, )"
+[16] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IIOCCXPathNavigatorCache, )"
+[17] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IMarkdownProcessor, )"
+[18] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IOCCDocumentParser, )"
+[19] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IOCCDocumentParserAttribute+IOCCDocumentParserFactory, )"
+[20] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IPropertyMap, )"
+[21] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.IResourceProvider, )"
+[22] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.Mapper, )"
+[23] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.MarkdownProcessor, )"
+[24] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.XPathNavigatoorFixedCache, )"
+[25] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.XPathNavigatorNoCache, )"
+[26] = {ValueTuple<Type,string>} "(SimpleIOCCDocumentor.XPathNavigatorResourceFactory, navigator)"
+
