@@ -8,7 +8,6 @@ using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {
-    [Ignore]
     internal interface IDocumentParser
     {
         string GetFragment(string fragmentType, string fragmentName);

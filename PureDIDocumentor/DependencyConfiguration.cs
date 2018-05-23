@@ -14,14 +14,10 @@ namespace PureDIDocumentor
         public (IDocumentationSiteGenerator, IDocumentProcessor, InjectionState) 
           Configure(InjectionState injectionState = null)
         {
-/*
             injectionState = pdi.CreateAndInjectDependencies(this, injectionState: injectionState
                 , deferDepedencyInjection: false).injectionState;
-*/
-/*
             injectionState = CreateAndInjectDocumentParser(injectionState
               ,"site-userguide", "PureDI.Docs.UserGuide.xml", Constants.UserGuideRoot);
-*/
             
             InjectionState @is;
             (_, @is) =
