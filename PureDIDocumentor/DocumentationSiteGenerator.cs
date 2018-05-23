@@ -19,6 +19,7 @@ namespace SimpleIOCCDocumentor
         [IOCCDocumentParser(
             DocumentPath: "PureDI.Docs.UserGuide.xml"
             , XmlRoot: Constants.UserGuideRoot)]
+//        [BeanReference(Name="site-userguide")]
         private IDocumentParser userGuideDocumentParser = null;
         [IOCCDocumentParser(
             DocumentPath: "PureDI.Docs.DiagnosticSchema.xml"

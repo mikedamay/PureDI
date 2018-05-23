@@ -353,12 +353,12 @@
     <group>
         <topic>UnreachableReference</topic>
         <severity>Warning</severity>
-        <intro>A bean reference exists in a context where a bean cannot be injected</intro>
-        <background>All members for which beans can be injected must exist within classes validly marked as [bean]s.
+        <intro>A bean reference exists in a context where a bean will not be injected</intro>
+        <background>All members for which beans can be injected must exist within classes marked as [bean]s.
         </background>
 
 
-        <template>{Type} has an unreachable member {MemberType} {MemberName}</template>
+        <template>{Type} has a member {MemberType} {MemberName} that cannot be injected</template>
         <artefacts>
             <Type>
             </Type>
