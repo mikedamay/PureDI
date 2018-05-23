@@ -14,9 +14,7 @@ namespace SimpleIOCCDocumentor
     public class DocumentProcessor : IDocumentProcessor
     {
         [BeanReference] private MarkdownProcessor markdownProcessor = null;
-        [IOCCDocumentParser(
-            DocumentPath: "PureDI.Docs.UserGuide.xml"
-            , XmlRoot: Constants.UserGuideRoot)]
+        [BeanReference(Name="doc-userguide")]
         private IDocumentParser userGuideDocumentParser = null;
         [BeanReference(Factory = typeof(ResourceFactory)
                 , FactoryParameter = new object[] {typeof(Program)

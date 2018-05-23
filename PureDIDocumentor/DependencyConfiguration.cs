@@ -18,6 +18,10 @@ namespace PureDIDocumentor
                 , deferDepedencyInjection: false).injectionState;
             injectionState = CreateAndInjectDocumentParser(injectionState
               ,"site-userguide", "PureDI.Docs.UserGuide.xml", Constants.UserGuideRoot);
+            injectionState = CreateAndInjectDocumentParser(injectionState
+              ,"site-diagnostics", "PureDI.Docs.DiagnosticSchema.xml", Constants.DiagnosticSchemaRoot);
+            injectionState = CreateAndInjectDocumentParser(injectionState
+              ,"doc-userguide", "PureDI.Docs.UserGuide.xml", Constants.UserGuideRoot);
             
             InjectionState @is;
             (_, @is) =
