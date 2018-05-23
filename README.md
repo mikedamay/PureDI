@@ -134,4 +134,6 @@ browse to http://localhost:60653/
     TODO document that factories must take care of any dependency
     TODO injection for member variables.
     TODO How does tye cycle guard interact with factories
-    TODO Validator gives false positives in PureDIDocumentor for IPropertyMap etc.
+    *** TODO Validator gives false positives in PureDIDocumentor for IPropertyMap etc.
+    TODO decide whether there are exceptions to the ruie that all containers of bean references
+    TODO must be beans - check on BeanValidator

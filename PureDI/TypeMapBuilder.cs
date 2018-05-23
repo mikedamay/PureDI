@@ -42,6 +42,12 @@ namespace PureDI
             return (IReadOnlyDictionary<(Type, string), Type>)map;
         }
 
+        public IList<KeyValuePair<(Type, string), Type>> GetTypesForRootObject(Type objType, string beanName)
+        {
+            var types = objType.GetBaseClassesAndInterfaces().IncludeImplementation(objType);
+            var kvs = types.Select(d => new KeyValuePair<(Type, string), Type>((d, beanName), objType));
+            return kvs.ToList();
+        }
         private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<(BeanSpec, BeanSpec)> duplicatePairs)
         {
             Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.Extensions.DependencyModel;
 using PureDI;
 using PureDI.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -146,6 +147,20 @@ namespace IOCCTest
                 rootBeanSpec: new RootBeanSpec(rootConstructorName: "MyConstructor"));
             (var other, var is2) = pdi.CreateAndInjectDependencies<AnotherClass>(@is);
             Assert.IsNotNull(other.named);
+        }
+
+        [TestMethod]
+        public void ShouldInjectDependenciesForRootObjectBaseClass()
+        {
+            var pdi = new PDependencyInjector();
+            var @base = new BaseClasses();
+            InjectionState @is;
+            (_, @is) = pdi.CreateAndInjectDependencies(@base);
+            (SomeClassUser scu, InjectionState is2) = pdi.CreateAndInjectDependencies<SomeClassUser>(@is);
+            Assert.IsNotNull(scu.BaseClasses);
+            Assert.IsNotNull(scu.SomeBaseClass);
+            Assert.IsNotNull(scu.SomeInterface);
+
         }
     }
 }

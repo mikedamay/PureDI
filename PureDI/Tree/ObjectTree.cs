@@ -603,7 +603,9 @@ namespace PureDI.Tree
                     // coreapp2.0 allowed a IReadonlyDictionary to be passed as a param to the constructor
                     // standard2.0 could not handle it
                 );
-            typeMap.Add(beanId, beanId.type);
+            var tmb = new TypeMapBuilder();
+            var typeMapAdditions = tmb.GetTypesForRootObject(beanId.type, beanId.beanName);
+            typeMap = typeMap.Concat(typeMapAdditions).ToDictionary(kv => kv.Key, kv => kv.Value);
             return new InjectionState(injectionState.Diagnostics, typeMap
                 , injectionState.MapObjectsCreatedSoFar, injectionState.Assemblies, injectionState.CreationContext);
         }        
