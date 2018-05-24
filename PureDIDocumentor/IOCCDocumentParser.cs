@@ -19,15 +19,12 @@ namespace SimpleIOCCDocumentor
         private string resourcePath;
         private string xmlRoot;
         [BeanReference] private ICodeFetcher codeFetcher = null;
-        private IIOCCXPathNavigatorCache navigatorCache;
-        [BeanReference(Scope=BeanScope.Prototype)]
-        private IIOCCXPathNavigatorCache NavigatorCache
+        private IIOCCXPathNavigatorCache _navigatorCache;
+        public IIOCCXPathNavigatorCache NavigatorCache
         {
             set
             {
-                navigatorCache = value;
-                navigatorCache.Factory = factory;
-                navigatorCache.ResourcePath = resourcePath;
+                _navigatorCache = value;
             }
         }
 
@@ -50,7 +47,7 @@ namespace SimpleIOCCDocumentor
 
         public string GetFragment(string fragmentType, string fragmentName)
         {
-            XPathNodeIterator nodes = navigatorCache.Navigator.Select(
+            XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
                 $"/{xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
             {
@@ -65,7 +62,7 @@ namespace SimpleIOCCDocumentor
         public IDictionary<string, string> GetDocumentIndex()
         {
             IDictionary<string, string> map = new Dictionary<string, string>();
-            XPathNodeIterator nodes = navigatorCache.Navigator.Select(
+            XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
                 $"/{xmlRoot}/group/topic");
             while (nodes.MoveNext())
             {

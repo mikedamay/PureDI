@@ -18,11 +18,6 @@ namespace SimpleIOCCDocumentor
         // we really need constructor parameters
         [BeanReference(Name="site-userguide")]
         private IDocumentParser userGuideDocumentParser = null;
-/*
-        [IOCCDocumentParser(
-            DocumentPath: "PureDI.Docs.DiagnosticSchema.xml"
-            , XmlRoot: Constants.DiagnosticSchemaRoot)]
-*/
         [BeanReference(Name="site-diagnostics")]
         private IDocumentParser diagnosticSchemaDocumentParser = null;
 
