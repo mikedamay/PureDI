@@ -16,39 +16,26 @@ namespace SimpleIOCCDocumentor
     [Bean]
     internal class IOCCDocumentParser : IDocumentParser
     {
-        private string resourcePath;
-        private string xmlRoot;
+        private string _xmlRoot;
         [BeanReference] private ICodeFetcher codeFetcher = null;
         private IIOCCXPathNavigatorCache _navigatorCache;
-        public IIOCCXPathNavigatorCache NavigatorCache
-        {
-            set
-            {
-                _navigatorCache = value;
-            }
-        }
-
-        private readonly XPathNavigatorResourceFactory factory;
 
         // inhibit PureDI diagnostic for no arg constructor
         public IOCCDocumentParser() { }
-        /// <param name="resourcePath">either "PDependencyInjector.Docs.DiagnosticSchema.xml"}
-        ///   or "PDependencyInjector.Docs.UserGuide.xml"} if it's anything else
-        ///   then the resource needs to be in the PDependencyInjector assembly </param>
+
         /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
-        ///   then the document must be a superset of UserGuide.xml </param>
-        /// <param name="factory">provides tha pparopriate resources e.g. user guide, diagnostics etc.</param>
-        public IOCCDocumentParser(string resourcePath, string xmlRoot, XPathNavigatorResourceFactory factory)
+        ///     then the document must be a superset of UserGuide.xml </param>
+        /// <param name="navigatorCache"></param>
+        public IOCCDocumentParser(string xmlRoot, IIOCCXPathNavigatorCache navigatorCache)
         {
-            this.xmlRoot = xmlRoot;
-            this.resourcePath = resourcePath;
-            this.factory = factory;
+            this._xmlRoot = xmlRoot;
+            this._navigatorCache = navigatorCache;
         }
 
         public string GetFragment(string fragmentType, string fragmentName)
         {
             XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
-                $"/{xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
+                $"/{_xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
             {
                 return codeFetcher.SubstituteCode(nodes.Current.InnerXml);
@@ -63,11 +50,11 @@ namespace SimpleIOCCDocumentor
         {
             IDictionary<string, string> map = new Dictionary<string, string>();
             XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
-                $"/{xmlRoot}/group/topic");
+                $"/{_xmlRoot}/group/topic");
             while (nodes.MoveNext())
             {
                 map.Add(new KeyValuePair<string, string>(
-                    $"[{nodes.Current.InnerXml}](/Simple/{xmlRoot}/{nodes.Current.InnerXml}.html)"
+                    $"[{nodes.Current.InnerXml}](/Simple/{_xmlRoot}/{nodes.Current.InnerXml}.html)"
                     // e.g. "[MissingBean](/diagnosticSchema/MissingBean)"
                     , $"({nodes.Current.InnerXml})"));
             }
