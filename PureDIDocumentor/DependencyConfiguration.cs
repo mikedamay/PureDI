@@ -37,11 +37,18 @@ namespace PureDIDocumentor
         private InjectionState CreateAndInjectDocumentParser(InjectionState injectionState
           ,string beanName, string documentPath, string xmlRoot)
         {
-            var nc = new XPathNavigatorNoCache();
+            IIOCCXPathNavigatorCache nc;
+            (nc, injectionState) = pdi.CreateAndInjectDependencies<IIOCCXPathNavigatorCache>(injectionState);
             nc.Factory = navigatorFactory;
             nc.ResourcePath = (string) propertyMap.Map(documentPath);
             IOCCDocumentParser ddp = new IOCCDocumentParser(
                 xmlRoot, nc);
+/*
+            IDocumentParser ddp;
+            (ddp, injectionState) = pdi.CreateAndInjectDependencies<IDocumentParser>(injectionState);
+            ddp.XmlRoot = xmlRoot;
+            ddp.NavigatorCache = nc;
+*/
             return pdi.CreateAndInjectDependencies(ddp, injectionState: injectionState, rootBeanSpec:
                 new RootBeanSpec(rootBeanName: beanName), deferDepedencyInjection: true).injectionState;
 

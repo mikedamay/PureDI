@@ -12,14 +12,28 @@ namespace SimpleIOCCDocumentor
     {
         string GetFragment(string fragmentType, string fragmentName);
         IDictionary<string, string> GetDocumentIndex();
+        string XmlRoot { get; set; }
+        IIOCCXPathNavigatorCache NavigatorCache { get; set; }
     }
     [Bean]
     internal class IOCCDocumentParser : IDocumentParser
     {
         private string _xmlRoot;
-        [BeanReference] private ICodeFetcher codeFetcher = null;
         private IIOCCXPathNavigatorCache _navigatorCache;
 
+        public string XmlRoot
+        {
+            get => _xmlRoot;
+            set => _xmlRoot = value;
+        }
+
+        public IIOCCXPathNavigatorCache NavigatorCache
+        {
+            get => _navigatorCache;
+            set => _navigatorCache = value;
+        }
+
+        [BeanReference] private ICodeFetcher codeFetcher = null;
         // inhibit PureDI diagnostic for no arg constructor
         public IOCCDocumentParser() { }
 
