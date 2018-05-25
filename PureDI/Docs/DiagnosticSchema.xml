@@ -564,4 +564,20 @@
             <BeanType/>
         </artefacts>
     </group>
+    <group>
+        <topic>IncompleteInjections</topic>
+        <severity>Warning</severity>
+        <intro>Deferred injections have not been completed
+        </intro>
+        <background>
+            When CreateAndInjectDependnecies is called with the deferredDependencyInjection set to true
+            in order to instantiate a bean
+            then a subsequent call to CreateAndInjectDependencies must be made to inject the bean's members
+        </background>
+        <template>An instance of {BeanType},{BeanName} has been created but its members have not been injected</template>
+        <artefacts>
+            <BeanType/>
+            <BeanName/>
+        </artefacts>
+    </group>
 </DiagnosticSchema>

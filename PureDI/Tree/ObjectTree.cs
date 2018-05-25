@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
+using System.Transactions;
 using PureDI.Common;
 using PureDI.Attributes;
 using PureDI.Public;
@@ -16,7 +17,7 @@ namespace PureDI.Tree
             , Type constructableType
             , IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar
             , Diagnostics diagnostics
-            , IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null);
+            , IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null, CreationContext creationContext = null);
         private const BindingFlags constructorFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
         private static readonly ClassScraper _classScraper = new ClassScraper();
@@ -35,28 +36,60 @@ namespace PureDI.Tree
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
+        /// <param name="deferDependencyInjection"></param>
         /// <returns>an ojbect of root type</returns>
         public (object bean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
-          ,string rootConstructorName, BeanScope scope)
+          ,string rootConstructorName, BeanScope scope, bool deferDependencyInjection)
         {
             try
             {
                 Assert(rootType != null);
                 Assert(rootBeanName != null);
                 object rootObject;
-                (rootObject, injectionState) = CreateObjectTree(new BeanSpec(rootType, rootBeanName, rootConstructorName)
-                    ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope, MakeBean);
+                BeanMaker beanMaker;
+                if (deferDependencyInjection)
+                {
+                    beanMaker = (scopex, spec, ct, mocf, diags, cp, cc) =>
+                    {
+                        (bool complete, object bean) = MakeBean(scopex, spec, ct, mocf, diags, cp, cc);
+                        ConstructableBean cb = new ConstructableBean(ct, spec.BeanName);
+                        if (cc.BeansWithDeferredAssignments.Contains(cb))
+                        {
+                            // a cyclical dependency has been encountered which has triggered a genuine
+                            // deferred assignment.  This needs to be squashed
+                            cc.BeansWithDeferredAssignments.Remove(cb);
+                        }
+
+                        return (true, bean);
+                    };
+                }
+                else
+                {
+                    beanMaker = MakeBean;
+                }
+
+                (rootObject, injectionState) = CreateObjectTree(
+                    new BeanSpec(rootType, rootBeanName, rootConstructorName)
+                    , injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope, beanMaker);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new DIException(
-                        $"object created by IOC container is not {rootType.Name} as expected", injectionState.Diagnostics);
+                        $"object created by IOC container is not {rootType.Name} as expected",
+                        injectionState.Diagnostics);
                 }
+
+                if (deferDependencyInjection)
+                {
+                    injectionState.CreationContext.BeansWithDeferredAssignments
+                        .Add(new ConstructableBean(rootType, rootBeanName));
+                }
+
                 Assert(rootObject == null
                        || rootType.IsInstanceOfType(rootObject));
                 return (rootObject, injectionState);
             }
-            catch (NoArgConstructorException inace)    // I suspect this is never executed
+            catch (NoArgConstructorException inace) // I suspect this is never executed
             {
                 dynamic diagnostic = injectionState.Diagnostics.Groups["MissingNoArgConstructor"].CreateDiagnostic();
                 diagnostic.Class = rootType.GetSafeFullName();
@@ -64,35 +97,71 @@ namespace PureDI.Tree
                 throw new DIException("Failed to create object tree - see diagnostics for details", inace,
                     injectionState.Diagnostics);
             }
+            finally
+            {
+                RecordIncompleteAssignments(injectionState);
+            }
         }
         public InjectionState CreateAndInjectDependencies(object rootObject,
             InjectionState injectionState, RootBeanSpec rootBeanSpec = null, bool deferDependencyInjection = false)
         {
-            Type constructableType = rootObject.GetType();
-            rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
-            rootBeanSpec = rootBeanSpec.Scope == BeanScope.Prototype
-              ? new RootBeanSpec("prototype-" + Guid.NewGuid().ToString()
-              , rootBeanSpec.RootConstrutorName, rootBeanSpec.Scope)
-              : rootBeanSpec;
-                // in the call to CreateObjectTree we trick the method to create the dependencies
-                // by adding the prototype uniquely to both the type map and the deferred assignment list
-            var rodt = new RootObjectDecisionTable(deferDependencyInjection, rootBeanSpec.Scope);            
-            string beanName = rootBeanSpec.RootBeanName;
-            rodt.MaybeAddBeanToTypeMap(
-              () => injectionState = UpdateTypeMap(injectionState, rootBeanSpec, constructableType, beanName));
-            rodt.MaybeAddObjectToCreatedSoFarMap(
-              () => injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
-              ,beanName, rootBeanSpec.RootConstrutorName)] = rootObject);
-            rodt.MaybeAddDeferredIn(
-              () => injectionState.CreationContext.BeansWithDeferredAssignments
-              .Add(new ConstructableBean(rootObject.GetType(), beanName)));
-            BeanMaker rootBeanMaker = (bs, bs2, ctx, mocf, diags, cp) => { return (true, rootObject); };
-            (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, rootBeanSpec.RootConstrutorName)
-              ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), rootBeanSpec.Scope, rootBeanMaker);
-            rodt.MaybeAddDeferredOut(
-              () => injectionState.CreationContext.BeansWithDeferredAssignments
-              .Add(new ConstructableBean(rootObject.GetType(), beanName)));
-            return injectionState;
+            try
+            {
+                Type constructableType = rootObject.GetType();
+                rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
+                rootBeanSpec = rootBeanSpec.Scope == BeanScope.Prototype
+                  ? new RootBeanSpec("prototype-" + Guid.NewGuid().ToString()
+                  , rootBeanSpec.RootConstrutorName, rootBeanSpec.Scope)
+                  : rootBeanSpec;
+                    // in the call to CreateObjectTree we trick the method to create the dependencies
+                    // by adding the prototype uniquely to both the type map and the deferred assignment list
+                var rodt = new RootObjectDecisionTable(deferDependencyInjection, rootBeanSpec.Scope);            
+                string beanName = rootBeanSpec.RootBeanName;
+                rodt.MaybeAddBeanToTypeMap(
+                  () => injectionState = UpdateTypeMap(injectionState, rootBeanSpec, constructableType, beanName));
+                rodt.MaybeAddObjectToCreatedSoFarMap(
+                  () => injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(constructableType
+                  ,beanName, rootBeanSpec.RootConstrutorName)] = rootObject);
+                rodt.MaybeAddDeferredIn(
+                  () => injectionState.CreationContext.BeansWithDeferredAssignments
+                  .Add(new ConstructableBean(rootObject.GetType(), beanName)));
+                
+                ConstructableBean cb = new ConstructableBean(constructableType, beanName);
+                bool deferredIn = injectionState.CreationContext.BeansWithDeferredAssignments.Contains(cb);
+                BeanMaker rootBeanMaker = (scope, spec, ct, mocf, diags, cp, cc) =>
+                {
+                    if ( !deferredIn && cc.BeansWithDeferredAssignments.Contains(cb))
+                    {
+                        // a cyclical dependency has been encountered which has triggered a genuine
+                        // deferred assignment.  This needs to be squashed
+                        cc.BeansWithDeferredAssignments.Remove(cb);
+                    }
+                    return (true, rootObject);
+                };
+                (_, injectionState) = CreateObjectTree(new BeanSpec(constructableType, beanName, rootBeanSpec.RootConstrutorName)
+                  ,injectionState.CreationContext, injectionState, new BeanReferenceDetails(), rootBeanSpec.Scope, rootBeanMaker);
+                rodt.MaybeAddDeferredOut(
+                  () => injectionState.CreationContext.BeansWithDeferredAssignments
+                  .Add(new ConstructableBean(rootObject.GetType(), beanName)));
+                return injectionState;
+            }
+            finally
+            {
+                RecordIncompleteAssignments(injectionState);
+            }
+         }
+
+        private static void RecordIncompleteAssignments(InjectionState injectionState)
+        {
+            Diagnostics.Group grp = injectionState.Diagnostics.Groups["IncompleteInjections"];
+            grp.Occurrences.Clear();
+            foreach (var constructableBean in injectionState.CreationContext.BeansWithDeferredAssignments)
+            {
+                dynamic diag = grp.CreateDiagnostic();
+                diag.BeanType = constructableBean.Type.ToString();
+                diag.BeanName = constructableBean.BeanName;
+                grp.Add(diag);
+            }
         }
 
         private InjectionState UpdateTypeMap(InjectionState injectionState, RootBeanSpec rootBeanSpec, Type constructableType,
@@ -198,7 +267,8 @@ namespace PureDI.Tree
                     (complete, bean) = beanMaker(beanScope, beanSpec, constructableType
                       ,injectionState.MapObjectsCreatedSoFar
                       ,injectionState.Diagnostics
-                      ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList() );
+                      ,beanSpecs.Where(bs => bs.Role == ChildBeanSpec.Roles.ConstructorParameter).ToList()
+                      ,creationContext);
                     Assert(!beansWithDeferredAssignments.Contains(constructableBeanx)
                            || beansWithDeferredAssignments.Contains(constructableBeanx)
                            && complete
@@ -239,7 +309,7 @@ namespace PureDI.Tree
                         throw new DIException("Cannot create this bean due to a cyclical dependency", injectionState.Diagnostics);
                     }
                     (_, bean) = beanMaker(beanScope, beanSpec, constructableType
-                      ,injectionState.MapObjectsCreatedSoFar, injectionState.Diagnostics);
+                      ,injectionState.MapObjectsCreatedSoFar, injectionState.Diagnostics, creationContext: creationContext);
                     if (bean != null)
                     {
                         beansWithDeferredAssignments.Add(constructableBeanx);
@@ -261,7 +331,8 @@ namespace PureDI.Tree
             ,Type constructableType
             ,IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar
             ,Diagnostics diagnostics
-            ,IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null)
+            ,IReadOnlyList<ChildBeanSpec> constructorParameterSpecs = null
+            ,CreationContext creationContext = null)
         {            
             object constructedBean;
             try

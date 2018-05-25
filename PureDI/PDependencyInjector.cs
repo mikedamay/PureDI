@@ -61,20 +61,27 @@ namespace PureDI
         ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
+        /// <param name="deferredDependencyInjection">
+        ///   when this flag is set to true the root object will be created but dependencies will not
+        ///   be assigned to its members.  A subsequent call to CreateAndInjectDependencies will be
+        ///   required to complete the operation.  The use case is where the library user needs to
+        ///   instantiate a bean and manipulate it before assigning its members.
+        /// </param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (TRootType rootBean, InjectionState injectionState)
-          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+          CreateAndInjectDependencies<TRootType>(InjectionState injectionState = null
+          ,Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null
+          ,bool deferredDependencyInjection = false)
         {
             (object rootObject, InjectionState newInjectionState)
                 = CreateAndInjectDependencies(typeof(TRootType), injectionState
-                ,assemblies, rootBeanSpec);
+                ,assemblies, rootBeanSpec, deferredDependencyInjection);
             return ((TRootType) rootObject, newInjectionState);
         }
-
-        /// <summary>
+       /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
         /// <param name="rootType">Typically, the root node of a tree of objects to be created by this call </param>
@@ -86,13 +93,20 @@ namespace PureDI
         ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
+        /// <param name="deferDependencyInjection">
+        ///   when this flag is set to true the root object will be created but dependencies will not
+        ///   be assigned to its members.  A subsequent call to CreateAndInjectDependencies will be
+        ///   required to complete the operation.  The use case is where the library user needs to
+        ///   instantiate a bean and manipulate it before assigning its members.
+        /// </param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState)
           CreateAndInjectDependencies(Type rootType, InjectionState injectionState = null
-          , Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+          , Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null
+          , bool deferDependencyInjection = false)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -106,16 +120,14 @@ namespace PureDI
               , assemblies ?? new Assembly[0]);
             (rootObject, newInjectionState) 
                 = CreateAndInjectDependenciesExCommon(
-                rootType, newInjectionState, rootBeanName, rootConstructorName, scope);
+                rootType, newInjectionState, rootBeanName, rootConstructorName, scope, deferDependencyInjection);
             return (rootObject, newInjectionState);
         }
 
         /// <summary>
         /// Causes classes to be instantiated and injected, starting with the rootType.
         /// </summary>
-        /// <param name="rootTypeName">Typically, the name of a class for which an object
-        ///     will be instantiated by this call.
-        ///     Fully specified name including namespace</param>
+        /// <param name="rootTypeName">Typically, the root node of a tree of objects to be created by this call </param>
         /// <param name="injectionState">This is null the first time the method is called.
         ///     Subsequent calls will typically take some saved instance of injection state.</param>
         /// <param name="assemblies">an array of assemblies where beans to be injected will be found.
@@ -124,12 +136,19 @@ namespace PureDI
         ///   irrespective of the argument passed here</param>
         /// <param name="rootBeanSpec">optional arguments which help identify the class of the object to be instantiated
         ///     at the root of the object graph</param>
+        /// <param name="deferDependencyInjection">
+        ///   when this flag is set to true the root object will be created but dependencies will not
+        ///   be assigned to its members.  A subsequent call to CreateAndInjectDependencies will be
+        ///   required to complete the operation.  The use case is where the library user needs to
+        ///   instantiate a bean and manipulate it before assigning its members.
+        /// </param>
         /// <returns>an object of rootType for use by the program and an injection state object which can
         ///   be passed into subsequent calls to Create...Dependencies if there are other program entry points
         ///   which require additional objects to be created.</returns>
         /// <seealso cref="BeanReferenceAttribute">see BeanReference for an explanation of Scope</seealso>
         public (object rootBean, InjectionState injectionState) CreateAndInjectDependencies(string rootTypeName
-          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null)
+          ,InjectionState injectionState = null, Assembly[] assemblies = null, RootBeanSpec rootBeanSpec = null
+          ,bool deferDependencyInjection = false)
         {
             rootBeanSpec = rootBeanSpec ?? new RootBeanSpec();
             (string rootBeanName, string rootConstructorName, BeanScope scope) = rootBeanSpec;
@@ -157,7 +176,7 @@ namespace PureDI
             }
             return CreateAndInjectDependenciesExCommon(rootType
                 , newInjectionState, rootBeanName
-                , rootConstructorName, scope);
+                , rootConstructorName, scope, deferDependencyInjection);
         }
 
         /// <summary>
@@ -215,8 +234,9 @@ namespace PureDI
               rootObject, newInjectionState, rootBeanSpec, deferDepedencyInjection);
             return (rootObject, newInjectionState);
         }
+
         /// <summary>
-        /// <see cref="CreateAndInjectDependencies(string,PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec)"/>
+        /// <see cref="CreateAndInjectDependencies(string,PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec, bool)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
         /// <param name="rootType"></param>
@@ -224,9 +244,10 @@ namespace PureDI
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
+        /// <param name="deferDependencyInjection"></param>
         private (object rootObject, InjectionState injectionState) CreateAndInjectDependenciesExCommon(Type rootType
-          , InjectionState injectionState, string rootBeanName
-          , string rootConstructorName, BeanScope scope)
+            , InjectionState injectionState, string rootBeanName
+            , string rootConstructorName, BeanScope scope, bool deferDependencyInjection)
         {
             IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap;
             IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar;
@@ -237,20 +258,10 @@ namespace PureDI
               ,Constants.DefaultConstructorName)] = this;
                 // factories and possibly other beans may need access to the PDependencyInjector itself
                 // so we include it as a bean by default
-//            if (mapObjectsCreatedSoFar.ContainsKey(new InstantiatedBeanId(rootType, rootBeanName
-//              ,Constants.DefaultConstructorName)))
-//            {
-//                return (mapObjectsCreatedSoFar[
-//                  new InstantiatedBeanId(rootType, rootBeanName, Constants.DefaultConstructorName)]
-//                    , new InjectionState(
-//                        injectionState.Diagnostics
-//                        , typeMap
-//                        , mapObjectsCreatedSoFar
-//                        , assemblies, injectionState.CreationContext));
-//            }
             object rootObject;
             (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
-              rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower(), scope);
+              rootType, injectionState, rootBeanName.ToLower(), rootConstructorName.ToLower()
+              ,scope, deferDependencyInjection);
             if (rootObject == null && injectionState.Diagnostics.HasWarnings)
             {
                 throw new DIException("Failed to create object tree - see diagnostics for details", injectionState.Diagnostics);
