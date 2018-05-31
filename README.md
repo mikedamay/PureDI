@@ -67,7 +67,7 @@ browse to http://localhost:60653/
     TODO allow empty array to be passed as Profiles, or a member with null, or a member with "" maybe
     TODO bean names, constructor names and profiles are case insensitive
     TODO Implementation:
-    TODO Move UserGuide.xml from PureDI to PureDiDocumentor
+    *** TODO Move UserGuide.xml from PureDI to PureDiDocumentor
     TODO can we handle an object or type from some assembly as root which is not
     TODO a scanned assembly
     TODO Later: implement constructor parameters
