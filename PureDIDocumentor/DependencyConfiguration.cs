@@ -42,10 +42,8 @@ namespace PureDIDocumentor
             nc.Factory = navigatorFactory;
             nc.ResourcePath = (string) propertyMap.Map(documentPath);
             IOCCDocumentParser ddp = new IOCCDocumentParser(
-                xmlRoot, nc);
-//            IDocumentParser ddp;
-//            (ddp, injectionState) = pdi.CreateAndInjectDependencies<IDocumentParser>(injectionState
-//              ,rootBeanSpec: new RootBeanSpec(rootBeanName: beanName, scope: BeanScope.Prototype), deferredDependencyInjection: true);
+              xmlRoot, nc);
+            (ddp, injectionState) = pdi.CreateAndInjectDependencies<IOCCDocumentParser>(injectionState);            
             ddp.XmlRoot = xmlRoot;
             ddp.NavigatorCache = nc;
             return pdi.CreateAndInjectDependencies(ddp, injectionState: injectionState, rootBeanSpec:
