@@ -37,7 +37,7 @@ namespace IOCCTest.CycleGuardTestData
     {
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             if (args.FactoryParmeter as Type == typeof(DiverseA))
             {
                 return pdi.CreateAndInjectDependencies<DiverseA>(injectionState);

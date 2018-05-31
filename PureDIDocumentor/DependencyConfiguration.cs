@@ -10,7 +10,7 @@ namespace PureDIDocumentor
     [Bean]
     internal class DependencyConfiguration
     {
-        PDependencyInjector pdi = new PDependencyInjector(profiles: new string[] {"authoring"});
+        DependencyInjector pdi = new DependencyInjector(profiles: new string[] {"authoring"});
         [BeanReference] private IPropertyMap propertyMap = null;        
         [BeanReference(Name = "navigator")] private XPathNavigatorResourceFactory navigatorFactory = null;
         public (IDocumentationSiteGenerator, IDocumentProcessor, InjectionState) 
@@ -23,7 +23,7 @@ namespace PureDIDocumentor
               ,typeof(DependencyConfiguration));
             injectionState = CreateAndInjectDocumentParser(injectionState
               ,"site-diagnostics", "PureDI.Docs.DiagnosticSchema.xml", Constants.DiagnosticSchemaRoot
-              ,typeof(PDependencyInjector));
+              ,typeof(DependencyInjector));
             injectionState = CreateAndInjectDocumentParser(injectionState
               ,"doc-userguide", "PureDIDocumentor.Docs.UserGuide.xml", Constants.UserGuideRoot
               ,typeof(DependencyConfiguration));

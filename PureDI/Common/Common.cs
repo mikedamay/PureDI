@@ -33,7 +33,7 @@ namespace PureDI.Common
         // as above.  Presumably, the original
         // csproj overrode some default setting.
         public static readonly string ResourcePrefix 
-          = typeof(PDependencyInjector).Namespace;
+          = typeof(DependencyInjector).Namespace;
 #endif
     }
 }

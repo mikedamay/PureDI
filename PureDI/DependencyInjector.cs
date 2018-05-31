@@ -17,7 +17,7 @@ namespace PureDI
     /// </summary>
     /// <conceptualLink target="DI-Introduction">see Introduction</conceptualLink>
     [Bean]
-    public class PDependencyInjector
+    public class DependencyInjector
     {
         private readonly Os os = new StdOSDetector().DetectOS();
         private readonly ISet<string> _profileSet;
@@ -39,7 +39,7 @@ namespace PureDI
         /// when scanning for dependencies - this is available to support testing
         /// during the development of this library</param>
         /// <onceptualLink target="DI-Profiles">See description of profiles</onceptualLink>
-        public PDependencyInjector(string[] profiles = null, bool ignoreRootTypeAssembly = false
+        public DependencyInjector(string[] profiles = null, bool ignoreRootTypeAssembly = false
           )
         {
             CheckNoBlankProfiles(profiles);
@@ -258,7 +258,7 @@ namespace PureDI
             injectionState.MapObjectsCreatedSoFar[new InstantiatedBeanId(this.GetType()
               ,Constants.DefaultBeanName
               ,Constants.DefaultConstructorName)] = this;
-                // factories and possibly other beans may need access to the PDependencyInjector itself
+                // factories and possibly other beans may need access to the DependencyInjector itself
                 // so we include it as a bean by default
             object rootObject;
             (rootObject, injectionState) = new ObjectTree().CreateAndInjectDependencies(
@@ -417,7 +417,7 @@ namespace PureDI
                 }
             }
         }
-    }   // PDependencyInjector
+    }   // DependencyInjector
 
     internal class CaseInsensitiveEqualityComparer : IEqualityComparer<string>
     {

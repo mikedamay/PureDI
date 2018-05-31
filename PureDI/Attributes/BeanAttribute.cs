@@ -37,7 +37,7 @@ namespace PureDI.Attributes
         /// <conceptualLink target="DI-Profiles">Profiles</conceptualLink>
         public string Profile { get; set; } = Constants.DefaultProfileArg;
 
-        // <example>`[Bean(OS=PDependencyInjector.OS.Linux)]`</example>
+        // <example>`[Bean(OS=DependencyInjector.OS.Linux)]`</example>
 
         /// <summary>
         /// A class to which this attribute is applied

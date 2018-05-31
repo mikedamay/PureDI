@@ -23,7 +23,7 @@ namespace IOCCTest.MultipleCallsTestData
     [Bean]
     public class ChildFactory : IFactory
     {
-        [BeanReference] private PDependencyInjector pDependencyInjector = null;
+        [BeanReference] private DependencyInjector pDependencyInjector = null;
 
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {

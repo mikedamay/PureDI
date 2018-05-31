@@ -21,7 +21,7 @@ namespace IOCCTest.LoadTest
             ReadLine();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             (object root, InjectionState InjectionState)
                 = pdi.CreateAndInjectDependencies("Level1", assemblies: new Assembly[] { assembly });
             Diagnostics diagnostics = InjectionState.Diagnostics;

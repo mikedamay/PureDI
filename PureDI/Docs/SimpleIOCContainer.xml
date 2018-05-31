@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>PDependencyInjector</name>
+        <name>DependencyInjector</name>
     </assembly>
     <members>
         <member name="T:PureDI.BeanBaseAttribute">
@@ -29,7 +29,7 @@
             an OS for which it should be instantiated.  When running
             on any other OS it will be ignored.
             OS.Any means that it will always be instantiated unless
-            <example>`[Bean(OS=PDependencyInjector.OS.Linux)]`</example>
+            <example>`[Bean(OS=DependencyInjector.OS.Linux)]`</example>
             </summary>
         </member>
         <member name="T:PureDI.BeanAttribute">
@@ -95,7 +95,7 @@
         <member name="M:PureDI.DiagnosticBuilder.#ctor(System.IO.Stream)">
             <param name="diagnosticSchema">
                 XML Text which populates the diagnostics object
-                e.g. typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+                e.g. typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                      $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml")
             </param>
         </member>
@@ -160,7 +160,7 @@
             which the library user does not want to be treated as a reference
             for the purposes of injecting dependencies.
             This does not prevent it being used as the root type in
-            calls to PDependencyInjector.CreateAndInjectDependencies().
+            calls to DependencyInjector.CreateAndInjectDependencies().
             The purpose is simply to prevent warnings for duplicate
             beans which might otherwise occurs.
             </summary>
@@ -168,7 +168,7 @@
         <member name="T:PureDI.UnsupportedPlatformException">
             <inheritdoc/>/>
         </member>
-        <member name="T:PureDI.PDependencyInjector">
+        <member name="T:PureDI.DependencyInjector">
             <summary>
             
             </summary>
@@ -180,34 +180,34 @@
                 7) bean names, constructor names and profiles are case insensitive
             </remarks>
         </member>
-        <member name="T:PureDI.PDependencyInjector.OS">
+        <member name="T:PureDI.DependencyInjector.OS">
             <summary>
             caches the operating system in which the container is executing.
             Library users may have OS dependent injections
             </summary>
         </member>
-        <member name="F:PureDI.PDependencyInjector.OS.Any">
+        <member name="F:PureDI.DependencyInjector.OS.Any">
             <summary>
             Beans typically have an OS of OS.Any
             this will match any OS under which the container is executing
             </summary>
         </member>
-        <member name="F:PureDI.PDependencyInjector.OS.Linux">
+        <member name="F:PureDI.DependencyInjector.OS.Linux">
             <summary>
             Any version of Linux supporting dotnetstandard 2.0
             </summary>
         </member>
-        <member name="F:PureDI.PDependencyInjector.OS.Windows">
+        <member name="F:PureDI.DependencyInjector.OS.Windows">
             <summary>
             Any version of Windows supporting dotnetstandard 2.0
             </summary>
         </member>
-        <member name="F:PureDI.PDependencyInjector.OS.MacOS">
+        <member name="F:PureDI.DependencyInjector.OS.MacOS">
             <summary>
             Any MAC verion supported by dotnetstandard 2.0
             </summary>
         </member>
-        <member name="M:PureDI.PDependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.PDependencyInjector.AssemblyExclusion)">
+        <member name="M:PureDI.DependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.DependencyInjector.AssemblyExclusion)">
             <summary>
             this routine is called to specify the assemblies to be scanned
             for beans.  Any bean to be injected must be defined in one
@@ -216,7 +216,7 @@
             <remarks>
             The assembly containing SimpleIOCCBean class itself is always included
             by default.  It does not need to be specified.  The purpose
-            of the inclusion is to allow callers to include the PDependencyInjector
+            of the inclusion is to allow callers to include the DependencyInjector
             bean itself in factories.  The assumbly is included to make this intuitive.
             </remarks>
             <example>SetAssemblies( true, "MyApp", "MyLib")</example>
@@ -230,7 +230,7 @@
             the flag was set to true as there is no easy way for the container
             to know the assembly from which it was called.</param>
         </member>
-        <member name="M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)">
+        <member name="M:PureDI.DependencyInjector.CreateAndInjectDependencies``1(PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)">
             <param name="diagnostics"></param>
             <param name="rootBeanName"></param>
             <param name="rootConstructorName"></param>
@@ -239,7 +239,7 @@
                 It does not affect the rest of the tree.  The other nodes on the tree will
                 honour the Scope property of [IOCCBeanReference]</param>
         </member>
-        <member name="M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(System.String,System.String,PureDI.BeanScope)">
+        <member name="M:PureDI.DependencyInjector.CreateAndInjectDependencies``1(System.String,System.String,PureDI.BeanScope)">
             <summary>
             1. mainly used to create the complete object tree at program startup
             2. may be used to create object tree fragments when running tests
@@ -254,10 +254,10 @@
                 honour the Scope property of [IOCCBeanReference]</param>
             <returns>an ojbect of root type</returns>
         </member>
-        <member name="M:PureDI.PDependencyInjector.CreateAndInjectDependencies(System.String,PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)">
-            <param name="rootTypeName">provided by caller - <see cref="M:PureDI.PDependencyInjector.AreTypeNamesEqualish(System.String,System.String)"/></param>
+        <member name="M:PureDI.DependencyInjector.CreateAndInjectDependencies(System.String,PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)">
+            <param name="rootTypeName">provided by caller - <see cref="M:PureDI.DependencyInjector.AreTypeNamesEqualish(System.String,System.String)"/></param>
             <param name="diagnostics"></param>
-            <param name="rootBeanName">an PDependencyInjector type spec in the form "MyNameSpace.MyClass"
+            <param name="rootBeanName">an DependencyInjector type spec in the form "MyNameSpace.MyClass"
                 or "MyNameSpace.MyClass&lt;MyActualParam &gt;" or
                 where inner classes are involved "MyNameSpace.MyClass+MyInnerClass"</param>
             <param name="rootConstructorName"></param>
@@ -267,9 +267,9 @@
                 honour the Scope property of [IOCCBeanReference]</param>
             <returns>the root of the object tree with all dependencies instantiated</returns>
         </member>
-        <member name="M:PureDI.PDependencyInjector.CreateAndInjectDependenciesExCommon(System.Type,PureDI.IOCCDiagnostics,System.Collections.Generic.ISet{System.String},System.String,System.String,PureDI.BeanScope)">
+        <member name="M:PureDI.DependencyInjector.CreateAndInjectDependenciesExCommon(System.Type,PureDI.IOCCDiagnostics,System.Collections.Generic.ISet{System.String},System.String,System.String,PureDI.BeanScope)">
             <summary>
-            <see cref="M:PureDI.PDependencyInjector.CreateAndInjectDependencies(System.String,PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)"/>
+            <see cref="M:PureDI.DependencyInjector.CreateAndInjectDependencies(System.String,PureDI.IOCCDiagnostics@,System.String,System.String,PureDI.BeanScope)"/>
             this overload does not print out the diagnostics
             </summary>
             <param name="rootType"></param>
@@ -279,7 +279,7 @@
             <param name="rootConstructorName"></param>
             <param name="scope"></param>
         </member>
-        <member name="M:PureDI.PDependencyInjector.AssembleAssemblies(System.Collections.Generic.IList{System.String})">
+        <member name="M:PureDI.DependencyInjector.AssembleAssemblies(System.Collections.Generic.IList{System.String})">
             <summary>
             NOT USED: builds list of all the assemblies involved in the dependency tree
             </summary>
@@ -289,7 +289,7 @@
                 of the root class in the tree</param>
             <returns></returns>
         </member>
-        <member name="M:PureDI.PDependencyInjector.AreTypeNamesEqualish(System.String,System.String)">
+        <member name="M:PureDI.DependencyInjector.AreTypeNamesEqualish(System.String,System.String)">
             <param name="typeFullName">classic Type.FullName</param>
             <param name="IOCCUserEnteredName">Hopefully same as Type.FullName except for generics where
                 parameters have the same format as a program delcaration, e.g. MyClass&lt;MyOuterParam&lt;MyInnerParam&gt;&gt;</param>

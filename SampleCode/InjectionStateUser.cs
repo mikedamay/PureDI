@@ -9,7 +9,7 @@ public class InjectionStateUser
     {
         InjectionState injectionState;
         PermanentService ps;
-        var pdi = new PDependencyInjector();
+        var pdi = new DependencyInjector();
         (ps, injectionState) = pdi.CreateAndInjectDependencies<PermanentService>();
         InjectionState transitoryState = injectionState;
         for (int ii = 0; ii < 10; ii++)

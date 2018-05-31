@@ -125,7 +125,7 @@ namespace IOCCTest
             string schemaName
                 = $"{PureDI.Common.Common.ResourcePrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 return db.Diagnostics;

@@ -17,7 +17,7 @@ namespace IOCCTest
         public void SHouldCreateTreeForInstantiatedObject()
         {
             Simple simple = new Simple();
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             pdi.CreateAndInjectDependencies(simple, assemblies: new Assembly[] { this.GetType().Assembly});
             Assert.IsNotNull(simple.GetResults().Child);
         }
@@ -25,7 +25,7 @@ namespace IOCCTest
         public void ShouldConnectInstantiatedObjectToExistingTree()
         {
             ConnectUp connectUp = new ConnectUp();
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             var existing = pdi.CreateAndInjectDependencies<ExistingRoot>();
             pdi.CreateAndInjectDependencies( connectUp, existing.injectionState);
             Assert.AreEqual(connectUp.connectedChild, existing.rootBean.existingChild);
@@ -34,7 +34,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForInstantiatedObjectInHierarchy()
         {
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             Complex complex = pdi.CreateAndInjectDependencies<Complex>().rootBean;
             Assert.AreEqual("ValueOne", complex.value1.val);
             Assert.AreEqual("ValueTwo", complex.value2.val);
@@ -42,7 +42,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldHookUpWithRootObjwectFromAnotherEntryPoint()
         {
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             object obj;
             InjectionState injectionState;
             (obj, injectionState) = pdi.CreateAndInjectDependencies(new DeepHierarchy());
@@ -54,7 +54,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeForRootObjectWithoutExplictAssemblies()
         {
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             (object inserted, InjectionState InjectionState) 
               = pdi.CreateAndInjectDependencies(new InsertedAsObject());
             InferAssembly infer = pdi.CreateAndInjectDependencies<InferAssembly>(InjectionState).rootBean;
@@ -65,7 +65,7 @@ namespace IOCCTest
         public void ShouldCreateUniqueInstancesWithNamedRootObject()
         {
             Instance instanceInstance = new Instance();
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is, is2;
             (_, @is) = pdi.CreateAndInjectDependencies(instanceInstance, rootBeanSpec:new RootBeanSpec("MyInstance"));
             MultipleInstances multiple;
@@ -78,7 +78,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldWarnIfRootObjectWasAlreadyInjected()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>();
             (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is
@@ -88,7 +88,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldNotWarnIfPrototypeRootObjectWasAlreadyInjected()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             (_, @is) = pdi.CreateAndInjectDependencies<AlreadyInstantiated>();
             (_, @is) = pdi.CreateAndInjectDependencies(new AlreadyInstantiated(), injectionState: @is
@@ -98,7 +98,7 @@ namespace IOCCTest
         [TestMethod]    // prototype not deferred
         public void ShouldCreateDependenciesForPrototypeRootObject()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             var rootBean = new AlreadyInstantiated();
             (_, @is) = pdi.CreateAndInjectDependencies(rootBean
@@ -108,7 +108,7 @@ namespace IOCCTest
         [TestMethod]    // prototype deferred
         public void ShouldNotWarnOfPrototypeRootObjectWithDeferredFlag()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             var rootBean = new AlreadyInstantiated();
             (_, @is) = pdi.CreateAndInjectDependencies(rootBean
@@ -119,7 +119,7 @@ namespace IOCCTest
         [TestMethod]    // singleton not deferred
         public void ShouldRespectNotDeferredFlag()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             var rootBean = new AlreadyInstantiated();
             (_, @is) = pdi.CreateAndInjectDependencies(rootBean
@@ -129,7 +129,7 @@ namespace IOCCTest
         [TestMethod]    // singleton deferred
         public void ShouldRespectDeferredFlag()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             InjectionState @is;
             var rootBean = new AlreadyInstantiated();
             (_, @is) = pdi.CreateAndInjectDependencies(rootBean
@@ -142,7 +142,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldRespectConstructorNameOnRootObject()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             var named = new NamedConstructor(new MyParam());
             InjectionState @is;
             (_, @is) = pdi.CreateAndInjectDependencies(named,
@@ -154,7 +154,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectDependenciesForRootObjectBaseClass()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             var @base = new BaseClasses();
             InjectionState @is;
             (_, @is) = pdi.CreateAndInjectDependencies(@base);
@@ -168,7 +168,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateNonBeanWithCreateBeanMethod()
         {
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             (var nonBean, var @is) = pdi.CreateBean<NonBean>();
             Assert.IsNotNull(nonBean);
         }
@@ -178,7 +178,7 @@ namespace IOCCTest
         {
             try
             {
-                var pdi = new PDependencyInjector();
+                var pdi = new DependencyInjector();
                 (var unnamedBean, var @is) = pdi.CreateBean<UnnamedBean>();
                 Assert.IsNotNull(unnamedBean);
                 (var _, var is2) = pdi.CreateAndInjectDependencies(unnamedBean, @is

@@ -18,7 +18,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldBuildTreeWithSelfReferentialClass()
         {
-            SelfReferring sr = new PDependencyInjector().CreateAndInjectDependencies<SelfReferring>().rootBean;
+            SelfReferring sr = new DependencyInjector().CreateAndInjectDependencies<SelfReferring>().rootBean;
             Assert.IsNotNull(sr);
         }
         [TestMethod, Timeout(1000)]
@@ -27,7 +27,7 @@ namespace IOCCTest
             try
             {
                 // this should not run forever
-                CyclicalDependency cd = new PDependencyInjector().CreateAndInjectDependencies<CyclicalDependency>().rootBean;
+                CyclicalDependency cd = new DependencyInjector().CreateAndInjectDependencies<CyclicalDependency>().rootBean;
                 Assert.IsNotNull(cd);
                 Assert.IsNotNull(cd?.GetResults().Child);
                 Assert.IsNotNull(cd?.GetResults().Child?.GetResults().Parent);
@@ -43,7 +43,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfaces()
         {
             ParentWithInterface cd
-                = new PDependencyInjector().CreateAndInjectDependencies<ParentWithInterface>().rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<ParentWithInterface>().rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.IsNotNull(cd.GetResults().IChild?.GetResults().IParent);
@@ -52,7 +52,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClasses()
         {
             BaseClass cd
-                = new PDependencyInjector().CreateAndInjectDependencies<BaseClass>().rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<BaseClass>().rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.IsNotNull(cd?.GetResults().ChildClass?.GetResults().BasestClass);
@@ -61,7 +61,7 @@ namespace IOCCTest
         public void ShouldWorkWithCyclicalInterfacesWithNames()
         {
             TestCode.WithNames.ParentWithInterface cd
-                = new PDependencyInjector().CreateAndInjectDependencies<TestCode.WithNames.ParentWithInterface>(rootBeanSpec: new RootBeanSpec(rootBeanName: "name-B")).rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<TestCode.WithNames.ParentWithInterface>(rootBeanSpec: new RootBeanSpec(rootBeanName: "name-B")).rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd.GetResults().IChild);
             Assert.AreEqual("name-B", cd.GetResults().IChild?.GetResults().IParent?.GetResults().Name);
@@ -71,7 +71,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForCyclicalBaseClassesWithNames()
         {
             TestCode.WithNames.BaseClass cd
-                = new PDependencyInjector().CreateAndInjectDependencies<TestCode.WithNames.BaseClass>( rootBeanSpec: new RootBeanSpec(rootBeanName: "basest")).rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<TestCode.WithNames.BaseClass>( rootBeanSpec: new RootBeanSpec(rootBeanName: "basest")).rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().ChildClass);
             Assert.AreEqual("basest", cd?.GetResults().ChildClass?.GetResults().BasestClass?.GetResults().Name);

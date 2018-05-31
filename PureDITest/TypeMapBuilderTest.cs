@@ -121,7 +121,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.AbstractClass.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -140,7 +140,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.StaticClass.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -192,7 +192,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.DuplicateBeans.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -210,7 +210,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.BeanBase.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -258,7 +258,7 @@ namespace IOCCTest
                     $"{Utils.TestResourcePrefix}.TestData.ImplementationClass.cs")
                 , ExtraAssemblies: new [] {assemblyInterface}, InMemory: false);
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;

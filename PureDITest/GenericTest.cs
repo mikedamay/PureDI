@@ -11,26 +11,26 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithGenerics()
         {
-            RefersToGeneric rtg = new PDependencyInjector().CreateAndInjectDependencies<RefersToGeneric>().rootBean;
+            RefersToGeneric rtg = new DependencyInjector().CreateAndInjectDependencies<RefersToGeneric>().rootBean;
             Assert.AreEqual("Generic<T>", rtg?.GenericInt?.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericRoot()
         {
-            Generic<int> gi = new PDependencyInjector().CreateAndInjectDependencies<Generic<int>>().rootBean;
+            Generic<int> gi = new DependencyInjector().CreateAndInjectDependencies<Generic<int>>().rootBean;
             Assert.IsNotNull(gi);
         }
         [TestMethod]
         public void ShouldCreateTreeWithGenericParameter()
         {
-            GenericHolderParent ghp = new PDependencyInjector().CreateAndInjectDependencies<GenericHolderParent>().rootBean;
+            GenericHolderParent ghp = new DependencyInjector().CreateAndInjectDependencies<GenericHolderParent>().rootBean;
             Assert.AreEqual("GenericHeld", ghp?.GenericHolder?.GenericHeld.Name);
         }
         [TestMethod]
         public void ShouldCreateTreeWhenRootHasGenericParameter()
         {
             GenericHolder<GenericHeld> ghgh
-                = new PDependencyInjector().CreateAndInjectDependencies<GenericHolder<GenericHeld>>().rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<GenericHolder<GenericHeld>>().rootBean;
             Assert.AreEqual("GenericHeld", ghgh?.GenericHeld?.Name);
         }
 
@@ -38,14 +38,14 @@ namespace IOCCTest
         public void ShouldCreateTreeForGenericsWithMultipleParameters()
         {
             MultipleParamGenericUser mpgu
-                = new PDependencyInjector().CreateAndInjectDependencies<MultipleParamGenericUser>().rootBean;
+                = new DependencyInjector().CreateAndInjectDependencies<MultipleParamGenericUser>().rootBean;
             Assert.IsNotNull(mpgu?.Multiple);
         }
 
         [TestMethod]
         public void ShouldCreateTreeForNestedGeneric()
         {
-            WrapperUser wu = new PDependencyInjector().CreateAndInjectDependencies<WrapperUser>().rootBean;
+            WrapperUser wu = new DependencyInjector().CreateAndInjectDependencies<WrapperUser>().rootBean;
             Assert.IsNotNull(wu?.Nested);
         }
         [TestMethod]

@@ -24,7 +24,7 @@ namespace SimpleIOCCDocumentor
         private IDictionary<string, string> fragments = null;
 
         [BeanReference(Factory = typeof(ResourceFactory)
-            , FactoryParameter = new object[] {typeof(PDependencyInjector), "PureDI.Docs.apidoc.xsl"})]
+            , FactoryParameter = new object[] {typeof(DependencyInjector), "PureDI.Docs.apidoc.xsl"})]
         private string apiDocStyleSheet = null;
         public ApiDocParser()
         {
@@ -33,7 +33,7 @@ namespace SimpleIOCCDocumentor
             string apiDocPath = Path.Combine(
               Path.GetDirectoryName(
               this.GetType().Assembly.Location)
-              , "../../../../PureDI/bin/Debug/PDependencyInjector.xml");
+              , "../../../../PureDI/bin/Debug/DependencyInjector.xml");
 
         }
         public string GetFragment(string fragmentName)

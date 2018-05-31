@@ -10,7 +10,7 @@ public class ConstructorUser
 
     public static void Main()
     {
-        var constructorUser = new PDependencyInjector()
+        var constructorUser = new DependencyInjector()
           .CreateAndInjectDependencies<ConstructorUser>().rootBean;
         constructorUser.someService.DoMeAFavour();   // writes "SomeData"
     }

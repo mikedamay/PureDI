@@ -37,7 +37,7 @@ namespace IOCCTest.CycleGuardTestData
     [Bean]
     internal class CycleFactory : IFactory
     {
-        [BeanReference] private PDependencyInjector injector = null;
+        [BeanReference] private DependencyInjector injector = null;
         public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
         {
             return injector.CreateAndInjectDependencies<MyDependency>(injectionState);

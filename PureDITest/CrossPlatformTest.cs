@@ -23,7 +23,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateLinuxTypesOnLinux()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("TestData", "CrossPlatform");
             (object rootBean, InjectionState injectionState)
               = pdi.CreateAndInjectDependencies("IOCCTest.TestData.CrossPlatform"
               , assemblies: new Assembly[] { assembly});

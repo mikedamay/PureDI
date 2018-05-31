@@ -30,12 +30,12 @@ namespace IOCCTest
             (dynamic result, Diagnostics diagnostics)
         CreateAndRunAssembly(string nameSpace, string className, bool usePureDiTestAssembly = false)
         {
-            PDependencyInjector iocc;
+            DependencyInjector iocc;
             Assembly assembly;
             if (usePureDiTestAssembly)
             {
                 assembly = typeof(Utils).Assembly;
-                iocc = new PDependencyInjector();
+                iocc = new DependencyInjector();
             }
             else
             {
@@ -54,11 +54,11 @@ namespace IOCCTest
         /// <param name="testDataFolderName">e.g. "ScopeTestData" - no prefix required</param>
         /// <param name="className">e.g. "FactoryPrototype" - no ".cs" required</param>
         /// <returns>instantiated container with an assembly based on className but no tree</returns>
-        public static (PDependencyInjector, Assembly) CreateIOCCinAssembly(string testDataFolderName
+        public static (DependencyInjector, Assembly) CreateIOCCinAssembly(string testDataFolderName
             , string className)
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.{testDataFolderName}.{className}.cs");
-            PDependencyInjector iocc = new PDependencyInjector();
+            DependencyInjector iocc = new DependencyInjector();
             return (iocc, assembly);
         }
         /// <summary>

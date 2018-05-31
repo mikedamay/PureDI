@@ -11,7 +11,7 @@ namespace IOCCTest
         public void ShouldNotInitializeMembersWhenDDIFlagSetForRootObject()
         {
             var simple = new Simple();
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             (_, InjectionState @is) = pdi.CreateAndInjectDependencies(simple, deferDepedencyInjection: true);
             Assert.IsNull(simple?.SimpleChild);
             Assert.IsNull(simple?.NotSimpleChild);
@@ -25,7 +25,7 @@ namespace IOCCTest
         public void ShouldInitializeMembersWhenDDINotFlagSetForRootObject()
         {
             var simple = new Simple();
-            var pdi = new PDependencyInjector();
+            var pdi = new DependencyInjector();
             (_, InjectionState @is) = pdi.CreateAndInjectDependencies(simple, deferDepedencyInjection: false);
             Assert.IsNotNull(simple?.SimpleChild);
             Assert.IsNotNull(simple?.NotSimpleChild);

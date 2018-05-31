@@ -2,7 +2,7 @@
 
 namespace PureDI
 {
-    public partial class PDependencyInjector
+    public partial class DependencyInjector
     {
         public object GetBean(Type classOrInterface, string beanName)
         {

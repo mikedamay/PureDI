@@ -7,7 +7,7 @@ public class Profiles
 {
     public static void Main()
     {
-        PDependencyInjector pdi = new PDependencyInjector();
+        DependencyInjector pdi = new DependencyInjector();
         MyService ms = pdi.CreateAndInjectDependencies<MyService>()
           .rootBean;
         Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
@@ -48,7 +48,7 @@ public class SomeTest
     [TestMethod]
     public void ShouldPrintThisIsJustATest() =>
         Assert.AreEqual("this is just a test"
-            , new PDependencyInjector(
+            , new DependencyInjector(
               profiles: new[] { "test" }).CreateAndInjectDependencies
             <MyService>().rootBean.DoStuff()
         );

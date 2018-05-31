@@ -34,7 +34,7 @@ namespace PureDI.Attributes
         /// returning it together with the injection state
         /// </summary>
         /// <param name="injectionState">this should be passed to any call to
-        /// PDependencyInjector.CreateAndInjectDependencies if there is one.</param>
+        /// DependencyInjector.CreateAndInjectDependencies if there is one.</param>
         /// <param name="args">contains FactoryParams as declared on the BeanReference for the factory</param>
         /// <returns>
         /// if a call is made to CreateAndInjectDependencies then

@@ -13,7 +13,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldExtendTreeWhenMoreCallsAreMode()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Simple");
             (object simpleBean, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Simple"
@@ -28,8 +28,8 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldRejectAttemptToCreateTreeForASecondTimeWithoutState()
         {
-            //PDependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
-            PDependencyInjector pdi = new PDependencyInjector();
+            //DependencyInjector pdi = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Fails");
+            DependencyInjector pdi = new DependencyInjector();
                     // remote assembly refuses to work (Bad IL Format) in this test despite
                     // being identical to the one above
             Assert.ThrowsException<ArgumentException>(() =>
@@ -49,7 +49,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithMultipleCallsWithEmptyState()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "Empty");
             (object empty1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.Empty", assemblies: new Assembly[] { assembly});
@@ -60,7 +60,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreesWithRecursingFactories()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "SimpleFactory");
             (object factory1, InjectionState injectionState) 
               = pdi.CreateAndInjectDependencies(
               "IOCCTest.MultipleCallsTestData.SimpleFactory", assemblies: new Assembly[] { assembly});
@@ -70,7 +70,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateTreeWithAComplexArrangementOfFactories()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly("MultipleCallsTestData", "ComplexFactory");
             (object factory1, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.ComplexFactory", assemblies: new Assembly[] { assembly});
@@ -85,10 +85,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldAddFactoryCreatedParameterBeansToInjectionState()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
               "MultipleCallsTestData", "FactoryMadeWithConstructor");
 //            Assembly assembly = this.GetType().Assembly;
-//            var pdi = new PDependencyInjector();
+//            var pdi = new DependencyInjector();
             (object fmwc, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.FactoryMadeWithConstructor", assemblies: new Assembly[] { assembly});
@@ -103,10 +103,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldAddFactoryCreatedMemberBeansToInjectionState()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
               "MultipleCallsTestData", "FactoryMadeWithMember");
 //            Assembly assembly = this.GetType().Assembly;
-//            var pdi = new PDependencyInjector();
+//            var pdi = new DependencyInjector();
             (object fmwc, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.FactoryMadeWithMember", assemblies: new Assembly[] { assembly});
@@ -121,10 +121,10 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldAddFactoryCreatedComplexBeansToInjectionState()
         {
-            (PDependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
+            (DependencyInjector pdi, Assembly assembly) = Utils.CreateIOCCinAssembly(
               "MultipleCallsTestData", "FactoryMadeComplex");
 //            Assembly assembly = this.GetType().Assembly;
-//            var pdi = new PDependencyInjector();
+//            var pdi = new DependencyInjector();
             (object fmwc, InjectionState injectionState)
                 = pdi.CreateAndInjectDependencies(
                     "IOCCTest.MultipleCallsTestData.FactoryMadeComplex", assemblies: new Assembly[] { assembly});
@@ -139,7 +139,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldReferenceUserCreatedObject()
         {
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             var isbu = new IOCCTest.MultipleCallsTestCode.InstantiatedByUser();
             isbu.value = 42;
             (_, InjectionState @is) = pdi.CreateAndInjectDependencies(isbu);

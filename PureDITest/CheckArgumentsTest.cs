@@ -15,7 +15,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     //pdi.SetAssemblies(null);
                 });
 
@@ -27,7 +27,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies<CheckArgumentsTest>( rootBeanSpec: new RootBeanSpec(rootBeanName: null));
                 });
 
@@ -39,7 +39,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies<CheckArgumentsTest>( rootBeanSpec: new RootBeanSpec(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null)
                     );
                 });
@@ -52,7 +52,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies<CheckArgumentsTest>(rootBeanSpec: new RootBeanSpec(rootBeanName: null));
                 });
 
@@ -64,7 +64,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies<CheckArgumentsTest>(
                       rootBeanSpec: new RootBeanSpec(rootBeanName: Constants.DefaultBeanName, rootConstructorName: null)
                     );
@@ -78,7 +78,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies((string)null);
                 }); 
             
@@ -91,7 +91,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanSpec: new RootBeanSpec( rootBeanName: null));
                 });
 
@@ -103,7 +103,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies("CheckArgumentsTest", rootBeanSpec: new RootBeanSpec( rootBeanName: Constants.DefaultBeanName, rootConstructorName: null)
                     );
                 });
@@ -115,7 +115,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies((Type)null);
                 });
 
@@ -127,7 +127,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector();
+                    var pdi = new DependencyInjector();
                     pdi.CreateAndInjectDependencies(this.GetType(), null, null, new RootBeanSpec(rootBeanName: null));
                 }
             );
@@ -138,7 +138,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(profiles: new[] { (string)null });
+                    var pdi = new DependencyInjector(profiles: new[] { (string)null });
                 });
 
         }
@@ -148,7 +148,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(profiles: new[] { "" });
+                    var pdi = new DependencyInjector(profiles: new[] { "" });
                 });
 
         }
@@ -158,7 +158,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(profiles: new[] { " " });
+                    var pdi = new DependencyInjector(profiles: new[] { " " });
                 });
 
         }
@@ -168,7 +168,7 @@ namespace IOCCTest
             Assert.ThrowsException<ArgumentNullException>(
                 () =>
                 {
-                    var pdi = new PDependencyInjector(profiles: new[] { "goodstuff", null });
+                    var pdi = new DependencyInjector(profiles: new[] { "goodstuff", null });
                 });
 
         }

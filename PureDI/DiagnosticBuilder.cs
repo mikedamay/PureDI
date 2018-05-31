@@ -31,7 +31,7 @@ namespace PureDI
             string schemaName
                 = $"{Common.Common.ResourcePrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 return CreateDiagnosticsFromSchema(s);
             }
@@ -39,7 +39,7 @@ namespace PureDI
 
         /// <param name="diagnosticSchema">
         ///     XML Text which populates the diagnostics object
-        ///     e.g. typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+        ///     e.g. typeof(DependencyInjector).Assembly.GetManifestResourceStream(
         ///          $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml")
         /// </param>
         public DiagnosticBuilder(Stream diagnosticSchema)

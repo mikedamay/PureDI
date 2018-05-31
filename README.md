@@ -95,14 +95,14 @@ browse to http://localhost:60653/
     TODO Later: red team: deep hierarchies
     TODO Later: red team: mix new and CreateAndInject...
     TODO Later: red team: self registering classes - that are also beans
-    TODO Later: PDependencyInjector or InjectionState should expose active
+    TODO Later: DependencyInjector or InjectionState should expose active
     TODO Later: profiles, particularly for use by factories.
 	TODO Later: InjectionState should allow objects to be queried using BeanSpec.
 	TODO Later:  Multiple items will be returned as appropriate
     TODO Later: allow user to pass a flag to the injector constructor to treat warnings as errors
-    TODO add an interface for PDependencyInjector
+    TODO add an interface for DependencyInjector
     TODO docs: DI-OddsAndEnds examples for object cycles
-    TODO docs: DI-Assemblies example of including a reference to PDependencyInjector
+    TODO docs: DI-Assemblies example of including a reference to DependencyInjector
     TODO docs: in a factory bean
     *** N/A docs: example of assembly exclusion
     TODO docs: connect up summary and details in DesignRationale

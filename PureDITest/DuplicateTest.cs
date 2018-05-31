@@ -20,7 +20,7 @@ namespace IOCCTest
         public void ShouldDetectDuplicatesForProfile()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Duplicate.cs");
-            PDependencyInjector pdi = new PDependencyInjector(profiles: new[] {"myprofile"});
+            DependencyInjector pdi = new DependencyInjector(profiles: new[] {"myprofile"});
 
         //pdi.SetAssemblies(assembly.GetName().Name);
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies("IOCCTest.DuplicateTestData.Duplicate"
@@ -33,7 +33,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForSpecificOs()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.Os.cs");
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
               "IOCCTest.DuplicateTestData.Duplicate"
               ,assemblies: new Assembly[] { assembly}
@@ -48,7 +48,7 @@ namespace IOCCTest
         public void ShouldPreferSpecificOs()
         {
             Assembly assembly = CreateAssembly($"{TestResourcePrefix}.DuplicateTestData.PreferredOs.cs");
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             Diagnostics diagnostics = pdi.CreateAndInjectDependencies(
               "IOCCTest.DuplicateTestData.PreferredOs"
               ,assemblies: new Assembly[] { assembly}
