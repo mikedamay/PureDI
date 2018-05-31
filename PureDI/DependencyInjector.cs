@@ -16,8 +16,7 @@ namespace PureDI
     /// The key class in the library.  This carries out the dependency injection
     /// </summary>
     /// <conceptualLink target="DI-Introduction">see Introduction</conceptualLink>
-    [Bean]
-    public class DependencyInjector
+    public class DependencyInjector : IDependencyInjector
     {
         private readonly Os os = new StdOSDetector().DetectOS();
         private readonly ISet<string> _profileSet;
@@ -304,12 +303,11 @@ namespace PureDI
           CreateTypeMap(Type rootType, Assembly[] assemblies)
         {
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
-            IReadOnlyDictionary<(Type beanType, string beanName), Type> typeMap = null;
+            IDictionary<(Type beanType, string beanName), Type> typeMap = null;
 
             IReadOnlyList<Assembly> allAssemblies 
               = assemblies
               .Union(new[] { rootType.Assembly }.Where(a => !_ignoreRootTypeAssembly))
-              .Union(new[] { this.GetType().Assembly })
               .ToList();
             new BeanValidator().ValidateAssemblies(allAssemblies, diagnostics);
             if (typeMap == null)
@@ -318,9 +316,16 @@ namespace PureDI
                     , ref diagnostics, _profileSet, os);
                 LogAssemblies(diagnostics, allAssemblies);
                 LogProfiles(diagnostics, _profileSet);
-                LogTypeMap(diagnostics, typeMap);
+                LogTypeMap(diagnostics, typeMap as IReadOnlyDictionary<(Type beanType, string beanName), Type>);
             }
-            return (typeMap, diagnostics);
+
+            if (!typeMap.ContainsKey((typeof(DependencyInjector), Constants.DefaultBeanName)))
+            {
+                typeMap.Add((typeof(DependencyInjector), Constants.DefaultBeanName), typeof(DependencyInjector));
+                typeMap.Add((typeof(IDependencyInjector), Constants.DefaultBeanName), typeof(DependencyInjector));
+            }
+
+            return (typeMap as IReadOnlyDictionary<(Type beanType, string beanName), Type>, diagnostics);
         }
 
         private void LogTypeMap(Diagnostics diagnostics

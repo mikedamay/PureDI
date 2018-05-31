@@ -375,7 +375,7 @@ namespace IOCCTest
             Assert.AreEqual(
               Utils.LessThanIsGoodEnough(mapExpected.Keys.Count, map.Keys.Count()), map.Keys.Count());
             Assert.IsFalse(Utils.Falsify(diagnostics.HasWarnings));
-            CompareMaps(map, mapExpected);
+            CompareMaps(map as IReadOnlyDictionary<(Type, string), Type>, mapExpected);
         }
 
 

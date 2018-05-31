@@ -11,7 +11,7 @@ namespace PureDI
 {
     internal class TypeMapBuilder
     {
-        public IReadOnlyDictionary<(Type type, string name), Type> 
+        public IDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
@@ -39,7 +39,7 @@ namespace PureDI
                 // not sure why we don't log enums as invalid beans
             LogInvalidBeans(diagnostics, invalidBeanSpecs);
 
-            return (IReadOnlyDictionary<(Type, string), Type>)map;
+            return map;
         }
 
         public IList<KeyValuePair<(Type, string), Type>> GetTypesForRootObject(Type objType, string beanName)
