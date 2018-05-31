@@ -151,6 +151,10 @@ namespace PureDI.Tree
             }
          }
 
+        public object CreateBean(Type beanType, Diagnostics diagnostics)
+        {
+            return Construct(beanType, new List<ChildBeanSpec>(), Constants.DefaultConstructorName, diagnostics);
+        }
         private static void RecordIncompleteAssignments(InjectionState injectionState)
         {
             Diagnostics.Group grp = injectionState.Diagnostics.Groups["IncompleteInjections"];
@@ -326,7 +330,7 @@ namespace PureDI.Tree
             return (bean, injectionState);
         }
 
-        (bool constructionComplete, object beanId) 
+        private (bool constructionComplete, object beanId) 
           MakeBean(BeanScope beanScope, BeanSpec beanSpec
             ,Type constructableType
             ,IDictionary<InstantiatedBeanId, object> mapObjectsCreatedSoFar

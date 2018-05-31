@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using PureDI;
 using PureDI.Common;
@@ -161,6 +163,47 @@ namespace IOCCTest
             Assert.IsNotNull(scu.SomeBaseClass);
             Assert.IsNotNull(scu.SomeInterface);
 
+        }
+
+        [TestMethod]
+        [Ignore]
+        public void ShouldCreateNamedInstanceForClassWithoutBeanName()
+        {
+            var pdi = new PDependencyInjector();
+            (var bean, var @is) =
+              pdi.CreateAndInjectDependencies<UnnamedBean>(
+              rootBeanSpec: new RootBeanSpec(rootBeanName: "BeanWithNoName"));
+            (var bean2, var is2) = pdi.CreateAndInjectDependencies<Bean>(@is);
+            Assert.IsNotNull(bean2?.RefToUnnamedBean?.child);
+        }
+
+        [TestMethod]
+        public void ShouldCreateNonBeanWithCreateBeanMethod()
+        {
+            var pdi = new PDependencyInjector();
+            (var nonBean, var @is) = pdi.CreateBean<NonBean>();
+            Assert.IsNotNull(nonBean);
+        }
+
+        [TestMethod]
+        public void ShouldCreateBeanWithCreateBeanMethod()
+        {
+            try
+            {
+                var pdi = new PDependencyInjector();
+                (var unnamedBean, var @is) = pdi.CreateBean<UnnamedBean>();
+                Assert.IsNotNull(unnamedBean);
+                (var _, var is2) = pdi.CreateAndInjectDependencies(unnamedBean, @is
+                    ,rootBeanSpec: new RootBeanSpec(rootBeanName: "BeanWithAName")
+                );
+                (var bean, var is3) = pdi.CreateAndInjectDependencies<Bean>(is2);
+                Assert.IsNotNull(bean?.RefToUnnamedBean);
+            }
+            catch (DIException dix)
+            {
+                Console.WriteLine(dix.Diagnostics.AllToString());
+                Assert.Fail();
+            }
         }
     }
 }

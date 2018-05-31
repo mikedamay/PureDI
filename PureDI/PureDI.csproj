@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release;Debug (WindowsOnly with SandCastle Docs);FW</Configurations>
+    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.1.0" />
     <!--    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" /> -->
   </ItemGroup>
 </Project>

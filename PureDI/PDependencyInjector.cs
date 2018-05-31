@@ -236,6 +236,25 @@ namespace PureDI
         }
 
         /// <summary>
+        /// This is the PureDI's equivalent of 'new'.  It instantiates an object which is returned.
+        /// If the object has a bean defined for it then any active profile will be respected.
+        /// If the object has no bean defined for it then this method will simply create the object usiong
+        /// a no-arg constructor.
+        /// In order for this object to participate in the injection mechanism a subsequent call
+        /// to CreateAndInjectDependencies must be made using the overload that takes a root object rather
+        /// than a type.
+        /// </summary>
+        /// <typeparam name="TBean">The type of the bean to be created.  It must have a no-arg constructor</typeparam>
+        /// <returns>an object with no dependencies injected</returns>
+        public (TBean, InjectionState) CreateBean<TBean>(InjectionState injectionState = null) where TBean : class
+        {
+            CheckInjectionStateArgument(injectionState);
+            Type beanType = typeof(TBean);
+            var newInjectionState = CloneOrCreateInjectionState(beanType, injectionState, new Assembly[0]);
+            var obj = new ObjectTree().CreateBean(beanType, newInjectionState.Diagnostics);
+            return (obj as TBean, newInjectionState);
+        }
+        /// <summary>
         /// <see cref="CreateAndInjectDependencies(string,PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec, bool)"/>
         /// this overload does not print out the diagnostics
         /// </summary>
