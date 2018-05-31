@@ -33,7 +33,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Docs\DiagnosticSchema.xml" />
     <EmbeddedResource Include="Docs\DiagnosticSchemaSchema.xsd" />
-    <EmbeddedResource Include="Docs\UserGuide.xml" />
     <EmbeddedResource Include="PDependencyInjectorMinorMethods.cs" />
   </ItemGroup>
   <ItemGroup>

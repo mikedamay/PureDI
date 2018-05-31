@@ -1,4 +1,6 @@
-﻿using System.Xml.XPath;
+﻿using System;
+using System.Reflection;
+using System.Xml.XPath;
 using PureDI;
 using PureDI.Attributes;
 
@@ -9,6 +11,7 @@ namespace SimpleIOCCDocumentor
         XPathNavigator Navigator { get; }
         XPathNavigatorResourceFactory Factory { set; }
         string ResourcePath { set; }
+        Type ResourceAssemblyFinder { set; }
     }
     [Bean]
     internal class XPathNavigatorFixedCache : IIOCCXPathNavigatorCache
@@ -19,29 +22,37 @@ namespace SimpleIOCCDocumentor
         public XPathNavigatorResourceFactory Factory { set { _factory = value; QueryMakeNavigator(); } }
         private string _resourcePath;
         public string ResourcePath { set { _resourcePath = value; QueryMakeNavigator(); } }
+        private Type _resourceAssemblyFinder;
+        public Type ResourceAssemblyFinder
+        {
+            set { _resourceAssemblyFinder = value; QueryMakeNavigator(); }
+        }
 
         private void QueryMakeNavigator()
         {
-            if (_factory != null && _resourcePath != null)
+            if (_factory != null && _resourcePath != null && _resourceAssemblyFinder != null)
             {
-                _navigator = _factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), _resourcePath);
+                _navigator = _factory.ConvertResourceToXPathNavigator(_resourceAssemblyFinder, _resourcePath);
             }
         }
     }
     [Bean(Profile = "authoring")]
     internal class XPathNavigatorNoCache : IIOCCXPathNavigatorCache
     {
-        private XPathNavigator _navigator = null;
         public XPathNavigator Navigator => MakeNavigator();
         private XPathNavigatorResourceFactory _factory;
         public XPathNavigatorResourceFactory Factory { set { _factory = value; } }
         private string _resourcePath;
         public string ResourcePath { set { _resourcePath = value; } }
+        private Type _resourceAssemblyFinder;
+        public Type ResourceAssemblyFinder
+        {
+            set { _resourceAssemblyFinder = value; }
+        }
 
         private XPathNavigator MakeNavigator()
         {
-            _ = _navigator;
-            return _factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), _resourcePath);
+            return _factory.ConvertResourceToXPathNavigator(_resourceAssemblyFinder, _resourcePath);
         }
     }
 }

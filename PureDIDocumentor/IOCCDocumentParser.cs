@@ -37,15 +37,6 @@ namespace SimpleIOCCDocumentor
         // inhibit PureDI diagnostic for no arg constructor
         public IOCCDocumentParser() { }
 
-        /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
-        ///     then the document must be a superset of UserGuide.xml </param>
-        /// <param name="navigatorCache"></param>
-        public IOCCDocumentParser(string xmlRoot, IIOCCXPathNavigatorCache navigatorCache)
-        {
-            this._xmlRoot = xmlRoot;
-            this._navigatorCache = navigatorCache;
-        }
-
         public string GetFragment(string fragmentType, string fragmentName)
         {
             XPathNodeIterator nodes = _navigatorCache.Navigator.Select(

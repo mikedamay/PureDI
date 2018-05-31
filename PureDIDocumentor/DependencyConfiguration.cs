@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.ObjectPool;
+﻿using System;
+using Microsoft.Extensions.ObjectPool;
 using SimpleIOCCDocumentor;
 using PureDI;
 using PureDI.Attributes;
@@ -18,11 +19,14 @@ namespace PureDIDocumentor
             injectionState = pdi.CreateAndInjectDependencies(this, injectionState: injectionState
                 , deferDepedencyInjection: false).injectionState;
             injectionState = CreateAndInjectDocumentParser(injectionState
-              ,"site-userguide", "PureDI.Docs.UserGuide.xml", Constants.UserGuideRoot);
+              ,"site-userguide", "PureDIDocumentor.Docs.UserGuide.xml", Constants.UserGuideRoot
+              ,typeof(DependencyConfiguration));
             injectionState = CreateAndInjectDocumentParser(injectionState
-              ,"site-diagnostics", "PureDI.Docs.DiagnosticSchema.xml", Constants.DiagnosticSchemaRoot);
+              ,"site-diagnostics", "PureDI.Docs.DiagnosticSchema.xml", Constants.DiagnosticSchemaRoot
+              ,typeof(PDependencyInjector));
             injectionState = CreateAndInjectDocumentParser(injectionState
-              ,"doc-userguide", "PureDI.Docs.UserGuide.xml", Constants.UserGuideRoot);
+              ,"doc-userguide", "PureDIDocumentor.Docs.UserGuide.xml", Constants.UserGuideRoot
+              ,typeof(DependencyConfiguration));
             InjectionState @is;
             (_, @is) =
                 pdi.CreateAndInjectDependencies(
@@ -35,12 +39,13 @@ namespace PureDIDocumentor
         }
 
         private InjectionState CreateAndInjectDocumentParser(InjectionState injectionState
-          ,string beanName, string documentPath, string xmlRoot)
+          ,string beanName, string documentPath, string xmlRoot, Type resourceAssemblyFinder)
         {
             IIOCCXPathNavigatorCache nc;
             (nc, injectionState) = pdi.CreateAndInjectDependencies<IIOCCXPathNavigatorCache>(injectionState);
             nc.Factory = navigatorFactory;
             nc.ResourcePath = (string) propertyMap.Map(documentPath);
+            nc.ResourceAssemblyFinder = resourceAssemblyFinder;
             IOCCDocumentParser ddp;
             (ddp, injectionState) = pdi.CreateAndInjectDependencies<IOCCDocumentParser>(injectionState);            
             ddp.XmlRoot = xmlRoot;

@@ -27,12 +27,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\docwrapper.html" />
+    <Content Include="Docs\UserGuide.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Docs\UserGuide.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Docs\UserGuide.xml" />
     <EmbeddedResource Include="wwwroot\docwrapper.html" />
   </ItemGroup>
   <ItemGroup>
