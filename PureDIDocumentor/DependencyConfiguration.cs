@@ -41,14 +41,12 @@ namespace PureDIDocumentor
             (nc, injectionState) = pdi.CreateAndInjectDependencies<IIOCCXPathNavigatorCache>(injectionState);
             nc.Factory = navigatorFactory;
             nc.ResourcePath = (string) propertyMap.Map(documentPath);
-            IOCCDocumentParser ddp = new IOCCDocumentParser(
-              xmlRoot, nc);
+            IOCCDocumentParser ddp;
             (ddp, injectionState) = pdi.CreateAndInjectDependencies<IOCCDocumentParser>(injectionState);            
             ddp.XmlRoot = xmlRoot;
             ddp.NavigatorCache = nc;
             return pdi.CreateAndInjectDependencies(ddp, injectionState: injectionState, rootBeanSpec:
                 new RootBeanSpec(rootBeanName: beanName), deferDepedencyInjection: false).injectionState;
-
         }
     }
 }
