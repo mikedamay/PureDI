@@ -97,7 +97,7 @@ namespace IOCCTest
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
             (object furthest, _)
                 = pdi.CreateAndInjectDependencies(
-                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+                    "IOCCTest.MultipleCallsTestData.Furthest", injectionState: injectionState, assemblies: new Assembly[] { assembly});
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
         }
         [TestMethod]
@@ -115,7 +115,7 @@ namespace IOCCTest
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
             (object furthest, _)
                 = pdi.CreateAndInjectDependencies(
-                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+                    "IOCCTest.MultipleCallsTestData.Furthest", injectionState: injectionState, assemblies: new Assembly[] { assembly});
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
         }
         [TestMethod]
@@ -133,7 +133,7 @@ namespace IOCCTest
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
             (object furthest, _)
                 = pdi.CreateAndInjectDependencies(
-                    "IOCCTest.MultipleCallsTestData.Furthest", assemblies: new Assembly[] { assembly}, injectionState: injectionState);
+                    "IOCCTest.MultipleCallsTestData.Furthest", injectionState: injectionState, assemblies: new Assembly[] { assembly});
             Assert.AreEqual(1, result?.GetResults().FurthestCtr);
         }
         [TestMethod]

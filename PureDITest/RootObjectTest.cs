@@ -166,18 +166,6 @@ namespace IOCCTest
         }
 
         [TestMethod]
-        [Ignore]
-        public void ShouldCreateNamedInstanceForClassWithoutBeanName()
-        {
-            var pdi = new PDependencyInjector();
-            (var bean, var @is) =
-              pdi.CreateAndInjectDependencies<UnnamedBean>(
-              rootBeanSpec: new RootBeanSpec(rootBeanName: "BeanWithNoName"));
-            (var bean2, var is2) = pdi.CreateAndInjectDependencies<Bean>(@is);
-            Assert.IsNotNull(bean2?.RefToUnnamedBean?.child);
-        }
-
-        [TestMethod]
         public void ShouldCreateNonBeanWithCreateBeanMethod()
         {
             var pdi = new PDependencyInjector();

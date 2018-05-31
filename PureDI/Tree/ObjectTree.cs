@@ -36,53 +36,25 @@ namespace PureDI.Tree
         /// <param name="rootBeanName"></param>
         /// <param name="rootConstructorName"></param>
         /// <param name="scope"></param>
-        /// <param name="deferDependencyInjection"></param>
         /// <returns>an ojbect of root type</returns>
         public (object bean, InjectionState injectionState)
-          CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
-          ,string rootConstructorName, BeanScope scope, bool deferDependencyInjection)
+            CreateAndInjectDependencies(Type rootType, InjectionState injectionState, string rootBeanName
+                , string rootConstructorName, BeanScope scope)
         {
             try
             {
                 Assert(rootType != null);
                 Assert(rootBeanName != null);
                 object rootObject;
-                BeanMaker beanMaker;
-                if (deferDependencyInjection)
-                {
-                    beanMaker = (scopex, spec, ct, mocf, diags, cp, cc) =>
-                    {
-                        (bool complete, object bean) = MakeBean(scopex, spec, ct, mocf, diags, cp, cc);
-                        ConstructableBean cb = new ConstructableBean(ct, spec.BeanName);
-                        if (cc.BeansWithDeferredAssignments.Contains(cb))
-                        {
-                            // a cyclical dependency has been encountered which has triggered a genuine
-                            // deferred assignment.  This needs to be squashed
-                            cc.BeansWithDeferredAssignments.Remove(cb);
-                        }
-
-                        return (true, bean);
-                    };
-                }
-                else
-                {
-                    beanMaker = MakeBean;
-                }
 
                 (rootObject, injectionState) = CreateObjectTree(
                     new BeanSpec(rootType, rootBeanName, rootConstructorName)
-                    , injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope, beanMaker);
+                    , injectionState.CreationContext, injectionState, new BeanReferenceDetails(), scope, MakeBean);
                 if (rootObject != null && !rootType.IsInstanceOfType(rootObject))
                 {
                     throw new DIException(
                         $"object created by IOC container is not {rootType.Name} as expected",
                         injectionState.Diagnostics);
-                }
-
-                if (deferDependencyInjection)
-                {
-                    injectionState.CreationContext.BeansWithDeferredAssignments
-                        .Add(new ConstructableBean(rootType, rootBeanName));
                 }
 
                 Assert(rootObject == null

@@ -67,7 +67,7 @@ namespace IOCCTest
                     PDependencyInjector pdi = new PDependencyInjector();
                     object obj = pdi.CreateAndInjectDependencies<global::IOCCTest.DuplicateAssemblies
                       .DuplicateAssemblies>(
-                      assemblies:  new Assembly[] {assembly,this.GetType().Assembly}).rootBean;
+                      assemblies: new Assembly[] {assembly,this.GetType().Assembly}).rootBean;
                     Assert.IsNotNull(obj);
                     
                 }
