@@ -71,10 +71,10 @@ browse to http://localhost:60653/
     TODO can we handle an object or type from some assembly as root which is not
     TODO a scanned assembly
     TODO Later: implement constructor parameters
-    TODO allow arbitrary objects to be attached to the tree.  Provide them with
-	TODO a BeanSpec.  This should handle the case where there is a single implementation
-	TODO of some bean with multiple varying parameters.
-    TODO Later: built-in factories for environement variables, command line arguments, config files
+    *** TODO allow arbitrary objects to be attached to the tree.  Provide them with
+	*** TODO a BeanSpec.  This should handle the case where there is a single implementation
+	*** TODO of some bean with multiple varying parameters.
+    N/A TODO Later: built-in factories for environement variables, command line arguments, config files
     *** DONE Later: syntax colorisation in documentation
     TODO Code Analysis
     TODO deal with exceptions on nested calls to CreateAndInject...()
@@ -89,16 +89,16 @@ browse to http://localhost:60653/
     TODO Later: look at MEF implementations - heard on dnr 8-8-17
     TODO Later: testing in untrusted environments
     TODO Later: ninject
-    TODO spring
+    *** TODO spring
     *** DONE Later: ASP.NET
     TODO Later: Mass Test - 2 days
     TODO Later: red team: deep hierarchies
     TODO Later: red team: mix new and CreateAndInject...
     TODO Later: red team: self registering classes - that are also beans
-    TODO PDependencyInjector or InjectionState should expose active
-    TODO profiles, particularly for use by factories.
-	TODO InjectionState should allow objects to be queried using BeanSpec.
-	TODO   Multiple items will be returned as appropriate
+    TODO Later: PDependencyInjector or InjectionState should expose active
+    TODO Later: profiles, particularly for use by factories.
+	TODO Later: InjectionState should allow objects to be queried using BeanSpec.
+	TODO Later:  Multiple items will be returned as appropriate
     TODO Later: allow user to pass a flag to the injector constructor to treat warnings as errors
     TODO add an interface for PDependencyInjector
     TODO docs: DI-OddsAndEnds examples for object cycles
@@ -108,7 +108,7 @@ browse to http://localhost:60653/
     TODO docs: connect up summary and details in DesignRationale
     TODO Later: add debug message for Diagnostics to prevent it showing the view string - maybe
 	TODO Add "No lazy initialisation" to the list of limitations.
-	TODO Allow multiple profiles for a bean.  The difficulty here is in testing uniqueness and
+	TODO Limitation Allow multiple profiles for a bean.  The difficulty here is in testing uniqueness and
 	TODO allowing the user to reason about it.  Perhaps set as limitation.
 	*** DONE Limitation - no init or cleanup methods
 	*** DONE Limitation - no aliasing
@@ -123,17 +123,17 @@ browse to http://localhost:60653/
 	*** DONE Limitation - no indirect dependencies
 	*** DONE Limitation - beans can be associated with a single profile only
 	*** limitations are based on the IOC Container functionality of Spring Core Framework
-    TODO Factory.Execute will not automatically inject the dependencies
-    TODO of the object it creates.  The library user must call 
-    TODO CreateAndInjectDependencies if they want that behaviour
-    TODO a run-time diagnostic should be produced.
+    *** TODO Factory.Execute will not automatically inject the dependencies
+    *** TODO of the object it creates.  The library user must call 
+    *** TODO CreateAndInjectDependencies if they want that behaviour
+    *** TODO a run-time diagnostic should be produced.
     TODO add test to ClassScraper for invalid beans
     TODO exception should be thrown if Execution fails due to type mismatch.
     TODO investigate why catch in outer function does not trap exception
     TODO thrown in inner function.
     TODO document that factories must take care of any dependency
     TODO injection for member variables.
-    TODO How does tye cycle guard interact with factories
+    *** TODO How does tye cycle guard interact with factories
     *** TODO Validator gives false positives in PureDIDocumentor for IPropertyMap etc.
-    TODO decide whether there are exceptions to the ruie that all containers of bean references
+    TODO document that there are exceptions to the ruie that all containers of bean references
     TODO must be beans - check on BeanValidator
