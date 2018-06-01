@@ -21,7 +21,7 @@ namespace IOCCTest
             SelfReferring sr = new DependencyInjector().CreateAndInjectDependencies<SelfReferring>().rootBean;
             Assert.IsNotNull(sr);
         }
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(2000)]
         public void ShouldWorkWithCyclicalDependencies()
         {
             try
