@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ced939de-f7bc-43dc-94dd-c9b1cf163e01</ProjectGuid>
-    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>2017.9.26.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
     <AssemblyName>sandDoc</AssemblyName>
     <RootNamespace>sandDoc</RootNamespace>
@@ -36,13 +36,13 @@
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
-    <VisibleItems>InheritedMembers, Protected, ProtectedInternalAsProtected</VisibleItems>
+    <VisibleItems>InheritedMembers, Protected, ProtectedInternalAsProtected, EditorBrowsableNever, NonBrowsable</VisibleItems>
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
     <BuildLogFile>..\PureDI\sandcastle.log</BuildLogFile>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
-    <SyntaxFilters>Standard</SyntaxFilters>
+    <SyntaxFilters>C#</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>False</RootNamespaceContainer>
     <PresentationStyle>VS2013</PresentationStyle>
@@ -50,7 +50,7 @@
     <NamingMethod>Guid</NamingMethod>
     <HelpTitle>PureDI</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <ProjectSummary>The one and only namespace exposed by PureDI</ProjectSummary>
+    <ProjectSummary>The namespaces exposed by PureDI</ProjectSummary>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="PureDI" isDocumented="True">The main namespace exposed by PureDI</NamespaceSummaryItem>
       <NamespaceSummaryItem name="PureDI.Attributes" isDocumented="True">A collection of attributes to be included in code using the library together with some closely related classes</NamespaceSummaryItem>
