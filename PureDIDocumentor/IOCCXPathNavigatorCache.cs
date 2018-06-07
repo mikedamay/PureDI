@@ -1,4 +1,6 @@
-﻿using System.Xml.XPath;
+﻿using System;
+using System.Reflection;
+using System.Xml.XPath;
 using PureDI;
 using PureDI.Attributes;
 
@@ -9,38 +11,48 @@ namespace SimpleIOCCDocumentor
         XPathNavigator Navigator { get; }
         XPathNavigatorResourceFactory Factory { set; }
         string ResourcePath { set; }
+        Type ResourceAssemblyFinder { set; }
     }
     [Bean]
-    internal class XPathNavigatoorFixedCache : IIOCCXPathNavigatorCache
+    internal class XPathNavigatorFixedCache : IIOCCXPathNavigatorCache
     {
-        public XPathNavigator navigator;
-        public XPathNavigator Navigator => navigator;
-        private XPathNavigatorResourceFactory factory;
-        public XPathNavigatorResourceFactory Factory { set { factory = value; QueryMakeNavigator(); } }
-        private string resourcePath;
-        public string ResourcePath { set { resourcePath = value; QueryMakeNavigator(); } }
+        private XPathNavigator _navigator;
+        public XPathNavigator Navigator => _navigator;
+        private XPathNavigatorResourceFactory _factory;
+        public XPathNavigatorResourceFactory Factory { set { _factory = value; QueryMakeNavigator(); } }
+        private string _resourcePath;
+        public string ResourcePath { set { _resourcePath = value; QueryMakeNavigator(); } }
+        private Type _resourceAssemblyFinder;
+        public Type ResourceAssemblyFinder
+        {
+            set { _resourceAssemblyFinder = value; QueryMakeNavigator(); }
+        }
 
         private void QueryMakeNavigator()
         {
-            if (factory != null && resourcePath != null)
+            if (_factory != null && _resourcePath != null && _resourceAssemblyFinder != null)
             {
-                navigator = factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), resourcePath);
+                _navigator = _factory.ConvertResourceToXPathNavigator(_resourceAssemblyFinder, _resourcePath);
             }
         }
     }
     [Bean(Profile = "authoring")]
     internal class XPathNavigatorNoCache : IIOCCXPathNavigatorCache
     {
-        public XPathNavigator navigator = null;
         public XPathNavigator Navigator => MakeNavigator();
-        private XPathNavigatorResourceFactory factory;
-        public XPathNavigatorResourceFactory Factory { set { factory = value; } }
-        private string resourcePath;
-        public string ResourcePath { set { resourcePath = value; } }
+        private XPathNavigatorResourceFactory _factory;
+        public XPathNavigatorResourceFactory Factory { set { _factory = value; } }
+        private string _resourcePath;
+        public string ResourcePath { set { _resourcePath = value; } }
+        private Type _resourceAssemblyFinder;
+        public Type ResourceAssemblyFinder
+        {
+            set { _resourceAssemblyFinder = value; }
+        }
 
         private XPathNavigator MakeNavigator()
         {
-            return factory.ConvertResourceToXPathNavigator(typeof(PDependencyInjector), resourcePath);
+            return _factory.ConvertResourceToXPathNavigator(_resourceAssemblyFinder, _resourcePath);
         }
     }
 }

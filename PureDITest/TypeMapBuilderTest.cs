@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PureDI;
 using System.CodeDom.Compiler;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PureDI.Common;
 using Microsoft.CSharp;
 using PureDI.Public;
@@ -87,7 +88,7 @@ namespace IOCCTest
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenB", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
                 ,{("IOCCTest.TestData.DependencyHierarchy.IThirdGenC", ""),"IOCCTest.TestData.DependencyHierarchy.ForstGemClassWithManyAncestors8"}
             };
-            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.DependencyHierarchy.cs", mapExpected);
+            CommonTypeMapTest($"{Utils.TestResourcePrefix}.TestData.DependencyHierarchy.cs", mapExpected, usePureDITestAssembly: false);
         }
 
         [TestMethod]
@@ -120,7 +121,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.AbstractClass.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -139,7 +140,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.StaticClass.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -191,7 +192,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.DuplicateBeans.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -209,7 +210,7 @@ namespace IOCCTest
             Assembly assembly = Utils.CreateAssembly(
                 $"{Utils.TestResourcePrefix}.TestData.BeanBase.cs");
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -257,7 +258,7 @@ namespace IOCCTest
                     $"{Utils.TestResourcePrefix}.TestData.ImplementationClass.cs")
                 , ExtraAssemblies: new [] {assemblyInterface}, InMemory: false);
             Diagnostics diagnostics;
-            using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
                 $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             {
                 diagnostics = new DiagnosticBuilder(stream).Diagnostics;
@@ -277,7 +278,7 @@ namespace IOCCTest
                 {("IOCCTest.TestData.Generic`1", ""),"IOCCTest.TestData.Generic`1"}
                 ,{("IOCCTest.TestData.GenericUser", ""),"IOCCTest.TestData.GenericUser"}
                 ,{("IOCCTest.TestData.GenericChild", ""),"IOCCTest.TestData.GenericChild"}
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETCOREAPP2_1
                 ,{("IOCCTest.TestData.Generic`1[[System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]", ""),"IOCCTest.TestData.GenericChild"}
 #else
                 ,{("IOCCTest.TestData.Generic`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", ""),"IOCCTest.TestData.GenericChild"}
@@ -331,6 +332,7 @@ namespace IOCCTest
         /// <param name="mapExpected"></param>
         /// <param name="profile"></param>
         /// <param name="os"></param>
+        /// <param name="usePureDITestAssembly"></param>
         /// <returns></returns>
 #if false // not supported on .NET core 2.0 - besides which it does not solve anything
         private (AppDomain, Assembly) CreateAssemblyInNewAppDomain(string resourceName)
@@ -363,16 +365,17 @@ namespace IOCCTest
         public static void CommonTypeMapTest(string resourceName
           , IDictionary<(string, string), string> mapExpected
           , ISet<string> profile = null
-          , Os os = Os.Any)
+          , Os os = Os.Any, bool usePureDITestAssembly = false)
         {
-            Assembly assembly = Utils.CreateAssembly(resourceName);
+            Assembly assembly = usePureDITestAssembly 
+              ? typeof(TypeMapBuilderTest).Assembly : Utils.CreateAssembly(resourceName);
             Diagnostics diagnostics = new DiagnosticBuilder().Diagnostics;
             var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
                 new List<Assembly>() { assembly }, ref diagnostics, profile, os);
             Assert.AreEqual(
               Utils.LessThanIsGoodEnough(mapExpected.Keys.Count, map.Keys.Count()), map.Keys.Count());
             Assert.IsFalse(Utils.Falsify(diagnostics.HasWarnings));
-            CompareMaps(map, mapExpected);
+            CompareMaps(map as IReadOnlyDictionary<(Type, string), Type>, mapExpected);
         }
 
 

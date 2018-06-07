@@ -1,6 +1,6 @@
 ﻿using PureDI.Attributes;
 
-namespace IOCCTest.rootBean
+namespace PureDITest.RootObjectTestCode
 {
     [Bean]
     public class MultipleInstances

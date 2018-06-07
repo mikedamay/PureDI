@@ -22,10 +22,10 @@ namespace PureDI
               a.GetTypes().SelectMany(
               t => t.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
               .Select(m => new { type = t, member = m}))).Where(tm => tm.member.IsPropertyOrField());
-            var nonBeanAndMembers =
+            var nonBeanMembers =
               typesAndMembers.Where(tm => tm.type.IsAbstract || !tm.type.GetCustomAttributes<BeanBaseAttribute>().Any());
             var nonBeanTypesWithBeanReferences =
-                nonBeanAndMembers.Where(tm => tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any());
+                nonBeanMembers.Where(tm => tm.member.GetCustomAttributes<BeanReferenceBaseAttribute>().Any());
             Diagnostics.Group group = diagnostics.Groups["UnreachableReference"];
             foreach (var typeAndMember in nonBeanTypesWithBeanReferences)
             {

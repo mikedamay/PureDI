@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using PureDI.Public;
-using static PureDI.PDependencyInjector;
+using static PureDI.DependencyInjector;
 
 namespace PureDI
 {

@@ -2,6 +2,13 @@
 
 namespace PureDI.Common
 {
+    internal class AssertException : Exception
+    {
+        public AssertException(string message) : base(message)
+        {
+            
+        }
+    }
     internal static partial class Common
     {
         public static bool Assert(bool expr)
@@ -10,7 +17,7 @@ namespace PureDI.Common
                 // can't do this as it upsets unit tests
             if (!expr)
             {
-                throw new Exception("assertion failure");
+                throw new AssertException("assertion failure");
             }
             return true;
         }
@@ -26,7 +33,7 @@ namespace PureDI.Common
         // as above.  Presumably, the original
         // csproj overrode some default setting.
         public static readonly string ResourcePrefix 
-          = typeof(PDependencyInjector).Namespace;
+          = typeof(DependencyInjector).Namespace;
 #endif
     }
 }

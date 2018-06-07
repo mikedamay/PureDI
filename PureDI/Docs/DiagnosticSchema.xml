@@ -1,538 +1,583 @@
 <?xml version="1.0" encoding="ascii"?>
 <DiagnosticSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <group>
-    <topic>DuplicateBean</topic>
-    <severity>Warning</severity>
-    <intro>Duplicate beans have been detected.  
-           The mechanism will be unable to determine which 
-           class an injected reference refers to</intro>
-    <background>If there are multiple implementations of some 
-               interface or base class then use the bean's "name" 
-               property to distinguish them and then include that 
-               name in the bean reference whose value is to be injected</background>
-    
-    
-    
-    <template>attempt to add duplicate bean: {Interface1} {BeanName}, 
-              attempting to add ${NewBean}, when ${ExistingBean} is already included.
-              </template>
-    <artefacts>
-      <Interface1>
-</Interface1>
-      <NewBean>
-</NewBean>
-      <BeanName>
-</BeanName>
-      <ExistingBean>
-</ExistingBean>
-    </artefacts>
-  </group>
-  <group>
-    <topic>InvalidBean</topic>
-    <severity>Warning</severity>
-    <intro>A class has been marked as a bean (with 
-      the "Bean" attribute) which is not capable of being 
-      a bean.  The only types that can be beans are concrete non-static classes.</intro>
-    <background>Typically this problem occurs with abstract and static
-      classes.  Note that although the bean reference 
-      where the injection takes place may be specified as a base
-      class or interface, the "Bean" attribute should be applied 
-      only to the concrete implementation, not to a parent 
-      or interface</background>
-    
-    
-    
-    <template>{AbstractOrStaticClass} is {ClassMode}</template>
-    <artefacts>
-      <AbstractOrStaticClass>
-</AbstractOrStaticClass>
-      <ClassMode>
-</ClassMode>
-    </artefacts>
-  </group>  
-  <group>
-    <topic>ReadOnlyProperty</topic>
-    <severity>Warning</severity>
-    <intro>An attempt has been made to set the value of an auto property.  The container
-           cannot do this.</intro>
-    <background>The container cannot set the value of an auto property as the
-               operation is not supported by reflection.</background>
-    
-    
-    
-    <template>{Member} is an auto property on {Class}</template>
-    <artefacts>
-      <Class>
-</Class>
-      <Member>
-</Member>
-    </artefacts>
-  </group>
-  <group>
-    <topic>MissingNoArgConstructor</topic>
-    <severity>Warning</severity>
-    <intro>A class or struct without a no-arg constructor has been encountered.  All types in the object tree must have no-arg constructors</intro>
-    <background>The container needs to be able to construct the objects in the tree by reflection
-    .For this it needs a non-static constructor
-    which takes no arguments.  Alternatively a constructor annotated with the [Constructor] attribute
-    can be specified together with all of its parameters annotated as [BeanReference]</background>
-    
-    
-    
-    <template>{Class} needs a no-arg constructor</template>
-    <artefacts>
-      <Class>
-</Class>
-    </artefacts>   
-  </group>
-  <group>
-    <topic>MissingBean</topic>
-    <severity>Warning</severity>
-    <intro>A reference to a missing bean has been encountered</intro>
-    <background>The most likely cause of this issue is that 
-      you forgot to mark a bean with [Bean] or omitted its name for the [BeanReference] 
-      or there are 
-      duplicate beans or that the bean referred to was
-      not a concrete class or struct.  (In the case of duplicates the details should be listed
-      in the relevant diagnostics above).  Alternatively you may have attempted
-      to mark as injectable a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
-      This, of course, amounts to much the same thing.
-      You may be attempting the bean through an interface that it does not implement.</background>
-    
-    
-    
-    <template>Missing bean referred to at: ({MemberType}({MemberBeanName})  {MemberName}) declared by {Bean}</template>
-    <artefacts>
-      <MemberType>
-</MemberType>
-      <MemberBeanName>
-</MemberBeanName>
-      <MemberName>
-</MemberName>
-      <Bean>
-</Bean>
-    </artefacts>  
-  </group>  
-  <group>
-    <topic>MissingRootBean</topic>
-    <severity>Warning</severity>
-    <intro>The bean specified as the root of the tree cannot be found</intro>
-    <background>The most likely cause of this issue is that 
-      you forgot to mark a bean with [Bean] 
-      or there are 
-      duplicate beans or that the bean referred to was
-      not a concrete class or struct.  (In the case of duplicates the details should be listed
-      in the relevant diagnostics above).  Alternatively you may have attempted
-      to access a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
-      This, of course, amounts to much the same thing.
-      You may be attempting the bean through an interface that it does not implement.</background>
-    
-    
-    
-    <template>Missing bean: {BeanType}({BeanName})</template>
-    <artefacts>
-      <BeanType>
-</BeanType>
-      <BeanName>
-</BeanName>
-    </artefacts>  
-  </group>  
-  <group>
-    <topic>MissingRoot</topic>
-    <severity>Warning</severity>
-    <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above</intro>
-    <background>The most likely cause of this issue is that the type passed
-    to PDependencyInjector.CreateAndInjectDependencies was not marked as a bean.  [Bean] or the concrete class
-    derived from the type was not marked as a bean.  Alternatively the bean may have been found
-    to be invalid - see above.</background>
-    
-    
-    
-    <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
-    <artefacts>
-      <BeanType>
-</BeanType>
-      <BeanName>
-</BeanName>
-    </artefacts>  
-  </group>
-  <group>
-    <topic>MissingFactory</topic>
-    <severity>Warning</severity>
-    <intro>No factory has been found for member(s) marked with a factory bean</intro>
-    <background>
-      Factory beans must be marked as beans [Bean].  They must be in an assembly passed to PDependencyInjector.SetAssemblies().
-    </background>
-    
-    
-    
-    <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
-    <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-    </artefacts>
-  </group>
-  <group>
-    <topic>BadFactory</topic>
-    <severity>Warning</severity>
-    <intro>A factory has been found but it does not implement the required IFactory interface</intro>
-    <background>
-      Factory beans must be marked as beans [Bean].  They must also implement IFactory.
-    </background>
-    
-    
-    
-    <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
-    <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-    </artefacts>
-  </group>
-  <group>
-    <topic>TypeMismatch</topic>
-    <severity>Warning</severity>
-    <intro>The type assigned to a member by a factory was incompatible</intro>
-    <background>
-      The type of the object returned by the Execute() method of a factory must be compatible with the
-      type of the member to which it is being assigned
-    </background>
-    
-    
-    
-    <template>
-      The type returne from {Factory} for {DeclaringBean}.{Member}
-      {ExpectedType} was expected.Excepton: {Exception}
-    </template>
-    <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-      <ExpectedType>
-</ExpectedType>
-      <Exception>
-</Exception>
-    </artefacts>
-  </group>
-  <group>
-    <topic>FactoryExecutionFailure</topic>
-    <severity>Warning</severity>
-    <intro>An error occurred when creating a bean using bean factory</intro>
-    <background>
-      An exception was thrown during the Execute() method of a bean factory
-    </background>
-    
-    
-    
-    <template>
-      The exception thrown by {Factory} for {DeclaringBean}.{Member}
-      was {Exception}
-    </template>
-    <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <Member>
-</Member>
-      <Factory>
-</Factory>
-      <Exception>
-</Exception>
-    </artefacts>
-  </group>
-  <group>
-    <topic>CyclicalDepndency</topic>
-    <severity>Warning</severity>
-    <intro>A cyclical dependency was found in the object tree.  This is not supported</intro>
-    <background>A cyclical dependency occurs when a class constructor includes
-      a parameter whose own constructor includes a parameter of the original class.
-      Add in intermediate ancestors to make this interesting
-      a parent bean or </background>
-    
-    
-    
-    <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
-    <artefacts>
-      <DeclaringBean>
-</DeclaringBean>
-      <ConstructorParam>
-</ConstructorParam>
-    </artefacts>
-  </group>
-  <group>
-    <topic>DuplicateConstructors</topic>
-    <severity>Warning</severity>
-    <intro>More than one suitable constructor is available for injection</intro>
-    <background>
-      The container needs an exact specification of the constructor to be run.
-      Where there are two candidate constructors then each should be given a differnt "Name"
-      and the "ConstructorName" parameter of the [BeanReference] should be used
-      in the reference to the bean to indicate which constructor should be used.
-    </background>
-    
-    
-    
-    <template>The declaring bean {Bean} has more than one applicable constructor</template>
-    <artefacts>
-      <Bean>
-</Bean>
-    </artefacts>
-  </group>
-  <group>
-    <topic>MissingConstructorParameterAttribute</topic>
-    <severity>Warning</severity>
-    <intro>A constructor has been found marked as [Constructor] but one or more of whose parameters are not marked as [BeanReference]</intro>
-    <background>
-      In order to inject values into a class (bean) via the constructor its constructor must
-      be marked with the [Constructor] attribute and all that constructor's parameters
-      must be marked as [BeanReference].  If a parameter to be injected is not a
-      bean then a factory bean can be used to provide the value and the constructor
-      should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
-    </background>
-    
-    
-    
-    <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
-    <artefacts>
-      <Bean>
-</Bean>
-    </artefacts>
-  </group>
-  <group>
-    <topic>MissingConstructorAttribute</topic>
-    <severity>Warning</severity>
-    <intro>A constructor has been found not marked as [Constructor] but one or more of whose parameters is marked as [BeanReference]</intro>
-    <background>
-      In order to inject values into a class (bean) via the constructor its constructor must
-      be marked with the [Constructor] attribute and all that constructor's parameters
-      must be marked as [BeanReference].
-    </background>
-    
-    
-    
-    <template>One or more of the declaring bean {Bean}'s constructors is not marked as [Constructor] but has marked parameters</template>
-    <artefacts>
-      <Bean>
-</Bean>
-    </artefacts>
-  </group>
-  <group>
-    <topic>CyclicalDependency</topic>
-    <severity>Warning</severity>
-    <intro>Two beans has been found that are mutually dependent using constructor injection.  This is not supported</intro>
-    <background>
-      If a reference to Bean A is injected into Bean B's constructor and a reference to Bean B is
-      injected into Bean A's constructor then there is no way to construct both beans.
-    </background>
-    
-    
-    
-    <template>{Bean} has a cyclical dependency</template>
-    <artefacts>
-      <Bean>
-</Bean>
-    </artefacts>
-  </group>
-  <group>
-    <topic>UnreachableReference</topic>
-    <severity>Warning</severity>
-    <intro>A bean reference exists in a context where a bean cannot be injected</intro>
-    <background>All members for which beans can be injected must exist within classes validly marked as [bean]s.</background>
-    
-    
-    
-    <template>{Type} has an unreachable member {MemberType} {MemberName}</template>
-    <artefacts>
-      <Type>
-</Type>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
-    </artefacts>
-  </group>
-  <group>
-    <topic>UnreachableConstructor</topic>
-    <severity>Warning</severity>
-    <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
-    <background>All constructors for which beans can be injected must exist within classes validly marked as [bean]s.</background>
-    
-    
-    
-    <template>{Type} has an unreachable constructor</template>
-    <artefacts>
-      <Type>
-</Type>
-    </artefacts>
-  </group>
-  <group>
-    <topic>NonBeanFactory</topic>
-    <severity>Warning</severity>
-    <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
-    <background>Factories must implement IFactory and be marked with the [Bean] attribute.</background>
-    
-    
-    
-    <template>{Type} implements IFactory but is not a bean</template>
-    <artefacts>
-      <Type>
-</Type>
-    </artefacts>
-  </group>
-  <group>
-    <topic>AlreadyInitialised</topic>
-    <severity>Warning</severity>
-    <intro>A value is being injected into a member that has already been initialized</intro>
-    <background>Values are injected after a bean has been instantiated, constructor has executed and member initialisations
-      have occurred.  Any preceding initialisation will be obliterated by the injection</background>
-    
-    
-    
-    <template>The member, {Member}, of {DeclaringType} was already initialized with {ExistingValue}.  The
-      value, {ExistingValue}, has been overwritten</template>
-    <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <Member>
-</Member>
-      <ExistingValue>
-</ExistingValue>
-    </artefacts>
-  </group>
-  <group>
-    <topic>UnreachableStruct</topic>
-    <severity>Warning</severity>
-    <intro>An embedded struct bean exists which will never be instantiated</intro>
-    <background>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be injected</background>
-    
-    
-    
-    <template>{DeclaringType} has an unreachable member struct {MemberType} {MemberName}</template>
-    <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
-    </artefacts>
-  </group>
-  <group>
-    <topic>ProfilesInfo</topic>
-    <severity>Info</severity>
-    <intro>List of Profiles in use by the container</intro>
-    <background>The active profiles will determine which types are 
-      included in the type map and are available for injection</background>
-    
-    
-    
-    <template>Profiles (blank indicates an empty list):{Profiles}</template>
-    <artefacts>
-      <Profiles>
-</Profiles>
-    </artefacts>
-  </group>
-  <group>
-    <topic>AssembliesInfo</topic>
-    <severity>Info</severity>
-    <intro>List of Assemblies in use by the container</intro>
-    <background>The active assemblies will determine which types are 
-      included in the type map and are available for injection</background>
-    
-    
-    
-    <template>Assemblies (blank indicates an empty list):{Assemblies}</template>
-    <artefacts>
-      <Assemblies>
-</Assemblies>
-    </artefacts>
-  </group>
-  <group>
-    <topic>TypesInfo</topic>
-    <severity>Info</severity>
-    <intro>List of Types available for injection together with their mapping</intro>
-    <background>The mapping shows what implementation* (concrete class) will be injected for
-      a reference with the given Type (interface, base class, or concrete class).
-      Only types in this list are available for injection.
-    
-      * Note that in the case of references containing factories it is the
-        factory implementation rather than the actual derived class
-        that is reported.</background>
-    
-    
-    
-    <template>{ReferenceType} (bean name:{BeanName}) maps to {ImplementationType}</template>
-    <artefacts>
-      <ReferenceType>
-</ReferenceType>
-      <BeanName>
-</BeanName>
-      <ImplementationType>
-</ImplementationType>
-    </artefacts>
-  </group>
-  <group>
-    <topic>MemberInjectionsInfo</topic>
-    <severity>Info</severity>
-    <intro>List of objects injected by the container into member variables</intro>
-    <background>
-</background>
-    
-    
-    
-    <template>{{MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
-    <artefacts>
-      <DeclaringType>
-</DeclaringType>
-      <MemberType>
-</MemberType>
-      <MemberName>
-</MemberName>
-      <MemberImplementation>
-</MemberImplementation>
-    </artefacts>
-  </group>
-  <group>
-    <topic>ConstructorInjectionsInfo</topic>
-    <severity>Info</severity>
-    <intro>List of objects injected by the container into the constructor</intro>
-    <background>
-    </background>
+    <group>
+        <topic>DuplicateBean</topic>
+        <severity>Warning</severity>
+        <intro>Duplicate beans have been detected.
+            The mechanism will be unable to determine which
+            class an injected reference refers to
+        </intro>
+        <background>If there are multiple implementations of some
+            interface or base class then use the bean's "name"
+            property to distinguish them and then include that
+            name in the bean reference whose value is to be injected
+        </background>
 
 
+        <template>attempt to add duplicate bean: {Interface1} {BeanName},
+            attempting to add ${NewBean}, when ${ExistingBean} is already included.
+        </template>
+        <artefacts>
+            <Interface1>
+            </Interface1>
+            <NewBean>
+            </NewBean>
+            <BeanName>
+            </BeanName>
+            <ExistingBean>
+            </ExistingBean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>InvalidBean</topic>
+        <severity>Warning</severity>
+        <intro>A class has been marked as a bean (with
+            the "Bean" attribute) which is not capable of being
+            a bean. The only types that can be beans are concrete non-static classes.
+        </intro>
+        <background>Typically this problem occurs with abstract and static
+            classes. Note that although the bean reference
+            where the injection takes place may be specified as a base
+            class or interface, the "Bean" attribute should be applied
+            only to the concrete implementation, not to a parent
+            or interface
+        </background>
 
-    <template>{ParameterImplementation} has been injected into the constructor of {DeclaringType}</template>
-    <artefacts>
-      <DeclaringType>
-      </DeclaringType>
-      <ParameterImplementation>
-      </ParameterImplementation>
-    </artefacts>
-  </group>
-  <group>
-    <topic>NoCreationContext</topic>
-    <severity>Warning</severity>
-    <intro>Attempt to call CreateAndInjectDependencies() from factory without passing down the creation context</intro>
-    <background>In the Execute() method of a factory object the dependency injector is being used to
-      create some object and inject its dependencies.  This pattern requires that the
-      "parent's" CreationContext is passed down to ensure that no cycclical dependencies are introduced
-      unbeknownst to the injector.
-      The parent's creationContext can be found in the BeanFactoryArgs object passed in as a parameter.
-    </background>
+
+        <template>{AbstractOrStaticClass} is {ClassMode}</template>
+        <artefacts>
+            <AbstractOrStaticClass>
+            </AbstractOrStaticClass>
+            <ClassMode>
+            </ClassMode>
+        </artefacts>
+    </group>
+    <group>
+        <topic>ReadOnlyProperty</topic>
+        <severity>Warning</severity>
+        <intro>An attempt has been made to set the value of an auto property. The container
+            cannot do this.
+        </intro>
+        <background>The container cannot set the value of an auto property as the
+            operation is not supported by reflection.
+        </background>
 
 
-    <template>Attempt to create {BeanType}</template>
-    <artefacts>
-      <BeanType/>
-    </artefacts>
-  </group>
+        <template>{Member} is an auto property on {Class}</template>
+        <artefacts>
+            <Class>
+            </Class>
+            <Member>
+            </Member>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingNoArgConstructor</topic>
+        <severity>Warning</severity>
+        <intro>A class or struct without a no-arg constructor has been encountered. All types in the object tree must
+            have no-arg constructors
+        </intro>
+        <background>The container needs to be able to construct the objects in the tree by reflection
+            .For this it needs a non-static constructor
+            which takes no arguments. Alternatively a constructor annotated with the [Constructor] attribute
+            can be specified together with all of its parameters annotated as [BeanReference]
+        </background>
+
+
+        <template>{Class} needs a no-arg constructor</template>
+        <artefacts>
+            <Class>
+            </Class>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingBean</topic>
+        <severity>Warning</severity>
+        <intro>A reference to a missing bean has been encountered</intro>
+        <background>The most likely cause of this issue is that
+            you forgot to mark a bean with [Bean] or omitted its name for the [BeanReference]
+            or there are
+            duplicate beans or that the bean referred to was
+            not a concrete class or struct. (In the case of duplicates the details should be listed
+            in the relevant diagnostics above). Alternatively you may have attempted
+            to mark as injectable a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library
+            class.
+            This, of course, amounts to much the same thing.
+            You may be attempting the bean through an interface that it does not implement.
+        </background>
+
+
+        <template>Missing bean referred to at: ({MemberType}({MemberBeanName}) {MemberName}) declared by {Bean}
+        </template>
+        <artefacts>
+            <MemberType>
+            </MemberType>
+            <MemberBeanName>
+            </MemberBeanName>
+            <MemberName>
+            </MemberName>
+            <Bean>
+            </Bean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingRootBean</topic>
+        <severity>Warning</severity>
+        <intro>The bean specified as the root of the tree cannot be found</intro>
+        <background>The most likely cause of this issue is that
+            you forgot to mark a bean with [Bean]
+            or there are
+            duplicate beans or that the bean referred to was
+            not a concrete class or struct. (In the case of duplicates the details should be listed
+            in the relevant diagnostics above). Alternatively you may have attempted
+            to access a non-bean class such as a primitive, dynamic, tuple, array or 3rd party library class.
+            This, of course, amounts to much the same thing.
+            You may be attempting the bean through an interface that it does not implement.
+        </background>
+
+
+        <template>Missing bean: {BeanType}({BeanName})</template>
+        <artefacts>
+            <BeanType>
+            </BeanType>
+            <BeanName>
+            </BeanName>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingRoot</topic>
+        <severity>Warning</severity>
+        <intro>The root of the class tree was not marked as [Bean] or the bean was invalid - see diagnostics above
+        </intro>
+        <background>The most likely cause of this issue is that the type passed
+            to DependencyInjector.CreateAndInjectDependencies was not marked as a bean. [Bean] or the concrete class
+            derived from the type was not marked as a bean. Alternatively the bean may have been found
+            to be invalid - see above.
+        </background>
+
+
+        <template>Missing root bean referred to as: ({BeanType}({BeanName}))</template>
+        <artefacts>
+            <BeanType>
+            </BeanType>
+            <BeanName>
+            </BeanName>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingFactory</topic>
+        <severity>Warning</severity>
+        <intro>No factory has been found for member(s) marked with a factory bean</intro>
+        <background>
+            Factory beans must be marked as beans [Bean]. They must be in an assembly passed to
+            DependencyInjector.SetAssemblies().
+        </background>
+
+
+        <template>Missing factory {Factory} for {DeclaringBean}.{Member}</template>
+        <artefacts>
+            <DeclaringBean>
+            </DeclaringBean>
+            <Member>
+            </Member>
+            <Factory>
+            </Factory>
+        </artefacts>
+    </group>
+    <group>
+        <topic>BadFactory</topic>
+        <severity>Warning</severity>
+        <intro>A factory has been found but it does not implement the required IFactory interface</intro>
+        <background>
+            Factory beans must be marked as beans [Bean]. They must also implement IFactory.
+        </background>
+
+
+        <template>Bad factory {Factory} for {DeclaringBean}.{Member}</template>
+        <artefacts>
+            <DeclaringBean>
+            </DeclaringBean>
+            <Member>
+            </Member>
+            <Factory>
+            </Factory>
+        </artefacts>
+    </group>
+    <group>
+        <topic>TypeMismatch</topic>
+        <severity>Warning</severity>
+        <intro>The type assigned to a member by a factory was incompatible</intro>
+        <background>
+            The type of the object returned by the Execute() method of a factory must be compatible with the
+            type of the member to which it is being assigned
+        </background>
+
+
+        <template>
+            The type returne from {Factory} for {DeclaringBean}.{Member}
+            {ExpectedType} was expected.Excepton: {Exception}
+        </template>
+        <artefacts>
+            <DeclaringBean>
+            </DeclaringBean>
+            <Member>
+            </Member>
+            <Factory>
+            </Factory>
+            <ExpectedType>
+            </ExpectedType>
+            <Exception>
+            </Exception>
+        </artefacts>
+    </group>
+    <group>
+        <topic>FactoryExecutionFailure</topic>
+        <severity>Warning</severity>
+        <intro>An error occurred when creating a bean using bean factory</intro>
+        <background>
+            An exception was thrown during the Execute() method of a bean factory
+        </background>
+
+
+        <template>
+            The exception thrown by {Factory} for {DeclaringBean}.{Member}
+            was {Exception}
+        </template>
+        <artefacts>
+            <DeclaringBean>
+            </DeclaringBean>
+            <Member>
+            </Member>
+            <Factory>
+            </Factory>
+            <Exception>
+            </Exception>
+        </artefacts>
+    </group>
+    <group>
+        <topic>CyclicalDepndency</topic>
+        <severity>Warning</severity>
+        <intro>A cyclical dependency was found in the object tree. This is not supported</intro>
+        <background>A cyclical dependency occurs when a class constructor includes
+            a parameter whose own constructor includes a parameter of the original class.
+            Add in intermediate ancestors to make this interesting
+            a parent bean or
+        </background>
+
+
+        <template>The declaring bean {DeclaringBean} has cyclical dependency related to {ConstructorParam}</template>
+        <artefacts>
+            <DeclaringBean>
+            </DeclaringBean>
+            <ConstructorParam>
+            </ConstructorParam>
+        </artefacts>
+    </group>
+    <group>
+        <topic>DuplicateConstructors</topic>
+        <severity>Warning</severity>
+        <intro>More than one suitable constructor is available for injection</intro>
+        <background>
+            The container needs an exact specification of the constructor to be run.
+            Where there are two candidate constructors then each should be given a differnt "Name"
+            and the "ConstructorName" parameter of the [BeanReference] should be used
+            in the reference to the bean to indicate which constructor should be used.
+        </background>
+
+
+        <template>The declaring bean {Bean} has more than one applicable constructor</template>
+        <artefacts>
+            <Bean>
+            </Bean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingConstructorParameterAttribute</topic>
+        <severity>Warning</severity>
+        <intro>A constructor has been found marked as [Constructor] but one or more of whose parameters are not marked
+            as [BeanReference]
+        </intro>
+        <background>
+            In order to inject values into a class (bean) via the constructor its constructor must
+            be marked with the [Constructor] attribute and all that constructor's parameters
+            must be marked as [BeanReference]. If a parameter to be injected is not a
+            bean then a factory bean can be used to provide the value and the constructor
+            should be marked [BeanReference(Factory=typeof(SomeFactoryClass)]
+        </background>
+
+
+        <template>The declaring bean {Bean}'s constructor has unmarked parameters</template>
+        <artefacts>
+            <Bean>
+            </Bean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MissingConstructorAttribute</topic>
+        <severity>Warning</severity>
+        <intro>A constructor has been found not marked as [Constructor] but one or more of whose parameters is marked as
+            [BeanReference]
+        </intro>
+        <background>
+            In order to inject values into a class (bean) via the constructor its constructor must
+            be marked with the [Constructor] attribute and all that constructor's parameters
+            must be marked as [BeanReference].
+        </background>
+
+
+        <template>One or more of the declaring bean {Bean}'s constructors is not marked as [Constructor] but has marked
+            parameters
+        </template>
+        <artefacts>
+            <Bean>
+            </Bean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>CyclicalDependency</topic>
+        <severity>Warning</severity>
+        <intro>Two beans has been found that are mutually dependent using constructor injection. This is not supported
+        </intro>
+        <background>
+            If a reference to Bean A is injected into Bean B's constructor and a reference to Bean B is
+            injected into Bean A's constructor then there is no way to construct both beans.
+        </background>
+
+
+        <template>{Bean} has a cyclical dependency</template>
+        <artefacts>
+            <Bean>
+            </Bean>
+        </artefacts>
+    </group>
+    <group>
+        <topic>UnreachableReference</topic>
+        <severity>Warning</severity>
+        <intro>A bean reference exists in a context where a bean will not be injected</intro>
+        <background>All members for which beans can be injected must exist within classes marked as [bean]s.
+        </background>
+
+
+        <template>{Type} has a member {MemberType} {MemberName} that cannot be injected</template>
+        <artefacts>
+            <Type>
+            </Type>
+            <MemberType>
+            </MemberType>
+            <MemberName>
+            </MemberName>
+        </artefacts>
+    </group>
+    <group>
+        <topic>UnreachableConstructor</topic>
+        <severity>Warning</severity>
+        <intro>A injectable constructor exists in a context where a bean cannot be injected</intro>
+        <background>All constructors for which beans can be injected must exist within classes validly marked as
+            [bean]s.
+        </background>
+
+
+        <template>{Type} has an unreachable constructor</template>
+        <artefacts>
+            <Type>
+            </Type>
+        </artefacts>
+    </group>
+    <group>
+        <topic>NonBeanFactory</topic>
+        <severity>Warning</severity>
+        <intro>A class exists which implements the IFactory interface but which is not marked as a [Bean]</intro>
+        <background>Factories must implement IFactory and be marked with the [Bean] attribute.</background>
+
+
+        <template>{Type} implements IFactory but is not a bean</template>
+        <artefacts>
+            <Type>
+            </Type>
+        </artefacts>
+    </group>
+    <group>
+        <topic>AlreadyInitialised</topic>
+        <severity>Warning</severity>
+        <intro>A value is being injected into a member that has already been initialized</intro>
+        <background>Values are injected after a bean has been instantiated, constructor has executed and member
+            initialisations
+            have occurred. Any preceding initialisation will be obliterated by the injection
+        </background>
+
+
+        <template>The member, {Member}, of {DeclaringType} was already initialized with {ExistingValue}. The
+            value, {ExistingValue}, has been overwritten
+        </template>
+        <artefacts>
+            <DeclaringType>
+            </DeclaringType>
+            <Member>
+            </Member>
+            <ExistingValue>
+            </ExistingValue>
+        </artefacts>
+    </group>
+    <group>
+        <topic>UnreachableStruct</topic>
+        <severity>Warning</severity>
+        <intro>An embedded struct bean exists which will never be instantiated</intro>
+        <background>Embedded structs must be marked as [BeanReference] in order for their bean reference members to be
+            injected
+        </background>
+
+
+        <template>{DeclaringType} has an unreachable member struct {MemberType} {MemberName}</template>
+        <artefacts>
+            <DeclaringType>
+            </DeclaringType>
+            <MemberType>
+            </MemberType>
+            <MemberName>
+            </MemberName>
+        </artefacts>
+    </group>
+    <group>
+        <topic>ProfilesInfo</topic>
+        <severity>Info</severity>
+        <intro>List of Profiles in use by the container</intro>
+        <background>The active profiles will determine which types are
+            included in the type map and are available for injection
+        </background>
+
+
+        <template>Profiles (blank indicates an empty list):{Profiles}</template>
+        <artefacts>
+            <Profiles>
+            </Profiles>
+        </artefacts>
+    </group>
+    <group>
+        <topic>AssembliesInfo</topic>
+        <severity>Info</severity>
+        <intro>List of Assemblies in use by the container</intro>
+        <background>The active assemblies will determine which types are
+            included in the type map and are available for injection
+        </background>
+
+
+        <template>Assemblies (blank indicates an empty list):{Assemblies}</template>
+        <artefacts>
+            <Assemblies>
+            </Assemblies>
+        </artefacts>
+    </group>
+    <group>
+        <topic>TypesInfo</topic>
+        <severity>Info</severity>
+        <intro>List of Types available for injection together with their mapping</intro>
+        <background>The mapping shows what implementation* (concrete class) will be injected for
+            a reference with the given Type (interface, base class, or concrete class).
+            Only types in this list are available for injection.
+
+            * Note that in the case of references containing factories it is the
+            factory implementation rather than the actual derived class
+            that is reported.
+        </background>
+
+
+        <template>{ReferenceType} (bean name:{BeanName}) maps to {ImplementationType}</template>
+        <artefacts>
+            <ReferenceType>
+            </ReferenceType>
+            <BeanName>
+            </BeanName>
+            <ImplementationType>
+            </ImplementationType>
+        </artefacts>
+    </group>
+    <group>
+        <topic>MemberInjectionsInfo</topic>
+        <severity>Info</severity>
+        <intro>List of objects injected by the container into member variables</intro>
+        <background>
+        </background>
+
+
+        <template>{{MemberImplementation} has been assigned to {MemberName}({MemberType}) in {DeclaringType}</template>
+        <artefacts>
+            <DeclaringType>
+            </DeclaringType>
+            <MemberType>
+            </MemberType>
+            <MemberName>
+            </MemberName>
+            <MemberImplementation>
+            </MemberImplementation>
+        </artefacts>
+    </group>
+    <group>
+        <topic>ConstructorInjectionsInfo</topic>
+        <severity>Info</severity>
+        <intro>List of objects injected by the container into the constructor</intro>
+        <background>
+        </background>
+
+
+        <template>{ParameterImplementation} has been injected into the constructor of {DeclaringType}</template>
+        <artefacts>
+            <DeclaringType>
+            </DeclaringType>
+            <ParameterImplementation>
+            </ParameterImplementation>
+        </artefacts>
+    </group>
+    <group>
+        <topic>NoCreationContext</topic>
+        <severity>Warning</severity>
+        <intro>Attempt to call CreateAndInjectDependencies() from factory without passing down the creation context
+        </intro>
+        <background>In the Execute() method of a factory object the dependency injector is being used to
+            create some object and inject its dependencies. This pattern requires that the
+            "parent's" CreationContext is passed down to ensure that no cycclical dependencies are introduced
+            unbeknownst to the injector.
+            The parent's creationContext can be found in the BeanFactoryArgs object passed in as a parameter.
+        </background>
+
+
+        <template>Attempt to create {BeanType}</template>
+        <artefacts>
+            <BeanType/>
+        </artefacts>
+    </group>
+    <group>
+        <topic>RootObjectExists</topic>
+        <severity>Warning</severity>
+        <intro>Attempt to inject an object where a bean has already been injected
+        </intro>
+        <background>
+            A singleton object cannot be injected if an object of the same type, bean name and constructor name
+            has already been injected.
+            This can be addressed with one of the following actions:
+                a) Change bean name or constructor name
+                b) Make the scope of this object a ProtoType
+                c) Make the call to this overload of CreateAndInjectDependencies over any other relevant call
+                   to CreateAndInjectDependencies
+        </background>
+        <template>Attempt to inject {BeanType}</template>
+        <artefacts>
+            <BeanType/>
+        </artefacts>
+    </group>
+    <group>
+        <topic>IncompleteInjections</topic>
+        <severity>Warning</severity>
+        <intro>Deferred injections have not been completed
+        </intro>
+        <background>
+            When CreateAndInjectDependnecies is called with the deferredDependencyInjection set to true
+            in order to instantiate a bean
+            then a subsequent call to CreateAndInjectDependencies must be made to inject the bean's members
+        </background>
+        <template>An instance of {BeanType},{BeanName} has been created but its members have not been injected</template>
+        <artefacts>
+            <BeanType/>
+            <BeanName/>
+        </artefacts>
+    </group>
 </DiagnosticSchema>

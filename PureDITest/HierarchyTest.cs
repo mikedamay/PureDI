@@ -14,8 +14,8 @@ namespace IOCCTest
         [TestMethod]
         public void SelfTest()
         {
-            PDependencyInjector iocc
-                = new PDependencyInjector();
+            DependencyInjector iocc
+                = new DependencyInjector();
             //iocc.SetAssemblies("mscorlib", "System", "SimpleIOCContainerTest");
             TestRoot twf
                 = iocc.CreateAndInjectDependencies<TestRoot>(
@@ -27,7 +27,7 @@ namespace IOCCTest
         {
             void DoTest()
             {
-                new PDependencyInjector().CreateAndInjectDependencies<int>();
+                new DependencyInjector().CreateAndInjectDependencies<int>();
             }
             Assert.ThrowsException<DIException>((System.Action)DoTest);
         }
@@ -38,14 +38,14 @@ namespace IOCCTest
             void DoTest()
             {
                 
-                new PDependencyInjector().CreateAndInjectDependencies<Mike>();
+                new DependencyInjector().CreateAndInjectDependencies<Mike>();
             }
             Assert.ThrowsException<DIException>((System.Action)DoTest);
         }
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchy()
         {
-            DeepHierahy root = new PDependencyInjector().CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootBean;
+            DeepHierahy root = new DependencyInjector().CreateAndInjectDependencies<global::IOCCTest.TestCode.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -58,7 +58,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldInjectIntoDeepHierarchyWithNames()
         {
-            WithNames.DeepHierahy root = new PDependencyInjector().CreateAndInjectDependencies<WithNames.DeepHierahy>().rootBean;
+            WithNames.DeepHierahy root = new DependencyInjector().CreateAndInjectDependencies<WithNames.DeepHierahy>().rootBean;
             Assert.IsNotNull(root);
             Assert.IsNotNull(root?.GetResults().Level2a);
             Assert.IsNotNull(root?.GetResults().Level2b);
@@ -71,7 +71,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForBeansWithNames()
         {
             WithNames.CyclicalDependency cd 
-              = new PDependencyInjector().CreateAndInjectDependencies<
+              = new DependencyInjector().CreateAndInjectDependencies<
                     WithNames.CyclicalDependency>(rootBeanSpec: new RootBeanSpec(rootBeanName: "name-A")).rootBean;
             Assert.IsNotNull(cd);
             Assert.IsNotNull(cd?.GetResults().Child);
@@ -82,7 +82,7 @@ namespace IOCCTest
         [TestMethod]
         public void ShouldCreateASingleInstanceForMultipleReferences()
         {
-            CrossConnections cc = new PDependencyInjector().CreateAndInjectDependencies<CrossConnections>().rootBean;
+            CrossConnections cc = new DependencyInjector().CreateAndInjectDependencies<CrossConnections>().rootBean;
             Assert.IsNotNull(cc?.ChildA?.Common);
             Assert.IsTrue(cc?.ChildA?.Common == cc?.ChildB?.Common);
         }
@@ -91,7 +91,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForInheritedBeanWithDifferentName()
         {
             (WithNames.InheritedBean ib, InjectionState InjectionState)
-                = new PDependencyInjector().CreateAndInjectDependencies<
+                = new DependencyInjector().CreateAndInjectDependencies<
                     WithNames.InheritedBean>();
             Assert.IsNotNull(ib.derived);
             Assert.IsFalse(InjectionState.Diagnostics.ToString().Contains(typeof(WithNames.InheritedBean).Name));
@@ -101,7 +101,7 @@ namespace IOCCTest
         public void ShouldCreateTreeWithReferencesInBaseClasses()
         {
             (BaseBean bb, InjectionState injectionState)
-                = new PDependencyInjector().CreateAndInjectDependencies<
+                = new DependencyInjector().CreateAndInjectDependencies<
                     BaseBean>();
             Assert.IsNotNull(bb.someRef);
         }
@@ -109,13 +109,13 @@ namespace IOCCTest
         public void ShouldCreateTreeForInheritedBeanWithDifferentProfile()
         {
             (WithNames.BeanUser bu, InjectionState InjectionState)
-                = new PDependencyInjector().CreateAndInjectDependencies<
+                = new DependencyInjector().CreateAndInjectDependencies<
                     WithNames.BeanUser>();
             Diagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited", bu.Used.Val);
             Assert.IsFalse(diags.ToString().Contains(typeof(WithNames.InheritedBeanWithProfile).Name));
             (bu, InjectionState)
-                = new PDependencyInjector(profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
+                = new DependencyInjector(profiles: new[] { "some-profile" }).CreateAndInjectDependencies<
                     WithNames.BeanUser>();
             diags = InjectionState.Diagnostics;
             Assert.AreEqual("Derived", bu.Used.Val);
@@ -125,7 +125,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForDerivedBeanIfInheritedIsIgnored()
         {
             (WithNames.IgnoredBeanUser bu, InjectionState InjectionState)
-                = new PDependencyInjector().CreateAndInjectDependencies<
+                = new DependencyInjector().CreateAndInjectDependencies<
                     WithNames.IgnoredBeanUser>();
             Diagnostics diags = InjectionState.Diagnostics;
             Assert.AreEqual("Inherited and ignored", bu.InheritedIgnorer.Val);

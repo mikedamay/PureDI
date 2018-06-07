@@ -8,7 +8,7 @@ namespace IOCCTest.FactoryTestData
     [Bean]
     internal class MemberFactory : IFactory
     {
-        [BeanReference] private PDependencyInjector injector = null;
+        [BeanReference] private DependencyInjector injector = null;
         public (object bean, InjectionState injectionState)
             Execute(InjectionState injectionState, BeanFactoryArgs args)
         {

@@ -9,13 +9,11 @@ namespace SimpleIOCCDocumentor
     internal interface IPropertyMap
     {
         object Map(string key);
-        object Map(string key, object @default);
     }
     [Bean(Profile = "noop")]
     public class NoopPropertyMap : IPropertyMap
     {
         public object Map(string key) => null;
-        public object Map(string key, object @default) => @default;
     }
 
     [Bean]
@@ -35,14 +33,6 @@ namespace SimpleIOCCDocumentor
             }
             return key;
         }
-        public object Map(string key, object @default)
-        {
-            if (kvs.ContainsKey(key))
-            {
-                return kvs[key];
-            }
-            return @default;
-        }
     }
 
     [Bean(Profile = "authoring")]
@@ -53,8 +43,6 @@ namespace SimpleIOCCDocumentor
             const string root = "../";
             return Path.Combine(root, Path.ChangeExtension(key, null).Replace(".", "/")) + ".xml";
         }
-
-        public object Map(string key, object @default) => @default;
     }
 
 

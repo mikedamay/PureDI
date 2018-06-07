@@ -14,7 +14,7 @@ namespace IOCCTest
             // can't build using CodeAnalysis.CSharpCompilation.Emit - bad IL format
             IResultGetter result;
             InjectionState injectionState;
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             (result, injectionState) = pdi.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.AlreadyInitialised>();
             var diagnostics = injectionState.Diagnostics;
             Assert.IsTrue(diagnostics.HasWarnings);
@@ -28,7 +28,7 @@ namespace IOCCTest
             // can't build using CodeAnalysis.CSharpCompilation.Emit - bad IL format
             IResultGetter result;
             InjectionState injectionState;
-            PDependencyInjector pdi = new PDependencyInjector();
+            DependencyInjector pdi = new DependencyInjector();
             (result, injectionState) = pdi.CreateAndInjectDependencies<IOCCTest.AlreadyInitialisedTestData.Primitive>();
             var diagnostics = injectionState.Diagnostics;
             Assert.IsTrue(diagnostics.HasWarnings);

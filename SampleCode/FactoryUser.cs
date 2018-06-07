@@ -9,7 +9,7 @@ public class FactoryUser
       private IRepository2 repo = null;
     public static void Main()
     {
-        var factoryUser = new PDependencyInjector()
+        var factoryUser = new DependencyInjector()
           .CreateAndInjectDependencies<FactoryUser>().rootBean;
         Console.WriteLine(factoryUser.repo.GetData());
                 // will print null unless you happen to have an environment

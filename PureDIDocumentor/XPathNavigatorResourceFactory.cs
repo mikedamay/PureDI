@@ -13,7 +13,7 @@ namespace SimpleIOCCDocumentor
     {
         [BeanReference] private IResourceProvider _resourceProvider = null;
         /// <param name="assemblyFinder">any type whose assembly is the assembly where the resource is stored</param>
-        /// <param name="resourcePath">absolute path of resource, e.g. "PDependencyInjector.IOCC.DiagnosticSchema.xml"
+        /// <param name="resourcePath">absolute path of resource, e.g. "DependencyInjector.IOCC.DiagnosticSchema.xml"
         ///   in case of doubt run ildasm against the assembly's binary and inspect the manifest
         ///   to ascertain the absolute path</param>
         /// <returns>an XPath navigator ready for calls to navigator.Select(xpath)</returns>

@@ -1,62 +1,51 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Configurations>Debug;Release;Interesting;Debug (WindowsOnly with SandCastle Docs);FW</Configurations>
     <!--<TargetFramework>net47</TargetFramework>-->
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FW|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile />
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Interesting|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile />
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (WindowsOnly with SandCastle Docs)|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile />
   </PropertyGroup>
-
   <ItemGroup>
     <Content Remove="wwwroot\docwrapper.html" />
+    <Content Include="Docs\UserGuide.xml" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Docs\UserGuide.xml" />
   </ItemGroup>
-
   <ItemGroup>
-    <EmbeddedResource Include="Docs\UserGuide.xml" />
     <EmbeddedResource Include="wwwroot\docwrapper.html" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.13.3" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
     <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Simple\" />
     <Folder Include="wwwroot\Simple\" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\PureDI\PureDI.csproj" />
   </ItemGroup>
-
 </Project>

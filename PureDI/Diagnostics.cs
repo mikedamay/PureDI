@@ -161,7 +161,7 @@ namespace PureDI
         public string AllToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Diagnostic Report");
+            sb.Append("PureDI: Diagnostic Report");
             sb.AppendLine();
             sb.AppendLine();
             sb.Append(GetStringForSeverity(Severity.Warning));
@@ -176,18 +176,18 @@ namespace PureDI
         /// <returns>Details of warnings encountered during dependency injection</returns>
         public override string ToString()
         {
-            string str = "Diagnostic Report" 
+            string str = "PureDI: Diagnostic Report" 
               + Environment.NewLine + Environment.NewLine;
             if (!this.HasWarnings)
             {
-                str = "There are no diagnostic warnings to report";
+                str = "PureDI: There are no diagnostic warnings to report";
             }
             else
             {
                 str = str + GetStringForSeverity(Severity.Warning);
             }
             str = str + Environment.NewLine + Environment.NewLine
-              + "Note that to see information as well as warnings you should call Diagnostics.AllToString()";
+              + "Note that to see informational messages as well as warnings you should call Diagnostics.AllToString()";
             return str;
         }
 

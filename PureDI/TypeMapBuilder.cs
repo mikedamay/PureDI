@@ -11,7 +11,7 @@ namespace PureDI
 {
     internal class TypeMapBuilder
     {
-        public IReadOnlyDictionary<(Type type, string name), Type> 
+        public IDictionary<(Type type, string name), Type> 
           BuildTypeMapFromAssemblies(IEnumerable<Assembly> assemblies
           , ref Diagnostics diagnostics, ISet<string> profileSet, Os os)
         {
@@ -39,9 +39,15 @@ namespace PureDI
                 // not sure why we don't log enums as invalid beans
             LogInvalidBeans(diagnostics, invalidBeanSpecs);
 
-            return (IReadOnlyDictionary<(Type, string), Type>)map;
+            return map;
         }
 
+        public IList<KeyValuePair<(Type, string), Type>> GetTypesForRootObject(Type objType, string beanName)
+        {
+            var types = objType.GetBaseClassesAndInterfaces().IncludeImplementation(objType);
+            var kvs = types.Select(d => new KeyValuePair<(Type, string), Type>((d, beanName), objType));
+            return kvs.ToList();
+        }
         private void LogDuplicateBeans(Diagnostics diagnostics, IEnumerable<(BeanSpec, BeanSpec)> duplicatePairs)
         {
             Diagnostics.Group group = diagnostics.Groups["DuplicateBean"];
@@ -118,7 +124,8 @@ namespace PureDI
 
     internal static class TypeMapBuilderExtensions
     {
-        public static IEnumerable<IGrouping<TKey, TSource>> MyGroupBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) {
+        public static IEnumerable<IGrouping<TKey, TSource>> MyGroupBy<TSource, TKey>(
+          this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) {
             return Enumerable.GroupBy<TSource, TKey>(source, keySelector);
         }
          public static bool TypeIsABean(this Type type, ISet<string> profileSet, Os os)

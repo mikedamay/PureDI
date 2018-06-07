@@ -8,51 +8,39 @@ using PureDI.Attributes;
 
 namespace SimpleIOCCDocumentor
 {
-    [Ignore]
     internal interface IDocumentParser
     {
         string GetFragment(string fragmentType, string fragmentName);
         IDictionary<string, string> GetDocumentIndex();
+        string XmlRoot { get; set; }
+        IIOCCXPathNavigatorCache NavigatorCache { get; set; }
     }
     [Bean]
     internal class IOCCDocumentParser : IDocumentParser
     {
-        private string resourcePath;
-        private string xmlRoot;
-        [BeanReference] private ICodeFetcher codeFetcher = null;
-        private IIOCCXPathNavigatorCache navigatorCache;
-        [BeanReference(Scope=BeanScope.Prototype)]
-        private IIOCCXPathNavigatorCache NavigatorCache
+        private string _xmlRoot;
+        private IIOCCXPathNavigatorCache _navigatorCache;
+
+        public string XmlRoot
         {
-            set
-            {
-                navigatorCache = value;
-                navigatorCache.Factory = factory;
-                navigatorCache.ResourcePath = resourcePath;
-            }
+            get => _xmlRoot;
+            set => _xmlRoot = value;
         }
 
-        private readonly XPathNavigatorResourceFactory factory;
+        public IIOCCXPathNavigatorCache NavigatorCache
+        {
+            get => _navigatorCache;
+            set => _navigatorCache = value;
+        }
 
+        [BeanReference] private ICodeFetcher codeFetcher = null;
         // inhibit PureDI diagnostic for no arg constructor
         public IOCCDocumentParser() { }
-        /// <param name="resourcePath">either "PDependencyInjector.Docs.DiagnosticSchema.xml"}
-        ///   or "PDependencyInjector.Docs.UserGuide.xml"} if it's anything else
-        ///   then the resource needs to be in the PDependencyInjector assembly </param>
-        /// <param name="xmlRoot">either "DiagnosticSchema" or "UserGuide" if anything else
-        ///   then the document must be a superset of UserGuide.xml </param>
-        /// <param name="factory">provides tha pparopriate resources e.g. user guide, diagnostics etc.</param>
-        public IOCCDocumentParser(string resourcePath, string xmlRoot, XPathNavigatorResourceFactory factory)
-        {
-            this.xmlRoot = xmlRoot;
-            this.resourcePath = resourcePath;
-            this.factory = factory;
-        }
 
         public string GetFragment(string fragmentType, string fragmentName)
         {
-            XPathNodeIterator nodes = navigatorCache.Navigator.Select(
-                $"/{xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
+            XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
+                $"/{_xmlRoot}/group/topic[text() = \'{fragmentName}\']/following-sibling::{fragmentType}");
             if (nodes.MoveNext())
             {
                 return codeFetcher.SubstituteCode(nodes.Current.InnerXml);
@@ -66,12 +54,12 @@ namespace SimpleIOCCDocumentor
         public IDictionary<string, string> GetDocumentIndex()
         {
             IDictionary<string, string> map = new Dictionary<string, string>();
-            XPathNodeIterator nodes = navigatorCache.Navigator.Select(
-                $"/{xmlRoot}/group/topic");
+            XPathNodeIterator nodes = _navigatorCache.Navigator.Select(
+                $"/{_xmlRoot}/group/topic");
             while (nodes.MoveNext())
             {
                 map.Add(new KeyValuePair<string, string>(
-                    $"[{nodes.Current.InnerXml}](/Simple/{xmlRoot}/{nodes.Current.InnerXml}.html)"
+                    $"[{nodes.Current.InnerXml}](/Simple/{_xmlRoot}/{nodes.Current.InnerXml}.html)"
                     // e.g. "[MissingBean](/diagnosticSchema/MissingBean)"
                     , $"({nodes.Current.InnerXml})"));
             }

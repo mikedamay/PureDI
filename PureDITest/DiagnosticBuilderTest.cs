@@ -23,7 +23,7 @@ namespace IOCCTest
             string schemaName
               = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
             }
@@ -64,7 +64,7 @@ namespace IOCCTest
             string schemaName
                 = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
@@ -83,7 +83,7 @@ namespace IOCCTest
             string schemaName
                 = $"{ResourceLocationPrefix}.Docs.DiagnosticSchema.xml";
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 DiagnosticBuilder db = new DiagnosticBuilder(s);
                 diags = db.Diagnostics;
@@ -132,7 +132,7 @@ namespace IOCCTest
             string schemaSchemaResourcePath
                 = $"{ResourceLocationPrefix}.Docs.{schemaSchemaName}";
             using (Stream @in
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaSchemaResourcePath))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaSchemaResourcePath))
             using (Stream @out = File.Open(schemaSchemaName, FileMode.Create))
             {
                 byte[] bytes = new byte[1024];
@@ -143,7 +143,7 @@ namespace IOCCTest
                 }
             }
             using (Stream s
-                = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(schemaName))
+                = typeof(DependencyInjector).Assembly.GetManifestResourceStream(schemaName))
             {
                 XDocument doc = XDocument.Load(s);
                 ValidateXml(doc, schemaSchemaName);

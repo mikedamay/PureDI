@@ -39,14 +39,14 @@ namespace IOCCTest
             //Assembly assembly = Utils.CreateAssembly(
             //    $"{Utils.TestResourcePrefix}.TestData.IgnoredBean.cs");
             //Diagnostics diagnostics;
-            //using (Stream stream = typeof(PDependencyInjector).Assembly.GetManifestResourceStream(
+            //using (Stream stream = typeof(DependencyInjector).Assembly.GetManifestResourceStream(
             //    $"{Common.ResourcePrefix}.Docs.DiagnosticSchema.xml"))
             //{
             //    diagnostics = new DiagnosticBuilder(stream).Diagnostics;
 
             //}
             //var map = new TypeMapBuilder().BuildTypeMapFromAssemblies(
-            //    new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), PDependencyInjector.OS.Any);
+            //    new List<Assembly>() { assembly }, ref diagnostics, new HashSet<string>(), DependencyInjector.OS.Any);
             //Assert.AreEqual(Utils.LessThanIsGoodEnough(2, map.Keys.Count()), map.Keys.Count());
             //Assert.AreEqual(Utils.LessThanIsGoodEnough(1, diagnostics.Groups["DuplicateBean"].Occurrences.Count)
             //    , diagnostics.Groups["DuplicateBean"].Occurrences.Count);

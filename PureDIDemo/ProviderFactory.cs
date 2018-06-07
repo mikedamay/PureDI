@@ -6,7 +6,7 @@ namespace SimpleIOCCDemo
 	[Bean]
 	public class ProviderFactory : IFactory
 	{
-		[BeanReference] private PDependencyInjector iocContainer = null;
+		[BeanReference] private DependencyInjector iocContainer = null;
 		public (object bean, InjectionState injectionState) Execute(InjectionState injectionState, BeanFactoryArgs args)
 		{
 			if (System.Environment.GetCommandLineArgs().Length > 1)

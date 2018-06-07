@@ -22,7 +22,7 @@ namespace IOCCTest
             ReadOnlyFields rof = null;
             try
             {
-                rof = new PDependencyInjector().CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
+                rof = new DependencyInjector().CreateAndInjectDependencies<ReadOnlyFields>().rootBean;
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace IOCCTest
             AlreadyInitialized rof = null;
             try
             {
-                rof = new PDependencyInjector().CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
+                rof = new DependencyInjector().CreateAndInjectDependencies<AlreadyInitialized>().rootBean;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace IOCCTest
             MyProps props = null;
             try
             {
-                props = new PDependencyInjector().CreateAndInjectDependencies<MyProps>().rootBean;
+                props = new DependencyInjector().CreateAndInjectDependencies<MyProps>().rootBean;
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace IOCCTest
             try
             {
                 InjectionState injectionState;
-                (props, injectionState) = new PDependencyInjector().CreateAndInjectDependencies<MyAutoProp>();
+                (props, injectionState) = new DependencyInjector().CreateAndInjectDependencies<MyAutoProp>();
                 Diagnostics diags = injectionState.Diagnostics;
                 Assert.IsTrue(diags.HasWarnings);
                 Diagnostics.Group grp = diags.Groups["ReadOnlyProperty"];
@@ -163,7 +163,7 @@ namespace IOCCTest
         public void ShouldCreateTreeForAttributeBean()
         {
             // couldn't create assembly for this
-            var result = new PDependencyInjector()
+            var result = new DependencyInjector()
               .CreateAndInjectDependencies<AttributeAsBean>().rootBean as IResultGetter;
             Assert.IsNull( result.GetResults().SomeOtherValue);
         }

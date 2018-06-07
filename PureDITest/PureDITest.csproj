@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!--<TargetFramework>net47</TargetFramework>-->
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release;Interesting;LinuxTest;MacOsTest;Debug (WindowsOnly with SandCastle Docs);FW</Configurations>
   </PropertyGroup>
@@ -87,7 +87,6 @@
     <Compile Remove="TestData\BlankAssembly.cs" />
     <Compile Remove="TestData\CheckProfileAndOs.cs" />
     <Compile Remove="TestData\CrossPlatform.cs" />
-    <Compile Remove="TestData\DependencyHierarchy.cs" />
     <Compile Remove="TestData\DuplicateBeans.cs" />
     <Compile Remove="TestData\DuplicateInterfaces.cs" />
     <Compile Remove="TestData\Generic.cs" />
@@ -133,6 +132,8 @@
     <EmbeddedResource Include="GenericTestData\Generic.cs" />
     <Compile Remove="CycleGuardTestData\MyCycleGuard.cs" />
     <EmbeddedResource Include="CycleGuardTestData\MyCycleGuard.cs" />
+    <Compile Remove="TestData\DependencyHierarchy.cs" />
+    <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AdditionalAssemblyData\EntryPoint.cs" />
@@ -216,7 +217,6 @@
     <EmbeddedResource Include="TestData\AbstractClass.cs" />
     <EmbeddedResource Include="TestData\BadGeneric.cs" />
     <EmbeddedResource Include="TestData\BlankAssembly.cs" />
-    <EmbeddedResource Include="TestData\DependencyHierarchy.cs" />
     <EmbeddedResource Include="TestData\DuplicateBeans.cs" />
     <EmbeddedResource Include="TestData\DuplicateInterfaces.cs" />
     <EmbeddedResource Include="TestData\Generic.cs" />
@@ -234,13 +234,13 @@
     <None Include="MinorMethodsTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
-    <PackageReference Include="System.CodeDom" Version="4.4.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0-preview-20180510-03" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.1" />
+    <PackageReference Include="System.CodeDom" Version="4.5.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PureDI\PureDI.csproj" />

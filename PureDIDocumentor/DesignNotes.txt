@@ -15,3 +15,4 @@
 	the IOCCDocumentParser the resource id is assigned to the navigation cache's
 	resource id member.  On assignment the cache creates an XPathNavigator using
 	an XPathNavigator factory (also provided by IOCCDocumentParserAttribute).
+	

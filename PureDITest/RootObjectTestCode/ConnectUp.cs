@@ -1,7 +1,7 @@
 ﻿using PureDI;
 using PureDI.Attributes;
 
-namespace IOCCTest.rootBean
+namespace PureDITest.RootObjectTestCode
 {
     public class ConnectUp
     {

@@ -13,7 +13,7 @@ namespace IOCCTest
         private class TrivialBean
         {
             [BeanReference]
-            public PDependencyInjector child = null;
+            public DependencyInjector child = null;
 
         }
 
@@ -27,7 +27,7 @@ namespace IOCCTest
         {
             try
             {
-                PDependencyInjector pdi = new PDependencyInjector();
+                DependencyInjector pdi = new DependencyInjector();
                 ContainerAsBeanTest.TrivialBean tb 
                   = pdi.CreateAndInjectDependencies<ContainerAsBeanTest.TrivialBean>().rootBean;
                 Assert.AreEqual(pdi, tb.child);

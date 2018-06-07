@@ -17,7 +17,7 @@ namespace IOCCTest
         public void ShouldWarnIfTypeMissing()
         {
             (MissingType mt, InjectionState InjectionState) 
-              = new PDependencyInjector().CreateAndInjectDependencies<MissingType>();
+              = new DependencyInjector().CreateAndInjectDependencies<MissingType>();
             Diagnostics diags = InjectionState.Diagnostics;
             Assert.IsTrue(diags.HasWarnings);
             dynamic diagnostic = diags.Groups["MissingBean"]?.Occurrences[0];
@@ -36,7 +36,7 @@ namespace IOCCTest
             int ii;
             try
             {
-                (ii, injectionState) = new PDependencyInjector().CreateAndInjectDependencies<int>();
+                (ii, injectionState) = new DependencyInjector().CreateAndInjectDependencies<int>();
                 Assert.Fail();
             }
             catch (DIException iex)

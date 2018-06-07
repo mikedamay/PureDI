@@ -50,7 +50,7 @@ namespace IOCCTest.DerivedAttributeTestData
     [Bean]
     public class Factory : IResultGetter
     {
-        [Resource(typeof(PDependencyInjector)
+        [Resource(typeof(DependencyInjector)
           , "PureDI.Docs.DiagnosticSchema.xml")]
         public string resource;
 
