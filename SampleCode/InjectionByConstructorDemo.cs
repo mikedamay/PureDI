@@ -1,9 +1,10 @@
-﻿using System;
+﻿#region main
+using System;
 using PureDI;
 using PureDI.Attributes;
 
 [Bean]
-public class ConstructorUser
+public class InjectionByConstructorDemo
 {
     [BeanReference]
     private ISomeService someService = null;
@@ -11,7 +12,8 @@ public class ConstructorUser
     public static void Main()
     {
         var constructorUser = new DependencyInjector()
-          .CreateAndInjectDependencies<ConstructorUser>().rootBean;
+          .CreateAndInjectDependencies<
+          InjectionByConstructorDemo>().rootBean;
         constructorUser.someService.DoMeAFavour();   // writes "SomeData"
     }
 }
@@ -58,14 +60,13 @@ public class SomeRepository : ISomeRepository
         _connectionString = initString;
     }
 }
-
-
-namespace ConstructorRunner
+#endregion
+namespace InjectionByConstructorDemoRunner
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     [TestClass]
     public class MainRunner
     {
-        [TestMethod] public void RunMain() => ConstructorUser.Main();
+        [TestMethod] public void RunMain() => InjectionByConstructorDemo.Main();
     }
 }

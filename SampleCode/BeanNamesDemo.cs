@@ -1,18 +1,19 @@
-﻿using PureDI;
+﻿#region main
+using PureDI;
 using PureDI.Attributes;
 
 [Bean]
-public class DuplicateBean
+public class BeanNamesDemo
 {
     [BeanReference] private IRepository mainDB = null;
     [BeanReference(Name = "mongo")] private IRepository mongoDB = null;
 
     public static void Main()
     {
-        var beans = new DependencyInjector()
-          .CreateAndInjectDependencies<DuplicateBean>()
+        var bean = new DependencyInjector()
+          .CreateAndInjectDependencies<BeanNamesDemo>()
           .rootBean;
-        beans.ListDatabases();
+        bean.ListDatabases();
     }
     private void ListDatabases()
     {
@@ -38,9 +39,10 @@ internal class MongoDB : IRepository
 {
     public string Id => "magnificent mongo";
 }
+#endregion
 namespace BeanNamesRunner
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     [TestClass] public class MainRunner    {
-[TestMethod] public void RunMain() => DuplicateBean.Main();}}
+[TestMethod] public void RunMain() => BeanNamesDemo.Main();}}
 

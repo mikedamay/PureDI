@@ -20,7 +20,7 @@
           Any class including that of the root bean that is intended to contain bean references
           must itself be annotated as a bean.  There is one exception to this where
           an already instantiated bean is passed as the "root" to 
-          <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies(System.Object,PureDI.InjectionState)</codeEntityReference>.
+          <codeEntityReference>M:PureDI.DependencyInjector.CreateAndInjectDependencies(System.Object,PureDI.InjectionState)</codeEntityReference>.
         </para>
         <para>
           Primitive types (such as int, string) etc. cannot be beans.

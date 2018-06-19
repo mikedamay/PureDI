@@ -28,68 +28,7 @@
         </para>
 
         <para>The following code illustrates a simple implementation:</para>
-        <code language="c#">
-using System;
-using PureDI;
-using PureDI.Attributes;
-
-[Bean]
-public class ConstructorUser
-{
-    [BeanReference]
-    private ISomeService someService = null;
-
-    public static void Main()
-    {
-        var constructorUser = new PDependencyInjector()
-          .CreateAndInjectDependencies&lt;ConstructorUser>().rootBean;
-        constructorUser.someService.DoMeAFavour();   // writes "SomeData"
-    }
-}
-
-public interface ISomeService
-{
-    void DoMeAFavour();
-}
-
-[Bean]
-public class SomeService : ISomeService
-{
-    private ISomeRepository _repo;
-    [Constructor]
-    public SomeService([BeanReference] ISomeRepository repo)
-    {
-        repo.Init("myConnection");
-        _repo = repo;
-    }
-    public void DoMeAFavour()
-    {
-        Console.WriteLine(_repo.GetSomeData()); 
-    }
-
-}
-
-public interface ISomeRepository
-{
-    string GetSomeData();
-    void Init(string connectionSTring);
-}
-[Bean]
-public class SomeRepository : ISomeRepository
-{
-    private string _connectionString;
-
-    public string GetSomeData()
-    {
-        return "someData";
-    }
-
-    public void Init(string initString)
-    {
-        _connectionString = initString;
-    }
-}
-        </code>
+        <code language="c#" source="..\SampleCode\InjectionByConstructorDemo.cs" region="main"/>
         <para>
           In the code example above <legacyItalic>ConstructorUser</legacyItalic>
           instantiates <legacyItalic>SomeService</legacyItalic> by calling the latter's

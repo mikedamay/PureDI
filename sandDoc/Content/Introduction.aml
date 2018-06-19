@@ -11,7 +11,7 @@
         simplicity, transparency and verifiability over sophistication and comprehensiveness.
       </para>
       <para>
-        The library is fully functional (feature complete with thorough testing).
+        The library is fully functional (feature complete with wide ranging unit tests).
         It needs hardening in the real world.
       </para>
     </introduction>
@@ -61,7 +61,7 @@
           <content>
             <para>
               Usage follows the following pattern: the caller instantiates some significant object
-              with a call to <codeInline>PDependencyInjector.CreateAndInjectDependencies</codeInline> and that
+              with a call to <codeInline>DependencyInjector.CreateAndInjectDependencies</codeInline> and that
               object is created together with dependencies to which it refers
               and so forth recursively through the tree of dependencies.  The root of the
               tree is returned and the caller invokes methods on that.
@@ -85,32 +85,7 @@
               be a useful mechanism in controlling the lifetime of the multiple sets of objects independently.
             </para>
             <para>The following illustrates simple usage:</para>
-            <code>
-using PureDI;
-using PureDI.Attributes;
-
-[Bean]
-public class Program
-{
-    [BeanReference] private Logger logger = null;
-    public static void Main()
-    {
-        PDependencyInjector pdi = new PDependencyInjector();
-        Program prog = pdi.CreateAndInjectDependencies&lt;Program>()
-          .rootBean;
-        prog.SaySomething();
-    }
-    private void SaySomething()
-    {
-        logger.Log("Hello Simple");
-    }
-}
-[Bean]
-public class Logger
-{
-    public void Log(string message) => System.Console.WriteLine(message);
-}}
-            </code>
+            <code language="c#" source="..\SampleCode\IntroductionDemo.cs" region="main"/>
             <para>
               In the above example the <legacyItalic>Program</legacyItalic> class is
               instantiated in the call to <legacyItalic>CreateAndInjectDependencies</legacyItalic>
@@ -138,14 +113,15 @@ public class Logger
             </listItem>
             <listItem>
               <para>
-                The site of the injection is annotated with a <codeInline>[BeanReference]</codeInline> attribute
+                A member whose value is to be injected is annotated with a <codeInline>[BeanReference]</codeInline> attribute
               </para>
             </listItem>
             <listItem>
               <para>
                 The type of a member variable where a bean is to be injected
                 should be the type of the reference or an interface, a direct or indirect base class 
-                of the referenced type.
+                of the referenced type.  However only the implementation class itself should be marked as
+                a <codeInline>[Bean]</codeInline>.
               </para>
             </listItem>
             <listItem>
@@ -181,8 +157,8 @@ public class Logger
       <link xlink:href="DI-Profiles">Profiles</link>
       <link xlink:href="3a5d7e35-2d4c-4f46-862b-122d83fa5047">Injection State &amp; Multiple Entrypoints</link>
  
-      <codeEntityReference>T:PureDI.PDependencyInjector</codeEntityReference>
-      <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec)</codeEntityReference>
+      <codeEntityReference>T:PureDI.DependencyInjector</codeEntityReference>
+      <codeEntityReference>M:PureDI.DependencyInjector.CreateAndInjectDependencies``1(PureDI.InjectionState,System.Reflection.Assembly[],PureDI.RootBeanSpec)</codeEntityReference>
       <codeEntityReference>T:PureDI.BeanScope</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>

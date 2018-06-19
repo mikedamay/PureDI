@@ -33,56 +33,7 @@
         </para>
 
         <para>The following code provides a simple example.</para>
-
-        <code language="c#">
-using System;
-using PureDI;
-using PureDI.Attributes;
-
-[Bean]
-public class FactoryUser
-{
-    [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
-      private IRepository2 repo = null;
-    public static void Main()
-    {
-        var factoryUser = new PDependencyInjector()
-          .CreateAndInjectDependencies&lt;FactoryUser>().rootBean;
-        Console.WriteLine(factoryUser.repo.GetData());
-                // will print null unless you happen to have an environment
-                // variable called CONNECTION_STRING
-    }
-}
-[Bean]
-public class EnvironmentVariableFactory : IFactory
-{
-    public (object bean, InjectionState injectionState) 
-      Execute(InjectionState injectionState, BeanFactoryArgs args)
-    {
-        return (new Repository(Environment.GetEnvironmentVariable("CONNECTION_STRING"))
-          , injectionState);
-    }
-}
-
-public class Repository : IRepository2
-{
-    private readonly string _connectionString;
-    public Repository(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
-    public string GetData()
-    {
-        return _connectionString;
-    }
-}
-
-public interface IRepository2
-{
-    string GetData();
-}
-        </code>
+        <code language="c#" source="..\SampleCode\BeanFactoriesDemo.cs" region="main"/>
         <para>
           The code example above shows a <legacyItalic>FactoryUser</legacyItalic> class 
           which uses an implementation of <legacyItalic>IRepository2</legacyItalic>.

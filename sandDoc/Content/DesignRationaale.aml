@@ -36,7 +36,7 @@
             <listItem>
               <para>
                 A single significant operational class,
-                <codeInline>PDependencyInjector</codeInline>,
+                <codeInline>DependencyInjector</codeInline>,
                 coupled with 2 associated enums an opaque
                 object holding the library's state <codeInline>InjectionState</codeInline>
               </para>

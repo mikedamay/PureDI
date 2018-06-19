@@ -23,34 +23,32 @@
         <para>
           In order to accomplish this the library user must provide the injection
           mechanism with the identities of the assemblies that are subject to
-          injection.  These can be passed to the <codeInline>PDependencyInjector</codeInline>
+          injection.  These can be optionally passed to the <codeInline>DependencyInjector.CreateAndInjectDependencies</codeInline>
           constructor as follows: 
-          <codeInline>var pdi = new PDependencyInjector(Assemblies: new Assembly[]
+          <codeInline>dependencyInjector.CreateAndInjectDependencies(Assemblies: new Assembly[]
           {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
-          Note that the constructor takes an array of references to assemblies
-          rather than the names.  Not only is this is safer but it's actually more
+          Note that the method takes an array of references to assemblies
+          rather than assembly names.  Not only is this is safer but it's actually more
           convenient for the library user once they get the hang of it.
         </para>
         <para>
-          You will rarely see assemblies being passed to the constructor in the
+          You will rarely see assemblies being passed to the method in the
           sample code in this user guide.  This is because the assembly of the
           root bean is automatically scanned for injection by default.  If the root
           type's assembly is the only one for which injection is required then the
-          constructor can be called without the <codeInline>Assemblies</codeInline> parameter.
-          <codeInline>var pdi = new PDependencyInjector();
+          method can be called without the <codeInline>Assemblies</codeInline> parameter.
+          <codeInline>var pdi = new DependencyInjector();
           var result = pdi.CreateAndInjectDependencies&lt;SomeRootClass>();</codeInline>.
         </para>
         <para>
           One other assembly, besides the root type's, is included by default.  It
-          is that of the PDependencyInjector itself, i.e. <legacyItalic>PureDI</legacyItalic>.  This is to allow
-          beans such as bean factories to get access to the injector (by including a 
-          <codeInline>[BeanReference]</codeInline> to the PDependencyInjector in
+          is that of the DependencyInjector itself, i.e. <legacyItalic>PureDI</legacyItalic>.  This is to allow
+          beans such as bean factories to get access to the injector (by the library user's including a 
+          <codeInline>[BeanReference]</codeInline> to the DependencyInjector in
           the factory itself.
         </para>
         <para>
-          All assemblies must be loaded before a related call to  <codeInline>
-          CreateAndInjectDependencies</codeInline>
-          is made.  The injection mechanism does not load referenced assemblies itself.
+          The injection mechanism does not load referenced assemblies itself.
         </para>
       </content>
         <sections>
@@ -69,7 +67,8 @@
                     where it is troublesome to have the "root" assembly included in the set of
                     assemblies to be scanned.  To address this the optional parameter <codeInline>
                       ignoreRootTypeAssembly
-                    </codeInline> can be passed in, set to true.  If so the root assembly will not be scanned.
+                    </codeInline> can be passed to the DependencyInjector constructor, set to true.
+                    If so the root assembly will not be scanned.
                   </para>
                 </listItem>
               </list>

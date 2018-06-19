@@ -1,9 +1,10 @@
-﻿using System;
+﻿#region main
+using System;
 using PureDI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PureDI.Attributes;
 
-public class Profiles
+public class ProfilesDemo
 {
     public static void Main()
     {
@@ -53,7 +54,7 @@ public class SomeTest
             <MyService>().rootBean.DoStuff()
         );
 }
-
-namespace ProfilesRunner{ using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endregion
+namespace ProfilesDemoRunner{ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass] public class MainRunner{
-[TestMethod] public void RunMain() => Profiles.Main();}}
+[TestMethod] public void RunMain() => ProfilesDemo.Main();}}

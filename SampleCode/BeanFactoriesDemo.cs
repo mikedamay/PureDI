@@ -1,16 +1,17 @@
-﻿using System;
+﻿#region main
+using System;
 using PureDI;
 using PureDI.Attributes;
 
 [Bean]
-public class FactoryUser
+public class BeanFactoriesDemo
 {
     [BeanReference(Factory = typeof(EnvironmentVariableFactory))]
       private IRepository2 repo = null;
     public static void Main()
     {
         var factoryUser = new DependencyInjector()
-          .CreateAndInjectDependencies<FactoryUser>().rootBean;
+          .CreateAndInjectDependencies<BeanFactoriesDemo>().rootBean;
         Console.WriteLine(factoryUser.repo.GetData());
                 // will print null unless you happen to have an environment
                 // variable called CONNECTION_STRING
@@ -45,14 +46,13 @@ public interface IRepository2
 {
     string GetData();
 }
-
-
-namespace FactoryRunner
+#endregion
+namespace BeanFactoriesDemoRunner
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     [TestClass]
     public class MainRunner
     {
-        [TestMethod] public void RunMain() => FactoryUser.Main();
+        [TestMethod] public void RunMain() => BeanFactoriesDemo.Main();
     }
 }

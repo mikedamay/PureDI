@@ -20,67 +20,7 @@
         interactive, multiple entry points in a library which takes <legacyItalic>PureDI</legacyItalic> 
         as a dependency and presumably others where the library user needs to avoid
         keeping the object tree around for the entire lifetime of the program</para>
-        <code>
-using System;
-using System.Linq;
-using PureDI;
-using PureDI.Attributes;
-
-public class InjectionStateUser
-{
-    public static void Main()
-    {
-        InjectionState injectionState;
-        PermanentService ps;
-        var pdi = new PDependencyInjector();
-        (ps, injectionState) = pdi.CreateAndInjectDependencies&lt;PermanentService>();
-        InjectionState transitoryState = injectionState;
-        for (int ii = 0; ii &lt; 10; ii++)
-        {
-            BigData bigData;
-            (bigData, transitoryState)
-                = pdi.CreateAndInjectDependencies&lt;BigData>(injectionState);
-            Console.WriteLine(bigData.AddUp());     // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-                                                    // 500_000_500_000
-        }
-    }
-}
-
-[Bean]
-public class PermanentService
-{
-    public int GetData(int ii)
-    {
-        return ii + 1;
-    }
-}
-
-[Bean]
-public class BigData
-{
-    private int[] blob = new int[1_000_000];
-    [BeanReference] private PermanentService permanent = null;
-    private decimal agg;
-
-    public decimal AddUp()
-    {        
-        for (int ii = 0; ii &lt; blob.Length; ii++)
-        {
-            blob[ii] = permanent.GetData(ii);
-        }
-        blob.Sum(b => agg += b);
-        return agg;
-    }
-}
-        </code>
+        <code language="c#" source="..\SampleCode\InjectionStateDemo.cs" region="main"/>
         <para>
           This contrived example shows a "permanent" service being created which will last
           the lifetime of the program.   Then ten calculations are made with the
@@ -130,7 +70,7 @@ public class BigData
           <title>Notes:</title>
           <content>
             <para>
-              <codeInline>PDependencyInjector</codeInline> is immutable so it follows that
+              <codeInline>DependencyInjector</codeInline> is immutable so it follows that
               the injection state instance can passed to any instance of the injector.
               However the injector must have the same set of profiles as the one that
               created <codeInline>InjectionState</codeInline>

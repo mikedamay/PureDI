@@ -21,7 +21,7 @@
         </para>
 
         <para>
-          With the PDependencyInjector this is accomplished through
+          With the DependencyInjector this is accomplished through
           the use of profiles.
           A profile string can be associated with any
           bean (class to be instantiated) by including
@@ -33,7 +33,7 @@
 
         <para>
           The archetypal case is for testing which
-          is particularly pertinent for the PDependencyInjector
+          is particularly pertinent for the DependencyInjector
           with its emphasis on injection into private
           member variables - other ways of handling mocks might fail here.
         </para>
@@ -41,63 +41,7 @@
           The following example shows how mock functionality
           can be injected:
         </para>
-        <code>
-using System;
-using PureDI;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PureDI.Attributes;
-
-public class Profiles
-{
-    public static void Main()
-    {
-        PDependencyInjector pdi = new PDependencyInjector();
-        MyService ms = pdi.CreateAndInjectDependencies&lt;MyService>()
-          .rootBean;
-        Console.WriteLine(ms.DoStuff());   // prints "doing the real thing"
-    }
-}
-[Bean]
-public class MyService
-{
-    [BeanReference] private IMyRepository myRepository = null;
-    public string DoStuff()
-    {
-        return myRepository.DoSomething();
-    }
-}
-public interface IMyRepository
-{
-    string DoSomething();
-}
-[Bean]
-public class MyRepository : IMyRepository
-{
-    public string DoSomething()
-    {
-        return "doing the real thing";
-    }
-}
-[Bean(Profile = "test")]
-public class MyTestRepository : IMyRepository
-{
-    public string DoSomething()
-    {
-        return "this is just a test";
-    }
-}
-[TestClass]
-public class SomeTest
-{
-    [TestMethod]
-    public void ShouldPrintThisIsJustATest() =>
-        Assert.AreEqual("this is just a test"
-            , new PDependencyInjector(
-              profiles: new[] { "test" }).CreateAndInjectDependencies
-            &lt;MyService>().rootBean.DoStuff()
-        );
-}
-        </code>
+        <code language="c#" source="..\SampleCode\ProfilesDemo.cs" region="main"/>
         <para>
           The <legacyItalic>myRepository</legacyItalic>
           bean is referenced through an interface (<legacyItalic>IMyRepository</legacyItalic>)
@@ -113,7 +57,7 @@ public class SomeTest
         </para>
         <para>
           The main program does not pass a profile when it creates 
-          the <legacyItalic>PDependencyInjector</legacyItalic>.
+          the <legacyItalic>DependencyInjector</legacyItalic>.
           Therefore the production version of <legacyItalic>IMyRepository</legacyItalic> is instantiated.
           However the unit test passes a profile of "test" which matches the profile
           for MyTestRepository and allows the repository to be mocked when testing *MyService*.
@@ -156,7 +100,7 @@ public class SomeTest
                 <listItem>
                   <para>
                     It is possible (and, in fact, usual) to specify multiple profiles to the
-                    <codeInline>PDependencyInjector</codeInline> constructor.  This enables fine grained control at run-time
+                    <codeInline>DependencyInjector</codeInline> constructor.  This enables fine grained control at run-time
                     of which implementations are to be used.
                   
                   </para>
@@ -172,7 +116,7 @@ public class SomeTest
       <link xlink:href="DI-BeanNames">Bean Names</link>
       <codeEntityReference>T:PureDI.BeanAttribute</codeEntityReference>
       <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
-      <codeEntityReference>M:PureDI.PDependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.PDependencyInjector.AssemblyExclusion)</codeEntityReference>
+      <codeEntityReference>M:PureDI.DependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.DependencyInjector.AssemblyExclusion)</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

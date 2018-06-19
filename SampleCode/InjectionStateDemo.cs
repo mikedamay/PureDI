@@ -1,9 +1,10 @@
-﻿using System;
+﻿#region main
+using System;
 using System.Linq;
 using PureDI;
 using PureDI.Attributes;
 
-public class InjectionStateUser
+public class InjectionStateDemo
 {
     public static void Main()
     {
@@ -57,14 +58,13 @@ public class BigData
         return agg;
     }
 }
-
-
-namespace InjectionStateUserRunner
+#endregion
+namespace InjectionStateDemoRunner
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     [TestClass]
     public class MainRunner
     {
-        [TestMethod] public void RunMain() => InjectionStateUser.Main();
+        [TestMethod] public void RunMain() => InjectionStateDemo.Main();
     }
 }

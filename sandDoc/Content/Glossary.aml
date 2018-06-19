@@ -101,7 +101,7 @@
 
           <definition>
             <para>
-              The injector <codeInline>PDependencyInjector</codeInline>
+              The injector <codeInline>DependencyInjector</codeInline>
               controls the creation of the object tree and returns meta
               data in the form of an injection state
               so that additions can be made to the tree at subsequent entry points
@@ -179,7 +179,7 @@
               some cases where there is a single entry point) the metaphor breaks
               down.  What we see is more of a graph.  "Root" can look something
               of a misnomer particularly in the corner case where the caller
-              makes a call to <codeEntityReference>M:PureDI.PDependencyInjector.CreateAndInjectDependencies(System.Object,PureDI.InjectionState)
+              makes a call to <codeEntityReference>M:PureDI.DependencyInjector.CreateAndInjectDependencies(System.Object,PureDI.InjectionState)
               </codeEntityReference> to instantiate some object with the express purpose
               of having that object available for a tree that is subsequently created.
             </para>
