@@ -25,7 +25,7 @@
         <code language="c#" source="..\SampleCode\BeanNamesDemo.cs" region="main"/>
         <para>
           In the above example two repositories are instantiated; one for SQL Server
-          and one for Mongo.  They share an interface <code>IRepository</code> but the injector
+          and one for Mongo.  They share an interface <codeInline>IRepository</codeInline> but the injector
           uses the name specified in the bean reference to select the appropriate
           implementation.
         </para>

@@ -89,6 +89,19 @@
                   addressed with the use of bean factories.
                 </para>
               </listItem>
+              <listItem>
+                <para>
+                   An instance of <codeInline>InjectionState</codeInline> is
+                   passed as a parameter to Execute by the injector.  An instance
+                   of <codeInline>InjectionState</codeInline> must be returned.
+                   In most cases you should simply return the instance passed
+                   as a parameter.  The exception is where a call to 
+                   <codeInline>CreateAndInjectDependencies</codeInline> is made within
+                   the implementation of Execute as this will typically cause
+                   the injection state to be changed.  Simply return the
+                   value returned by <codeInline>CreateAndInjectDependencies</codeInline>
+                </para>
+              </listItem>
             </list>
           </content>
         </section>
@@ -96,6 +109,7 @@
     </section>
 
     <relatedTopics>
+      <link xlink:href="3a5d7e35-2d4c-4f46-862b-122d83fa5047">Injection State &amp; Multiple Entrypoints</link>
       <codeEntityReference>T:PureDI.Attributes.IFactory</codeEntityReference>
       <codeEntityReference>T:PureDI.Attributes.BeanReferenceAttribute</codeEntityReference>
     </relatedTopics>

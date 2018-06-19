@@ -17,9 +17,11 @@
           is critical to an advanced use of the injector mechanism where multiple entry points are involved.
         </para>
         <para>The use case may be request handlers in a web or similar server, event handlers in
-        interactive, multiple entry points in a library which takes <legacyItalic>PureDI</legacyItalic> 
+        interactive desktop applications, multiple entry points in a library which takes <legacyItalic>PureDI</legacyItalic> 
         as a dependency and presumably others where the library user needs to avoid
         keeping the object tree around for the entire lifetime of the program</para>
+        <para>The injection state holds references to singleton objects that have
+        previously been created by CreateAndInjectDependencies</para>
         <code language="c#" source="..\SampleCode\InjectionStateDemo.cs" region="main"/>
         <para>
           This contrived example shows a "permanent" service being created which will last

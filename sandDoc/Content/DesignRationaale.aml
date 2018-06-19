@@ -45,7 +45,7 @@
               <para>
                 A single constructor for the injector and a single
                 method, <codeInline>CreateAndInjectDependencies</codeInline>,
-                albeit with 4 overloads
+                albeit with 4 overloads plus the seldom used method <codeInline>CreateBean</codeInline>
               </para>
             </listItem>
             <listItem>
@@ -72,9 +72,12 @@
             </listItem>
           </list>
           <para>
-            There is only one way to define the injectables and injection sites, i.e. by
+            There is one principal way to define the injectables and injection sites, i.e. by
             the use of attributes.  There is no XML alternative or privileged configuration
-            by code.
+            by code.  The only qualification to this is that beans can be
+            created with <codeInline>CreateBean</codeInline> and injected
+            using the overload of CreateAndInjectDependencies that takes
+            an already instantiated object.
           </para>
           <para>The library is lightweight, with no non-Sdk dependencies</para>
           <para>
@@ -109,7 +112,7 @@
               the injector when tackling edge cases.  Appropriate knowledge
               of the implementation is seen as something to supplement
               familiar abstractions and assist the developer in
-              reasoning about application behaviour
+              reasoning about library behaviour
             </para>
 
             <para>
@@ -178,7 +181,7 @@
                 </para>
               </listItem>
               <listItem>
-                <para>The library is netcoreapp2.0 using C# 7.1.</para>
+                <para>The library is netcoreapp2.0 using C# 7.3.</para>
               </listItem>
               <listItem>
                 <para>
@@ -186,6 +189,16 @@
                   and expect injection to take place.  It must be in the graph produced by
                   following the dependencies of
                   <codeInline>CreateAndInjectDependencies</codeInline>.
+                </para>
+              </listItem>
+              <listItem>
+                <para>
+                  <codeInline>InjectionState</codeInline> which must be passed to calls
+                  to and returned by CreateAndInjectDependencies and the Execute method of 
+                  bean factories may appear alien to many library users.  The price seems
+                  worth paying when dealing with concurrency issues which may occur in
+                  such scenarios as web requests.  Forcing the user to confront state
+                  may be the best way of ensuring maintainable code.
                 </para>
               </listItem>
             </list>

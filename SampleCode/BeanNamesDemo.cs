@@ -18,9 +18,9 @@ public class BeanNamesDemo
     private void ListDatabases()
     {
         System.Console.WriteLine($"our main database is {mainDB.Id}");
-        // this will display "SqlServerDB"
+        // this will display "our main database is SqlServerDB"
         System.Console.WriteLine($"our document database is {mongoDB.Id}");
-        // this will display "magnificent mongo""
+        // this will display "our document database is magnificent mongo""
     }
 }
 

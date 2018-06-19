@@ -44,7 +44,7 @@
           a bean name to distinguish them there is no way for the injector
           to determine whether a reference to the inherited class is intended
           to refer to the inherited class itself or a derived class.)  Alternatively
-          if you mark the inherited bean as <codeInline>[Ignored]</codeInline> then both beans can be
+          if you mark the inherited class as <codeInline>[Ignored]</codeInline> then both beans can be
           injected but only through their respective implementation class types.
         </para>
 
@@ -54,7 +54,7 @@
     <relatedTopics>
       <link xlink:href="DI-Profiles">Profiles</link>
       <link xlink:href="DI-BeanNames">Bean Names</link>
-      <codeEntityReference>T:PureDI.IgnoreAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.IgnoreAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

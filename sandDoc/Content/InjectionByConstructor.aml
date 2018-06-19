@@ -71,8 +71,7 @@
               <listItem>
                 <para>
                   You can mix constructor injection with member variable injection in the
-                  same object.  If you specify both for some member then the
-                  constructor injection will be the effective one.
+                  same object.
                 </para>
               </listItem>
               <listItem>
@@ -95,7 +94,7 @@
     </section>
 
     <relatedTopics>
-      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.ConstructorAttribute</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

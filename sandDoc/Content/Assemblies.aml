@@ -24,7 +24,7 @@
           In order to accomplish this the library user must provide the injection
           mechanism with the identities of the assemblies that are subject to
           injection.  These can be optionally passed to the <codeInline>DependencyInjector.CreateAndInjectDependencies</codeInline>
-          constructor as follows: 
+          method as follows: 
           <codeInline>dependencyInjector.CreateAndInjectDependencies(Assemblies: new Assembly[]
           {typeof(SomeTypeFromMyAssembly).Assembly});</codeInline>.
           Note that the method takes an array of references to assemblies
@@ -68,7 +68,7 @@
                     assemblies to be scanned.  To address this the optional parameter <codeInline>
                       ignoreRootTypeAssembly
                     </codeInline> can be passed to the DependencyInjector constructor, set to true.
-                    If so the root assembly will not be scanned.
+                    If so the root assembly will not be scanned, <codeInline>var di = new DependencyInjector(ignoreRootTypeAssembly: true);</codeInline>.
                   </para>
                 </listItem>
               </list>
