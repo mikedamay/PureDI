@@ -33,7 +33,7 @@
         </para>
 
         <para>The following code provides a simple example.</para>
-        <code language="c#" source="..\SampleCode\BeanFactoriesDemo.cs" region="main"/>
+        <code language="c#" source="..\SampleCode\BeanFactoryDemo.cs" region="main"/>
         <para>
           The code example above shows a <legacyItalic>FactoryUser</legacyItalic> class 
           which uses an implementation of <legacyItalic>IRepository2</legacyItalic>.

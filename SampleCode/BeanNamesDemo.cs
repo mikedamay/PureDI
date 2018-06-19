@@ -40,7 +40,7 @@ internal class MongoDB : IRepository
     public string Id => "magnificent mongo";
 }
 #endregion
-namespace BeanNamesRunner
+namespace BeanNamesDemoRunner
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     [TestClass] public class MainRunner    {
