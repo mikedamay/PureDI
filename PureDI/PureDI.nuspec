@@ -11,8 +11,8 @@
     <iconUrl>https://github.com/mikedamay/PureDI/blob/master/SimpleIOCCDocumentor/wwwroot/glyphicons_free/glyphicons/png/glyphicons-159-show-lines.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Thread safe Dependency Injector</description>
-    <releaseNotes>First Release </releaseNotes>
-    <copyright>Copyright Michael May (TheDisappointedProgrammer.com) 2017</copyright>
+    <releaseNotes>Beta Release </releaseNotes>
+    <copyright>Copyright Michael May (TheDisappointedProgrammer.com) 2017-2018</copyright>
     <tags>IoC DI</tags>
   </metadata>
 </package>

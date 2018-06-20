@@ -1,4 +1,4 @@
-debugger started to fail possibly after using decompiler
+debugger started to fail possibly after using decompiler - intermittent
 
 Loaded application domain 'DefaultDomain (id 1)'
 Loaded Assembly 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Private.CoreLib.dll'

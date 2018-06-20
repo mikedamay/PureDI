@@ -15,7 +15,7 @@ Library Maintainer Notes at [Documentation/LibraryMaintainerNotes.md](Documentat
 
 #### Usage
 To run tests:  
-install dotnetcore 2.0  
+install dotnetcore 2.1  
 cd PureDITest
 
 then  

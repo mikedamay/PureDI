@@ -4,14 +4,15 @@ Documnetation of the *library user* is at http://mikedamay.co.uk/PureDI
 
 Code Status
 ==============
-* No Warnings except in Sandcastle Help Builder
+* No Warnings except in Sandcastle Help Builder (innocuous)
 * All Tests Pass
 * Useable (except for the absence of real-world hardening)
+* The Sandcastle API docs for DependencyInjector.CreateAndInjectDependencies is corrupted.  Maybe a Sandcastle/SHFB problem
 
 Prerequisites
 =============
 VS2017.
-Sandcastle build helper extension (2017.5.15).
+Sandcastle build helper extension (2018.5.29).
 
 Alternatively:
 If you don't need to build User Guide and API docs 
@@ -37,21 +38,18 @@ as the sandDoc project requires the full .NET framework so its inclusion by
 default would break non-Windows builds.  It also slows down the build).  The sandBox
 project is included in the PureDI git repo under the PureDI solution directory.
 
-2) Change the targetFramework of the PureDI.csproj from nestandard2.0 to netcoreapp2.0 before building
-docs and back afterwards.  (See Note A, below and Step 5)
+2) Make changes to the Content folder if necessary.  (See Note C, below)
 
-3) Make changes to the Content folder if necessary.  (See Note C, below)
+43 Do Rebuild Solution - but note the issue (Note D) below.
 
-4) Do Rebuild Solution - but note the issue (Note D) below.
-
-5) Reverse steps 1) and 2).
+5) Reverse steps 1) .
 
 6) Copy contents of sandDoc/GeneratedHelp to the document directory of some website.
 
 Note A. The Help Build barfs (unable to find the System assembly) when attempting to build
 with a target of netstandard2.0.
 
-Note B. The Sandcastle Help Builder is version 2017.5.15
+Note B. The Sandcastle Help Builder is version 2018.5.29
 
 Note C. Help Builder Gotcha: make sure you change the text of Version History
 when you add version.  Simply adding the version using ContentLayout.content
