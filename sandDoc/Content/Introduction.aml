@@ -92,7 +92,7 @@
               which also creates an instance of <legacyItalic>Logger</legacyItalic> (because it is annotated with
               a <legacyItalic>BeanReferenceAttribute</legacyItalic>) and assigns it
               to the <legacyItalic>logger</legacyItalic> member variable.  Assignment to
-              the member variable follows execution of <legacyItalic>Pragram&apos;s</legacyItalic>
+              the member variable occurs after execution of <legacyItalic>Pragram&apos;s</legacyItalic>
               constructor, as you would expect.
             </para>
           </content>

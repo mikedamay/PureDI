@@ -38,7 +38,7 @@
             the case where some interface is implemented by multiple bean classes but is not used
             as a bean reference.  The <codeInline>Ignore</codeInline> attribute will cause the injector not to report the multiple implementations
             as duplicates in its diagnostic output.  It would typically be applied to an utility interface, say some user-inspired equivalent of IComparable or
-            ISerializable.  To reiterate: this does not do much, it just keeps noise out of the diagnostics.
+            ISerializable.  This does not do much, it just keeps noise out of the diagnostics.
           </para>
         </content>
       </section>
@@ -51,7 +51,7 @@
             The <codeInline>[Bean]</codeInline>, <codeInline>[BeanReference]</codeInline>,
             <codeInline>[Constructor]</codeInline> and <codeInline>[Ignore]</codeInline> attributes
             are sealed classes.  In each case there is an equivalent base class
-            from which user defined classes can be derived.  This might be useful
+            from which user defined classes can be derived.  These base classes might be useful
             to the library user if there were a requirement for some complex 
             factory with a number of parameters
             that could be named.  The injector will treat a class derived from <codeInline>BeanBaseAttribute</codeInline>
@@ -100,13 +100,13 @@
       </section>
     </sections>
     </section>
-    <relatedTopics>
-      <codeEntityReference>T:PureDI.IgnoreAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.BeanAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.BeanBaseAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.BeanReferenceAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.BeanReferenceBaseAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
+    <relatedTopics>a
+      <codeEntityReference>T:PureDI.Attributes.IgnoreAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanBaseAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanReferenceAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanReferenceBaseAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.ConstructorAttribute</codeEntityReference>
       <codeEntityReference>T:PureDI.DIException</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>

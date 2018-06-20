@@ -71,7 +71,7 @@
                 <legacyBold>Testing:</legacyBold> the implementation of mock objects
                 can have a "test" profile <codeInline>[BeanReference(Profile="test"]</codeInline>.
                 The object under test can then be instantiated with
-                <codeInline>CreateAndInjectDependencies(Profiles: new[]{"test"});</codeInline>
+                <codeInline>new DependencyInjector(Profiles: new[]{"test"});</codeInline>
               </para>
               <para>
                 <legacyBold>Software Product Line (SPL): </legacyBold>
@@ -114,9 +114,9 @@
 
     <relatedTopics>
       <link xlink:href="DI-BeanNames">Bean Names</link>
-      <codeEntityReference>T:PureDI.BeanAttribute</codeEntityReference>
-      <codeEntityReference>T:PureDI.ConstructorAttribute</codeEntityReference>
-      <codeEntityReference>M:PureDI.DependencyInjector.#ctor(System.String[],System.Reflection.Assembly[],PureDI.DependencyInjector.AssemblyExclusion)</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.BeanAttribute</codeEntityReference>
+      <codeEntityReference>T:PureDI.Attributes.ConstructorAttribute</codeEntityReference>
+      <codeEntityReference>M:PureDI.DependencyInjector.#ctor(System.String[],System.Boolean)</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

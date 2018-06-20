@@ -54,7 +54,9 @@
                   but no <legacyBold>name</legacyBold>.
                 </para>
                 <para>
-                  One workaround is to have four versions of the repository
+                  This limitation can be mitigated by instantiating
+                  objects explicitly and associate each with an appropriate name.
+                  Another workaround is to have four versions of the repository
                   each having an unique combination of name and profile.  This
                   might be achieved with some thin "wrapper" derived classes.
                   Alternatively the use of factories and factory parameters
@@ -69,18 +71,20 @@
                   One key difference is the <legacyBold>absence of an external configuration</legacyBold> mechanism (in Spring's case
                   , XML files) reduces the expressiveness and flexibility of PureDI in orchestrating
                   alternative configurations say for a development versus a production environment or
-                  to meet the varying requirements of different customers.  PureDI does support
-                  multiple configurations that can be selected at runtime but the logic is distributed
-                  throughout the code base, thus limiting the ability to reason about the configuration.
+                  to meet the varying requirements of different customers.  Apart from this practical
+                  consiseration, the fact that PureDI's support for
+                  multiple configurations (via profiles) that can be selected at runtime is limited such that
+                  the logic is distributed
+                  throughout the code base, means that the library user's ability to reason about the configuration.
                 </para>
                 <para>
                   Perhaps the most serious limitation of PureDI is the <legacyBold>role of types</legacyBold> (classes and interfaces)
                   as the sole mechanism for defining beans.  Spring provides the facility to define beans
                   as instances through both XML and Java configuration.  A class such as a repository can be
-                  instantiated twice once with a local connection and once with a remote connection.  Although
+                  instantiated twice, once with a local connection and once with a remote connection.  Although
                   PureDi allows the library user to achieve the same effect by instantiating bean instances
-                  in code and injecting them into the object hierarchy, this unsystematic and hampers orchestration
-                  , reasoning about the configuration, static and runtime analysis.
+                  in code and injecting them into the object hierarchy, this is unsystematic and hampers orchestration
+                  , reasoning about the configuration, and static and runtime analysis.
                 </para>
                 <para>
                   Many limitations can be worked around by instantiating beans before injecting them.
@@ -145,7 +149,7 @@
                 <listItem>
                   <para>
                     There is no way to require that some bean is instantiated before other beans are
-                    created where the <legacyBold>dependency is indirect</legacyBold> (i.e. it is not realized in the object hierarchy.
+                    created where the <legacyBold>dependency is indirect</legacyBold> (i.e. it is not explicit in the object hierarchy).
                     The PureDI library user must take responsibility for creating the dependency before
                     instantiating the indirectly dependent beans.
                   </para>
