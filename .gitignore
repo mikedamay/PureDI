@@ -268,3 +268,4 @@ __pycache__/
 Simple/*.html
 Simple/DiagnosticSchema/*.html
 Simple/UserGuide/*.html
+/sandDoc/PureDI

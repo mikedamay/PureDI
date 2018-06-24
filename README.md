@@ -3,7 +3,7 @@
 A simple dependency injection mechanism
 
 #### Version
-Alpha
+Beta
 
 If anybody wants to take this for a spin I would be grateful and responsive
 
