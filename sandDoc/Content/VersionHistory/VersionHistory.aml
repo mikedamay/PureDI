@@ -24,6 +24,12 @@ life of the project.</para>
             </para>
 	        </listItem>
 
+	        <listItem>
+	          <para>
+              <link xlink:href="DI-Version_0_2_1_0"/>
+            </para>
+	        </listItem>
+
 	      </list>
 
 	    </content>

@@ -83,6 +83,7 @@
     <Folder Include="DO THIS CHANGE BEFORE BUILDING DOCS" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\VersionHistory\v0.2.1.0.aml" />
     <None Include="Content\VersionHistory\VersionHistory.aml" />
     <None Include="Content\VersionHistory\v0.1.2.0.aml" />
     <None Include="Content\VersionHistory\v0.1.1.0.aml" />

@@ -1,4 +1,4 @@
-Mike May - October 2017, Updated March 2018
+Mike May - October 2017, Updated March 2018, June 2018
 
 Documnetation of the *library user* is at http://mikedamay.co.uk/PureDI
 
@@ -11,18 +11,21 @@ Code Status
 
 Prerequisites
 =============
-VS2017.
+VS2017 (2)
 Sandcastle build helper extension (2018.5.29).
 
 Alternatively:
 If you don't need to build User Guide and API docs 
 or you are building on Linux or MacOs then Rider or VSCode can be used
+Select the appropriate Build Configuration
 
 
 Building User Guide and API Docs
 ================================
 
 The documentation can be built only on Windows (not Linux or MacOs) and requires VS2017.
+
+Use the configuration: Debug (WindowsOnly with Sandcastle docs)
 
 The build process takes the files in sandDoc/Contents and generates sandDoc/GeneratedHelp as 
 HTML, js, css etc.  The contents of sandDoc/GeneratedHelp can be copied into a web folder,
@@ -33,9 +36,10 @@ binary from which API details are extracted.
 The following steps are requred to build the User Guide and API documentation:
 
 1) Add sandDoc VS project to the PureDI solution.  (The sandDoc project bulds that User Guide and API Docs.)
-(Note that the PureDI solution is persisted with the sandBox project removed from the .sln file
+(Note that the PureDI solution may be persisted with the sandBox project removed from the .sln file
 as the sandDoc project requires the full .NET framework so its inclusion by
-default would break non-Windows builds.  It also slows down the build).  The sandBox
+default would break non-Windows builds - Jetbrains Rider is not sufficiently respectful 
+of build configurations.  It also slows down the build).  The sandBox
 project is included in the PureDI git repo under the PureDI solution directory.
 
 2) Make changes to the Content folder if necessary.  (See Note C, below)
@@ -68,8 +72,7 @@ dotnet pack & msbuild /t:pack produce a file but ignore our
 
 Release Activities
 ==================
--1 Remove SandDoc project from solution
-0. Ensure PureDI targets netstandard2.0 (not netcoreapp)
+0 Remove SandDoc project from solution
 1. Build & Test on Windows
 2. Build & Test on Linux
 3. Build & Test on Mac

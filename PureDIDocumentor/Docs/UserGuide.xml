@@ -33,7 +33,7 @@ A simple example (Introduction.cs) is as follows:
 <div class="pre-scrollable">
 
 ```  
-{code-introduction.cs}
+{code-introductionDemo.cs}
 ```
 
 </div>
@@ -96,7 +96,7 @@ can be injected:
 <div class="pre-scrollable">
 
 ```  
-{code-Profiles.cs}
+{code-ProfilesDemo.cs}
 ```
 
 </div>
@@ -442,7 +442,7 @@ The following code provides a simple example.
 <div class="pre-scrollable">
 
 ```  
-{code-FactoryUser.cs}
+{code-BeanFactoryDemo.cs}
 ```
 
 </div>
@@ -479,7 +479,7 @@ The following code illustrates a simpple implementation:
 <div class="pre-scrollable">
 
 ```  
-{code-ConstructorUser.cs}
+{code-InjectionByConstructorDemo.cs}
 ```
 
 </div>
@@ -505,7 +505,7 @@ The following code (BeanNames.cs) illustrates this:
 <div class="pre-scrollable">
 
   ```
-  {code-duplicateBean.cs}
+  {code-BeanNamesDemo.cs}
   ```
 
 </div>
