@@ -29,7 +29,7 @@
             </para>
             <para>
               <command>
-                nuget install PureDI-version 0.1.2-alpha
+                nuget install PureDI-version 0.2.2
               </command>
             </para>
             <para>
@@ -37,7 +37,7 @@
             </para>
             <para>
               <command>
-                install-package PureDI-version 0.1.2-alpha
+                install-package PureDI-version 0.2.2
               </command>
             </para>
             <para>

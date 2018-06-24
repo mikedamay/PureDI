@@ -24,5 +24,6 @@
     <Topic id="DI-Version_0_1_1_0" visible="True" />
     <Topic id="DI-Version_0_1_2_0" visible="True" />
     <Topic id="DI-Version_0_2_1_0" visible="True" />
+    <Topic id="DI-Version_0_2_2_0" visible="True" />
   </Topic>
 </Topics>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="DI-Version_0_2_2_0" revisionNumber="1">
+  <developerConceptualDocument
+    xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <introduction>
+      <para>
+        Beta
+      </para>
+    </introduction>
+
+    <section>
+      <title>Changes in This Release</title>
+      <content>
+
+        <list class="bullet">
+          <listItem>
+            <para>Corrected version on doc Introduction page</para>
+          </listItem>
+        </list>
+
+      </content>
+    </section>
+
+
+    <relatedTopics>
+      <link xlink:href="0c9d7895-4488-4df5-845f-8e27d0e3da73" />
+    </relatedTopics>
+
+  </developerConceptualDocument>
+</topic>
