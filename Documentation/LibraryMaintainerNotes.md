@@ -93,5 +93,3 @@ Release Activities
 18. push master
 19. Upload latest help files to mikedamay.co.uk/PureDI
 20. Test nuget install on Mac or Linux or Windows
-21. Change SampleCode project file to refer to the latest nuget package and squash any project reference
-
