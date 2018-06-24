@@ -1,1 +1,1 @@
-c:\projects\nuget push PureDI\bin\Debug\PureDI.0.2.1.nupkg secret -Source https://www.nuget.org/api/v2/package
+c:\projects\nuget push PureDI\bin\Debug\PureDI.0.2.2.nupkg secret -Source https://www.nuget.org/api/v2/package
